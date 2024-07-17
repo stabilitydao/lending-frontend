@@ -51,3 +51,22 @@ export const navLinks = [
     href: "/governance",
   },
 ];
+
+export const portfolioData = [
+  {
+    title: "Deposited Collateral",
+    value: "$3,000.00",
+  },
+  {
+    title: "Borrowed Fund",
+    value: "$1,521.93",
+  },
+  {
+    title: "Net Value",
+    value: "$2,478.07",
+  },
+  {
+    title: "Fees and Interest",
+    value: "$27.93",
+  },
+];

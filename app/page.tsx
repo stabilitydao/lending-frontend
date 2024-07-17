@@ -10,8 +10,14 @@ import {
 export default function Home() {
   return (
     <main className="flex flex-col items-center">
-      <div className="relative pt-4">
-        <Image src="/hero.png" alt="hero" width={1500} height={1000} />
+      <div className="relative pt-4 w-full h-[600px]">
+        <Image
+          src="/hero.png"
+          alt="hero"
+          fill
+          className="object-cover object-center"
+          priority
+        />
         <div className="absolute top-28 right-20 bg-background/60 text-black px-12 py-6 rounded">
           Network TVL: $1,234,567
         </div>

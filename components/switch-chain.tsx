@@ -37,7 +37,11 @@ export const SwitchChain = () => {
       toast({
         title: "Failed to switch chain",
         description: error.message,
-        variant: "destructive",
+        variant: "default",
+        style: {
+          background: "rgb(255, 255, 255)",
+          color: "rgb(0, 0, 0)",
+        },
       });
     }
   }, [error, toast]);
