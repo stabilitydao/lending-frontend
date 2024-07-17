@@ -6,6 +6,23 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export function formatNumberWithSuffix(num: number): string | null {
+  switch (true) {
+    case num >= 1000000000000:
+      return `$${(num / 1000000000000).toFixed(2)}T`;
+    case num >= 1000000000:
+      return `$${(num / 1000000000).toFixed(2)}B`;
+    case num >= 1000000:
+      return `$${(num / 1000000).toFixed(2)}M`;
+    case num >= 1000:
+      return `$${(num / 1000).toFixed(2)}K`;
+    case num >= 0:
+      return `$${num.toFixed(2)}`;
+    default:
+      return null;
+  }
+}
+
 export async function calculateTVL(
   balances: TokenBalance[],
   apiUrl: string

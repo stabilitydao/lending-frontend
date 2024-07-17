@@ -9,7 +9,7 @@ export const Navbar = () => {
   const { isConnected } = useAccount();
 
   return (
-    <nav className="flex justify-between items-center bg-background py-4 px-8 shadow-lg z-50 absolute w-full">
+    <nav className="flex justify-between items-center bg-background py-4 px-8 z-50 shadow-lg absolute w-full">
       <Link href="/">
         <Image src="/logo.png" alt="logo" width={150} height={150} />
       </Link>

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import { navLinks, socialLinks } from "@/lib/constants";
 
@@ -17,17 +18,13 @@ export const Footer = () => {
       </div>
       <div className="flex flex-row space-x-4">
         {socialLinks.map((link, index) => (
-          <Link
-            key={index}
-            href={link.url}
-            className="rounded-full px-4 bg-primary p-2"
-          >
-            <Image
-              src={link.imageSrc}
-              alt="Social icon"
-              width={24}
-              height={24}
-            />
+          <Link key={index} href={link.url}>
+            <Avatar className="bg-primary">
+              <AvatarImage src={link.imageSrc} />
+              <AvatarFallback className="text-xs">
+                {link.imageSrc}
+              </AvatarFallback>
+            </Avatar>
           </Link>
         ))}
       </div>
