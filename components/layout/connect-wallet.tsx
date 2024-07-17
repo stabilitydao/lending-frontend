@@ -9,7 +9,7 @@ export const ConnectWallet = () => {
       {({ isConnected, show, truncatedAddress }) => {
         return (
           <Button onClick={show} variant="default" className="bg-primary">
-            {isConnected ? truncatedAddress : "Connect"}
+            {isConnected ? truncatedAddress : "Connect Wallet"}
           </Button>
         );
       }}

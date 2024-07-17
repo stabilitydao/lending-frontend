@@ -4,6 +4,7 @@ import "./globals.css";
 import { Web3Provider } from "@/components/ui/providers/web3-provider";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
+import { Toaster } from "@/components/ui/toaster";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -26,6 +27,8 @@ export default function RootLayout({
         <Web3Provider>
           <Navbar />
           <main className="flex-grow">{children}</main>
+          <Toaster />
+
           <Footer />
         </Web3Provider>
       </body>
