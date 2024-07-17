@@ -7,7 +7,7 @@ import { Separator } from "@/components/ui/separator";
 
 export default function Page() {
   return (
-    <div className="bg-foreground p-4 h-full rounded-lg mx-10 mt-24 flex flex-col gap-6">
+    <div className="bg-card p-4 h-full rounded-lg mx-10 my-24 flex flex-col gap-6 shadow-2xl">
       <div className="flex flex-col gap-2">
         <h1 className="text-primary text-lg font-semibold">Portfolio</h1>
         <p className="text-primary text-sm font-light">
