@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowRightIcon } from "lucide-react";
+import { ArrowRightIcon, PowerIcon } from "lucide-react";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 import { Button } from "@/components/ui/button";
 import {
@@ -36,9 +36,12 @@ export const ConnectWallet = () => {
             {formatAddress(address)}
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56">
-          <DropdownMenuItem onClick={() => disconnect()}>
-            Disconnect
+        <DropdownMenuContent className=" w-40">
+          <DropdownMenuItem
+            onClick={() => disconnect()}
+            className="flex items-center justify-between"
+          >
+            Disconnect <PowerIcon className="w-4 h-4" />
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
