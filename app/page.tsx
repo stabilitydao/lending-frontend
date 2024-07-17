@@ -5,7 +5,6 @@ import {
   CardHeader,
   CardTitle,
   CardDescription,
-  CardFooter,
 } from "@/components/ui/card";
 
 export default function Home() {
@@ -19,22 +18,45 @@ export default function Home() {
       </div>
       <div className="flex flex-col mx-10 py-24">
         <Card className="max-w-3xl py-10">
-          <CardHeader>
+          <CardHeader className="py-10">
             <CardTitle className="text-md">Vicuna Finance offers:</CardTitle>
           </CardHeader>
           <CardContent>
             <CardDescription>
               <ul className="space-y-4">
-                <li>
-                  Yield farm while you sleep with Vicuna Finance’s
+                <li className="flex items-center gap-4">
+                  <Image
+                    src="/icons/llama.svg"
+                    alt="Llama icon"
+                    width={24}
+                    height={24}
+                    className="mr-2"
+                  />
+                  Yield farm while you sleep with Vicuna Finance's
                   high-performance, set-and-forget auto compounders
                 </li>
-                <li>
+                <li className="flex items-center gap-4">
+                  <Image
+                    src="/icons/llama.svg"
+                    alt="Llama icon"
+                    width={24}
+                    height={24}
+                    className="mr-2"
+                  />
                   Amplify your rewards with leveraged yield farms and accelerate
                   asset growth-Stake $VIFI to earn fees + protocol revenue and
                   govern Vicuna Finance
                 </li>
-                <li>Borrowing and lending off crypto assets at high APR</li>
+                <li className="flex items-center gap-4">
+                  <Image
+                    src="/icons/llama.svg"
+                    alt="Llama icon"
+                    width={24}
+                    height={24}
+                    className="mr-2"
+                  />
+                  Borrowing and lending off crypto assets at high APR
+                </li>
               </ul>
             </CardDescription>
           </CardContent>
