@@ -4,7 +4,7 @@ import { navLinks, socialLinks } from "@/lib/constants";
 
 export const Footer = () => {
   return (
-    <footer className="flex flex-col lg:flex-row items-center justify-between shadow-inner gap-10 bg-background w-full py-24 px-10">
+    <footer className="flex flex-col lg:flex-row items-center z-50 justify-between shadow-inner gap-10 bg-background w-full py-24 px-10">
       <div>
         <Image src="/logo.png" alt="Llama icon" width={300} height={300} />
       </div>

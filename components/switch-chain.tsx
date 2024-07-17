@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
+import Image from "next/image";
 
 export const SwitchChain = () => {
   const { toast } = useToast();
@@ -42,25 +43,49 @@ export const SwitchChain = () => {
   }, [error, toast]);
 
   return (
-    <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
-      <DropdownMenuTrigger asChild>
-        <Button disabled={isPending} variant="default">
-          {connectedChain ? connectedChain.name : "Select Chain"}
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        {availableChains.map((c) => (
-          <DropdownMenuItem
-            key={c.id}
-            onClick={() => {
-              switchChain?.({ chainId: c.id });
-              setIsOpen(false);
-            }}
+    <div className="relative">
+      {isOpen && (
+        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[1]" />
+      )}
+      <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+        <DropdownMenuTrigger asChild>
+          <Button
+            disabled={isPending}
+            variant="default"
+            className="flex items-center gap-2"
           >
-            {c.name}
-          </DropdownMenuItem>
-        ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
+            {connectedChain && (
+              <Image
+                src={`/icons/coins/${connectedChain.name.toLowerCase()}.png`}
+                alt={`${connectedChain.name} icon`}
+                width={16}
+                height={16}
+              />
+            )}
+            {connectedChain ? connectedChain.name : "Select Chain"}
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="z-50">
+          {availableChains.map((c) => (
+            <DropdownMenuItem
+              key={c.id}
+              onClick={() => {
+                switchChain?.({ chainId: c.id });
+                setIsOpen(false);
+              }}
+            >
+              <Image
+                src={`/icons/coins/${c.name.toLowerCase()}.png`}
+                alt={`${c.name} icon`}
+                width={16}
+                height={16}
+                className="mr-2"
+              />
+              {c.name}
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   );
 };
