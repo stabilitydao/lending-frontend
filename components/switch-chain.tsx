@@ -45,14 +45,14 @@ export const SwitchChain = () => {
   return (
     <div className="relative">
       {isOpen && (
-        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[1]" />
+        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[40]" />
       )}
       <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
         <DropdownMenuTrigger asChild>
           <Button
             disabled={isPending}
             variant="default"
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 rounded-lg"
           >
             {connectedChain && (
               <Image
@@ -65,10 +65,11 @@ export const SwitchChain = () => {
             {connectedChain ? connectedChain.name : "Select Chain"}
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="z-50">
+        <DropdownMenuContent className="z-50 p-2 space-y-2">
           {availableChains.map((c) => (
             <DropdownMenuItem
               key={c.id}
+              className="flex items-center gap-4"
               onClick={() => {
                 switchChain?.({ chainId: c.id });
                 setIsOpen(false);

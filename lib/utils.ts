@@ -31,3 +31,7 @@ export async function calculateTVL(
     return 0;
   }
 }
+
+export function formatAddress(address: string): string {
+  return `${address.slice(0, 4)}...${address.slice(-5)}`;
+}
