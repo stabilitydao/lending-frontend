@@ -20,7 +20,7 @@ export const VaultTable = () => {
     <div className="p-4">
       <div className="flex items-center justify-between ">
         <div className="flex items-center gap-4">
-          <p className="text-sm font-light text-primary">Assets</p>
+          <p className="text-xs font-light text-primary">Assets:</p>
           <Tabs defaultValue="all" className="w-full">
             <TabsList>
               <TabsTrigger value="all">All</TabsTrigger>
@@ -35,7 +35,7 @@ export const VaultTable = () => {
           </Tabs>
         </div>
         <div className="flex items-center gap-4">
-          <p className="text-sm font-light text-primary">Sort by:</p>
+          <p className="text-xs font-light text-primary w-full">Sort by:</p>
           <Tabs defaultValue="default" className="w-full ml-4">
             <TabsList>
               <TabsTrigger value="default">Default</TabsTrigger>
