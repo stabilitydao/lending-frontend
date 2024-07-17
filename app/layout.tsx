@@ -3,6 +3,7 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import { Web3Provider } from "@/components/ui/providers/web3-provider";
 import { Navbar } from "@/components/layout/navbar";
+import { Footer } from "@/components/layout/footer";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -21,10 +22,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={poppins.className}>
+      <body className={`${poppins.className} flex flex-col min-h-screen`}>
         <Web3Provider>
           <Navbar />
-          {children}
+          <main className="flex-grow">{children}</main>
+          <Footer />
         </Web3Provider>
       </body>
     </html>
