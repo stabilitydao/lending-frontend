@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
+import { Web3Provider } from "@/components/ui/providers/web3-provider";
+import { Navbar } from "@/components/layout/navbar";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -19,7 +21,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={poppins.className}>{children}</body>
+      <body className={poppins.className}>
+        <Web3Provider>
+          <Navbar />
+          {children}
+        </Web3Provider>
+      </body>
     </html>
   );
 }

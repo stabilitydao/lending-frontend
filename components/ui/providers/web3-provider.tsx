@@ -1,5 +1,5 @@
 "use client";
-
+import { useState, useEffect } from "react";
 import { WagmiProvider, createConfig, http } from "wagmi";
 import { mainnet, polygon, arbitrum, bsc, base, optimism } from "wagmi/chains";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -29,11 +29,20 @@ const config = createConfig(
 const queryClient = new QueryClient();
 
 export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
+  const [hydrate, setHydrate] = useState(false);
+
+  useEffect(() => {
+    setHydrate(true);
+  }, []);
   return (
-    <WagmiProvider config={config}>
-      <QueryClientProvider client={queryClient}>
-        <ConnectKitProvider>{children}</ConnectKitProvider>
-      </QueryClientProvider>
-    </WagmiProvider>
+    <>
+      {hydrate && (
+        <WagmiProvider config={config}>
+          <QueryClientProvider client={queryClient}>
+            <ConnectKitProvider>{children}</ConnectKitProvider>
+          </QueryClientProvider>
+        </WagmiProvider>
+      )}
+    </>
   );
 };
