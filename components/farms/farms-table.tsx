@@ -39,11 +39,10 @@ export const FarmsTable = () => {
     <div className="p-4">
       <AssetFilter />
       <Table>
-        <TableHeader>
+        <TableHeader className="h-24">
           <TableHead>Leveraged Farming</TableHead>
           <TableHead>APY</TableHead>
           <TableHead>APR</TableHead>
-          <TableHead>Daily APR</TableHead>
           <TableHead>Leverage</TableHead>
         </TableHeader>
         <TableBody>
@@ -68,11 +67,21 @@ export const FarmsTable = () => {
               </TableCell>
               <TableCell>{farm.apy}%</TableCell>
               <TableCell>
-                <div className="flex flex-col border border-background rounded-md p-2">
-                  <span>{farm.apr.yield_percentage}%</span>
-                  <span>{farm.apr.token_borrowing_interest}%</span>
-                  <span>{farm.apr.total_apr}%</span>
-                  <span>{farm.apr.daily_apr}%</span>
+                <div className="flex flex-col border border-background rounded-md p-2 gap-2">
+                  <span className="text-primary flex items-center justify-between gap-2">
+                    {" "}
+                    Yielf Farm Percentage: {farm.apr.yield_percentage}%
+                  </span>
+                  <span className="text-primary flex items-center justify-between gap-2">
+                    Token Borrowing Interest:{" "}
+                    {farm.apr.token_borrowing_interest}%
+                  </span>
+                  <span className="text-primary flex items-center justify-between gap-2">
+                    Total APR: {farm.apr.total_apr}%
+                  </span>
+                  <span className="text-primary flex items-center justify-between gap-2">
+                    Daily APR: {farm.apr.daily_apr}%
+                  </span>
                 </div>
               </TableCell>
               <TableCell className="flex gap-10 justify-center pt-10">

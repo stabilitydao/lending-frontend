@@ -6,7 +6,7 @@ import { SearchIcon } from "lucide-react";
 import Image from "next/image";
 import { chainIcons } from "@/lib/constants";
 
-export const SearchFilter = () => {
+export const SearchFilter = ({ route }: { route: string }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [search, setSearch] = useState(searchParams.get("filter") || "");
@@ -23,7 +23,9 @@ export const SearchFilter = () => {
       if (selectedChain) {
         params.set("chain", selectedChain);
       }
-      router.push(`/vaults${params.toString() ? `?${params.toString()}` : ""}`);
+      router.push(
+        `/${route}${params.toString() ? `?${params.toString()}` : ""}`
+      );
     }, 300);
 
     return () => clearTimeout(delayDebounceFn);

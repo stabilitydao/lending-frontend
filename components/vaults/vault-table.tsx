@@ -50,7 +50,7 @@ export const VaultTable = () => {
       <AssetFilter />
       <Table>
         <TableHeader>
-          <TableHead className="flex items-center gap-4 h-24">
+          <TableHead className="flex items-center gap-4 h-24 ">
             Vaults{" "}
             <div className="flex items-center space-x-4 mb-4">
               <Tabs
