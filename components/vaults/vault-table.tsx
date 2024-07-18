@@ -18,9 +18,10 @@ import { vaultData } from "@/lib/constants";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAccount } from "wagmi";
 import { VaultFilter } from "./vault-filter";
+import { DepositVaultModal } from "./deposit-vault-modal";
 
 export const VaultTable = () => {
-  const { isDisconnected, address } = useAccount();
+  const { address } = useAccount();
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -111,8 +112,8 @@ export const VaultTable = () => {
               <TableCell>{vault.apy}%</TableCell>
               <TableCell>{vault.daily}%</TableCell>
               <TableCell className="flex gap-10 justify-center pt-10">
-                <Button disabled={isDisconnected}>Deposit</Button>
-                <Button disabled={isDisconnected}>Withdraw</Button>
+                <DepositVaultModal vault={vault} />
+                <Button>Withdraw</Button>
               </TableCell>
             </TableRow>
           ))}
