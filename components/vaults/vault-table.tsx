@@ -1,4 +1,6 @@
 "use client";
+import { useState, useEffect, useCallback } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   Table,
   TableBody,
@@ -14,44 +16,47 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { vaultData } from "@/lib/constants";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useAccount } from "wagmi";
+import { VaultFilter } from "./vault-filter";
 
 export const VaultTable = () => {
+  const { isDisconnected, address } = useAccount();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const [vault, setVault] = useState(searchParams.get("vault") || "all");
+
+  const updateURL = useCallback(
+    (vault: string) => {
+      const params = new URLSearchParams(searchParams.toString());
+      if (vault !== "all") params.set("vault", vault);
+      else params.delete("vault");
+
+      router.push(`/vaults?${params.toString()}`, { scroll: false });
+    },
+    [searchParams, router]
+  );
+
+  useEffect(() => {
+    updateURL(vault);
+  }, [vault, updateURL]);
+
+  const handleVaultChange = (value: string) =>
+    setVault(value === "my" ? address || "all" : value);
+
   return (
     <div className="p-4">
-      <div className="flex items-center justify-between ">
-        <div className="flex items-center gap-4">
-          <p className="text-xs font-light text-primary">Assets:</p>
-          <Tabs defaultValue="all" className="w-full">
-            <TabsList>
-              <TabsTrigger value="all">All</TabsTrigger>
-              <TabsTrigger value="eth">ETH</TabsTrigger>
-              <TabsTrigger value="usdc">USDC</TabsTrigger>
-              <TabsTrigger value="wsteth">wstETH</TabsTrigger>
-              <TabsTrigger value="arb">ARB</TabsTrigger>
-              <TabsTrigger value="gmx">GMX</TabsTrigger>
-              <TabsTrigger value="wbtc">wBTC</TabsTrigger>
-              <TabsTrigger value="usdt">USDT</TabsTrigger>
-            </TabsList>
-          </Tabs>
-        </div>
-        <div className="flex items-center gap-4">
-          <p className="text-xs font-light text-primary w-full">Sort by:</p>
-          <Tabs defaultValue="default" className="w-full ml-4">
-            <TabsList>
-              <TabsTrigger value="default">Default</TabsTrigger>
-              <TabsTrigger value="tvl">TVL</TabsTrigger>
-              <TabsTrigger value="apy">APY</TabsTrigger>
-              <TabsTrigger value="dexTvl">Dex TVL</TabsTrigger>
-            </TabsList>
-          </Tabs>
-        </div>
-      </div>
+      <VaultFilter />
       <Table>
         <TableHeader>
           <TableHead className="flex items-center gap-4">
             Vaults{" "}
             <div className="flex items-center space-x-4 mb-4">
-              <Tabs defaultValue="all" className="w-[400px]">
+              <Tabs
+                value={vault}
+                onValueChange={handleVaultChange}
+                className="w-[400px]"
+              >
                 <TabsList>
                   <TabsTrigger value="all">All Vaults</TabsTrigger>
                   <TabsTrigger value="my">My Vaults</TabsTrigger>
@@ -106,8 +111,8 @@ export const VaultTable = () => {
               <TableCell>{vault.apy}%</TableCell>
               <TableCell>{vault.daily}%</TableCell>
               <TableCell className="flex gap-10 justify-center pt-10">
-                <Button>Deposit</Button>
-                <Button>Withdraw</Button>
+                <Button disabled={isDisconnected}>Deposit</Button>
+                <Button disabled={isDisconnected}>Withdraw</Button>
               </TableCell>
             </TableRow>
           ))}
