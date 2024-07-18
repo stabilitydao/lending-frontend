@@ -12,13 +12,13 @@ import {
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { formatNumberWithSuffix } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { vaultData } from "@/lib/constants";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAccount } from "wagmi";
-import { VaultFilter } from "./vault-filter";
+import { AssetFilter } from "../asset-filter";
 import { DepositVaultModal } from "./deposit-vault-modal";
+import { WithdrawVaultModal } from "./withdraw-vault-modal";
 
 export const VaultTable = () => {
   const { address } = useAccount();
@@ -47,7 +47,7 @@ export const VaultTable = () => {
 
   return (
     <div className="p-4">
-      <VaultFilter />
+      <AssetFilter />
       <Table>
         <TableHeader>
           <TableHead className="flex items-center gap-4 h-24">
@@ -113,7 +113,7 @@ export const VaultTable = () => {
               <TableCell>{vault.daily}%</TableCell>
               <TableCell className="flex gap-10 justify-center pt-10">
                 <DepositVaultModal vault={vault} />
-                <Button>Withdraw</Button>
+                <WithdrawVaultModal vault={vault} />
               </TableCell>
             </TableRow>
           ))}

@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-export const VaultFilter = () => {
+export const AssetFilter = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 

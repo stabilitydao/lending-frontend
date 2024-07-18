@@ -6,7 +6,7 @@ import { SearchIcon } from "lucide-react";
 import Image from "next/image";
 import { chainIcons } from "@/lib/constants";
 
-export const VaultsSearch = () => {
+export const SearchFilter = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [search, setSearch] = useState(searchParams.get("filter") || "");

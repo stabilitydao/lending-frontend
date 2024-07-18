@@ -1,5 +1,5 @@
 import { SearchFilter } from "@/components/search-filter";
-import { VaultTable } from "@/components/vaults/vault-table";
+import { FarmsTable } from "@/components/farms/farms-table";
 
 export default function Page() {
   return (
@@ -11,7 +11,7 @@ export default function Page() {
         </div>
       </div>
       <div className="flex flex-col gap-4 bg-card p-4 rounded-lg shadow-xl">
-        <VaultTable />
+        <FarmsTable />
       </div>
     </div>
   );
