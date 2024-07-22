@@ -19,8 +19,11 @@ export const Footer = () => {
       <div className="flex flex-row space-x-4">
         {socialLinks.map((link, index) => (
           <Link key={index} href={link.url}>
-            <Avatar className="bg-primary">
-              <AvatarImage src={link.imageSrc} />
+            <Avatar className="bg-primary flex items-center justify-center">
+              <AvatarImage
+                src={link.imageSrc}
+                className="w-5 h-5 object-contain"
+              />
               <AvatarFallback className="text-xs">
                 {link.imageSrc}
               </AvatarFallback>

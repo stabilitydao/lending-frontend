@@ -3,31 +3,31 @@ import { VaultData } from "@/types/vault";
 
 export const socialLinks = [
   {
-    imageSrc: "/icons/twitter.svg",
+    imageSrc: "/icons/social/twitter.png",
     url: "https://x.com/llamafinance",
   },
   {
-    imageSrc: "/icons/medium.svg",
+    imageSrc: "/icons/social/medium.png",
     url: "https://medium.com/llamafinance",
   },
   {
-    imageSrc: "/icons/github.svg",
+    imageSrc: "/icons/social/github.png",
     url: "https://github.com/llamafinance",
   },
   {
-    imageSrc: "/icons/discord.svg",
+    imageSrc: "/icons/social/discord.png",
     url: "https://discord.gg/llamafinance",
   },
   {
-    imageSrc: "/icons/dune.svg",
+    imageSrc: "/icons/social/dune.png",
     url: "https://dune.com/llamafinance",
   },
   {
-    imageSrc: "/icons/linkedin.svg",
+    imageSrc: "/icons/social/docs.png",
     url: "https://linkedin.com/company/llamafinance",
   },
   {
-    imageSrc: "/icons/telegram.svg",
+    imageSrc: "/icons/social/telegram.png",
     url: "https://t.me/llamafinance",
   },
 ];
@@ -35,7 +35,7 @@ export const socialLinks = [
 export const navLinks = [
   {
     label: "Borrow/Lend",
-    href: "/borrow-lend",
+    href: "/borrow",
   },
   {
     label: "Farms",
