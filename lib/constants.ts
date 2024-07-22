@@ -142,6 +142,7 @@ export const farmsData: FarmData[] = [
     farmTVL: 318000000,
     farmDexTVL: 1103000000,
     apy: 19.6,
+    leverage: 2, // Added leverage property
     apr: {
       yield_percentage: 15.3,
       token_borrowing_interest: 2.5,
@@ -154,6 +155,7 @@ export const farmsData: FarmData[] = [
     farmTVL: 345140000,
     farmDexTVL: 1090000000,
     apy: 11.0,
+    leverage: 2, // Added leverage property
     apr: {
       yield_percentage: 8.5,
       token_borrowing_interest: 1.8,
@@ -166,6 +168,7 @@ export const farmsData: FarmData[] = [
     farmTVL: 521180000,
     farmDexTVL: 840000000,
     apy: 14.5,
+    leverage: 2, // Added leverage property
     apr: {
       yield_percentage: 11.2,
       token_borrowing_interest: 2.1,
@@ -178,6 +181,7 @@ export const farmsData: FarmData[] = [
     farmTVL: 636210000,
     farmDexTVL: 916530000,
     apy: 117.0,
+    leverage: 2, // Added leverage property
     apr: {
       yield_percentage: 85.5,
       token_borrowing_interest: 5.2,
@@ -190,6 +194,7 @@ export const farmsData: FarmData[] = [
     farmTVL: 287530000,
     farmDexTVL: 2170000000,
     apy: 12.5,
+    leverage: 2, // Added leverage property
     apr: {
       yield_percentage: 9.8,
       token_borrowing_interest: 1.9,

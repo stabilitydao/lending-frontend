@@ -32,7 +32,7 @@ export const ConnectWallet = () => {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="default" className="bg-primary rounded-lg">
+          <Button variant="default" className="bg-primary">
             {formatAddress(address)}
           </Button>
         </DropdownMenuTrigger>
@@ -51,7 +51,7 @@ export const ConnectWallet = () => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="default" className="bg-primary rounded-lg">
+        <Button variant="default" className="bg-primary">
           Connect Wallet
         </Button>
       </DialogTrigger>

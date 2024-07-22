@@ -9,4 +9,5 @@ export type FarmData = {
     total_apr: number;
     daily_apr: number;
   };
+  leverage: number;
 };

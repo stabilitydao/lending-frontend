@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export const AssetFilter = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
 
   const [asset, setAsset] = useState(searchParams.get("asset") || "all");
   const [sortBy, setSortBy] = useState(
@@ -21,9 +22,9 @@ export const AssetFilter = () => {
       if (sortBy !== "default") params.set("sort_by", sortBy);
       else params.delete("sort_by");
 
-      router.push(`/vaults?${params.toString()}`, { scroll: false });
+      router.push(`${pathname}?${params.toString()}`, { scroll: false });
     },
-    [searchParams, router]
+    [searchParams, router, pathname]
   );
 
   useEffect(() => {

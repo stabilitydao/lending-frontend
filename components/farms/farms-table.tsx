@@ -10,9 +10,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import { formatNumberWithSuffix } from "@/lib/utils";
 import { farmsData } from "@/lib/constants";
 import { AssetFilter } from "../asset-filter";
+import { ChevronsUpDown } from "lucide-react";
+import { FarmModal } from "./farm-modal";
 
 export const FarmsTable = () => {
   const router = useRouter();
@@ -68,24 +71,28 @@ export const FarmsTable = () => {
               <TableCell>{farm.apy}%</TableCell>
               <TableCell>
                 <div className="flex flex-col border border-background rounded-md p-2 gap-2">
-                  <span className="text-primary flex items-center justify-between gap-2">
-                    {" "}
-                    Yielf Farm Percentage: {farm.apr.yield_percentage}%
+                  <span className="text-primary flex items-center justify-between">
+                    <span>Yield Farming:</span>
+                    <span>{farm.apr.yield_percentage}%</span>
                   </span>
-                  <span className="text-primary flex items-center justify-between gap-2">
-                    Token Borrowing Interest:{" "}
-                    {farm.apr.token_borrowing_interest}%
+                  <span className="text-primary flex items-center justify-between">
+                    <span>Token Borrowing Interest:</span>
+                    <span>
+                      {farm.farmName} -{farm.apr.token_borrowing_interest}%
+                    </span>
                   </span>
-                  <span className="text-primary flex items-center justify-between gap-2">
-                    Total APR: {farm.apr.total_apr}%
+                  <span className="text-primary flex items-center justify-between">
+                    <span>Total APR:</span>
+                    <span>{farm.apr.total_apr}%</span>
                   </span>
-                  <span className="text-primary flex items-center justify-between gap-2">
-                    Daily APR: {farm.apr.daily_apr}%
+                  <span className="text-primary flex items-center justify-between">
+                    <span>Daily APR:</span>
+                    <span>{farm.apr.daily_apr}%</span>
                   </span>
                 </div>
               </TableCell>
-              <TableCell className="flex gap-10 justify-center pt-10">
-                {/* Add action buttons here if needed */}
+              <TableCell className="flex gap-10 justify-end pt-10">
+                <FarmModal farm={farm} />
               </TableCell>
             </TableRow>
           ))}

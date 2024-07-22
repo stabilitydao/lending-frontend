@@ -49,11 +49,11 @@ export const Vaults = () => {
           </TableBody>
         </Table>
         <div className="flex items-center justify-center gap-4">
-          <Button size={"sm"} className="rounded-lg">
+          <Button size={"sm"}>
             <PlusIcon className="w-4 h-4 mr-2" />
             Modify
           </Button>
-          <Button size={"sm"} className="rounded-lg">
+          <Button size={"sm"}>
             <XIcon className="w-4 h-4 mr-2" />
             Close
           </Button>

@@ -56,7 +56,7 @@ export const SwitchChain = () => {
           <Button
             disabled={isPending}
             variant="default"
-            className="flex items-center justify-start gap-2 rounded-lg "
+            className="flex items-center justify-start gap-2 "
           >
             {connectedChain && (
               <Image
