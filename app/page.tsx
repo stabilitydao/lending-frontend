@@ -22,14 +22,14 @@ export default function Home() {
           Network TVL: $1,234,567
         </div>
       </div>
-      <div className="flex flex-col mx-10 py-16">
+      <div className="flex flex-col mx-4 md:mx-10 py-16">
         <Card className="max-w-4xl py-10">
           <CardHeader className="py-10">
             <CardTitle className="text-lg">Vicuna Finance offers:</CardTitle>
           </CardHeader>
           <CardContent>
             <CardDescription>
-              <ul className="space-y-4">
+              <ul className="space-y-8">
                 <li className="flex items-center gap-4">
                   <Image
                     src="/icons/llama.svg"

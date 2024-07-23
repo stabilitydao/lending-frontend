@@ -9,9 +9,13 @@ export const Footer = () => {
       <div>
         <Image src="/logo.png" alt="Llama icon" width={300} height={300} />
       </div>
-      <div className="flex flex-col items-start space-y-4">
+      <div className="flex flex-row lg:flex-col items-start gap-4">
         {navLinks.map((link) => (
-          <Link key={link.href} href={link.href} className="text-primary">
+          <Link
+            key={link.href}
+            href={link.href}
+            className="text-primary text-xs md:text-base"
+          >
             {link.label}
           </Link>
         ))}

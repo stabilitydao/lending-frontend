@@ -25,7 +25,7 @@ export const LPStaking = () => {
             />
             <p className="text-3xl font-semibold">ViFi - ETH veLP</p>
           </div>
-          <div className="flex flex-row items-center justify-between">
+          <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-2">
               <p className="text-xs font-thin">Balance</p>
               <p className="text-lg font-medium">0</p>
@@ -35,7 +35,7 @@ export const LPStaking = () => {
               <p className="text-lg font-medium">12</p>
             </div>
           </div>
-          <div className="flex flex-row items-center justify-between">
+          <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-2">
               <p className="text-xs font-thin">Locked Amount</p>
               <p className="text-lg font-medium">12.25</p>
@@ -45,7 +45,7 @@ export const LPStaking = () => {
               <p className="text-lg font-medium">17.45</p>
             </div>
           </div>
-          <div className="flex flex-row items-center justify-between">
+          <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-2">
               <p className="text-xs font-thin">Pending Rewards</p>
               <p className="text-lg font-medium">0.0141</p>
