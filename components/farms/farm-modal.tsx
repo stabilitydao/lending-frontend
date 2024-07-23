@@ -32,7 +32,7 @@ export const FarmModal = ({ farm }: { farm: FarmData }) => {
       </DialogTrigger>
       <DialogContent className="bg-card text-primary overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="flex justify-between">
+          <DialogTitle className="flex justify-between pb-4">
             Farm {farm?.farmName} Pool
             <Tabs>
               <TabsList>
@@ -42,7 +42,7 @@ export const FarmModal = ({ farm }: { farm: FarmData }) => {
             </Tabs>
           </DialogTitle>
           <Separator />
-          <DialogDescription className="flex flex-col gap-8">
+          <DialogDescription className="flex flex-col gap-8 pt-4">
             <div className="flex items-center justify-between">
               <span>Deposit</span>
               <Tabs>
@@ -73,7 +73,13 @@ export const FarmModal = ({ farm }: { farm: FarmData }) => {
                 onChange={(percentage) => console.log(percentage)}
               />
             </div>
-            <div className="mt-4">And/Or</div>
+            <div className="mt-4 justify-center  place-items-center grid">
+              <div className="flex items-center gap-4">
+                <Separator className="w-12" />
+                <span>And/Or</span>
+                <Separator className="w-12" />
+              </div>
+            </div>
             <div className="flex flex-col gap-2 pt-8">
               <span>Available: 0</span>
               <div className="relative flex items-center">

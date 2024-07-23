@@ -1,4 +1,5 @@
 "use client";
+import { useChainId, useChains } from "wagmi";
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
@@ -7,12 +8,20 @@ import Image from "next/image";
 import { chainIcons } from "@/lib/constants";
 
 export const SearchFilter = ({ route }: { route: string }) => {
+  const chainId = useChainId();
+  const chains = useChains();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [search, setSearch] = useState(searchParams.get("filter") || "");
-  const [selectedChain, setSelectedChain] = useState<string | null>(
-    searchParams.get("chain")
-  );
+  const [selectedChain, setSelectedChain] = useState<string | null>(() => {
+    const chainParam = searchParams.get("chain");
+    if (chainParam) return chainParam.replace(/\+/g, "-");
+
+    const connectedChain = chains.find((chain) => chain.id === chainId);
+    return connectedChain
+      ? connectedChain.name.toLowerCase().replace(/\+/g, "-")
+      : null;
+  });
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -29,7 +38,7 @@ export const SearchFilter = ({ route }: { route: string }) => {
     }, 300);
 
     return () => clearTimeout(delayDebounceFn);
-  }, [search, selectedChain, router]);
+  }, [search, selectedChain, router, route]);
 
   const handleChainClick = (chain: string) => {
     const processedChain = chain
@@ -41,7 +50,7 @@ export const SearchFilter = ({ route }: { route: string }) => {
   };
 
   return (
-    <div className="flex items-center space-x-10">
+    <div className="flex flex-col lg:flex-row items-start gap-6 lg:gap-4 lg:items-center justify-between">
       <div className="relative w-full max-w-sm">
         <Input
           type="text"

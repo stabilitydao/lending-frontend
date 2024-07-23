@@ -36,7 +36,7 @@ export const BorrowLend = () => {
         </CardTitle>
         <Separator />
       </CardHeader>
-      <CardContent className="w-full flex items-center">
+      <CardContent className="w-full flex flex-col lg:flex-row items-center">
         <Table>
           <TableHeader>
             <TableRow>
@@ -59,7 +59,7 @@ export const BorrowLend = () => {
             </TableRow>
           </TableBody>
         </Table>
-        <div className="flex items-center justify-center gap-4">
+        <div className="flex items-end lg:items-center justify-end lg:justify-center gap-4 pt-2 lg:pt-0">
           <Button size={"sm"}>
             <PlusIcon className="w-4 h-4 mr-2" />
             Modify

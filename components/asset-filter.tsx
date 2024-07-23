@@ -35,14 +35,10 @@ export const AssetFilter = () => {
   const handleSortChange = (value: string) => setSortBy(value);
 
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex flex-col lg:flex-row items-start gap-6 lg:gap-4 lg:items-center justify-between">
       <div className="flex items-center gap-4">
         <p className="text-xs font-light text-primary">Assets:</p>
-        <Tabs
-          value={asset}
-          onValueChange={handleAssetChange}
-          className="w-full"
-        >
+        <Tabs value={asset} onValueChange={handleAssetChange}>
           <TabsList>
             <TabsTrigger value="all">All</TabsTrigger>
             <TabsTrigger value="eth">ETH</TabsTrigger>
@@ -56,12 +52,10 @@ export const AssetFilter = () => {
         </Tabs>
       </div>
       <div className="flex items-center gap-4">
-        <p className="text-xs font-light text-primary w-full">Sort by:</p>
-        <Tabs
-          value={sortBy}
-          onValueChange={handleSortChange}
-          className="w-full ml-4"
-        >
+        <p className="text-xs font-light text-primary w-auto lg:w-full">
+          Sort by:
+        </p>
+        <Tabs value={sortBy} onValueChange={handleSortChange}>
           <TabsList>
             <TabsTrigger value="default">Default</TabsTrigger>
             <TabsTrigger value="tvl">TVL</TabsTrigger>

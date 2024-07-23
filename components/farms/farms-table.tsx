@@ -10,11 +10,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { formatNumberWithSuffix } from "@/lib/utils";
 import { farmsData } from "@/lib/constants";
 import { AssetFilter } from "../asset-filter";
-import { ChevronsUpDown } from "lucide-react";
 import { FarmModal } from "./farm-modal";
 
 export const FarmsTable = () => {
@@ -42,7 +40,7 @@ export const FarmsTable = () => {
     <div className="p-4">
       <AssetFilter />
       <Table>
-        <TableHeader className="h-24">
+        <TableHeader className="h-24 border-b border-background">
           <TableHead>Leveraged Farming</TableHead>
           <TableHead>APY</TableHead>
           <TableHead>APR</TableHead>
@@ -53,7 +51,7 @@ export const FarmsTable = () => {
             <TableRow key={index} className="text-primary border-t-background">
               <TableCell>
                 <div className="flex items-center gap-10">
-                  <Avatar className="bg-background">
+                  <Avatar className="bg-background hidden lg:block">
                     <AvatarImage src={`/images/farms/farm-${index + 1}.png`} />
                     <AvatarFallback>Farm</AvatarFallback>
                   </Avatar>
@@ -71,22 +69,24 @@ export const FarmsTable = () => {
               <TableCell>{farm.apy}%</TableCell>
               <TableCell>
                 <div className="flex flex-col border border-background rounded-md p-2 gap-2">
-                  <span className="text-primary flex items-center justify-between">
-                    <span>Yield Farming:</span>
+                  <span className="text-primary flex flex-col lg:flex-row items-start lg:items-center justify-between">
+                    <span className="font-semibold">Yield Farming:</span>
                     <span>{farm.apr.yield_percentage}%</span>
                   </span>
-                  <span className="text-primary flex items-center justify-between">
-                    <span>Token Borrowing Interest:</span>
+                  <span className="text-primary flex flex-col lg:flex-row items-start lg:items-center justify-between">
+                    <span className="font-semibold">
+                      Token Borrowing Interest:
+                    </span>
                     <span>
                       {farm.farmName} -{farm.apr.token_borrowing_interest}%
                     </span>
                   </span>
-                  <span className="text-primary flex items-center justify-between">
-                    <span>Total APR:</span>
+                  <span className="text-primary flex flex-col lg:flex-row items-start lg:items-center justify-between">
+                    <span className="font-semibold">Total APR:</span>
                     <span>{farm.apr.total_apr}%</span>
                   </span>
-                  <span className="text-primary flex items-center justify-between">
-                    <span>Daily APR:</span>
+                  <span className="text-primary flex flex-col lg:flex-row items-start lg:items-center justify-between">
+                    <span className="font-semibold">Daily APR:</span>
                     <span>{farm.apr.daily_apr}%</span>
                   </span>
                 </div>

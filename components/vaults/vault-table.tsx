@@ -43,27 +43,23 @@ export const VaultTable = () => {
   }, [vault, updateURL]);
 
   const handleVaultChange = (value: string) =>
-    setVault(value === "my" ? address || "all" : value);
+    setVault(value === "personal" ? address || "all" : value);
 
   return (
     <div className="p-4">
       <AssetFilter />
+      <div className="flex items-center gap-4 pt-8 justify-end">
+        <Tabs value={vault} onValueChange={handleVaultChange}>
+          <TabsList>
+            <TabsTrigger value="all">All Vaults</TabsTrigger>
+            <TabsTrigger value="personal">My Vaults</TabsTrigger>
+          </TabsList>
+        </Tabs>
+      </div>
       <Table>
-        <TableHeader>
+        <TableHeader className="border-b border-background">
           <TableHead className="flex items-center gap-4 h-24 ">
-            Vaults{" "}
-            <div className="flex items-center space-x-4 mb-4">
-              <Tabs
-                value={vault}
-                onValueChange={handleVaultChange}
-                className="w-[400px]"
-              >
-                <TabsList>
-                  <TabsTrigger value="all">All Vaults</TabsTrigger>
-                  <TabsTrigger value="my">My Vaults</TabsTrigger>
-                </TabsList>
-              </Tabs>
-            </div>
+            Vaults
           </TableHead>
           <TableHead>Wallet</TableHead>
           <TableHead>Deposited</TableHead>
@@ -75,8 +71,8 @@ export const VaultTable = () => {
           {vaultData.map((vault, index) => (
             <TableRow key={index} className="text-primary border-t-background">
               <TableCell>
-                <div className="flex items-center gap-10">
-                  <Avatar className="bg-background">
+                <div className="flex items-center  gap-10">
+                  <Avatar className="bg-background hidden lg:block">
                     <AvatarImage
                       src={`/images/vaults/vault-${index + 1}.png`}
                     />
