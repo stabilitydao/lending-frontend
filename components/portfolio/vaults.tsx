@@ -9,7 +9,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { PlusIcon, XIcon } from "lucide-react";
+import { PlusIcon } from "lucide-react";
+import { CloseModal } from "./close-modal";
 
 export const Vaults = () => {
   return (
@@ -53,10 +54,7 @@ export const Vaults = () => {
             <PlusIcon className="w-4 h-4 mr-2" />
             Modify
           </Button>
-          <Button size={"sm"}>
-            <XIcon className="w-4 h-4 mr-2" />
-            Close
-          </Button>
+          <CloseModal />
         </div>
       </CardContent>
     </Card>

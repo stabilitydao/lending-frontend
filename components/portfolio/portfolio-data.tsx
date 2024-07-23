@@ -5,8 +5,8 @@ export const PortfolioData = () => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       {" "}
-      {portfolioData.map((item) => (
-        <Card>
+      {portfolioData.map((item, i) => (
+        <Card key={i}>
           <CardHeader>
             <CardTitle className="text-lg font-light">{item.title}</CardTitle>
           </CardHeader>

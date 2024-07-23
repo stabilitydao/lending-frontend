@@ -70,8 +70,8 @@ export default function Home() {
         <div className="flex flex-col md:flex-row gap-24 items-start md:items-center">
           <div className="flex flex-row gap-4 items-center">
             <Image
-              src="/icons/llama.svg"
-              alt="Llama icon"
+              src="/icons/layer-zero.png"
+              alt="LayerZero icon"
               width={24}
               height={24}
             />
@@ -79,28 +79,28 @@ export default function Home() {
           </div>
           <div className="flex flex-row gap-4 items-center">
             <Image
-              src="/icons/llama.svg"
+              src="/icons/debank.png"
               alt="Llama icon"
-              width={24}
-              height={24}
+              width={32}
+              height={32}
             />
             <p className="text-xl text-white">Debank</p>
           </div>
           <div className="flex flex-row gap-4 items-center">
             <Image
-              src="/icons/llama.svg"
+              src="/icons/dune.png"
               alt="Llama icon"
-              width={24}
-              height={24}
+              width={32}
+              height={32}
             />
             <p className="text-xl text-white">Dune</p>
           </div>
           <div className="flex flex-row gap-4 items-center">
             <Image
-              src="/icons/llama.svg"
+              src="/icons/uiux.png"
               alt="Llama icon"
-              width={24}
-              height={24}
+              width={32}
+              height={32}
             />
             <p className="text-xl text-black">Web3 UI/UX</p>
           </div>

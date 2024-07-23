@@ -22,7 +22,7 @@ export const Navbar = () => {
     { name: "Vaults", href: "/vaults", src: "/icons/vaults.png" },
     { name: "Portfolio", href: "/portfolio", src: "/icons/portfolio.png" },
     { name: "Governance", href: "/governance", src: "/icons/governance.png" },
-    { name: "More", href: "/more", src: "/icons/more.png" },
+    // { name: "More", href: "/more", src: "/icons/more.png" },
   ];
 
   return (
