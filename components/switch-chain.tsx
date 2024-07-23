@@ -66,7 +66,9 @@ export const SwitchChain = () => {
                 height={16}
               />
             )}
-            {connectedChain ? connectedChain.name : "Select Chain"}
+            <span className="hidden sm:inline">
+              {connectedChain ? connectedChain.name : "Select Chain"}
+            </span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="z-50 p-2 space-y-2">
