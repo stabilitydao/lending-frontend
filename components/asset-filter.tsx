@@ -4,12 +4,13 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import Link from "next/link";
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { ChevronDown } from "lucide-react";
 
 const assetItems = [
   { value: "all", name: "All" },
@@ -75,29 +76,28 @@ export const AssetFilter = () => {
           </Tabs>
         </div>
         <div className="lg:hidden w-full">
-          <Accordion type="single" collapsible className="w-full">
-            <AccordionItem value="assets">
-              <AccordionTrigger className="text-primary ">
-                {asset === "all" ? "All Assets" : asset.toUpperCase()}
-              </AccordionTrigger>
-              <AccordionContent>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-                  {assetItems.map((item) => (
-                    <Link
-                      key={item.value}
-                      href={`${pathname}?asset=${item.value}`}
-                      className={`block p-2 text-primary text-xs rounded border border-primary text-center ${
-                        asset === item.value ? "bg-accent text-primary" : ""
-                      }`}
-                      onClick={() => handleAssetChange(item.value)}
-                    >
-                      {item.name}
-                    </Link>
-                  ))}
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                className="w-full justify-between text-primary"
+              >
+                {assetItems.find((item) => item.value === asset)?.name ||
+                  "All Assets"}
+                <ChevronDown className="h-4 w-4 opacity-50" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-full bg-primary">
+              {assetItems.map((item) => (
+                <DropdownMenuItem
+                  key={item.value}
+                  onClick={() => handleAssetChange(item.value)}
+                >
+                  {item.name}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
       <div className="flex items-center gap-4 w-full lg:w-auto">
@@ -116,29 +116,28 @@ export const AssetFilter = () => {
           </Tabs>
         </div>
         <div className="lg:hidden w-full">
-          <Accordion type="single" collapsible className="w-full">
-            <AccordionItem value="sort">
-              <AccordionTrigger className="text-primary">
-                {sortBy === "default" ? "Default" : sortBy}
-              </AccordionTrigger>
-              <AccordionContent>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-                  {sortItems.map((item) => (
-                    <Link
-                      key={item.value}
-                      href={`${pathname}?sort_by=${item.value}`}
-                      className={`block p-2 text-primary text-xs rounded border border-primary text-center ${
-                        sortBy === item.value ? "bg-accent text-primary" : ""
-                      }`}
-                      onClick={() => handleSortChange(item.value)}
-                    >
-                      {item.name}
-                    </Link>
-                  ))}
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                className="w-full justify-between text-primary"
+              >
+                {sortItems.find((item) => item.value === sortBy)?.name ||
+                  "Default"}
+                <ChevronDown className="h-4 w-4 opacity-50" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-full">
+              {sortItems.map((item) => (
+                <DropdownMenuItem
+                  key={item.value}
+                  onClick={() => handleSortChange(item.value)}
+                >
+                  {item.name}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </div>
