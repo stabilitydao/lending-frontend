@@ -13,14 +13,14 @@ export const SearchFilter = ({ route }: { route: string }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [search, setSearch] = useState(searchParams.get("filter") || "");
-  const [selectedChain, setSelectedChain] = useState<string | null>(() => {
+  const [selectedChains, setSelectedChains] = useState<string[]>(() => {
     const chainParam = searchParams.get("chain");
-    if (chainParam) return chainParam.replace(/\+/g, "-");
+    if (chainParam) return chainParam.split("+");
 
     const connectedChain = chains.find((chain) => chain.id === chainId);
     return connectedChain
-      ? connectedChain.name.toLowerCase().replace(/\+/g, "-")
-      : null;
+      ? [connectedChain.name.toLowerCase().replace(/\s+/g, "-")]
+      : [];
   });
 
   useEffect(() => {
@@ -29,8 +29,8 @@ export const SearchFilter = ({ route }: { route: string }) => {
       if (search) {
         params.set("search", search.toLowerCase());
       }
-      if (selectedChain) {
-        params.set("chain", selectedChain);
+      if (selectedChains.length > 0) {
+        params.set("chain", selectedChains.join("+"));
       }
       router.push(
         `/${route}${params.toString() ? `?${params.toString()}` : ""}`
@@ -38,7 +38,7 @@ export const SearchFilter = ({ route }: { route: string }) => {
     }, 300);
 
     return () => clearTimeout(delayDebounceFn);
-  }, [search, selectedChain, router, route]);
+  }, [search, selectedChains, router, route]);
 
   const handleChainClick = (chain: string) => {
     const processedChain = chain
@@ -46,7 +46,11 @@ export const SearchFilter = ({ route }: { route: string }) => {
       .replace(".png", "")
       .replace(/\s+/g, "-")
       .toLowerCase();
-    setSelectedChain(selectedChain === processedChain ? null : processedChain);
+    setSelectedChains((prev) =>
+      prev.includes(processedChain)
+        ? prev.filter((c) => c !== processedChain)
+        : [...prev, processedChain]
+    );
   };
 
   return (
@@ -62,22 +66,27 @@ export const SearchFilter = ({ route }: { route: string }) => {
         <SearchIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary  h-5 w-5" />
       </div>
       <div className="flex space-x-6">
-        {chainIcons?.map((icon, index) => (
-          <Image
-            key={index}
-            src={icon}
-            alt={`Chain ${index + 1}`}
-            width={24}
-            height={24}
-            className={`cursor-pointer w-6 h-6 object-contain object-center ${
-              selectedChain ===
-              icon.replace(".png", "").replace(/\s+/g, "-").toLowerCase()
-                ? "border-2 border-primary rounded-full p-0.5"
-                : ""
-            }`}
-            onClick={() => handleChainClick(icon)}
-          />
-        ))}
+        {chainIcons?.map((icon, index) => {
+          const processedChain = icon
+            .replace("/icons/coins/", "")
+            .replace(".png", "")
+            .replace(/\s+/g, "-")
+            .toLowerCase();
+          const isSelected = selectedChains.includes(processedChain);
+          return (
+            <Image
+              key={index}
+              src={icon}
+              alt={`Chain ${index + 1}`}
+              width={24}
+              height={24}
+              className={`cursor-pointer w-6 h-6 object-contain object-center ${
+                isSelected ? "rounded-full opacity-100" : "opacity-50"
+              }`}
+              onClick={() => handleChainClick(icon)}
+            />
+          );
+        })}
       </div>
     </div>
   );

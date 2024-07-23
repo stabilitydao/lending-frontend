@@ -12,6 +12,12 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
 
 export const Navbar = () => {
   const { isConnected } = useAccount();
@@ -22,7 +28,6 @@ export const Navbar = () => {
     { name: "Vaults", href: "/vaults", src: "/icons/vaults.png" },
     { name: "Portfolio", href: "/portfolio", src: "/icons/portfolio.png" },
     { name: "Governance", href: "/governance", src: "/icons/governance.png" },
-    // { name: "More", href: "/more", src: "/icons/more.png" },
   ];
 
   return (
@@ -49,6 +54,16 @@ export const Navbar = () => {
             <Image src={item.src} alt={item.name} width={40} height={40} />
           </Link>
         ))}
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <Image src="/icons/more.png" alt="more" width={40} height={40} />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem>Docs</DropdownMenuItem>
+            <DropdownMenuItem>Blog</DropdownMenuItem>
+            <DropdownMenuItem>Audits</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
       <div className="flex items-center gap-4">
         {isConnected && <SwitchChain />}
@@ -71,6 +86,9 @@ export const Navbar = () => {
                   <span className="text-primary font-bold">{item.name}</span>
                 </Link>
               ))}
+              <span className="text-primary font-bold">Audits</span>
+              <span className="text-primary font-bold">Blog</span>
+              <span className="text-primary font-bold">Docs</span>
             </div>
           </SheetContent>
         </Sheet>
