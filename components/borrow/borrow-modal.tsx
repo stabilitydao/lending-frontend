@@ -1,6 +1,5 @@
 "use client";
 
-import { useAccount } from "wagmi";
 import {
   Dialog,
   DialogContent,
@@ -14,29 +13,48 @@ import { BorrowData } from "@/types/borrow";
 import { Input } from "@/components/ui/input";
 import { PercentageBar } from "@/components/ui/percentage-bar";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
+import { ReactNode } from "react";
+import { useState } from "react";
 
-export const BorrowModal = ({ borrow }: { borrow: BorrowData }) => {
-  const { isDisconnected } = useAccount();
+export const BorrowModal = ({
+  borrow,
+  children,
+}: {
+  borrow: BorrowData;
+  children: ReactNode;
+}) => {
+  const [activeTab, setActiveTab] = useState("borrow");
+
   return (
     <Dialog>
-      <DialogTrigger>
-        <Button disabled={isDisconnected} className="w-24 justify-between">
-          <span>Borrow</span>
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="bg-card text-primary overflow-y-auto">
+      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogContent className="bg-card text-primary overflow-y-auto pt-12">
         <DialogHeader>
-          <DialogTitle className="flex justify-between">
-            <Tabs>
-              <TabsList>
-                <TabsTrigger value="supply">Supply</TabsTrigger>
-                <TabsTrigger value="borrow">Withdraw</TabsTrigger>
+          <DialogTitle className="flex">
+            <Tabs
+              className="w-full h-12 bg-card"
+              value={activeTab}
+              onValueChange={setActiveTab}
+            >
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger
+                  value="borrow"
+                  className="w-full data-[state=active]:bg-background data-[state=active]:text-primary bg-transparent h-12 shadow-none rounded-none border-none"
+                >
+                  Borrow
+                </TabsTrigger>
+                <TabsTrigger
+                  value="repay"
+                  className="w-full data-[state=active]:bg-background data-[state=active]:text-primary bg-transparent h-12 shadow-none rounded-none border-none"
+                >
+                  Repay
+                </TabsTrigger>
               </TabsList>
             </Tabs>
           </DialogTitle>
-          <DialogDescription className="flex flex-col gap-8">
+          <DialogDescription className="flex flex-col gap-8 pt-10">
             <div className="flex items-center justify-between">
-              <span>Supply Amount</span>
+              <span>Borrow Amount</span>
               <div className="flex items-center gap-4">
                 Wallet Balance:{" "}
                 <span className="font-semibold">1111.11 ETH</span>
@@ -60,35 +78,41 @@ export const BorrowModal = ({ borrow }: { borrow: BorrowData }) => {
                 onChange={(percentage) => console.log(percentage)}
               />
             </div>
-            <p>Supply Stats</p>
-            <div className="flex flex-col">
-              <div className="flex items-center gap-4">
-                <span>Supply APY</span>
+            <p>Borrow Stats</p>
+            <div className="flex flex-col gap-4">
+              <div className="flex items-center justify-between">
+                <span>Borrow APY</span>
                 <span>10%</span>
               </div>
-              <div className="flex items-center gap-4">
-                <span>Supply Balance</span>
+              <div className="flex items-center justify-between">
+                <span>Borrow Balance</span>
                 <span>$0.00</span>
               </div>
-              <div className="flex items-center gap-4">
+              <div className="flex items-center justify-between">
                 <span>Reward APR</span>
                 <span>0.47%</span>
               </div>
             </div>
-            <p>Supply Stats</p>
-            <div className="flex flex-col">
-              <div className="flex items-center gap-4">
+            <div className="flex flex-col gap-2s">
+              <p>Borrow Stats</p>
+              <div className="flex items-center justify-between">
                 <span>Your Borrow Limit</span>
                 <span>$0</span>
               </div>
-              <div className="flex items-center gap-4">
+              <div className="flex items-center justify-between">
                 <span>Borrow Limit Used</span>
                 <span>0%</span>
               </div>
             </div>
             <div className="flex items-center justify-center gap-10">
-              <Button>Approve</Button>
-              <Button>Supply</Button>
+              {activeTab === "borrow" ? (
+                <>
+                  <Button className="w-full">Approve</Button>
+                  <Button className="w-full">Borrow</Button>
+                </>
+              ) : (
+                <Button className="w-full">Repay</Button>
+              )}
             </div>
           </DialogDescription>
         </DialogHeader>
