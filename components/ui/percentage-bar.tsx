@@ -49,8 +49,8 @@ export const PercentageBar = ({
           style={{ width: `${percentage}%` }}
         />
         <div
-          className="absolute top-0 right-0 w-6 h-6  border-2 border-primary bg-accent rounded-full -translate-y-1/4 translate-x-1/2"
-          style={{ left: `${percentage}%` }}
+          className="absolute top-0 w-6 h-6  border-2 border-primary bg-accent rounded-full -translate-y-1/4"
+          style={{ left: `calc(${percentage}% - 12px)` }}
         />
       </div>
       <div className="flex justify-between items-center px-2">
