@@ -14,6 +14,12 @@ import { formatNumberWithSuffix } from "@/lib/utils";
 import { farmsData } from "@/lib/constants";
 import { AssetFilter } from "../asset-filter";
 import { FarmModal } from "./farm-modal";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 export const FarmsTable = () => {
   const router = useRouter();
@@ -68,27 +74,63 @@ export const FarmsTable = () => {
               </TableCell>
               <TableCell>{farm.apy}%</TableCell>
               <TableCell>
-                <div className="flex flex-col border border-background rounded-md p-2 gap-2">
-                  <span className="text-primary flex flex-col lg:flex-row items-start lg:items-center justify-between">
-                    <span className="font-semibold">Yield Farming:</span>
-                    <span>{farm.apr.yield_percentage}%</span>
-                  </span>
-                  <span className="text-primary flex flex-col lg:flex-row items-start lg:items-center justify-between">
-                    <span className="font-semibold">
-                      Token Borrowing Interest:
+                <div className="lg:hidden">
+                  <Accordion type="single" collapsible>
+                    <AccordionItem value="apr-details">
+                      <AccordionTrigger>View APR Details</AccordionTrigger>
+                      <AccordionContent>
+                        <div className="flex flex-col gap-2">
+                          <span className="text-primary flex flex-col items-start justify-between">
+                            <span className="font-semibold">
+                              Yield Farming:
+                            </span>
+                            <span>{farm.apr.yield_percentage}%</span>
+                          </span>
+                          <span className="text-primary flex flex-col items-start justify-between">
+                            <span className="font-semibold">
+                              Token Borrowing Interest:
+                            </span>
+                            <span>
+                              {farm.farmName} -
+                              {farm.apr.token_borrowing_interest}%
+                            </span>
+                          </span>
+                          <span className="text-primary flex flex-col items-start justify-between">
+                            <span className="font-semibold">Total APR:</span>
+                            <span>{farm.apr.total_apr}%</span>
+                          </span>
+                          <span className="text-primary flex flex-col items-start justify-between">
+                            <span className="font-semibold">Daily APR:</span>
+                            <span>{farm.apr.daily_apr}%</span>
+                          </span>
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
+                </div>
+                <div className="hidden lg:block">
+                  <div className="flex flex-col border border-background rounded-md p-2 gap-2">
+                    <span className="text-primary flex flex-col lg:flex-row items-start lg:items-center justify-between">
+                      <span className="font-semibold">Yield Farming:</span>
+                      <span>{farm.apr.yield_percentage}%</span>
                     </span>
-                    <span>
-                      {farm.farmName} -{farm.apr.token_borrowing_interest}%
+                    <span className="text-primary flex flex-col lg:flex-row items-start lg:items-center justify-between">
+                      <span className="font-semibold">
+                        Token Borrowing Interest:
+                      </span>
+                      <span>
+                        {farm.farmName} -{farm.apr.token_borrowing_interest}%
+                      </span>
                     </span>
-                  </span>
-                  <span className="text-primary flex flex-col lg:flex-row items-start lg:items-center justify-between">
-                    <span className="font-semibold">Total APR:</span>
-                    <span>{farm.apr.total_apr}%</span>
-                  </span>
-                  <span className="text-primary flex flex-col lg:flex-row items-start lg:items-center justify-between">
-                    <span className="font-semibold">Daily APR:</span>
-                    <span>{farm.apr.daily_apr}%</span>
-                  </span>
+                    <span className="text-primary flex flex-col lg:flex-row items-start lg:items-center justify-between">
+                      <span className="font-semibold">Total APR:</span>
+                      <span>{farm.apr.total_apr}%</span>
+                    </span>
+                    <span className="text-primary flex flex-col lg:flex-row items-start lg:items-center justify-between">
+                      <span className="font-semibold">Daily APR:</span>
+                      <span>{farm.apr.daily_apr}%</span>
+                    </span>
+                  </div>
                 </div>
               </TableCell>
               <TableCell className="flex gap-10 justify-end pt-10">
