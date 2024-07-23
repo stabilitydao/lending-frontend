@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import { Web3Provider } from "@/components/providers/web3-provider";
+import { DisclaimerProvider } from "@/components/providers/disclaimer-provider";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { Toaster } from "@/components/ui/toaster";
@@ -27,11 +28,12 @@ export default function RootLayout({
         className={`${poppins.className} flex flex-col min-h-screen bg-background`}
       >
         <Web3Provider>
-          <Navbar />
-          <main className="flex-grow">{children}</main>
-          <Toaster />
-
-          <Footer />
+          <DisclaimerProvider>
+            <Navbar />
+            <main className="flex-grow">{children}</main>
+            <Toaster />
+            <Footer />
+          </DisclaimerProvider>
         </Web3Provider>
       </body>
     </html>
