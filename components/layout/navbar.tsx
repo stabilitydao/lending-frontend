@@ -4,6 +4,7 @@ import { ConnectWallet } from "./connect-wallet";
 import { SwitchChain } from "@/components/switch-chain";
 import { useAccount } from "wagmi";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   Sheet,
   SheetContent,
@@ -18,20 +19,22 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
 
 export const Navbar = () => {
   const { isConnected } = useAccount();
+  const pathname = usePathname();
 
   const navItems = [
     { name: "Borrow/Lend", href: "/borrow", src: "/icons/borrow.png" },
     { name: "Farms", href: "/farms", src: "/icons/farms.png" },
-    { name: "Vaults", href: "/vaults", src: "/icons/vaults.png" },
+    { name: "Vaults", href: "/vaults", src: "/icons/vault.png" },
     { name: "Portfolio", href: "/portfolio", src: "/icons/portfolio.png" },
     { name: "Governance", href: "/governance", src: "/icons/governance.png" },
   ];
 
   return (
-    <nav className="flex justify-between items-center bg-background py-4 px-8 z-50 shadow-lg absolute w-full">
+    <nav className="flex justify-between items-center bg-background py-3 px-8 z-50 shadow-lg absolute w-full">
       <Link href="/">
         <Image
           src={"/icons/rounded-logo.png"}
@@ -48,15 +51,47 @@ export const Navbar = () => {
           className="hidden lg:block"
         />
       </Link>
-      <div className="hidden lg:flex items-center gap-8">
+      <div className="hidden lg:flex items-center gap-10">
         {navItems.map((item, i) => (
-          <Link href={item.href} key={i}>
-            <Image src={item.src} alt={item.name} width={40} height={40} />
+          <Link
+            href={item.href}
+            key={i}
+            className="flex flex-col items-center gap-2 group"
+          >
+            <Image
+              src={item.src}
+              alt={item.name}
+              className={cn(
+                "transition-transform ease-in-out duration-300",
+                pathname === item.href ? "scale-125" : "group-hover:scale-110"
+              )}
+              width={34}
+              height={34}
+            />
+            <p
+              className={cn(
+                "text-primary text-center font-light transition-all",
+                pathname === item.href
+                  ? "text-[12px] font-semibold"
+                  : "text-[10px] group-hover:text-[12px]"
+              )}
+            >
+              {item.name}
+            </p>
           </Link>
         ))}
         <DropdownMenu>
-          <DropdownMenuTrigger>
-            <Image src="/icons/more.png" alt="more" width={40} height={40} />
+          <DropdownMenuTrigger className="flex flex-col items-center gap-2">
+            <Image
+              src="/icons/more.png"
+              alt="more"
+              width={34}
+              height={34}
+              className="transition-transform group-hover:scale-110 ease-in-out duration-300"
+            />
+            <p className="text-primary text-xs text-center font-light transition-all group-hover:text-[10px]">
+              More
+            </p>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuItem>Docs</DropdownMenuItem>

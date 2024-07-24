@@ -5,32 +5,32 @@ import { BorrowData } from "@/types/borrow";
 export const socialLinks = [
   {
     imageSrc: "/icons/social/twitter.png",
-    url: "https://x.com/llamafinance",
+    url: "https://twitter.com/VicunaFinance",
   },
   {
     imageSrc: "/icons/social/medium.png",
-    url: "https://medium.com/llamafinance",
+    url: "https://medium.com/@vicunafinance",
   },
-  {
-    imageSrc: "/icons/social/github.png",
-    url: "https://github.com/llamafinance",
-  },
-  {
-    imageSrc: "/icons/social/discord.png",
-    url: "https://discord.gg/llamafinance",
-  },
+  // {
+  //   imageSrc: "/icons/social/github.png",
+  //   url: "https://github.com/llamafinance",
+  // },
+  // {
+  //   imageSrc: "/icons/social/discord.png",
+  //   url: "https://discord.gg/llamafinance",
+  // },
   {
     imageSrc: "/icons/social/dune.png",
-    url: "https://dune.com/llamafinance",
+    url: "https://dune.com/vicunafinance",
   },
   {
     imageSrc: "/icons/social/docs.png",
-    url: "https://linkedin.com/company/llamafinance",
+    url: "https://vicuna-finance.gitbook.io/vicuna-finance",
   },
-  {
-    imageSrc: "/icons/social/telegram.png",
-    url: "https://t.me/llamafinance",
-  },
+  // {
+  //   imageSrc: "/icons/social/telegram.png",
+  //   url: "https://t.me/llamafinance",
+  // },
 ];
 
 export const navLinks = [

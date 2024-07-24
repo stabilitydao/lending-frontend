@@ -42,13 +42,29 @@ export const DisclaimerModal = ({
               optimizing platform.
             </p>
             <p>
-              By accessing the Vicuna Finance website, you agree to the terms of
-              service (this will link to gitbook).
+              By accessing the Vicuna Finance website, you agree to the{" "}
+              <a
+                href="https://vicuna-finance.gitbook.io/vicuna-finance/other-info/terms-of-use"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline text-blue-400"
+              >
+                terms of service
+              </a>
+              .
             </p>
             <p>
               We use cookies to provide you with the best experience and to help
-              improve our website and application. Please read our Cookie Policy
-              (will be hyperlink to Gitbook) for more information.
+              improve our website and application. Please read our{" "}
+              <a
+                href="https://vicuna-finance.gitbook.io/vicuna-finance/other-info/cookie-policy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline text-blue-400"
+              >
+                Cookie Policy
+              </a>{" "}
+              for more information.
             </p>
             <div className="flex items-center justify-between w-full">
               <Checkbox

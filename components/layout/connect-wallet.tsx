@@ -20,7 +20,6 @@ import {
 } from "@/components/ui/dialog";
 import { formatAddress } from "@/lib/utils";
 import Image from "next/image";
-import Link from "next/link";
 
 export const ConnectWallet = () => {
   const { isConnected, address } = useAccount();
@@ -54,9 +53,10 @@ export const ConnectWallet = () => {
       <DialogTrigger asChild>
         <Button variant="default" className="bg-primary">
           Connect Wallet
+          <Wallet2Icon className="w-5 h-5 ml-2" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] backdrop-blur-xl">
         <DialogHeader className="flex flex-col items-center">
           <div className="py-4">
             <Image
@@ -67,7 +67,7 @@ export const ConnectWallet = () => {
             />
           </div>
           <DialogTitle className="text-3xl">Connect Wallet</DialogTitle>
-          <p className="text-xs">To start using Vicuna Finances</p>
+          <p className="text-xs">To start using Vicuna Finance</p>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           {connectors.map((connector) => (
@@ -85,9 +85,14 @@ export const ConnectWallet = () => {
         </div>
         <DialogFooter className="text-[10px] text-center">
           By connecting, I accept Vicuna Finances{" "}
-          <Link href="/terms" className=" pl-1 text-accent">
+          <a
+            href="https://vicuna-finance.gitbook.io/vicuna-finance/other-info/terms-of-use"
+            target="_blank"
+            rel="noopener noreferrer"
+            className=" pl-1 text-accent"
+          >
             Terms of Service
-          </Link>
+          </a>
         </DialogFooter>
       </DialogContent>
     </Dialog>

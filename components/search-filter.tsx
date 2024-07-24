@@ -58,7 +58,7 @@ export const SearchFilter = ({ route }: { route: string }) => {
       <div className="relative w-full max-w-sm">
         <Input
           type="text"
-          placeholder="Search vaults (e.g., ARB-ETH)"
+          placeholder="Search"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="pr-10 text-primary"
@@ -78,8 +78,8 @@ export const SearchFilter = ({ route }: { route: string }) => {
               key={index}
               src={icon}
               alt={`Chain ${index + 1}`}
-              width={24}
-              height={24}
+              width={34}
+              height={34}
               className={`cursor-pointer w-6 h-6 object-contain object-center ${
                 isSelected ? "rounded-full opacity-100" : "opacity-50"
               }`}
