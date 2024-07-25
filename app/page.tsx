@@ -6,7 +6,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
- 
+
 export default function Home() {
   return (
     <main className="flex flex-col items-center">
@@ -36,8 +36,8 @@ export default function Home() {
                   <Image
                     src="/icons/llama.svg"
                     alt="Llama icon"
-                    width={24}
-                    height={24}
+                    width={20}
+                    height={20}
                   />
                   Yield farm while you sleep with Vicuna Finance's
                   high-performance, set-and-forget auto compounders
@@ -46,8 +46,8 @@ export default function Home() {
                   <Image
                     src="/icons/llama.svg"
                     alt="Llama icon"
-                    width={24}
-                    height={24}
+                    width={20}
+                    height={20}
                   />
                   Amplify your rewards with leveraged yield farms and accelerate
                   asset growth-Stake $VIFI to earn fees + protocol revenue and
@@ -57,8 +57,8 @@ export default function Home() {
                   <Image
                     src="/icons/llama.svg"
                     alt="Llama icon"
-                    width={24}
-                    height={24}
+                    width={20}
+                    height={20}
                   />
                   Borrowing and lending off crypto assets at high APR
                 </li>

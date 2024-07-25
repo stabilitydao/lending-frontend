@@ -33,7 +33,7 @@ export const ConnectWallet = () => {
         <DropdownMenuTrigger asChild>
           <Button variant="default" className="bg-primary">
             <span className="hidden sm:inline">{formatAddress(address)}</span>
-            <Wallet2Icon className="w-4 h-4 sm:hidden" />
+            <Wallet2Icon className="w-5 h-5 ml-0 sm:ml-2" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className=" w-40">

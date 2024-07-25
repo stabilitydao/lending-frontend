@@ -11,17 +11,38 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { formatNumberWithSuffix } from "@/lib/utils";
 import { borrowData } from "@/lib/constants";
 import { BorrowModal } from "./borrow-modal";
+import { ChevronsUpDown } from "lucide-react";
 
 export const BorrowTable = () => {
   return (
     <div className="p-4">
       <Table>
         <TableHeader className="h-8 border-b border-background">
-          <TableHead>Asset</TableHead>
-          <TableHead>Total Supplied</TableHead>
-          <TableHead>Supply APY</TableHead>
-          <TableHead>Total Borrowed</TableHead>
-          <TableHead>Borrow APY, Variable</TableHead>
+          <TableHead className="text-muted">
+            <div className="flex items-center gap-2">
+              Asset <ChevronsUpDown className="w-4 h-4" />
+            </div>
+          </TableHead>
+          <TableHead className="text-muted">
+            <div className="flex items-center gap-2">
+              Total Supplied <ChevronsUpDown className="w-4 h-4" />
+            </div>
+          </TableHead>
+          <TableHead className="text-muted">
+            <div className="flex items-center gap-2">
+              Supply APY <ChevronsUpDown className="w-4 h-4" />
+            </div>
+          </TableHead>
+          <TableHead className="text-muted">
+            <div className="flex items-center gap-2">
+              Total Borrowed <ChevronsUpDown className="w-4 h-4" />
+            </div>
+          </TableHead>
+          <TableHead className="text-muted">
+            <div className="flex items-center gap-2">
+              Borrow APY, Variable <ChevronsUpDown className="w-4 h-4" />
+            </div>
+          </TableHead>
         </TableHeader>
         <TableBody>
           {borrowData.map((asset, index) => (

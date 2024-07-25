@@ -11,14 +11,14 @@ export const socialLinks = [
     imageSrc: "/icons/social/medium.png",
     url: "https://medium.com/@vicunafinance",
   },
-  // {
-  //   imageSrc: "/icons/social/github.png",
-  //   url: "https://github.com/llamafinance",
-  // },
-  // {
-  //   imageSrc: "/icons/social/discord.png",
-  //   url: "https://discord.gg/llamafinance",
-  // },
+  {
+    imageSrc: "/icons/social/github.png",
+    url: "",
+  },
+  {
+    imageSrc: "/icons/social/discord.png",
+    url: "",
+  },
   {
     imageSrc: "/icons/social/dune.png",
     url: "https://dune.com/vicunafinance",
@@ -29,7 +29,7 @@ export const socialLinks = [
   },
   // {
   //   imageSrc: "/icons/social/telegram.png",
-  //   url: "https://t.me/llamafinance",
+  //   url: "",
   // },
 ];
 
@@ -218,8 +218,7 @@ export const farmsData: FarmData[] = [
   },
   {
     farmName: "wBTC-USDT",
-    tokenSymbol1: "wBTC",
-    tokenSymbol2: "USDT",
+
     farmTVL: 287530000,
     farmDexTVL: 2170000000,
     apy: { from: 10.1, to: 12.5 },
