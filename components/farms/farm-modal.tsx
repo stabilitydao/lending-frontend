@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import Image from "next/image";
 import { useAccount } from "wagmi";
 import {
   Dialog,
@@ -160,7 +161,7 @@ export const FarmModal = ({ farm }: { farm: FarmData }) => {
                     <span>Long 1.2 ETH</span>
                   </div>
                 </div>
-                <Tabs>
+                <Tabs defaultValue="eth">
                   <TabsList>
                     <TabsTrigger value="eth">ETH</TabsTrigger>
                     <TabsTrigger value="usdc">USDC</TabsTrigger>
@@ -173,11 +174,15 @@ export const FarmModal = ({ farm }: { farm: FarmData }) => {
               <>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    <span>Deposit</span>
+                    <span className="font-semibold text-lg">Deposit</span>
                     <Tabs defaultValue="assets">
                       <TabsList>
-                        <TabsTrigger value="assets">Assets</TabsTrigger>
-                        <TabsTrigger value="lp">LP</TabsTrigger>
+                        <TabsTrigger value="assets" className="h-6">
+                          Assets
+                        </TabsTrigger>
+                        <TabsTrigger value="lp" className="h-6">
+                          LP
+                        </TabsTrigger>
                       </TabsList>
                     </Tabs>
                   </div>
@@ -186,7 +191,7 @@ export const FarmModal = ({ farm }: { farm: FarmData }) => {
                   </span>
                 </div>
                 <div className="flex flex-col gap-2 pt-8">
-                  <span>Available: 0</span>
+                  <span className="font-semibold">Available: 0</span>
                   <div className="relative flex items-center">
                     <Button
                       size={"sm"}
@@ -195,9 +200,21 @@ export const FarmModal = ({ farm }: { farm: FarmData }) => {
                       MAX
                     </Button>
                     <Input
-                      className="bg-primary text-right text-accent rounded-2xl pl-16 pr-6"
+                      className="bg-primary placeholder:text-accent text-right text-accent rounded-2xl pl-16 pr-[5.2rem]"
                       placeholder="$0.00"
                     />
+                    <Badge
+                      variant="accent"
+                      className="absolute rounded-full right-2 px-1 flex items-center gap-2"
+                    >
+                      <Image
+                        src={farm.imageSrc1!}
+                        alt={farm.tokenSymbol1!}
+                        width={10}
+                        height={10}
+                      />
+                      {farm.tokenSymbol1}
+                    </Badge>
                   </div>
                   <PercentageBar
                     onChange={(percentage) => console.log(percentage)}
@@ -211,7 +228,7 @@ export const FarmModal = ({ farm }: { farm: FarmData }) => {
                   </div>
                 </div>
                 <div className="flex flex-col gap-2 pt-2">
-                  <span>Available: 0</span>
+                  <span className="font-semibold">Available: 0</span>
                   <div className="relative flex items-center">
                     <Button
                       size={"sm"}
@@ -220,9 +237,21 @@ export const FarmModal = ({ farm }: { farm: FarmData }) => {
                       MAX
                     </Button>
                     <Input
-                      className="bg-primary text-right text-accent rounded-2xl pl-16 pr-6"
+                      className="bg-primary placeholder:text-accent text-right text-accent rounded-2xl pl-16 pr-[5.2rem]"
                       placeholder="$0.00"
                     />
+                    <Badge
+                      variant="accent"
+                      className="absolute rounded-full right-2 px-1 flex items-center gap-2"
+                    >
+                      <Image
+                        src={farm.imageSrc2!}
+                        alt={farm.tokenSymbol2!}
+                        width={10}
+                        height={10}
+                      />
+                      {farm.tokenSymbol2}
+                    </Badge>
                   </div>
                   <PercentageBar
                     onChange={(percentage) => console.log(percentage)}
@@ -233,7 +262,7 @@ export const FarmModal = ({ farm }: { farm: FarmData }) => {
                   <MultiplierBar />
                 </div>
                 <div className="flex items-center justify-between">
-                  <span>Asset to Borrow</span>
+                  <span className="font-semibold">Asset to Borrow</span>
                   <div className="flex items-center gap-2">
                     <span>Dual Borrow</span>
                     <Switch />

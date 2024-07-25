@@ -150,6 +150,8 @@ export const vaultData: VaultData[] = [
 export const farmsData: FarmData[] = [
   {
     farmName: "ETH-USDC",
+    tokenSymbol1: "ETH",
+    tokenSymbol2: "USDC",
     farmTVL: 318000000,
     farmDexTVL: 1103000000,
     apy: { from: 15.2, to: 19.6 },
@@ -165,6 +167,8 @@ export const farmsData: FarmData[] = [
   },
   {
     farmName: "wstETH-ETH",
+    tokenSymbol1: "wstETH",
+    tokenSymbol2: "ETH",
     farmTVL: 345140000,
     farmDexTVL: 1090000000,
     apy: { from: 8.7, to: 11.0 },
@@ -180,6 +184,8 @@ export const farmsData: FarmData[] = [
   },
   {
     farmName: "ARB-ETH",
+    tokenSymbol1: "ARB",
+    tokenSymbol2: "ETH",
     farmTVL: 521180000,
     farmDexTVL: 840000000,
     apy: { from: 11.8, to: 14.5 },
@@ -195,6 +201,8 @@ export const farmsData: FarmData[] = [
   },
   {
     farmName: "GMX-ETH",
+    tokenSymbol1: "GMX",
+    tokenSymbol2: "ETH",
     farmTVL: 636210000,
     farmDexTVL: 916530000,
     apy: { from: 95.3, to: 117.0 },
@@ -210,6 +218,8 @@ export const farmsData: FarmData[] = [
   },
   {
     farmName: "wBTC-USDT",
+    tokenSymbol1: "wBTC",
+    tokenSymbol2: "USDT",
     farmTVL: 287530000,
     farmDexTVL: 2170000000,
     apy: { from: 10.1, to: 12.5 },

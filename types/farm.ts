@@ -1,5 +1,7 @@
 export type FarmData = {
   farmName: string;
+  tokenSymbol1?: string;
+  tokenSymbol2?: string;
   farmTVL: number;
   farmDexTVL: number;
   apy: {

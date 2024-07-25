@@ -54,7 +54,7 @@ export const WithdrawVaultModal = ({ vault }: { vault: VaultData }) => {
                   MAX
                 </Button>
                 <Input
-                  className="bg-primary text-right text-accent rounded-2xl pl-16 pr-32"
+                  className="bg-primary text-right placeholder:text-accent text-accent rounded-2xl pl-16 pr-32"
                   placeholder="$0.00"
                 />
                 <div className="absolute right-2 flex items-center">

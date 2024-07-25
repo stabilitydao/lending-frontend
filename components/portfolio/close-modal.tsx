@@ -45,7 +45,7 @@ export const CloseModal = () => {
             <div className="relative flex items-center">
               <Button
                 size={"sm"}
-                className="absolute left-2 h-6 z-10 bg-purple-300 text-primary"
+                className="absolute left-2 h-6 z-10 bg-purple-200 text-primary"
               >
                 MAX
               </Button>

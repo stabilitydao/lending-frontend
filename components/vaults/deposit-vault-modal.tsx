@@ -49,12 +49,12 @@ export const DepositVaultModal = ({ vault }: { vault: VaultData }) => {
               <div className="relative flex items-center">
                 <Button
                   size={"sm"}
-                  className="absolute left-2 h-6 z-10 bg-purple-300 text-primary"
+                  className="absolute left-2 h-6 z-10 bg-purple-200  text-primary"
                 >
                   MAX
                 </Button>
                 <Input
-                  className="bg-primary text-right text-accent rounded-2xl pl-16 pr-32"
+                  className="bg-primary placeholder:text-accent text-right text-accent rounded-2xl pl-16 pr-32"
                   placeholder="$0.00"
                 />
                 <div className="absolute right-2 flex items-center">
