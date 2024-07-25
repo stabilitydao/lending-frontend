@@ -94,6 +94,8 @@ export const vaultData: VaultData[] = [
     deposited: 0,
     apy: 19.6,
     daily: 0.05,
+    imageSrc2: "/icons/coins/ethereum.png",
+    imageSrc1: "/icons/coins/usdc.png",
   },
   {
     vaultName: "wstETH-ETH",
@@ -104,6 +106,8 @@ export const vaultData: VaultData[] = [
     deposited: 0,
     apy: 11.0,
     daily: 0.03,
+    imageSrc1: "/icons/coins/ethereum.png",
+    imageSrc2: "/icons/coins/wsteth.png",
   },
   {
     vaultName: "ARB-ETH",
@@ -114,6 +118,8 @@ export const vaultData: VaultData[] = [
     deposited: 0,
     apy: 14.5,
     daily: 0.04,
+    imageSrc1: "/icons/coins/ethereum.png",
+    imageSrc2: "/icons/coins/arbitrum one.png",
   },
   {
     vaultName: "GMX-ETH",
@@ -124,6 +130,8 @@ export const vaultData: VaultData[] = [
     deposited: 0,
     apy: 117.0,
     daily: 0.32,
+    imageSrc1: "/icons/coins/ethereum.png",
+    imageSrc2: "/icons/coins/gmx.png",
   },
   {
     vaultName: "wBTC-USDT",
@@ -134,6 +142,8 @@ export const vaultData: VaultData[] = [
     deposited: 0,
     apy: 12.5,
     daily: 0.03,
+    imageSrc2: "/icons/coins/wbtc.png",
+    imageSrc1: "/icons/coins/usdt.png",
   },
 ];
 
@@ -150,6 +160,8 @@ export const farmsData: FarmData[] = [
       total_apr: 17.8,
       daily_apr: 0.0487,
     },
+    imageSrc1: "/icons/coins/ethereum.png",
+    imageSrc2: "/icons/coins/usdc.png",
   },
   {
     farmName: "wstETH-ETH",
@@ -163,6 +175,8 @@ export const farmsData: FarmData[] = [
       total_apr: 10.3,
       daily_apr: 0.0282,
     },
+    imageSrc1: "/icons/coins/ethereum.png",
+    imageSrc2: "/icons/coins/wsteth.png",
   },
   {
     farmName: "ARB-ETH",
@@ -176,6 +190,8 @@ export const farmsData: FarmData[] = [
       total_apr: 13.3,
       daily_apr: 0.0364,
     },
+    imageSrc1: "/icons/coins/ethereum.png",
+    imageSrc2: "/icons/coins/arbitrum one.png",
   },
   {
     farmName: "GMX-ETH",
@@ -189,6 +205,8 @@ export const farmsData: FarmData[] = [
       total_apr: 90.7,
       daily_apr: 0.2485,
     },
+    imageSrc1: "/icons/coins/ethereum.png",
+    imageSrc2: "/icons/coins/gmx.png",
   },
   {
     farmName: "wBTC-USDT",
@@ -202,6 +220,8 @@ export const farmsData: FarmData[] = [
       total_apr: 11.7,
       daily_apr: 0.0321,
     },
+    imageSrc2: "/icons/coins/wbtc.png",
+    imageSrc1: "/icons/coins/usdt.png",
   },
 ];
 

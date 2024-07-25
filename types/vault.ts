@@ -7,4 +7,6 @@ export type VaultData = {
   deposited: number;
   apy: number;
   daily: number;
+  imageSrc1?: string;
+  imageSrc2?: string;
 };

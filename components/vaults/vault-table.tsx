@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { DoubleAvatar } from "@/components/ui/double-avatar";
 import { formatNumberWithSuffix } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
@@ -72,12 +72,12 @@ export const VaultTable = () => {
             <TableRow key={index} className="text-primary border-t-background">
               <TableCell>
                 <div className="flex items-center  gap-10">
-                  <Avatar className="bg-background hidden lg:block">
-                    <AvatarImage
-                      src={`/images/vaults/vault-${index + 1}.png`}
-                    />
-                    <AvatarFallback>Vault</AvatarFallback>
-                  </Avatar>
+                  <DoubleAvatar
+                    firstSrc={vault.imageSrc1!}
+                    secondSrc={vault.imageSrc2!}
+                    firstAlt={vault.vaultName}
+                    secondAlt={vault.vaultName}
+                  />
                   <div className="flex flex-col gap-2">
                     <p className="text-lg ">{vault.vaultName}</p>
                     <p className="text-sm font-light">
