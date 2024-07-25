@@ -84,7 +84,7 @@ export const ConnectWallet = () => {
           ))}
         </div>
         <DialogFooter className="text-[10px] text-center">
-          By connecting, I accept Vicuna Finances{" "}
+          By connecting, I accept the Vicuna Finance{" "}
           <a
             href="https://vicuna-finance.gitbook.io/vicuna-finance/other-info/terms-of-use"
             target="_blank"
