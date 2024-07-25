@@ -2,7 +2,10 @@ export type FarmData = {
   farmName: string;
   farmTVL: number;
   farmDexTVL: number;
-  apy: number;
+  apy: {
+    from: number;
+    to: number;
+  };
   apr: {
     yield_percentage: number;
     token_borrowing_interest: number;

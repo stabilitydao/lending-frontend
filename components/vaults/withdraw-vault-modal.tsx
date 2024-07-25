@@ -27,7 +27,7 @@ export const WithdrawVaultModal = ({ vault }: { vault: VaultData }) => {
       </DialogTrigger>
       <DialogContent className="bg-card text-primary">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-8 pb-10">
+          <DialogTitle className="flex items-center gap-6 pb-10">
             <DoubleAvatar
               firstSrc={vault?.imageSrc1!}
               secondSrc={vault?.imageSrc2!}

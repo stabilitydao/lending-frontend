@@ -75,7 +75,10 @@ export const FarmsTable = () => {
                   </div>
                 </div>
               </TableCell>
-              <TableCell>{farm.apy}%</TableCell>
+              <TableCell className="flex flex-col">
+                From {farm.apy.from}% to{" "}
+                <span className="text-green-500 text-base">{farm.apy.to}%</span>
+              </TableCell>
               <TableCell>
                 <div className="lg:hidden">
                   <Accordion type="single" collapsible>
