@@ -2,6 +2,7 @@ export type BorrowData = {
   asset: {
     name: string;
     symbol: string;
+    imageSrc: string;
   };
   totalSupplied: {
     amount: number;

@@ -230,6 +230,7 @@ export const borrowData: BorrowData[] = [
     asset: {
       name: "Ethereum",
       symbol: "ETH",
+      imageSrc: "/icons/coins/ethereum.png",
     },
     totalSupplied: {
       amount: 1000000,
@@ -247,6 +248,7 @@ export const borrowData: BorrowData[] = [
     asset: {
       name: "Wrapped Liquid Staked Ethereum",
       symbol: "wstETH",
+      imageSrc: "/icons/coins/wsteth.png",
     },
     totalSupplied: {
       amount: 1200000,
@@ -264,6 +266,7 @@ export const borrowData: BorrowData[] = [
     asset: {
       name: "USD Coin",
       symbol: "USDC",
+      imageSrc: "/icons/coins/usdc.png",
     },
     totalSupplied: {
       amount: 1500000,
@@ -281,6 +284,7 @@ export const borrowData: BorrowData[] = [
     asset: {
       name: "Tether",
       symbol: "USDT",
+      imageSrc: "/icons/coins/usdt.png",
     },
     totalSupplied: {
       amount: 900000,
@@ -296,8 +300,9 @@ export const borrowData: BorrowData[] = [
   },
   {
     asset: {
-      name: "Dai Stablecoin",
+      name: "Dai",
       symbol: "DAI",
+      imageSrc: "/icons/coins/dai.png",
     },
     totalSupplied: {
       amount: 800000,
@@ -315,6 +320,7 @@ export const borrowData: BorrowData[] = [
     asset: {
       name: "Wrapped Bitcoin",
       symbol: "WBTC",
+      imageSrc: "/icons/coins/wbtc.png",
     },
     totalSupplied: {
       amount: 750000,
@@ -332,6 +338,7 @@ export const borrowData: BorrowData[] = [
     asset: {
       name: "Chainlink",
       symbol: "LINK",
+      imageSrc: "/icons/coins/chainlink.png",
     },
     totalSupplied: {
       amount: 350000,
@@ -347,121 +354,74 @@ export const borrowData: BorrowData[] = [
   },
   {
     asset: {
-      name: "Uniswap",
-      symbol: "UNI",
+      name: "Radiant Capital",
+      symbol: "RADIANT",
+      imageSrc: "/icons/coins/radiant.png",
     },
     totalSupplied: {
-      amount: 250000,
-      value: 250000,
+      amount: 350000,
+      value: 350000,
     },
-    supplyAPY: 5.8,
+    supplyAPY: 6.2,
     totalBorrowed: {
-      amount: 125000,
-      value: 125000,
+      amount: 175000,
+      value: 175000,
     },
-    borrowAPY: 8.7,
-    collateralFactor: 0.5,
-  },
-  {
-    asset: {
-      name: "Aave",
-      symbol: "AAVE",
-    },
-    totalSupplied: {
-      amount: 200000,
-      value: 200000,
-    },
-    supplyAPY: 7.1,
-    totalBorrowed: {
-      amount: 100000,
-      value: 100000,
-    },
-    borrowAPY: 11.2,
-    collateralFactor: 0.65,
-  },
-  {
-    asset: {
-      name: "Synthetix Network Token",
-      symbol: "SNX",
-    },
-    totalSupplied: {
-      amount: 150000,
-      value: 150000,
-    },
-    supplyAPY: 9.5,
-    totalBorrowed: {
-      amount: 75000,
-      value: 75000,
-    },
-    borrowAPY: 14.3,
-    collateralFactor: 0.4,
-  },
-  {
-    asset: {
-      name: "Maker",
-      symbol: "MKR",
-    },
-    totalSupplied: {
-      amount: 280000,
-      value: 280000,
-    },
-    supplyAPY: 6.8,
-    totalBorrowed: {
-      amount: 140000,
-      value: 140000,
-    },
-    borrowAPY: 10.5,
-    collateralFactor: 0.55,
-  },
-  {
-    asset: {
-      name: "Compound",
-      symbol: "COMP",
-    },
-    totalSupplied: {
-      amount: 180000,
-      value: 180000,
-    },
-    supplyAPY: 7.5,
-    totalBorrowed: {
-      amount: 90000,
-      value: 90000,
-    },
-    borrowAPY: 11.8,
+    borrowAPY: 9.8,
     collateralFactor: 0.6,
   },
   {
     asset: {
-      name: "yearn.finance",
-      symbol: "YFI",
+      name: "Arbitrum",
+      symbol: "ARB",
+      imageSrc: "/icons/coins/arbitrum one.png",
     },
     totalSupplied: {
-      amount: 120000,
-      value: 120000,
+      amount: 350000,
+      value: 350000,
     },
-    supplyAPY: 8.2,
+    supplyAPY: 6.2,
     totalBorrowed: {
-      amount: 60000,
-      value: 60000,
+      amount: 175000,
+      value: 175000,
     },
-    borrowAPY: 13.1,
-    collateralFactor: 0.5,
+    borrowAPY: 9.8,
+    collateralFactor: 0.6,
   },
   {
     asset: {
-      name: "SushiSwap",
-      symbol: "SUSHI",
+      name: "Camelot Token ",
+      symbol: "GRAIL",
+      imageSrc: "/icons/coins/grail.png",
     },
     totalSupplied: {
-      amount: 100000,
-      value: 100000,
+      amount: 350000,
+      value: 350000,
     },
-    supplyAPY: 6.5,
+    supplyAPY: 6.2,
     totalBorrowed: {
-      amount: 50000,
-      value: 50000,
+      amount: 175000,
+      value: 175000,
     },
-    borrowAPY: 9.9,
-    collateralFactor: 0.45,
+    borrowAPY: 9.8,
+    collateralFactor: 0.6,
+  },
+  {
+    asset: {
+      name: "GMX",
+      symbol: "GMX",
+      imageSrc: "/icons/coins/gmx.png",
+    },
+    totalSupplied: {
+      amount: 350000,
+      value: 350000,
+    },
+    supplyAPY: 6.2,
+    totalBorrowed: {
+      amount: 175000,
+      value: 175000,
+    },
+    borrowAPY: 9.8,
+    collateralFactor: 0.6,
   },
 ];

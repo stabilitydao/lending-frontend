@@ -31,11 +31,12 @@ export const BorrowTable = () => {
               <TableRow className="text-primary border-t-background cursor-pointer hover:bg-background/50">
                 <TableCell>
                   <div className="flex items-center gap-10">
-                    <Avatar className="bg-background hidden lg:block">
+                    <Avatar className="bg-transparent hidden lg:block p-1.5">
                       <AvatarImage
-                        src={`/images/farms/farm-${index + 1}.png`}
+                        src={asset.asset.imageSrc!}
+                        className="object-contain"
                       />
-                      <AvatarFallback>Farm</AvatarFallback>
+                      <AvatarFallback>{asset.asset.symbol}</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">
                       <p className="text-md font-semibold">
