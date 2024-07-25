@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, ReactNode } from "react";
 import Image from "next/image";
 import { useAccount } from "wagmi";
 import {
@@ -24,7 +24,13 @@ import { DoubleAvatar } from "../ui/double-avatar";
 import { cn } from "@/lib/utils";
 import { MultiplierBar } from "../ui/multiplier-bar";
 
-export const FarmModal = ({ farm }: { farm: FarmData }) => {
+export const FarmModal = ({
+  farm,
+  children,
+}: {
+  farm: FarmData;
+  children: ReactNode;
+}) => {
   const { isDisconnected } = useAccount();
   const [summary, setSummary] = useState(false);
   const [leverage, setLeverage] = useState(farm.leverage);
@@ -39,21 +45,7 @@ export const FarmModal = ({ farm }: { farm: FarmData }) => {
 
   return (
     <Dialog>
-      <DialogTrigger className="flex items-center gap-2 bg-primary rounded-full px-4">
-        <Button disabled={isDisconnected} className="w-fit justify-between">
-          {leverage}x
-        </Button>
-      </DialogTrigger>
-      <div className="flex flex-col text-primary">
-        <ChevronUp
-          className="w-4 h-4 cursor-pointer"
-          onClick={increaseLeverage}
-        />
-        <ChevronDown
-          className="w-4 h-4 cursor-pointer"
-          onClick={decreaseLeverage}
-        />
-      </div>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="bg-card text-primary overflow-y-auto">
         <DialogHeader>
           <div className="grid place-items-center">

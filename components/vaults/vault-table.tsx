@@ -19,6 +19,7 @@ import { useAccount } from "wagmi";
 import { AssetFilter } from "../asset-filter";
 import { DepositVaultModal } from "./deposit-vault-modal";
 import { WithdrawVaultModal } from "./withdraw-vault-modal";
+import { ChevronsUpDown } from "lucide-react";
 
 export const VaultTable = () => {
   const { address } = useAccount();
@@ -48,23 +49,39 @@ export const VaultTable = () => {
   return (
     <div className="p-4">
       <AssetFilter />
-      <div className="flex items-center gap-4 pt-8 justify-end">
-        <Tabs value={vault} onValueChange={handleVaultChange}>
-          <TabsList>
-            <TabsTrigger value="all">All Vaults</TabsTrigger>
-            <TabsTrigger value="personal">My Vaults</TabsTrigger>
-          </TabsList>
-        </Tabs>
-      </div>
       <Table>
         <TableHeader className="border-b border-background">
           <TableHead className="flex items-center gap-4 h-24 ">
             Vaults
+            <div className="flex items-center gap-4 justify-center">
+              <Tabs value={vault} onValueChange={handleVaultChange}>
+                <TabsList>
+                  <TabsTrigger value="all">All Vaults</TabsTrigger>
+                  <TabsTrigger value="personal">My Vaults</TabsTrigger>
+                </TabsList>
+              </Tabs>
+            </div>
           </TableHead>
-          <TableHead>Wallet</TableHead>
-          <TableHead>Deposited</TableHead>
-          <TableHead>APY</TableHead>
-          <TableHead>Daily</TableHead>
+          <TableHead className="text-muted uppercase">
+            <div className="flex items-center gap-2">
+              Wallet <ChevronsUpDown className="w-4 h-4" />
+            </div>
+          </TableHead>
+          <TableHead className="text-muted uppercase">
+            <div className="flex items-center gap-2">
+              Deposited <ChevronsUpDown className="w-4 h-4" />
+            </div>
+          </TableHead>
+          <TableHead className="text-muted uppercase">
+            <div className="flex items-center gap-2">
+              APY <ChevronsUpDown className="w-4 h-4" />
+            </div>
+          </TableHead>
+          <TableHead className="text-muted uppercase">
+            <div className="flex items-center gap-2">
+              Daily <ChevronsUpDown className="w-4 h-4" />
+            </div>
+          </TableHead>
           <TableHead></TableHead>
         </TableHeader>
         <TableBody>
