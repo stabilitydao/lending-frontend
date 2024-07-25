@@ -7,7 +7,10 @@ export default function Page() {
       <div className="flex items-center justify-between">
         <SearchFilter route="farms" />
         <div className="flex items-center space-x-4">
-          <p className="text-primary">Network TVL: $100,000,000</p>
+          <p className="text-primary">
+            Network TVL:
+            <span className="font-semibold"> $100,000,000</span>
+          </p>
         </div>
       </div>
       <div className="flex flex-col gap-4 bg-card p-4 rounded-lg shadow-xl">

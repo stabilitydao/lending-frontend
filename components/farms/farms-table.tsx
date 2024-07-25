@@ -9,7 +9,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { formatNumberWithSuffix } from "@/lib/utils";
 import { farmsData } from "@/lib/constants";
 import { AssetFilter } from "../asset-filter";
@@ -48,10 +47,10 @@ export const FarmsTable = () => {
       <AssetFilter />
       <Table>
         <TableHeader className="h-24 border-b border-background">
-          <TableHead>Leveraged Farming</TableHead>
+          <TableHead className="font-bold">Leveraged Farming</TableHead>
           <TableHead>APY</TableHead>
           <TableHead>APR</TableHead>
-          <TableHead>Leverage</TableHead>
+          <TableHead className="text-center">Leverage</TableHead>
         </TableHeader>
         <TableBody>
           {farmsData.map((farm, index) => (
@@ -87,26 +86,33 @@ export const FarmsTable = () => {
                       <AccordionContent>
                         <div className="flex flex-col gap-2">
                           <span className="text-primary flex flex-col items-start justify-between">
-                            <span className="font-semibold">
-                              Yield Farming:
-                            </span>
+                            <span>Yield Farming:</span>
                             <span>{farm.apr.yield_percentage}%</span>
                           </span>
                           <span className="text-primary flex flex-col items-start justify-between">
+                            <span>Token Borrowing Interest:</span>
+                            <div className="flex flex-row items-center gap-2">
+                              <DoubleAvatar
+                                firstSrc={farm.imageSrc1!}
+                                secondSrc={farm.imageSrc2!}
+                                firstAlt={farm.farmName!}
+                                secondAlt={farm.farmName!}
+                                size="small"
+                              />
+                              <span className="font-semibold">
+                                {farm.farmName} -
+                                {farm.apr.token_borrowing_interest}%
+                              </span>
+                            </div>
+                          </span>
+                          <span className="text-primary flex flex-col items-start justify-between">
+                            <span>Total APR:</span>
                             <span className="font-semibold">
-                              Token Borrowing Interest:
-                            </span>
-                            <span>
-                              {farm.farmName} -
-                              {farm.apr.token_borrowing_interest}%
+                              {farm.apr.total_apr}%
                             </span>
                           </span>
                           <span className="text-primary flex flex-col items-start justify-between">
-                            <span className="font-semibold">Total APR:</span>
-                            <span>{farm.apr.total_apr}%</span>
-                          </span>
-                          <span className="text-primary flex flex-col items-start justify-between">
-                            <span className="font-semibold">Daily APR:</span>
+                            <span>Daily APR:</span>
                             <span>{farm.apr.daily_apr}%</span>
                           </span>
                         </div>
@@ -117,23 +123,32 @@ export const FarmsTable = () => {
                 <div className="hidden lg:block">
                   <div className="flex flex-col border border-background rounded-md p-2 gap-2">
                     <span className="text-primary flex flex-col lg:flex-row items-start lg:items-center justify-between">
-                      <span className="font-semibold">Yield Farming:</span>
+                      <span>Yield Farming:</span>
                       <span>{farm.apr.yield_percentage}%</span>
                     </span>
                     <span className="text-primary flex flex-col lg:flex-row items-start lg:items-center justify-between">
+                      <span>Token Borrowing Interest:</span>
+                      <div className="flex flex-row items-center gap-2">
+                        <DoubleAvatar
+                          firstSrc={farm.imageSrc1!}
+                          secondSrc={farm.imageSrc2!}
+                          firstAlt={farm.farmName!}
+                          secondAlt={farm.farmName!}
+                          size="small"
+                        />
+                        <span className="font-semibold">
+                          {farm.farmName} -{farm.apr.token_borrowing_interest}%
+                        </span>
+                      </div>
+                    </span>
+                    <span className="text-primary flex flex-col lg:flex-row items-start lg:items-center justify-between">
+                      <span>Total APR:</span>
                       <span className="font-semibold">
-                        Token Borrowing Interest:
-                      </span>
-                      <span>
-                        {farm.farmName} -{farm.apr.token_borrowing_interest}%
+                        {farm.apr.total_apr}%
                       </span>
                     </span>
                     <span className="text-primary flex flex-col lg:flex-row items-start lg:items-center justify-between">
-                      <span className="font-semibold">Total APR:</span>
-                      <span>{farm.apr.total_apr}%</span>
-                    </span>
-                    <span className="text-primary flex flex-col lg:flex-row items-start lg:items-center justify-between">
-                      <span className="font-semibold">Daily APR:</span>
+                      <span>Daily APR:</span>
                       <span>{farm.apr.daily_apr}%</span>
                     </span>
                   </div>

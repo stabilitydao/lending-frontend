@@ -15,24 +15,44 @@ import { ExternalLinkIcon, ArrowRightIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "../ui/badge";
 import { PercentageBar } from "@/components/ui/percentage-bar";
-import { ChevronsUpDown } from "lucide-react";
+import { ChevronUp, ChevronDown } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 import { Separator } from "../ui/separator";
 import { Switch } from "../ui/switch";
 import { DoubleAvatar } from "../ui/double-avatar";
 import { cn } from "@/lib/utils";
+import { MultiplierBar } from "../ui/multiplier-bar";
 
 export const FarmModal = ({ farm }: { farm: FarmData }) => {
   const { isDisconnected } = useAccount();
   const [summary, setSummary] = useState(false);
+  const [leverage, setLeverage] = useState(farm.leverage);
+
+  const increaseLeverage = () => {
+    setLeverage((prev) => Math.min(prev + 1, 10));
+  };
+
+  const decreaseLeverage = () => {
+    setLeverage((prev) => Math.max(prev - 1, 1));
+  };
+
   return (
     <Dialog>
-      <DialogTrigger>
-        <Button disabled={isDisconnected} className="w-24 justify-between">
-          {farm.leverage}x
-          <ChevronsUpDown className="w-4 h-4" />
+      <DialogTrigger className="flex items-center gap-2 bg-primary rounded-full px-4">
+        <Button disabled={isDisconnected} className="w-fit justify-between">
+          {leverage}x
         </Button>
       </DialogTrigger>
+      <div className="flex flex-col text-primary">
+        <ChevronUp
+          className="w-4 h-4 cursor-pointer"
+          onClick={increaseLeverage}
+        />
+        <ChevronDown
+          className="w-4 h-4 cursor-pointer"
+          onClick={decreaseLeverage}
+        />
+      </div>
       <DialogContent className="bg-card text-primary overflow-y-auto">
         <DialogHeader>
           <div className="grid place-items-center">
@@ -47,7 +67,7 @@ export const FarmModal = ({ farm }: { farm: FarmData }) => {
                   "text-sm text-muted-foreground rounded-full px-2.5 py-1",
                   summary
                     ? "bg-purple-500/30 border-none"
-                    : "bg-card border border-primary"
+                    : "bg-white border border-primary"
                 )}
               >
                 2
@@ -62,7 +82,7 @@ export const FarmModal = ({ farm }: { farm: FarmData }) => {
                 firstAlt={farm.farmName!}
                 secondAlt={farm.farmName!}
               />
-              <span>Farm {farm.farmName} Pool</span>
+              <span className="text-md">Farm {farm.farmName} Pool</span>
             </div>
             {!summary && (
               <Tabs>
@@ -154,8 +174,8 @@ export const FarmModal = ({ farm }: { farm: FarmData }) => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <span>Deposit</span>
-                    <Tabs>
-                      <TabsList defaultValue="assets">
+                    <Tabs defaultValue="assets">
+                      <TabsList>
                         <TabsTrigger value="assets">Assets</TabsTrigger>
                         <TabsTrigger value="lp">LP</TabsTrigger>
                       </TabsList>
@@ -170,7 +190,7 @@ export const FarmModal = ({ farm }: { farm: FarmData }) => {
                   <div className="relative flex items-center">
                     <Button
                       size={"sm"}
-                      className="absolute left-2 h-6 z-10 bg-purple-300 text-primary"
+                      className="absolute left-2 h-6 z-10 bg-purple-200 text-primary"
                     >
                       MAX
                     </Button>
@@ -195,7 +215,7 @@ export const FarmModal = ({ farm }: { farm: FarmData }) => {
                   <div className="relative flex items-center">
                     <Button
                       size={"sm"}
-                      className="absolute left-2 h-6 z-10 bg-purple-300 text-primary"
+                      className="absolute left-2 h-6 z-10 bg-purple-200 text-primary"
                     >
                       MAX
                     </Button>
@@ -210,18 +230,7 @@ export const FarmModal = ({ farm }: { farm: FarmData }) => {
                 </div>
                 <Separator />
                 <div className="flex flex-col">
-                  <div className="flex items-center gap-4">
-                    <span>Leverage Setup</span>
-                    <Badge
-                      variant="default"
-                      className="rounded-full px-6 shadow-lg"
-                    >
-                      1x
-                    </Badge>
-                  </div>
-                  <PercentageBar
-                    onChange={(percentage) => console.log(percentage)}
-                  />
+                  <MultiplierBar />
                 </div>
                 <div className="flex items-center justify-between">
                   <span>Asset to Borrow</span>
@@ -230,7 +239,7 @@ export const FarmModal = ({ farm }: { farm: FarmData }) => {
                     <Switch />
                   </div>
                 </div>
-                <Tabs>
+                <Tabs defaultValue="usdc">
                   <TabsList>
                     <TabsTrigger value="eth">ETH</TabsTrigger>
                     <TabsTrigger value="usdc">USDC</TabsTrigger>
