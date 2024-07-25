@@ -94,6 +94,8 @@ export const vaultData: VaultData[] = [
     deposited: 0,
     apy: 19.6,
     daily: 0.05,
+    imageSrc2: "/icons/coins/ethereum.png",
+    imageSrc1: "/icons/coins/usdc.png",
   },
   {
     vaultName: "wstETH-ETH",
@@ -104,6 +106,8 @@ export const vaultData: VaultData[] = [
     deposited: 0,
     apy: 11.0,
     daily: 0.03,
+    imageSrc1: "/icons/coins/ethereum.png",
+    imageSrc2: "/icons/coins/wsteth.png",
   },
   {
     vaultName: "ARB-ETH",
@@ -114,6 +118,8 @@ export const vaultData: VaultData[] = [
     deposited: 0,
     apy: 14.5,
     daily: 0.04,
+    imageSrc1: "/icons/coins/ethereum.png",
+    imageSrc2: "/icons/coins/arbitrum one.png",
   },
   {
     vaultName: "GMX-ETH",
@@ -124,6 +130,8 @@ export const vaultData: VaultData[] = [
     deposited: 0,
     apy: 117.0,
     daily: 0.32,
+    imageSrc1: "/icons/coins/ethereum.png",
+    imageSrc2: "/icons/coins/gmx.png",
   },
   {
     vaultName: "wBTC-USDT",
@@ -134,6 +142,8 @@ export const vaultData: VaultData[] = [
     deposited: 0,
     apy: 12.5,
     daily: 0.03,
+    imageSrc2: "/icons/coins/wbtc.png",
+    imageSrc1: "/icons/coins/usdt.png",
   },
 ];
 
@@ -142,66 +152,76 @@ export const farmsData: FarmData[] = [
     farmName: "ETH-USDC",
     farmTVL: 318000000,
     farmDexTVL: 1103000000,
-    apy: 19.6,
-    leverage: 2, // Added leverage property
+    apy: { from: 15.2, to: 19.6 },
+    leverage: 2,
     apr: {
       yield_percentage: 15.3,
       token_borrowing_interest: 2.5,
       total_apr: 17.8,
       daily_apr: 0.0487,
     },
+    imageSrc1: "/icons/coins/ethereum.png",
+    imageSrc2: "/icons/coins/usdc.png",
   },
   {
     farmName: "wstETH-ETH",
     farmTVL: 345140000,
     farmDexTVL: 1090000000,
-    apy: 11.0,
-    leverage: 2, // Added leverage property
+    apy: { from: 8.7, to: 11.0 },
+    leverage: 2,
     apr: {
       yield_percentage: 8.5,
       token_borrowing_interest: 1.8,
       total_apr: 10.3,
       daily_apr: 0.0282,
     },
+    imageSrc1: "/icons/coins/ethereum.png",
+    imageSrc2: "/icons/coins/wsteth.png",
   },
   {
     farmName: "ARB-ETH",
     farmTVL: 521180000,
     farmDexTVL: 840000000,
-    apy: 14.5,
-    leverage: 2, // Added leverage property
+    apy: { from: 11.8, to: 14.5 },
+    leverage: 2,
     apr: {
       yield_percentage: 11.2,
       token_borrowing_interest: 2.1,
       total_apr: 13.3,
       daily_apr: 0.0364,
     },
+    imageSrc1: "/icons/coins/ethereum.png",
+    imageSrc2: "/icons/coins/arbitrum one.png",
   },
   {
     farmName: "GMX-ETH",
     farmTVL: 636210000,
     farmDexTVL: 916530000,
-    apy: 117.0,
-    leverage: 2, // Added leverage property
+    apy: { from: 95.3, to: 117.0 },
+    leverage: 2,
     apr: {
       yield_percentage: 85.5,
       token_borrowing_interest: 5.2,
       total_apr: 90.7,
       daily_apr: 0.2485,
     },
+    imageSrc1: "/icons/coins/ethereum.png",
+    imageSrc2: "/icons/coins/gmx.png",
   },
   {
     farmName: "wBTC-USDT",
     farmTVL: 287530000,
     farmDexTVL: 2170000000,
-    apy: 12.5,
-    leverage: 2, // Added leverage property
+    apy: { from: 10.1, to: 12.5 },
+    leverage: 2,
     apr: {
       yield_percentage: 9.8,
       token_borrowing_interest: 1.9,
       total_apr: 11.7,
       daily_apr: 0.0321,
     },
+    imageSrc2: "/icons/coins/wbtc.png",
+    imageSrc1: "/icons/coins/usdt.png",
   },
 ];
 

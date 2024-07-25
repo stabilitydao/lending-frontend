@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { InfoTooltip } from "@/components/ui/info-tooltip";
 import { PercentageBar } from "@/components/ui/percentage-bar";
+import { DoubleAvatar } from "@/components/ui/double-avatar";
 
 export const WithdrawVaultModal = ({ vault }: { vault: VaultData }) => {
   const { isDisconnected } = useAccount();
@@ -26,7 +27,13 @@ export const WithdrawVaultModal = ({ vault }: { vault: VaultData }) => {
       </DialogTrigger>
       <DialogContent className="bg-card text-primary">
         <DialogHeader>
-          <DialogTitle className="justify-start text-left pb-8">
+          <DialogTitle className="flex items-center gap-6 pb-10">
+            <DoubleAvatar
+              firstSrc={vault?.imageSrc1!}
+              secondSrc={vault?.imageSrc2!}
+              firstAlt={vault?.vaultName!}
+              secondAlt={vault?.vaultName!}
+            />{" "}
             Withdraw from {vault?.vaultName} Vault
           </DialogTitle>
           <DialogDescription className="flex flex-col gap-8">

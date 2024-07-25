@@ -20,6 +20,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { DoubleAvatar } from "@/components/ui/double-avatar";
 
 export const FarmsTable = () => {
   const router = useRouter();
@@ -57,10 +58,12 @@ export const FarmsTable = () => {
             <TableRow key={index} className="text-primary border-t-background">
               <TableCell>
                 <div className="flex items-center gap-10">
-                  <Avatar className="bg-background hidden lg:block">
-                    <AvatarImage src={`/images/farms/farm-${index + 1}.png`} />
-                    <AvatarFallback>Farm</AvatarFallback>
-                  </Avatar>
+                  <DoubleAvatar
+                    firstSrc={farm.imageSrc1!}
+                    secondSrc={farm.imageSrc2!}
+                    firstAlt={farm.farmName!}
+                    secondAlt={farm.farmName!}
+                  />
                   <div className="flex flex-col gap-2">
                     <p className="text-lg ">{farm.farmName}</p>
                     <p className="text-sm font-light">
@@ -72,7 +75,10 @@ export const FarmsTable = () => {
                   </div>
                 </div>
               </TableCell>
-              <TableCell>{farm.apy}%</TableCell>
+              <TableCell className="flex flex-col">
+                From {farm.apy.from}% to{" "}
+                <span className="text-green-500 text-base">{farm.apy.to}%</span>
+              </TableCell>
               <TableCell>
                 <div className="lg:hidden">
                   <Accordion type="single" collapsible>
