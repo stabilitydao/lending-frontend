@@ -10,15 +10,13 @@ import {
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { formatNumberWithSuffix } from "@/lib/utils";
 import { borrowData } from "@/lib/constants";
-import { AssetFilter } from "../asset-filter";
 import { BorrowModal } from "./borrow-modal";
 
 export const BorrowTable = () => {
   return (
     <div className="p-4">
-      <AssetFilter />
       <Table>
-        <TableHeader className="h-16 border-b border-background">
+        <TableHeader className="h-8 border-b border-background">
           <TableHead>Asset</TableHead>
           <TableHead>Total Supplied</TableHead>
           <TableHead>Supply APY</TableHead>
