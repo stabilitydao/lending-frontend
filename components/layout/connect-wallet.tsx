@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowRightIcon, PowerIcon, Wallet2Icon } from "lucide-react";
+import { ArrowRightIcon, PowerIcon } from "lucide-react";
+import { Wallet } from "../icons/wallet";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 import { Button } from "@/components/ui/button";
 import {
@@ -33,7 +34,7 @@ export const ConnectWallet = () => {
         <DropdownMenuTrigger asChild>
           <Button variant="default" className="bg-primary">
             <span className="hidden sm:inline">{formatAddress(address)}</span>
-            <Wallet2Icon className="w-5 h-5 ml-0 sm:ml-2" />
+            <Wallet className="w-5 h-5 ml-0 sm:ml-2" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className=" w-40">
@@ -53,7 +54,7 @@ export const ConnectWallet = () => {
       <DialogTrigger asChild>
         <Button variant="default" className="bg-primary">
           Connect Wallet
-          <Wallet2Icon className="w-5 h-5 ml-2" />
+          <Wallet className="w-5 h-5 ml-2" />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] backdrop-blur-xl">

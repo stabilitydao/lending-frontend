@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RefreshCw } from "lucide-react";
 import { Button } from "../ui/button";
 import Image from "next/image";
+import { Wallet } from "../icons/wallet";
 
 export const SingleStake = () => {
   return (
@@ -31,7 +32,9 @@ export const SingleStake = () => {
               <p className="text-lg font-medium">351</p>
             </div>
             <div className="flex flex-col gap-2">
-              <p className="text-xs font-thin">veViFi Balance</p>
+              <p className="text-xs font-thin flex flex-row items-center gap-2">
+                veViFi Balance <Wallet className="w-4 h-4" />
+              </p>
               <p className="text-lg font-medium">12</p>
             </div>
           </div>

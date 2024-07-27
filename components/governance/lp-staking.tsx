@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RefreshCw } from "lucide-react";
 import { Button } from "../ui/button";
+import { Wallet } from "../icons/wallet";
 import Image from "next/image";
 
 export const LPStaking = () => {
@@ -31,7 +32,9 @@ export const LPStaking = () => {
               <p className="text-lg font-medium">0</p>
             </div>
             <div className="flex flex-col gap-2">
-              <p className="text-xs font-thin">ve Balance</p>
+              <p className="text-xs font-thin flex flex-row items-center gap-2">
+                ve Balance <Wallet className="w-4 h-4" />
+              </p>
               <p className="text-lg font-medium">12</p>
             </div>
           </div>

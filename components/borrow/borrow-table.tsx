@@ -11,7 +11,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { formatNumberWithSuffix } from "@/lib/utils";
 import { borrowData } from "@/lib/constants";
 import { BorrowModal } from "./borrow-modal";
-import { ChevronsUpDown } from "lucide-react";
+import { FilterIcon } from "../icons/filter";
 
 export const BorrowTable = () => {
   return (
@@ -20,27 +20,27 @@ export const BorrowTable = () => {
         <TableHeader className="h-8 border-b border-background">
           <TableHead className="text-muted">
             <div className="flex items-center gap-2">
-              Asset <ChevronsUpDown className="w-4 h-4" />
+              Asset <FilterIcon />
             </div>
           </TableHead>
           <TableHead className="text-muted">
             <div className="flex items-center gap-2">
-              Total Supplied <ChevronsUpDown className="w-4 h-4" />
+              Total Supplied <FilterIcon />
             </div>
           </TableHead>
           <TableHead className="text-muted">
             <div className="flex items-center gap-2">
-              Supply APY <ChevronsUpDown className="w-4 h-4" />
+              Supply APY <FilterIcon />
             </div>
           </TableHead>
           <TableHead className="text-muted">
             <div className="flex items-center gap-2">
-              Total Borrowed <ChevronsUpDown className="w-4 h-4" />
+              Total Borrowed <FilterIcon />
             </div>
           </TableHead>
           <TableHead className="text-muted">
             <div className="flex items-center gap-2">
-              Borrow APY, Variable <ChevronsUpDown className="w-4 h-4" />
+              Borrow APY, Variable <FilterIcon />
             </div>
           </TableHead>
         </TableHeader>
@@ -50,7 +50,7 @@ export const BorrowTable = () => {
               <TableRow className="text-primary border-t-background cursor-pointer hover:bg-background/50">
                 <TableCell>
                   <div className="flex items-center gap-10">
-                    <Avatar className="bg-transparent hidden lg:block p-1.5">
+                    <Avatar className="bg-transparent  p-1.5">
                       <AvatarImage
                         src={asset.asset.imageSrc!}
                         className="object-contain"

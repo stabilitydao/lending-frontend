@@ -11,16 +11,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
+import Image from "next/image";
 
 const assetItems = [
   { value: "all", name: "All" },
-  { value: "eth", name: "ETH" },
-  { value: "usdc", name: "USDC" },
-  { value: "wsteth", name: "wstETH" },
-  { value: "arb", name: "ARB" },
-  { value: "gmx", name: "GMX" },
-  { value: "wbtc", name: "wBTC" },
-  { value: "usdt", name: "USDT" },
+  { value: "eth", name: "ETH", imageSrc: "/icons/coins/ethereum.png" },
+  { value: "usdc", name: "USDC", imageSrc: "/icons/coins/usdc.png" },
+  { value: "wsteth", name: "wstETH", imageSrc: "/icons/coins/wsteth.png" },
+  { value: "arb", name: "ARB", imageSrc: "/icons/coins/arbitrum one.png" },
+  { value: "gmx", name: "GMX", imageSrc: "/icons/coins/gmx.png" },
+  { value: "wbtc", name: "wBTC", imageSrc: "/icons/coins/wbtc.png" },
+  { value: "usdt", name: "USDT", imageSrc: "/icons/coins/usdt.png" },
 ];
 
 const sortItems = [
@@ -68,7 +69,17 @@ export const AssetFilter = () => {
           <Tabs value={asset} onValueChange={handleAssetChange}>
             <TabsList>
               {assetItems.map((item) => (
-                <TabsTrigger key={item.value} value={item.value}>
+                <TabsTrigger
+                  key={item.value}
+                  value={item.value}
+                  className="flex items-center gap-2"
+                >
+                  <Image
+                    src={item.imageSrc ? item.imageSrc : ""}
+                    alt={item.name}
+                    width={12}
+                    height={20}
+                  />
                   {item.name}
                 </TabsTrigger>
               ))}

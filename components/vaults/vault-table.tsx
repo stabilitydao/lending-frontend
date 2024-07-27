@@ -19,7 +19,7 @@ import { useAccount } from "wagmi";
 import { AssetFilter } from "../asset-filter";
 import { DepositVaultModal } from "./deposit-vault-modal";
 import { WithdrawVaultModal } from "./withdraw-vault-modal";
-import { ChevronsUpDown } from "lucide-react";
+import { FilterIcon } from "../icons/filter";
 
 export const VaultTable = () => {
   const { address } = useAccount();
@@ -51,7 +51,7 @@ export const VaultTable = () => {
       <AssetFilter />
       <Table>
         <TableHeader className="border-b border-background">
-          <TableHead className="flex items-center gap-4 h-24 ">
+          <TableHead className="flex items-center gap-4 h-24 font-bold text-base ">
             Vaults
             <div className="flex items-center gap-4 justify-center">
               <Tabs value={vault} onValueChange={handleVaultChange}>
@@ -64,22 +64,22 @@ export const VaultTable = () => {
           </TableHead>
           <TableHead className="text-muted uppercase">
             <div className="flex items-center gap-2">
-              Wallet <ChevronsUpDown className="w-4 h-4" />
+              Wallet <FilterIcon />
             </div>
           </TableHead>
           <TableHead className="text-muted uppercase">
             <div className="flex items-center gap-2">
-              Deposited <ChevronsUpDown className="w-4 h-4" />
+              Deposited <FilterIcon />
             </div>
           </TableHead>
           <TableHead className="text-muted uppercase">
             <div className="flex items-center gap-2">
-              APY <ChevronsUpDown className="w-4 h-4" />
+              APY <FilterIcon />
             </div>
           </TableHead>
           <TableHead className="text-muted uppercase">
             <div className="flex items-center gap-2">
-              Daily <ChevronsUpDown className="w-4 h-4" />
+              Daily <FilterIcon />
             </div>
           </TableHead>
           <TableHead></TableHead>
@@ -122,7 +122,7 @@ export const VaultTable = () => {
               </TableCell>
               <TableCell>{vault.wallets}</TableCell>
               <TableCell>{vault.deposited}</TableCell>
-              <TableCell>{vault.apy}%</TableCell>
+              <TableCell className="text-green-500">{vault.apy}%</TableCell>
               <TableCell>{vault.daily}%</TableCell>
               <TableCell className="flex gap-10 justify-center pt-10">
                 <DepositVaultModal vault={vault} />

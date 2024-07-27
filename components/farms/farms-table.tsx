@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/accordion";
 import { DoubleAvatar } from "@/components/ui/double-avatar";
 import { ChevronUp, ChevronDown, ChevronsUpDown } from "lucide-react";
+import { FilterIcon } from "../icons/filter";
 
 export const FarmsTable = () => {
   const router = useRouter();
@@ -69,12 +70,12 @@ export const FarmsTable = () => {
           <TableHead className="font-bold">Leveraged Farming</TableHead>
           <TableHead className="text-muted">
             <div className="flex items-center gap-2">
-              APY <ChevronsUpDown className="w-4 h-4" />
+              APY <FilterIcon />
             </div>
           </TableHead>
           <TableHead className="text-muted">
             <div className="flex items-center gap-2">
-              APR <ChevronsUpDown className="w-4 h-4" />
+              APR <FilterIcon />
             </div>
           </TableHead>
           <TableHead className="text-muted">Leverage</TableHead>

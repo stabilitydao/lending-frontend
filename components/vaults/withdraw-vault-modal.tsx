@@ -23,7 +23,7 @@ export const WithdrawVaultModal = ({ vault }: { vault: VaultData }) => {
   return (
     <Dialog>
       <DialogTrigger>
-        <Button disabled={isDisconnected}>Withdraw</Button>
+        <Button disabled>Withdraw</Button>
       </DialogTrigger>
       <DialogContent className="bg-card text-primary">
         <DialogHeader>
