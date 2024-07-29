@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
 import { CloseModal } from "./close-modal";
+import { DoubleAvatar } from "../ui/double-avatar";
 
 export const Vaults = () => {
   return (
@@ -20,11 +21,11 @@ export const Vaults = () => {
           <p className="text-xl">Vaults</p>
           <div className="flex items-center justify-center gap-4 text-sm font-normal">
             <p>
-              Net Value: <span className="px-1 font-semibold">$824.10</span>
+              Net Value: <span className="px-1 font-semibold">$992.99</span>
             </p>
             <p>
               Total Interest:{" "}
-              <span className="px-1 font-semibold text-success">$13.02</span>
+              <span className="px-1 font-semibold text-green-400">$13.02</span>
             </p>
           </div>
         </CardTitle>
@@ -42,10 +43,18 @@ export const Vaults = () => {
           </TableHeader>
           <TableBody>
             <TableRow>
-              <TableCell>ETH</TableCell>
+              <TableCell>
+                <DoubleAvatar
+                  firstSrc="/icons/coins/ethereum.png"
+                  secondSrc="/icons/coins/arbitrum one.png"
+                  firstAlt="ETH"
+                  secondAlt="ARB"
+                  size="default"
+                />
+              </TableCell>
               <TableCell>$992.92</TableCell>
-              <TableCell>$12,304.00</TableCell>
-              <TableCell>$16.69</TableCell>
+              <TableCell>$12,304,341.00</TableCell>
+              <TableCell>+ $17.01</TableCell>
             </TableRow>
           </TableBody>
         </Table>

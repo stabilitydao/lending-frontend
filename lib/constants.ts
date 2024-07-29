@@ -71,7 +71,7 @@ export const portfolioData = [
   },
   {
     title: "Fees and Interest",
-    value: "$27.93",
+    value: "$27.33",
   },
 ];
 

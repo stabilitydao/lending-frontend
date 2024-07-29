@@ -16,13 +16,19 @@ import { ExternalLinkIcon, ArrowRightIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "../ui/badge";
 import { PercentageBar } from "@/components/ui/percentage-bar";
-import { ChevronUp, ChevronDown } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
+import {
+  Tabs as Tabs2,
+  TabsList as TabsList2,
+  TabsTrigger as TabsTrigger2,
+} from "../ui/tabs-two";
 import { Separator } from "../ui/separator";
 import { Switch } from "../ui/switch";
 import { DoubleAvatar } from "../ui/double-avatar";
 import { cn } from "@/lib/utils";
 import { MultiplierBar } from "../ui/multiplier-bar";
+import { Summary } from "../icons/summary";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 export const FarmModal = ({
   farm,
@@ -78,12 +84,28 @@ export const FarmModal = ({
               <span className="text-md">Farm {farm.farmName} Pool</span>
             </div>
             {!summary && (
-              <Tabs>
-                <TabsList>
-                  <TabsTrigger value="eth">ETH</TabsTrigger>
-                  <TabsTrigger value="usdc">USDC</TabsTrigger>
-                </TabsList>
-              </Tabs>
+              <Tabs2>
+                <TabsList2>
+                  <TabsTrigger2 value="eth" className="gap-2">
+                    <Image
+                      src={farm.imageSrc1!}
+                      alt={farm.tokenSymbol1!}
+                      width={10}
+                      height={10}
+                    />
+                    ETH
+                  </TabsTrigger2>
+                  <TabsTrigger2 value="usdc" className="gap-2">
+                    <Image
+                      src={farm.imageSrc2!}
+                      alt={farm.tokenSymbol2!}
+                      width={14}
+                      height={14}
+                    />
+                    USDC
+                  </TabsTrigger2>
+                </TabsList2>
+              </Tabs2>
             )}
           </DialogTitle>
           <Separator />
@@ -120,45 +142,137 @@ export const FarmModal = ({
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center justify-between text-primary">
                     <span>Price Impact</span>
-                    <span>0.00%</span>
+                    <span className="text-green-500">0.00%</span>
                   </div>
                   <div className="flex items-center justify-between text-primary">
                     <span>Swap Cost (0.03% fee rate on AMM)</span>
-                    <span>0.01% ($7.50)</span>
+                    <span className="text-background">0.01% ($7.50)</span>
                   </div>
                   <div className="flex items-center justify-between text-primary">
                     <span>Liquidation Prices (est.)</span>
-                    <span>1 ETH - 3019.01 USDC</span>
+                    <span className="flex items-center gap-2">
+                      <DoubleAvatar
+                        firstSrc={farm.imageSrc2!}
+                        secondSrc={farm.imageSrc1!}
+                        firstAlt={farm.tokenSymbol2!}
+                        secondAlt={farm.tokenSymbol1!}
+                        size="small"
+                      />
+                      <span>1 ETH - 3019.01 USDC</span>
+                    </span>
                   </div>
                   <div className="flex items-center justify-between text-primary">
                     <span>Net Exposure</span>
-                    <span>Long 1.2 ETH</span>
+                    <div className="flex flex-col items-center gap-2">
+                      <div className="flex items-center gap-2">
+                        Long
+                        <Avatar className="bg-primary p-0.5 w-4 h-4">
+                          <AvatarImage
+                            src={farm.imageSrc1!}
+                            className="object-cover p-0.5"
+                          />
+                          <AvatarFallback>{farm.tokenSymbol1}</AvatarFallback>
+                        </Avatar>{" "}
+                        1.2 ETH
+                      </div>
+                      <div className="flex items-center gap-2">
+                        Long
+                        <Avatar className="bg-primary p-0.5 w-4 h-4">
+                          <AvatarImage
+                            src={farm.imageSrc2!}
+                            className="object-cover"
+                          />
+                          <AvatarFallback>{farm.tokenSymbol2}</AvatarFallback>
+                        </Avatar>{" "}
+                        1.2 USDC
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center justify-between text-primary">
                     <span>Leverage</span>
-                    <span>1.2 ETH + 0 USDC</span>
                   </div>
                   <div className="flex items-center justify-between text-primary">
                     <span>Asset to Supply</span>
-                    <span>0 USDC + 0 USDC</span>
+                    <span className="flex items-center gap-1">
+                      <Avatar className="w-4 h-4">
+                        <AvatarImage
+                          src={farm.imageSrc1}
+                          alt={farm.tokenSymbol1}
+                        />
+                      </Avatar>
+                      1.2 ETH +
+                      <Avatar className="w-4 h-4">
+                        <AvatarImage
+                          src={farm.imageSrc2}
+                          alt={farm.tokenSymbol2}
+                        />
+                      </Avatar>
+                      0 USDC
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-primary">
+                    <span>Asset to Borrow</span>
+                    <span className="flex items-center gap-1">
+                      <Avatar className="w-4 h-4">
+                        <AvatarImage
+                          src={farm.imageSrc1}
+                          alt={farm.tokenSymbol1}
+                        />
+                      </Avatar>
+                      0 ETH +
+                      <Avatar className="w-4 h-4">
+                        <AvatarImage
+                          src={farm.imageSrc2}
+                          alt={farm.tokenSymbol2}
+                        />
+                      </Avatar>
+                      0 USDC
+                    </span>
                   </div>
                   <div className="flex items-center justify-between text-primary">
                     <span>Total Position</span>
-                    <span>1.2 ETH + 1200 USDC</span>
-                  </div>
-                  <div className="flex items-center justify-between text-primary">
-                    <span>Net Exposure</span>
-                    <span>Long 1.2 ETH</span>
+                    <span className="flex items-center gap-1">
+                      <Avatar className="w-4 h-4">
+                        <AvatarImage
+                          src={farm.imageSrc1}
+                          alt={farm.tokenSymbol1}
+                        />
+                      </Avatar>
+                      1.2 ETH +
+                      <Avatar className="w-4 h-4">
+                        <AvatarImage
+                          src={farm.imageSrc2}
+                          alt={farm.tokenSymbol2}
+                        />
+                      </Avatar>
+                      1200 USDC
+                    </span>
                   </div>
                 </div>
-                <Tabs defaultValue="eth">
-                  <TabsList>
-                    <TabsTrigger value="eth">ETH</TabsTrigger>
-                    <TabsTrigger value="usdc">USDC</TabsTrigger>
-                  </TabsList>
-                </Tabs>
+                <Tabs2>
+                  <TabsList2>
+                    <TabsTrigger2 value="eth" className="gap-2">
+                      <Image
+                        src={farm.imageSrc1!}
+                        alt={farm.tokenSymbol1!}
+                        width={10}
+                        height={10}
+                      />
+                      ETH
+                    </TabsTrigger2>
+                    <TabsTrigger2 value="usdc" className="gap-2">
+                      <Image
+                        src={farm.imageSrc2!}
+                        alt={farm.tokenSymbol2!}
+                        width={14}
+                        height={14}
+                      />
+                      USDC
+                    </TabsTrigger2>
+                  </TabsList2>
+                </Tabs2>
                 <p>USDC Borrowing Interest: 33%</p>
                 <Button>Confirm</Button>
               </>
@@ -187,7 +301,7 @@ export const FarmModal = ({
                   <div className="relative flex items-center">
                     <Button
                       size={"sm"}
-                      className="absolute left-2 h-6 z-10 bg-purple-200 text-primary"
+                      className="absolute left-2 h-6 z-10 bg-purple-200 hover:bg-purple-300 text-primary"
                     >
                       MAX
                     </Button>
@@ -224,7 +338,7 @@ export const FarmModal = ({
                   <div className="relative flex items-center">
                     <Button
                       size={"sm"}
-                      className="absolute left-2 h-6 z-10 bg-purple-200 text-primary"
+                      className="absolute left-2 h-6 z-10 bg-purple-200 hover:bg-purple-300 text-primary"
                     >
                       MAX
                     </Button>
@@ -260,14 +374,36 @@ export const FarmModal = ({
                     <Switch />
                   </div>
                 </div>
-                <Tabs defaultValue="usdc">
-                  <TabsList>
-                    <TabsTrigger value="eth">ETH</TabsTrigger>
-                    <TabsTrigger value="usdc">USDC</TabsTrigger>
-                  </TabsList>
-                </Tabs>
+                <Tabs2>
+                  <TabsList2>
+                    <TabsTrigger2 value="eth" className="gap-2">
+                      <Image
+                        src={farm.imageSrc1!}
+                        alt={farm.tokenSymbol1!}
+                        width={10}
+                        height={10}
+                      />
+                      ETH
+                    </TabsTrigger2>
+                    <TabsTrigger2 value="usdc" className="gap-2">
+                      <Image
+                        src={farm.imageSrc2!}
+                        alt={farm.tokenSymbol2!}
+                        width={14}
+                        height={14}
+                      />
+                      USDC
+                    </TabsTrigger2>
+                  </TabsList2>
+                </Tabs2>
                 <p>USDC Borrowing Interest: 33%</p>
-                <Button onClick={() => setSummary(true)}>Go to Summary</Button>
+                <Button
+                  onClick={() => setSummary(true)}
+                  className="flex items-center gap-2"
+                >
+                  <Summary className="w-5 h-5" />
+                  Go to Summary
+                </Button>
               </>
             )}
           </DialogDescription>

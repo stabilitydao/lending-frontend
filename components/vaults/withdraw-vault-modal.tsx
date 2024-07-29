@@ -17,6 +17,7 @@ import { Badge } from "@/components/ui/badge";
 import { InfoTooltip } from "@/components/ui/info-tooltip";
 import { PercentageBar } from "@/components/ui/percentage-bar";
 import { DoubleAvatar } from "@/components/ui/double-avatar";
+import { Withdraw } from "@/components/icons/withdraw";
 
 export const WithdrawVaultModal = ({ vault }: { vault: VaultData }) => {
   const { isDisconnected } = useAccount();
@@ -38,27 +39,38 @@ export const WithdrawVaultModal = ({ vault }: { vault: VaultData }) => {
           </DialogTitle>
           <DialogDescription className="flex flex-col gap-8">
             <div className="flex items-center justify-between">
-              <span>Withdraw</span>
-              <span className="flex items-center gap-2">
+              <span className="font-semibold">Withdraw</span>
+              <span className="flex items-center gap-2 font-semibold">
                 Break Liquidity{" "}
                 <ExternalLinkIcon className="w-4 h-4 text-primary" />
               </span>
             </div>
             <div className="flex flex-col gap-2 pt-8">
-              <span>Available: 0</span>
+              <span className="font-semibold">Available: 0</span>
               <div className="relative flex items-center">
                 <Button
                   size={"sm"}
-                  className="absolute left-2 h-6 z-10 bg-purple-200  text-primary"
+                  className="absolute left-2 h-6 z-10 bg-purple-200 hover:bg-purple-300 text-primary"
                 >
                   MAX
                 </Button>
                 <Input
-                  className="bg-primary text-right placeholder:text-accent text-accent rounded-2xl pl-16 pr-32"
+                  className="bg-primary placeholder:text-accent text-right text-accent rounded-2xl pl-16 pr-[8.1rem]"
                   placeholder="$0.00"
                 />
                 <div className="absolute right-2 flex items-center">
-                  <Badge variant="accent" className="rounded-lg">
+                  <Badge
+                    variant="accent"
+                    className="rounded-lg flex items-center gap-2 px-1"
+                  >
+                    <DoubleAvatar
+                      firstSrc={vault?.imageSrc1!}
+                      secondSrc={vault?.imageSrc2!}
+                      firstAlt={vault?.vaultName!}
+                      secondAlt={vault?.vaultName!}
+                      size={"small"}
+                    />
+
                     {vault.vaultName}
                   </Badge>
                 </div>
@@ -99,7 +111,9 @@ export const WithdrawVaultModal = ({ vault }: { vault: VaultData }) => {
                 that is deducted from the generated yield only.
               </p>
             </div>
-            <Button>Withdraw</Button>
+            <Button className="flex items-center gap-2">
+              <Withdraw className="w-5 h-5" /> Withdraw
+            </Button>
           </DialogDescription>
         </DialogHeader>
       </DialogContent>

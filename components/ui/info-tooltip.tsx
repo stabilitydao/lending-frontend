@@ -4,15 +4,15 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { InfoIcon } from "lucide-react";
-import { Button } from "./button";
+
+import { Question } from "../icons/question";
 
 export const InfoTooltip = ({ children }: { children: React.ReactNode }) => {
   return (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger>
-          <InfoIcon className="w-4 h-4 bg-primary text-foreground rounded-full" />
+          <Question className="w-3 h-3 rounded-full" />
         </TooltipTrigger>
         <TooltipContent>
           <p className="text-xs">{children}</p>

@@ -36,22 +36,29 @@ export const PercentageBar = ({
 
   return (
     <div className="w-full">
-      <div className="mb-2 text-center text-primary font-semibold">
+      {/* <div className="mb-2 text-center text-primary font-semibold">
         {percentage}%
-      </div>
+      </div> */}
       <div
         ref={barRef}
         className="relative h-3 bg-primary rounded-full cursor-pointer mb-4"
         onMouseDown={handleMouseDown}
       >
         <div
-          className="absolute top-0 left-0 h-full  rounded-full transition-all"
+          className="absolute top-0 left-0 h-full rounded-full transition-all"
           style={{ width: `${percentage}%` }}
         />
         <div
-          className="absolute top-0 w-6 h-6  border-2 border-primary bg-accent rounded-full -translate-y-1/4"
+          className="absolute top-0 w-6 h-6 border-2 border-primary bg-accent z-10 rounded-full -translate-y-1/4"
           style={{ left: `calc(${percentage}% - 12px)` }}
         />
+        {[0, 25, 50, 75, 100].map((mark) => (
+          <div
+            key={mark}
+            className="absolute top-0 w-px h-full bg-white"
+            style={{ left: `${mark}%` }}
+          />
+        ))}
       </div>
       <div className="flex justify-between items-center px-2">
         {[0, 25, 50, 75, 100].map((mark) => (

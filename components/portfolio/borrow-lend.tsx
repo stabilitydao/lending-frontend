@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
 import { CloseModal } from "./close-modal";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export const BorrowLend = () => {
   return (
@@ -31,7 +32,7 @@ export const BorrowLend = () => {
             </p>
             <p>
               Total Interest:{" "}
-              <span className="px-1 font-semibold text-success">$3.31</span>
+              <span className="px-1 font-semibold text-green-400">$3.31</span>
             </p>
           </div>
         </CardTitle>
@@ -51,12 +52,18 @@ export const BorrowLend = () => {
           </TableHeader>
           <TableBody>
             <TableRow>
-              <TableCell>USDC</TableCell>
-              <TableCell>$1,000.00</TableCell>
+              <TableCell className="flex items-center gap-2">
+                <Avatar className="w-8 h-8 bg-background p-1.5">
+                  <AvatarImage src="/icons/coins/usdc.png" />
+                  <AvatarFallback>USDC</AvatarFallback>
+                </Avatar>
+                USDC
+              </TableCell>
+              <TableCell>$3,000.00</TableCell>
               <TableCell>$0.00</TableCell>
               <TableCell>$3,000.00</TableCell>
               <TableCell>$12,304.00</TableCell>
-              <TableCell>$10.01</TableCell>
+              <TableCell>+ $3.31</TableCell>
             </TableRow>
           </TableBody>
         </Table>
