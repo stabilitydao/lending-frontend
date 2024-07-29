@@ -14,6 +14,7 @@ export type FarmData = {
     total_apr: number;
     daily_apr: number;
   };
+  trending?: boolean;
   leverage: number;
   imageSrc1?: string;
   imageSrc2?: string;

@@ -22,6 +22,7 @@ import {
 import { DoubleAvatar } from "@/components/ui/double-avatar";
 import { ChevronUp, ChevronDown, ChevronsUpDown } from "lucide-react";
 import { FilterIcon } from "../icons/filter";
+import { Fire } from "../icons/fire";
 
 export const FarmsTable = () => {
   const router = useRouter();
@@ -105,8 +106,8 @@ export const FarmsTable = () => {
                 </TableCell>
                 <TableCell className="flex flex-col">
                   From {farm.apy.from}% to{" "}
-                  <span className="text-green-500 text-base">
-                    {farm.apy.to}%
+                  <span className="text-green-500 text-base flex items-center gap-8">
+                    {farm.apy.to}% {farm.trending && <Fire />}
                   </span>
                 </TableCell>
                 <TableCell>
