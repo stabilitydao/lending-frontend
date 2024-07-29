@@ -16,6 +16,9 @@ import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 import { ReactNode } from "react";
 import { useState } from "react";
 import Image from "next/image";
+import { Deposit } from "../icons/deposit";
+import { Withdraw } from "../icons/withdraw";
+import { ArrowRight } from "lucide-react";
 
 export const BorrowModal = ({
   borrow,
@@ -30,6 +33,20 @@ export const BorrowModal = ({
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="bg-card text-primary overflow-y-auto pt-12">
+        <div className="flex flex-row items-center justify-center gap-4">
+          <Image
+            src={borrow.asset.imageSrc!}
+            alt="logo"
+            width={25}
+            height={25}
+          />
+          <div className="flex flex-col items-start gap-2">
+            <span className="text-sm font-semibold">{borrow.asset.name}</span>
+            <span className="text-xs font-light text-left">
+              {borrow.asset.symbol}
+            </span>
+          </div>
+        </div>
         <div className="absolute inset-0 flex items-center justify-center z-0">
           <Image
             src="/icons/rounded-logo.png"
@@ -69,11 +86,12 @@ export const BorrowModal = ({
                 <span>Borrow Amount</span>
                 <div className="flex items-center gap-4">
                   Wallet Balance:{" "}
-                  <span className="font-semibold">1111.11 ETH</span>
+                  <span className="font-semibold">
+                    111.11 {borrow.asset.symbol}
+                  </span>
                 </div>
               </div>
-              <div className="flex flex-col gap-2 pt-8">
-                <span>Available: 0</span>
+              <div className="flex flex-col gap-8 pt-8">
                 <div className="relative flex items-center">
                   <Button
                     size={"sm"}
@@ -82,7 +100,7 @@ export const BorrowModal = ({
                     MAX
                   </Button>
                   <Input
-                    className="bg-primary placeholder:text-accent text-right text-accent rounded-2xl pl-16 pr-4"
+                    className="bg-primary placeholder:text-accent text-right text-accent rounded-full pl-16 pr-4"
                     placeholder="$0.00"
                   />
                 </div>
@@ -94,7 +112,7 @@ export const BorrowModal = ({
               <div className="flex flex-col gap-4">
                 <div className="flex items-center justify-between">
                   <span>Borrow APY</span>
-                  <span>10%</span>
+                  <span>6.34%</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span>Borrow Balance</span>
@@ -105,25 +123,39 @@ export const BorrowModal = ({
                   <span>0.47%</span>
                 </div>
               </div>
-              <div className="flex flex-col gap-2s">
+              <div className="flex flex-col gap-2">
                 <p>Borrow Stats</p>
                 <div className="flex items-center justify-between">
                   <span>Your Borrow Limit</span>
-                  <span>$0</span>
+                  <div className="flex items-center gap-2">
+                    <span>$0</span>
+                    <ArrowRight className="w-4 h-4" />
+                    <span>$0</span>
+                  </div>
                 </div>
                 <div className="flex items-center justify-between">
                   <span>Borrow Limit Used</span>
-                  <span>0%</span>
+                  <div className="flex items-center gap-2">
+                    <span>0%</span>
+                    <ArrowRight className="w-4 h-4" />
+                    <span>0%</span>
+                  </div>
                 </div>
               </div>
               <div className="flex items-center justify-center gap-10">
                 {activeTab === "borrow" ? (
                   <>
                     <Button className="w-full">Approve</Button>
-                    <Button className="w-full">Borrow</Button>
+                    <Button className="w-full flex items-center justify-center gap-2">
+                      <Deposit className="w-5 h-5" />
+                      Borrow
+                    </Button>
                   </>
                 ) : (
-                  <Button className="w-full">Repay</Button>
+                  <Button className="w-full flex items-center justify-center gap-2">
+                    <Withdraw className="w-5 h-5" />
+                    Repay
+                  </Button>
                 )}
               </div>
             </DialogDescription>
