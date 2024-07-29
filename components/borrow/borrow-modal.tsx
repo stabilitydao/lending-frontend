@@ -18,7 +18,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { Deposit } from "../icons/deposit";
 import { Withdraw } from "../icons/withdraw";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, CheckCheck } from "lucide-react";
 
 export const BorrowModal = ({
   borrow,
@@ -145,7 +145,10 @@ export const BorrowModal = ({
               <div className="flex items-center justify-center gap-10">
                 {activeTab === "borrow" ? (
                   <>
-                    <Button className="w-full">Approve</Button>
+                    <Button className="w-full flex items-center justify-center gap-2">
+                      <CheckCheck className="w-5 h-5" />
+                      Approve
+                    </Button>
                     <Button className="w-full flex items-center justify-center gap-2">
                       <Deposit className="w-5 h-5" />
                       Borrow
