@@ -74,12 +74,14 @@ export const AssetFilter = () => {
                   value={item.value}
                   className="flex items-center gap-2"
                 >
-                  <Image
-                    src={item.imageSrc ? item.imageSrc : ""}
-                    alt={item.name}
-                    width={12}
-                    height={20}
-                  />
+                  {item.imageSrc && (
+                    <Image
+                      src={item.imageSrc}
+                      alt={item.name}
+                      width={12}
+                      height={20}
+                    />
+                  )}
                   {item.name}
                 </TabsTrigger>
               ))}
