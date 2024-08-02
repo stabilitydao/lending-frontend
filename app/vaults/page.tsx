@@ -9,7 +9,7 @@ export default function Page() {
         <div className="flex items-center space-x-4">
           <p className="text-primary">
             Network TVL:
-            <span className="font-semibold"> $100,000,000</span>
+            <span className="font-semibold"> $24,325,784.58</span>
           </p>
         </div>
       </div>
