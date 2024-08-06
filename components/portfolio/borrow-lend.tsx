@@ -21,11 +21,11 @@ export const BorrowLend = () => {
           <p className="text-xl">Borrow/Lend</p>
           <div className="flex items-center justify-center gap-4 text-sm font-normal">
             <p>
-              Net Value: <span className="px-1 font-semibold">$1000.00</span>
+              Net Value: <span className="px-1 font-semibold">$1,000.00</span>
             </p>
             <p>
-              Total Collateroal:{" "}
-              <span className="px-1 font-semibold">$3000.00</span>
+              Total Collateral:{" "}
+              <span className="px-1 font-semibold">$3,000.00</span>
             </p>
             <p>
               Total Debt: <span className="px-1 font-semibold">$0.00</span>

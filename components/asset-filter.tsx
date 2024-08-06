@@ -64,7 +64,7 @@ export const AssetFilter = () => {
   return (
     <div className="flex flex-col 2xl:flex-row items-start gap-6 justify-between">
       <div className="flex items-center gap-4 w-full lg:w-auto">
-        <p className="text-xs font-light text-primary">Assets:</p>
+        <p className="text-sm font-semibold text-primary">Assets:</p>
         <div className="hidden lg:block">
           <Tabs value={asset} onValueChange={handleAssetChange}>
             <TabsList>
@@ -114,7 +114,7 @@ export const AssetFilter = () => {
         </div>
       </div>
       <div className="flex items-center gap-4 w-full lg:w-auto">
-        <p className="text-xs font-light text-primary w-auto lg:w-full">
+        <p className="text-sm font-semibold text-primary w-auto lg:w-full">
           Sort by:
         </p>
         <div className="hidden lg:block">

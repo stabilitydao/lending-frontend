@@ -29,6 +29,7 @@ import { cn } from "@/lib/utils";
 import { MultiplierBar } from "../ui/multiplier-bar";
 import { Summary } from "../icons/summary";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Deposit } from "../icons/deposit";
 
 export const FarmModal = ({
   farm,
@@ -84,25 +85,25 @@ export const FarmModal = ({
               <span className="text-md">Farm {farm.farmName} Pool</span>
             </div>
             {!summary && (
-              <Tabs2>
+              <Tabs2 defaultValue={farm.tokenSymbol2}>
                 <TabsList2>
-                  <TabsTrigger2 value="eth" className="gap-2">
+                  <TabsTrigger2 value={farm.tokenSymbol1!} className="gap-2">
                     <Image
                       src={farm.imageSrc1!}
                       alt={farm.tokenSymbol1!}
                       width={10}
                       height={10}
                     />
-                    ETH
+                    {farm.tokenSymbol1}
                   </TabsTrigger2>
-                  <TabsTrigger2 value="usdc" className="gap-2">
+                  <TabsTrigger2 value={farm.tokenSymbol2!} className="gap-2">
                     <Image
                       src={farm.imageSrc2!}
                       alt={farm.tokenSymbol2!}
                       width={14}
                       height={14}
                     />
-                    USDC
+                    {farm.tokenSymbol2}
                   </TabsTrigger2>
                 </TabsList2>
               </Tabs2>
@@ -158,7 +159,9 @@ export const FarmModal = ({
                         secondAlt={farm.tokenSymbol1!}
                         size="small"
                       />
-                      <span>1 ETH - 3019.01 USDC</span>
+                      <span>
+                        1 {farm.tokenSymbol1} - 3019.01 {farm.tokenSymbol2}
+                      </span>
                     </span>
                   </div>
                   <div className="flex items-center justify-between text-primary">
@@ -173,7 +176,7 @@ export const FarmModal = ({
                           />
                           <AvatarFallback>{farm.tokenSymbol1}</AvatarFallback>
                         </Avatar>{" "}
-                        1.2 ETH
+                        1.2 {farm.tokenSymbol1}
                       </div>
                       <div className="flex items-center gap-2">
                         Long
@@ -184,7 +187,7 @@ export const FarmModal = ({
                           />
                           <AvatarFallback>{farm.tokenSymbol2}</AvatarFallback>
                         </Avatar>{" "}
-                        1.2 USDC
+                        1.2 {farm.tokenSymbol2}
                       </div>
                     </div>
                   </div>
@@ -202,14 +205,14 @@ export const FarmModal = ({
                           alt={farm.tokenSymbol1}
                         />
                       </Avatar>
-                      1.2 ETH +
+                      1.2 {farm.tokenSymbol1} +
                       <Avatar className="w-4 h-4">
                         <AvatarImage
                           src={farm.imageSrc2}
                           alt={farm.tokenSymbol2}
                         />
                       </Avatar>
-                      0 USDC
+                      0 {farm.tokenSymbol2}
                     </span>
                   </div>
                   <div className="flex items-center justify-between text-primary">
@@ -221,14 +224,14 @@ export const FarmModal = ({
                           alt={farm.tokenSymbol1}
                         />
                       </Avatar>
-                      0 ETH +
+                      0 {farm.tokenSymbol1} +
                       <Avatar className="w-4 h-4">
                         <AvatarImage
                           src={farm.imageSrc2}
                           alt={farm.tokenSymbol2}
                         />
                       </Avatar>
-                      0 USDC
+                      0 {farm.tokenSymbol2}
                     </span>
                   </div>
                   <div className="flex items-center justify-between text-primary">
@@ -240,41 +243,44 @@ export const FarmModal = ({
                           alt={farm.tokenSymbol1}
                         />
                       </Avatar>
-                      1.2 ETH +
+                      1.2 {farm.tokenSymbol1} +
                       <Avatar className="w-4 h-4">
                         <AvatarImage
                           src={farm.imageSrc2}
                           alt={farm.tokenSymbol2}
                         />
                       </Avatar>
-                      1200 USDC
+                      1200 {farm.tokenSymbol2}
                     </span>
                   </div>
                 </div>
-                <Tabs2>
+                <Tabs2 defaultValue={farm.tokenSymbol2}>
                   <TabsList2>
-                    <TabsTrigger2 value="eth" className="gap-2">
+                    <TabsTrigger2 value={farm.tokenSymbol1!} className="gap-2">
                       <Image
                         src={farm.imageSrc1!}
                         alt={farm.tokenSymbol1!}
                         width={10}
                         height={10}
                       />
-                      ETH
+                      {farm.tokenSymbol1}
                     </TabsTrigger2>
-                    <TabsTrigger2 value="usdc" className="gap-2">
+                    <TabsTrigger2 value={farm.tokenSymbol2!} className="gap-2">
                       <Image
                         src={farm.imageSrc2!}
                         alt={farm.tokenSymbol2!}
                         width={14}
                         height={14}
                       />
-                      USDC
+                      {farm.tokenSymbol2}
                     </TabsTrigger2>
                   </TabsList2>
                 </Tabs2>
-                <p>USDC Borrowing Interest: 33%</p>
-                <Button>Confirm</Button>
+                <p>{farm.tokenSymbol2} Borrowing Interest: 33%</p>
+                <Button>
+                  <Deposit className="w-4 h-4 mr-2" />
+                  Confirm
+                </Button>
               </>
             ) : (
               <>
@@ -306,7 +312,7 @@ export const FarmModal = ({
                       MAX
                     </Button>
                     <Input
-                      className="bg-primary placeholder:text-accent text-right text-accent rounded-2xl pl-16 pr-[5.2rem]"
+                      className="bg-primary placeholder:text-accent text-right text-accent rounded-full pl-16 pr-[5.2rem]"
                       placeholder="$0.00"
                     />
                     <Badge
@@ -343,7 +349,7 @@ export const FarmModal = ({
                       MAX
                     </Button>
                     <Input
-                      className="bg-primary placeholder:text-accent text-right text-accent rounded-2xl pl-16 pr-[5.2rem]"
+                      className="bg-primary placeholder:text-accent text-right text-accent rounded-full pl-16 pr-[5.2rem]"
                       placeholder="$0.00"
                     />
                     <Badge
@@ -374,29 +380,29 @@ export const FarmModal = ({
                     <Switch />
                   </div>
                 </div>
-                <Tabs2>
+                <Tabs2 defaultValue={farm.tokenSymbol2}>
                   <TabsList2>
-                    <TabsTrigger2 value="eth" className="gap-2">
+                    <TabsTrigger2 value={farm.tokenSymbol1!} className="gap-2">
                       <Image
                         src={farm.imageSrc1!}
                         alt={farm.tokenSymbol1!}
                         width={10}
                         height={10}
                       />
-                      ETH
+                      {farm.tokenSymbol1}
                     </TabsTrigger2>
-                    <TabsTrigger2 value="usdc" className="gap-2">
+                    <TabsTrigger2 value={farm.tokenSymbol2!} className="gap-2">
                       <Image
                         src={farm.imageSrc2!}
                         alt={farm.tokenSymbol2!}
                         width={14}
                         height={14}
                       />
-                      USDC
+                      {farm.tokenSymbol2}
                     </TabsTrigger2>
                   </TabsList2>
                 </Tabs2>
-                <p>USDC Borrowing Interest: 33%</p>
+                <p>{farm.tokenSymbol2} Borrowing Interest: 33%</p>
                 <Button
                   onClick={() => setSummary(true)}
                   className="flex items-center gap-2"

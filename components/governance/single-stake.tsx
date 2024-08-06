@@ -36,17 +36,17 @@ export const SingleStake = () => {
               <p className="text-xs font-light flex flex-row items-center gap-2">
                 veViFi Balance <Wallet2 className="w-4 h-4" />
               </p>
-              <p className="text-lg font-medium">12</p>
+              <p className="text-lg font-medium">2,605</p>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-2">
               <p className="text-xs font-light">Locked Amount</p>
-              <p className="text-lg font-medium">1212.25</p>
+              <p className="text-lg font-medium">2,605</p>
             </div>
             <div className="flex flex-col gap-2">
               <p className="text-xs font-light">Total Locked Amount</p>
-              <p className="text-lg font-medium">4317.45</p>
+              <p className="text-lg font-medium">2,605</p>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">

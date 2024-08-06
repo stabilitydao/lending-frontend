@@ -62,7 +62,7 @@ export const portfolioData = [
     value: "$3,000.00",
   },
   {
-    title: "Borrowed Fund",
+    title: "Borrowed Funds",
     value: "$1,521.93",
   },
   {
@@ -88,7 +88,7 @@ export const vaultData: VaultData[] = [
   {
     vaultName: "ETH-USDC",
     vaultTVL: 3180000,
-    vaultDexTVL: 1103000000,
+    vaultDexTVL: 110300000,
     vBoost: true,
     wallets: 0,
     deposited: 0,
@@ -99,8 +99,8 @@ export const vaultData: VaultData[] = [
   },
   {
     vaultName: "wstETH-ETH",
-    vaultTVL: 345140000,
-    vaultDexTVL: 1090000000,
+    vaultTVL: 345140,
+    vaultDexTVL: 10900000,
     vBoost: false,
     wallets: 0,
     deposited: 0,
@@ -111,8 +111,8 @@ export const vaultData: VaultData[] = [
   },
   {
     vaultName: "ARB-ETH",
-    vaultTVL: 521180000,
-    vaultDexTVL: 840000000,
+    vaultTVL: 521180,
+    vaultDexTVL: 8400000,
     vBoost: false,
     wallets: 0,
     deposited: 0,
@@ -123,8 +123,8 @@ export const vaultData: VaultData[] = [
   },
   {
     vaultName: "GMX-ETH",
-    vaultTVL: 636210000,
-    vaultDexTVL: 916530000,
+    vaultTVL: 636210,
+    vaultDexTVL: 916530,
     vBoost: false,
     wallets: 0,
     deposited: 0,
@@ -135,8 +135,8 @@ export const vaultData: VaultData[] = [
   },
   {
     vaultName: "wBTC-USDT",
-    vaultTVL: 287530000,
-    vaultDexTVL: 2170000000,
+    vaultTVL: 287530,
+    vaultDexTVL: 2170000,
     vBoost: false,
     wallets: 0,
     deposited: 0,
@@ -367,7 +367,7 @@ export const borrowData: BorrowData[] = [
     asset: {
       name: "Arbitrum",
       symbol: "ARB",
-      imageSrc: "/icons/coins/arbitrum.png",
+      imageSrc: "/icons/coins/arbitrum one.png",
     },
     totalSupplied: {
       amount: 17150000,

@@ -51,7 +51,7 @@ export const FarmsTable = () => {
     e.stopPropagation();
     setLeverages((prev) => ({
       ...prev,
-      [farmId]: Math.min((prev[farmId] || 1) + 1, 10),
+      [farmId]: Math.min((prev[farmId] || 1) + 0.5, 10),
     }));
   };
 
@@ -59,7 +59,7 @@ export const FarmsTable = () => {
     e.stopPropagation();
     setLeverages((prev) => ({
       ...prev,
-      [farmId]: Math.max((prev[farmId] || 1) - 1, 1),
+      [farmId]: Math.max((prev[farmId] || 1) - 0.5, 1),
     }));
   };
 
@@ -79,7 +79,7 @@ export const FarmsTable = () => {
               APR <FilterIcon />
             </div>
           </TableHead>
-          <TableHead className="text-muted">Leverage</TableHead>
+          <TableHead className="text-muted text-center">Leverage</TableHead>
         </TableHeader>
         <TableBody>
           {farmsData.map((farm, index) => (

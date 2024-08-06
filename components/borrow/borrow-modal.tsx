@@ -65,16 +65,16 @@ export const BorrowModal = ({
                 value={activeTab}
                 onValueChange={setActiveTab}
               >
-                <TabsList className="grid w-full grid-cols-2">
+                <TabsList className="grid w-full grid-cols-2 p-0 gap-0">
                   <TabsTrigger
                     value="borrow"
-                    className="w-full data-[state=active]:bg-background data-[state=active]:text-primary bg-transparent h-12 shadow-none rounded-none border-none"
+                    className="w-full text-lg data-[state=active]:bg-background data-[state=active]:text-primary bg-transparent h-12 shadow-none rounded-none border-b-0 border-l-0 border-r-0 border-t-2 border-t-transparent data-[state=inactive]:border-t-background"
                   >
                     Borrow
                   </TabsTrigger>
                   <TabsTrigger
                     value="repay"
-                    className="w-full data-[state=active]:bg-background data-[state=active]:text-primary bg-transparent h-12 shadow-none rounded-none border-none"
+                    className="w-full text-lg data-[state=active]:bg-background data-[state=active]:text-primary bg-transparent h-12 shadow-none rounded-none border-b-0 border-l-0 border-r-0 border-t-2 border-t-transparent data-[state=inactive]:border-t-background"
                   >
                     Repay
                   </TabsTrigger>
@@ -111,22 +111,22 @@ export const BorrowModal = ({
               <p>Borrow Stats</p>
               <div className="flex flex-col gap-4">
                 <div className="flex items-center justify-between">
-                  <span>Borrow APY</span>
+                  <span className=" font-semibold">Borrow APY</span>
                   <span>6.34%</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span>Borrow Balance</span>
+                  <span className=" font-semibold">Borrow Balance</span>
                   <span>$0.00</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span>Reward APR</span>
+                  <span className=" font-semibold">Reward APR</span>
                   <span>0.47%</span>
                 </div>
               </div>
               <div className="flex flex-col gap-2">
-                <p>Borrow Stats</p>
+                <p className="pb-4">Borrow Stats</p>
                 <div className="flex items-center justify-between">
-                  <span>Your Borrow Limit</span>
+                  <span className=" font-semibold">Your Borrow Limit</span>
                   <div className="flex items-center gap-2">
                     <span>$0</span>
                     <ArrowRight className="w-4 h-4" />
@@ -134,7 +134,7 @@ export const BorrowModal = ({
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span>Borrow Limit Used</span>
+                  <span className=" font-semibold">Borrow Limit Used</span>
                   <div className="flex items-center gap-2">
                     <span>0%</span>
                     <ArrowRight className="w-4 h-4" />

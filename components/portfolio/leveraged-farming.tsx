@@ -21,14 +21,14 @@ export const LeveragedFarming = () => {
           <p className="text-xl">Leveraged Farming</p>
           <div className="flex items-center justify-center gap-4 text-sm font-normal">
             <p>
-              Net Value: <span className="px-1 font-semibold">$-1514.92</span>
+              Net Value: <span className="px-1 font-semibold">$-1,514.92</span>
             </p>
             <p>
-              Total Collateroal:{" "}
+              Total Collateral:{" "}
               <span className="px-1 font-semibold">$0.00</span>
             </p>
             <p>
-              Total Debt: <span className="px-1 font-semibold">$1521.93</span>
+              Total Debt: <span className="px-1 font-semibold">$1,521.93</span>
             </p>
             <p>
               Total Interest:{" "}
