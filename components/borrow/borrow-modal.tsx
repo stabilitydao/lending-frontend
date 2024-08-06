@@ -123,7 +123,7 @@ export const BorrowModal = ({
                   <span>0.47%</span>
                 </div>
               </div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-4">
                 <p className="pb-4">Borrow Stats</p>
                 <div className="flex items-center justify-between">
                   <span className=" font-semibold">Your Borrow Limit</span>

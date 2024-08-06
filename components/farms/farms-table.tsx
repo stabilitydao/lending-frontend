@@ -108,11 +108,13 @@ export const FarmsTable = () => {
                     </div>
                   </div>
                 </TableCell>
-                <TableCell className="flex flex-col gap-4 ">
-                  From {farm.apy.from}% to{" "}
-                  <span className="text-green-500 text-base flex items-center gap-8">
-                    {farm.apy.to}% {farm.trending && <Fire />}
-                  </span>
+                <TableCell>
+                  <div className="flex flex-col gap-2">
+                    From {farm.apy.from}% to{" "}
+                    <span className="text-green-500 text-base flex items-center gap-8">
+                      {farm.apy.to}% {farm.trending && <Fire />}
+                    </span>
+                  </div>
                 </TableCell>
                 <TableCell>
                   <div className="lg:hidden">
