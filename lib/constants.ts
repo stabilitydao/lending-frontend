@@ -165,6 +165,7 @@ export const farmsData: FarmData[] = [
     trending: true,
     imageSrc1: "/icons/coins/ethereum.png",
     imageSrc2: "/icons/coins/usdc.png",
+    chainImageSrc: "/icons/coins/arbitrum one.png",
   },
   {
     farmName: "wstETH-ETH",
@@ -182,6 +183,7 @@ export const farmsData: FarmData[] = [
     },
     imageSrc1: "/icons/coins/wsteth.png",
     imageSrc2: "/icons/coins/ethereum.png",
+    chainImageSrc: "/icons/coins/op mainnet.png",
   },
   {
     farmName: "ARB-ETH",
@@ -199,6 +201,7 @@ export const farmsData: FarmData[] = [
     },
     imageSrc1: "/icons/coins/arbitrum one.png",
     imageSrc2: "/icons/coins/ethereum.png",
+    chainImageSrc: "/icons/coins/op mainnet.png",
   },
   {
     farmName: "GMX-ETH",
@@ -217,6 +220,7 @@ export const farmsData: FarmData[] = [
     },
     imageSrc1: "/icons/coins/gmx.png",
     imageSrc2: "/icons/coins/ethereum.png",
+    chainImageSrc: "/icons/coins/arbitrum one.png",
   },
   {
     farmName: "wBTC-USDT",
@@ -234,6 +238,7 @@ export const farmsData: FarmData[] = [
     },
     imageSrc2: "/icons/coins/wbtc.png",
     imageSrc1: "/icons/coins/usdt.png",
+    chainImageSrc: "/icons/coins/arbitrum one.png",
   },
 ];
 

@@ -18,4 +18,5 @@ export type FarmData = {
   leverage: number;
   imageSrc1?: string;
   imageSrc2?: string;
+  chainImageSrc?: string;
 };

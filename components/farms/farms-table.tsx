@@ -20,9 +20,10 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { DoubleAvatar } from "@/components/ui/double-avatar";
-import { ChevronUp, ChevronDown, ChevronsUpDown } from "lucide-react";
+import { ChevronUp, ChevronDown } from "lucide-react";
 import { FilterIcon } from "../icons/filter";
 import { Fire } from "../icons/fire";
+import { ChainBookmark } from "../icons/chain-bookmark";
 
 export const FarmsTable = () => {
   const router = useRouter();
@@ -86,6 +87,9 @@ export const FarmsTable = () => {
             <FarmModal key={index} farm={farm}>
               <TableRow className="text-primary border-t-background cursor-pointer hover:bg-background/50 relative">
                 <TableCell>
+                  <div className="absolute top-0 left-1">
+                    <ChainBookmark src={farm.chainImageSrc!} />
+                  </div>
                   <div className="flex items-center gap-10">
                     <DoubleAvatar
                       firstSrc={farm.imageSrc1!}
@@ -104,7 +108,7 @@ export const FarmsTable = () => {
                     </div>
                   </div>
                 </TableCell>
-                <TableCell className="flex flex-col">
+                <TableCell className="flex flex-col gap-4 ">
                   From {farm.apy.from}% to{" "}
                   <span className="text-green-500 text-base flex items-center gap-8">
                     {farm.apy.to}% {farm.trending && <Fire />}
@@ -187,22 +191,20 @@ export const FarmsTable = () => {
                     </div>
                   </div>
                 </TableCell>
-                <TableCell className="flex gap-10 justify-center">
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2 z-10">
-                    <div className="flex items-center gap-4">
-                      <span className="text-lg">
-                        {leverages[farm.farmName] || farm.leverage}x
-                      </span>
-                      <div className="flex flex-col text-primary">
-                        <ChevronUp
-                          className="w-4 h-4 cursor-pointer"
-                          onClick={(e) => increaseLeverage(farm.farmName, e)}
-                        />
-                        <ChevronDown
-                          className="w-4 h-4 cursor-pointer"
-                          onClick={(e) => decreaseLeverage(farm.farmName, e)}
-                        />
-                      </div>
+                <TableCell>
+                  <div className="flex items-center justify-center gap-4">
+                    <span className="text-lg">
+                      {leverages[farm.farmName] || farm.leverage}x
+                    </span>
+                    <div className="flex flex-col text-primary">
+                      <ChevronUp
+                        className="w-4 h-4 cursor-pointer"
+                        onClick={(e) => increaseLeverage(farm.farmName, e)}
+                      />
+                      <ChevronDown
+                        className="w-4 h-4 cursor-pointer"
+                        onClick={(e) => decreaseLeverage(farm.farmName, e)}
+                      />
                     </div>
                   </div>
                 </TableCell>
