@@ -180,8 +180,8 @@ export const farmsData: FarmData[] = [
       total_apr: 12.9,
       daily_apr: 0.04,
     },
-    imageSrc1: "/icons/coins/ethereum.png",
-    imageSrc2: "/icons/coins/wsteth.png",
+    imageSrc1: "/icons/coins/wsteth.png",
+    imageSrc2: "/icons/coins/ethereum.png",
   },
   {
     farmName: "ARB-ETH",
@@ -197,8 +197,8 @@ export const farmsData: FarmData[] = [
       total_apr: 21.4,
       daily_apr: 0.06,
     },
-    imageSrc1: "/icons/coins/ethereum.png",
-    imageSrc2: "/icons/coins/arbitrum one.png",
+    imageSrc1: "/icons/coins/arbitrum one.png",
+    imageSrc2: "/icons/coins/ethereum.png",
   },
   {
     farmName: "GMX-ETH",
@@ -215,12 +215,13 @@ export const farmsData: FarmData[] = [
       total_apr: 137.1,
       daily_apr: 0.38,
     },
-    imageSrc1: "/icons/coins/ethereum.png",
-    imageSrc2: "/icons/coins/gmx.png",
+    imageSrc1: "/icons/coins/gmx.png",
+    imageSrc2: "/icons/coins/ethereum.png",
   },
   {
     farmName: "wBTC-USDT",
-
+    tokenSymbol1: "wBTC",
+    tokenSymbol2: "USDT",
     farmTVL: 287530,
     farmDexTVL: 2170000,
     apy: { from: 12.5, to: 28.1 },
