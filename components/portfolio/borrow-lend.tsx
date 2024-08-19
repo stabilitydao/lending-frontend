@@ -12,6 +12,8 @@ import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
 import { CloseModal } from "./close-modal";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { BorrowLendModal } from "./borrow-lend-modal";
+import { borrowData } from "@/lib/constants";
 
 export const BorrowLend = () => {
   return (
@@ -68,10 +70,12 @@ export const BorrowLend = () => {
           </TableBody>
         </Table>
         <div className="flex items-end lg:items-center justify-end lg:justify-center gap-4 pt-2 lg:pt-0">
-          <Button size={"sm"}>
-            <PlusIcon className="w-4 h-4 mr-2" />
-            Modify
-          </Button>
+          <BorrowLendModal borrow={borrowData[0]}>
+            <Button size={"sm"}>
+              <PlusIcon className="w-4 h-4 mr-2" />
+              Modify
+            </Button>
+          </BorrowLendModal>
           <CloseModal />
         </div>
       </CardContent>

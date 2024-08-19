@@ -19,12 +19,17 @@ import { PercentageBar } from "@/components/ui/percentage-bar";
 import { DoubleAvatar } from "@/components/ui/double-avatar";
 import { Withdraw } from "@/components/icons/withdraw";
 
-export const WithdrawVaultModal = ({ vault }: { vault: VaultData }) => {
-  const { isDisconnected } = useAccount();
+export const WithdrawVaultModal = ({
+  vault,
+  children,
+}: {
+  vault: VaultData;
+  children?: React.ReactNode;
+}) => {
   return (
     <Dialog>
       <DialogTrigger>
-        <Button disabled>Withdraw</Button>
+        {children ? children : <Button disabled>Withdraw</Button>}
       </DialogTrigger>
       <DialogContent className="bg-card text-primary">
         <DialogHeader>

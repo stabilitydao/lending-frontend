@@ -19,12 +19,22 @@ import { PercentageBar } from "@/components/ui/percentage-bar";
 import { DoubleAvatar } from "@/components/ui/double-avatar";
 import { Deposit } from "@/components/icons/deposit";
 
-export const DepositVaultModal = ({ vault }: { vault: VaultData }) => {
+export const DepositVaultModal = ({
+  vault,
+  children,
+}: {
+  vault: VaultData;
+  children?: React.ReactNode;
+}) => {
   const { isDisconnected } = useAccount();
   return (
     <Dialog>
       <DialogTrigger>
-        <Button disabled={isDisconnected}>Deposit</Button>
+        {children ? (
+          children
+        ) : (
+          <Button disabled={isDisconnected}>Deposit</Button>
+        )}
       </DialogTrigger>
       <DialogContent className="bg-card text-primary">
         <DialogHeader>

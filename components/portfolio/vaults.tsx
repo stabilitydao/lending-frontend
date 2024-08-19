@@ -9,9 +9,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { PlusIcon } from "lucide-react";
-import { CloseModal } from "./close-modal";
+import { PlusIcon, X } from "lucide-react";
 import { DoubleAvatar } from "../ui/double-avatar";
+import { DepositVaultModal } from "../vaults/deposit-vault-modal";
+import { WithdrawVaultModal } from "../vaults/withdraw-vault-modal";
+import { vaultData } from "@/lib/constants";
 
 export const Vaults = () => {
   return (
@@ -59,11 +61,18 @@ export const Vaults = () => {
           </TableBody>
         </Table>
         <div className="flex items-end lg:items-center justify-end lg:justify-center gap-4 pt-2 lg:pt-0">
-          <Button size={"sm"}>
-            <PlusIcon className="w-4 h-4 mr-2" />
-            Modify
-          </Button>
-          <CloseModal />
+          <DepositVaultModal vault={vaultData[0]}>
+            <Button size={"sm"}>
+              <PlusIcon className="w-4 h-4 mr-2" />
+              Modify
+            </Button>
+          </DepositVaultModal>
+          <WithdrawVaultModal vault={vaultData[0]}>
+            <Button size={"sm"}>
+              <X className="w-4 h-4 mr-2" />
+              Close
+            </Button>
+          </WithdrawVaultModal>
         </div>
       </CardContent>
     </Card>
