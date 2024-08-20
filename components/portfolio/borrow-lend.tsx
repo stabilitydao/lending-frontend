@@ -9,11 +9,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { PlusIcon } from "lucide-react";
+import { PlusIcon, X } from "lucide-react";
 import { CloseModal } from "./close-modal";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { BorrowLendModal } from "./borrow-lend-modal";
 import { borrowData } from "@/lib/constants";
+import { LeveragedModal } from "./leveraged-modal";
 
 export const BorrowLend = () => {
   return (
@@ -76,7 +77,12 @@ export const BorrowLend = () => {
               Modify
             </Button>
           </BorrowLendModal>
-          <CloseModal />
+          <LeveragedModal borrow={borrowData[0]}>
+            <Button size={"sm"}>
+              <X className="w-4 h-4 mr-2" />
+              Close
+            </Button>
+          </LeveragedModal>
         </div>
       </CardContent>
     </Card>

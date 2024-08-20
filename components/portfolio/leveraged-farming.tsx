@@ -13,7 +13,8 @@ import { PlusIcon } from "lucide-react";
 import { CloseModal } from "./close-modal";
 import { DoubleAvatar } from "../ui/double-avatar";
 import { LeveragedModal } from "./leveraged-modal";
-import { borrowData } from "@/lib/constants";
+import { farmsData, borrowData } from "@/lib/constants";
+import { LeveragedFarmingModal } from "./leveraged-farming-modal";
 
 export const LeveragedFarming = () => {
   return (
@@ -74,12 +75,12 @@ export const LeveragedFarming = () => {
           </TableBody>
         </Table>
         <div className="flex items-end lg:items-center justify-end lg:justify-center gap-4 pt-2 lg:pt-0">
-          <LeveragedModal borrow={borrowData[0]}>
+          <LeveragedFarmingModal farm={farmsData[0]}>
             <Button size={"sm"}>
               <PlusIcon className="w-4 h-4 mr-2" />
               Modify
             </Button>
-          </LeveragedModal>
+          </LeveragedFarmingModal>
           <CloseModal />
         </div>
       </CardContent>
