@@ -10,7 +10,7 @@ import {
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { formatNumberWithSuffix } from "@/lib/utils";
 import { borrowData } from "@/lib/constants";
-import { BorrowModal } from "./borrow-modal";
+import { SupplyModal } from "./supply-modal";
 import { FilterIcon } from "../icons/filter";
 
 export const BorrowTable = () => {
@@ -46,7 +46,7 @@ export const BorrowTable = () => {
         </TableHeader>
         <TableBody>
           {borrowData.map((asset, index) => (
-            <BorrowModal key={index} borrow={asset}>
+            <SupplyModal key={index} borrow={asset}>
               <TableRow className="text-primary border-t-background cursor-pointer hover:bg-background/50">
                 <TableCell>
                   <div className="flex items-center gap-10">
@@ -84,7 +84,7 @@ export const BorrowTable = () => {
                 </TableCell>
                 <TableCell>{asset.borrowAPY}%</TableCell>
               </TableRow>
-            </BorrowModal>
+            </SupplyModal>
           ))}
         </TableBody>
       </Table>

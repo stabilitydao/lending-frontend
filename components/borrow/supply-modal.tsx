@@ -20,7 +20,7 @@ import { Deposit } from "../icons/deposit";
 import { Withdraw } from "../icons/withdraw";
 import { ArrowRight, CheckCheck } from "lucide-react";
 
-export const BorrowLendModal = ({
+export const SupplyModal = ({
   borrow,
   children,
 }: {
@@ -70,20 +70,20 @@ export const BorrowLendModal = ({
                     value="borrow"
                     className="w-full text-lg data-[state=active]:bg-background data-[state=active]:text-primary bg-transparent h-12 shadow-none rounded-none border-b-0 border-l-0 border-r-0 border-t-2 border-t-transparent data-[state=inactive]:border-t-background"
                   >
-                    Borrow
+                    Supply
                   </TabsTrigger>
                   <TabsTrigger
                     value="repay"
                     className="w-full text-lg data-[state=active]:bg-background data-[state=active]:text-primary bg-transparent h-12 shadow-none rounded-none border-b-0 border-l-0 border-r-0 border-t-2 border-t-transparent data-[state=inactive]:border-t-background"
                   >
-                    Repay
+                    Withdraw
                   </TabsTrigger>
                 </TabsList>
               </Tabs>
             </DialogTitle>
             <DialogDescription className="flex flex-col gap-8 pt-10">
               <div className="flex items-center justify-between">
-                <span>Borrow Amount</span>
+                <span>Supply Amount</span>
                 <div className="flex items-center gap-4">
                   Wallet Balance:{" "}
                   <span className="font-semibold">
@@ -108,14 +108,14 @@ export const BorrowLendModal = ({
                   onChange={(percentage) => console.log(percentage)}
                 />
               </div>
-              <p>Borrow Stats</p>
+              <p>Supply Stats</p>
               <div className="flex flex-col gap-4">
                 <div className="flex items-center justify-between">
-                  <span className=" font-semibold">Borrow APY</span>
+                  <span className=" font-semibold">Supply APY</span>
                   <span>6.34%</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className=" font-semibold">Borrow Balance</span>
+                  <span className=" font-semibold">Supply Balance</span>
                   <span>$0.00</span>
                 </div>
                 <div className="flex items-center justify-between">
@@ -151,13 +151,13 @@ export const BorrowLendModal = ({
                     </Button>
                     <Button className="w-full flex items-center justify-center gap-2">
                       <Deposit className="w-5 h-5" />
-                      Borrow
+                      Supply
                     </Button>
                   </>
                 ) : (
                   <Button className="w-full flex items-center justify-center gap-2">
                     <Withdraw className="w-5 h-5" />
-                    Repay
+                    Withdraw
                   </Button>
                 )}
               </div>
