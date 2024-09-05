@@ -1,4 +1,4 @@
-export type BorrowData = {
+export type BorrowData = { 
   asset: {
     name: string;
     symbol: string;
