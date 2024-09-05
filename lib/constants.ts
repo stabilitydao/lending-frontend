@@ -268,7 +268,7 @@ export const borrowData: BorrowData[] = [
       imageSrc: "/icons/coins/ethereum.png",
     },
     totalSupplied: {
-      amount: 61460000,
+      amount: 6146000,
       value: 193500000,
     },
     supplyAPY: 2.23,

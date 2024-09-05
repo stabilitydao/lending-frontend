@@ -43,7 +43,7 @@ export const MultiplierBar = ({
   return (
     <div className="w-full flex flex-col gap-6">
       <div className="flex items-center gap-4">
-        <span>Leverage Setup</span>
+        <span className="font-semibold">Leverage Setup</span>
         <Badge variant="default" className="rounded-full px-6 shadow-lg">
           {multiplier}x
         </Badge>

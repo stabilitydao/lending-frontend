@@ -69,7 +69,9 @@ export const FarmsTable = () => {
       <AssetFilter />
       <Table>
         <TableHeader className="h-24 border-b border-background">
-          <TableHead className="font-bold">Leveraged Farming</TableHead>
+          <TableHead className="font-bold text-primary text-lg">
+            Leveraged Farming
+          </TableHead>
           <TableHead className="text-muted">
             <div className="flex items-center gap-2">
               APY <FilterIcon />
