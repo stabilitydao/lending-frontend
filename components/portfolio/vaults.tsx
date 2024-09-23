@@ -64,7 +64,7 @@ export const Vaults = () => {
           <DepositVaultModal vault={vaultData[0]}>
             <Button size={"sm"}>
               <PlusIcon className="w-4 h-4 mr-2" />
-              Modify
+              Add
             </Button>
           </DepositVaultModal>
           <WithdrawVaultModal vault={vaultData[0]}>

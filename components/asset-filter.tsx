@@ -72,7 +72,7 @@ export const AssetFilter = () => {
                 <TabsTrigger
                   key={item.value}
                   value={item.value}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 text-primary"
                 >
                   {item.imageSrc && (
                     <Image
@@ -121,7 +121,7 @@ export const AssetFilter = () => {
           <Tabs value={sortBy} onValueChange={handleSortChange}>
             <TabsList>
               {sortItems.map((item) => (
-                <TabsTrigger key={item.value} value={item.value}>
+                <TabsTrigger key={item.value} value={item.value} className="text-primary">
                   {item.name}
                 </TabsTrigger>
               ))}

@@ -15,6 +15,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { BorrowLendModal } from "./borrow-lend-modal";
 import { borrowData } from "@/lib/constants";
 import { LeveragedModal } from "./leveraged-modal";
+import { SupplyModal } from "../borrow/supply-modal";
 
 export const BorrowLend = () => {
   return (
@@ -71,16 +72,22 @@ export const BorrowLend = () => {
           </TableBody>
         </Table>
         <div className="flex items-end lg:items-center justify-end lg:justify-center gap-4 pt-2 lg:pt-0">
-          <BorrowLendModal borrow={borrowData[0]}>
+          <SupplyModal borrow={borrowData[0]}>
+            <Button size={"sm"}>
+              <PlusIcon className="w-4 h-4 mr-2" />
+              Supply
+            </Button>
+          </SupplyModal>
+          {/* <BorrowLendModal borrow={borrowData[0]}>
             <Button size={"sm"}>
               <PlusIcon className="w-4 h-4 mr-2" />
               Modify
             </Button>
-          </BorrowLendModal>
+          </BorrowLendModal> */}
           <LeveragedModal borrow={borrowData[0]}>
             <Button size={"sm"}>
               <X className="w-4 h-4 mr-2" />
-              Close
+              Repay
             </Button>
           </LeveragedModal>
         </div>

@@ -56,8 +56,8 @@ export const VaultTable = () => {
             <div className="flex items-center gap-4 justify-center">
               <Tabs value={vault} onValueChange={handleVaultChange}>
                 <TabsList>
-                  <TabsTrigger value="all">All Vaults</TabsTrigger>
-                  <TabsTrigger value="personal">My Vaults</TabsTrigger>
+                  <TabsTrigger value="all" className="text-primary">All Vaults</TabsTrigger>
+                  <TabsTrigger value="personal" className="text-primary">My Vaults</TabsTrigger>
                 </TabsList>
               </Tabs>
             </div>

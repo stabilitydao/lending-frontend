@@ -42,7 +42,7 @@ export const WithdrawVaultModal = ({
             />{" "}
             Withdraw from {vault?.vaultName} Vault
           </DialogTitle>
-          <DialogDescription className="flex flex-col gap-8">
+          <DialogDescription className="flex flex-col gap-8 text-primary">
             <div className="flex items-center justify-between">
               <span className="font-semibold">Withdraw</span>
               <span className="flex items-center gap-2 font-semibold">
