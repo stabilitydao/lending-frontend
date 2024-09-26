@@ -69,7 +69,6 @@ export const SupplyModal = ({
     <Dialog onOpenChange={onClose}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="bg-card text-primary overflow-y-auto pt-12">
-        <button className="z-10" onClick={onClose}>simulate onclose reset</button>
         <button
           onClick={() => toggleMode(isBorrow)}
           className="z-10 place-self-start text-primary text-sm font-mdium underline"
