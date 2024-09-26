@@ -46,7 +46,7 @@ export const BorrowTable = () => {
         </TableHeader>
         <TableBody>
           {borrowData.map((asset, index) => (
-            <SupplyModal key={index} borrow={asset}>
+            <SupplyModal key={index} borrow={asset} defaultIsBorrow={false}>
               <TableRow className="text-primary border-t-background cursor-pointer hover:bg-background/50">
                 <TableCell>
                   <div className="flex items-center gap-10">
