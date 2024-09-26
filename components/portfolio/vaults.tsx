@@ -34,7 +34,7 @@ export const Vaults = () => {
         <Separator />
       </CardHeader>
       <CardContent className="w-full  flex flex-col lg:flex-row items-center">
-        <Table>
+        <Table className="lg:table-fixed">
           <TableHeader>
             <TableRow className="border-none">
               <TableHead>Collateral</TableHead>
