@@ -61,7 +61,7 @@ export const ConnectWallet = () => {
         <DialogHeader className="flex flex-col items-center">
           <div className="py-4">
             <Image
-              src="/icons/rounded-logo.png"
+              src="/logo.svg"
               alt="Vicuna Finances"
               width={60}
               height={60}

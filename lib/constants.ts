@@ -82,6 +82,7 @@ export const chainIcons = [
   "/icons/coins/polygon.png",
   "/icons/coins/base.png",
   "/icons/coins/bnb smart chain.png",
+  "/icons/coins/sonic.svg",
 ];
 
 export const vaultData: VaultData[] = [
