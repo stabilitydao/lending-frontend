@@ -29,7 +29,7 @@ export const WithdrawVaultModal = ({
   return (
     <Dialog>
       <DialogTrigger>
-        {children ? children : <Button disabled>Withdraw</Button>}
+        {children ? children : <Button>Withdraw</Button>}
       </DialogTrigger>
       <DialogContent className="bg-card text-primary">
         <DialogHeader>
