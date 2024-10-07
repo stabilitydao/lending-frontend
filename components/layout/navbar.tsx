@@ -35,13 +35,16 @@ export const Navbar = () => {
 
   return (
     <nav className="flex justify-between items-center bg-background py-3 px-8 z-50 shadow-lg absolute w-full">
-      <Link href="/" className="flex gap-[5px] items-center">
-        <Image src="/logo.svg" alt="logo" width={54} height={54} />
-        <div className="hidden min-[460px]:block self-end uppercase leading-[24px] text-primary">
-          <p className="text-[28px] font-black">Vicuna</p>
-          <p className="text-[16px] font-extralight">Finance</p>
-        </div>
-      </Link>
+      <div>
+        <Link href="/" className="flex gap-[5px] items-center">
+          <Image src="/logo.svg" alt="logo" width={54} height={54} />
+          <div className="hidden min-[460px]:block self-end uppercase leading-[24px] text-primary">
+            <p className="text-[28px] font-black">Vicuna</p>
+            <p className="text-[16px] font-extralight">Finance</p>
+          </div>
+        </Link>
+        <p className="mt-2 font-extralight text-primary">(Work In Progress)</p>
+      </div>
       {/* <Link href="/">
         <Image
           src={"/icons/rounded-logo.png"}
