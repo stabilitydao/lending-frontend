@@ -82,6 +82,7 @@ export const chainIcons = [
   "/icons/coins/polygon.png",
   "/icons/coins/base.png",
   "/icons/coins/bnb smart chain.png",
+  "/icons/coins/sonic.svg",
 ];
 
 export const vaultData: VaultData[] = [
@@ -268,7 +269,7 @@ export const borrowData: BorrowData[] = [
       imageSrc: "/icons/coins/ethereum.png",
     },
     totalSupplied: {
-      amount: 6146000,
+      amount: 61460,
       value: 193500000,
     },
     supplyAPY: 2.23,

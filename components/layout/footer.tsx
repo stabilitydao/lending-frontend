@@ -7,9 +7,23 @@ export const Footer = () => {
   return (
     <footer>
       <div className="flex flex-col lg:flex-row items-center h-fit z-50 justify-between shadow-inner gap-10 bg-background w-full py-12 px-10 relative">
-        <Link href="/">
+        <div>
+          <Link href="/" className="flex gap-[5px] items-center">
+            <Image src="/logo.svg" alt="logo" width={78} height={78} />
+            <div className="uppercase leading-[28px] sm:leading-[32px] lg:leading-[36px] text-primary">
+              <p className="text-[32px] sm:text-[36px] lg:text-[40px] font-black">
+                Vicuna
+              </p>
+              <p className="text-[20px] sm:text-[24px] lg:text-[28px] font-extralight">
+                Finance
+              </p>
+            </div>
+          </Link>
+          <p className="mt-4 font-extralight text-primary">(Work In Progress)</p>
+        </div>
+        {/* <Link href="/">
           <Image src="/logo.png" alt="Llama icon" width={300} height={300} />
-        </Link>
+        </Link> */}
         <div className="flex flex-row lg:flex-col items-start gap-4">
           {navLinks.map((link) => (
             <Link

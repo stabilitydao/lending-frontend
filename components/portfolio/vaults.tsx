@@ -34,7 +34,7 @@ export const Vaults = () => {
         <Separator />
       </CardHeader>
       <CardContent className="w-full  flex flex-col lg:flex-row items-center">
-        <Table>
+        <Table className="lg:table-fixed">
           <TableHeader>
             <TableRow className="border-none">
               <TableHead>Collateral</TableHead>
@@ -64,7 +64,7 @@ export const Vaults = () => {
           <DepositVaultModal vault={vaultData[0]}>
             <Button size={"sm"}>
               <PlusIcon className="w-4 h-4 mr-2" />
-              Modify
+              Add
             </Button>
           </DepositVaultModal>
           <WithdrawVaultModal vault={vaultData[0]}>

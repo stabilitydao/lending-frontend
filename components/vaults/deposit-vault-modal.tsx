@@ -47,7 +47,7 @@ export const DepositVaultModal = ({
             />{" "}
             Deposit to {vault?.vaultName} Vault
           </DialogTitle>
-          <DialogDescription className="flex flex-col gap-8">
+          <DialogDescription className="flex flex-col gap-8 text-primary">
             <div className="flex items-center justify-between">
               <span className="font-semibold">Deposit</span>
               <span className="flex items-center gap-2 font-semibold  ">
@@ -60,7 +60,7 @@ export const DepositVaultModal = ({
               <div className="relative flex items-center">
                 <Button
                   size={"sm"}
-                  className="absolute left-2 h-6 z-10 bg-purple-200 hover:bg-purple-300  text-primary"
+                  className="absolute left-2 h-6 z-10 bg-purple-200 text-primary"
                 >
                   MAX
                 </Button>

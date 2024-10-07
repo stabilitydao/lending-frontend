@@ -57,11 +57,11 @@ export const ConnectWallet = () => {
           <Wallet className="w-5 h-5 ml-2" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] backdrop-blur-xl">
+      <DialogContent className="sm:max-w-[425px]">
         <DialogHeader className="flex flex-col items-center">
           <div className="py-4">
             <Image
-              src="/icons/rounded-logo.png"
+              src="/logo.svg"
               alt="Vicuna Finances"
               width={60}
               height={60}

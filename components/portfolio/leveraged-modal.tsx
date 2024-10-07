@@ -49,7 +49,7 @@ export const LeveragedModal = ({
         </div>
         <div className="absolute inset-0 flex items-center justify-center z-0">
           <Image
-            src="/icons/rounded-logo.png"
+            src="/logo.svg"
             alt="Background Logo"
             objectFit="cover"
             className="opacity-10"
@@ -81,7 +81,7 @@ export const LeveragedModal = ({
                 </TabsList>
               </Tabs>
             </DialogTitle>
-            <DialogDescription className="flex flex-col gap-8 pt-10">
+            <DialogDescription className="flex flex-col gap-8 pt-10 text-primary">
               <div className="flex items-center justify-between">
                 <span>Borrow Amount</span>
                 <div className="flex items-center gap-4">

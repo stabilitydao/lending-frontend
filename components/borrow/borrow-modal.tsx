@@ -49,7 +49,7 @@ export const BorrowModal = ({
         </div>
         <div className="absolute inset-0 flex items-center justify-center z-0">
           <Image
-            src="/icons/rounded-logo.png"
+            src="/logo.svg"
             alt="Background Logo"
             objectFit="cover"
             className="opacity-10"

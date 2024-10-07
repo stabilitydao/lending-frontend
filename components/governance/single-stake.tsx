@@ -19,12 +19,7 @@ export const SingleStake = () => {
       <CardContent>
         <div className="flex flex-col gap-10">
           <div className="flex flex-row items-center gap-2">
-            <Image
-              src="/icons/rounded-logo.png"
-              alt="logo"
-              width={50}
-              height={50}
-            />
+            <Image src="/logo.svg" alt="logo" width={50} height={50} />
             <p className="text-3xl font-semibold">VeViFi</p>
           </div>
           <div className="grid grid-cols-2 gap-4">
@@ -65,7 +60,7 @@ export const SingleStake = () => {
               <div className="text-lg font-medium flex flex-row items-center gap-2">
                 <p>28.131</p>
                 <Avatar>
-                  <AvatarImage src="/icons/rounded-logo.png" />
+                  <AvatarImage src="/logo.svg" />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
               </div>
