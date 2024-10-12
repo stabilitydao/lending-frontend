@@ -6,7 +6,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
- 
+
 export default function Home() {
   return (
     <main className="flex flex-col items-center">
@@ -105,6 +105,15 @@ export default function Home() {
               height={32}
             />
             <p className="text-xl text-black">Web3 UI/UX</p>
+          </div>
+          <div className="flex flex-row gap-4 items-center">
+            <Image
+              src="/icons/sonic-labs.svg"
+              alt="Llama icon"
+              width={120}
+              height={32}
+            />
+            {/* <p className="text-xl text-black">Sonic Labs</p> */}
           </div>
         </div>
       </div>
