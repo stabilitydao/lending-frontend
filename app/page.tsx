@@ -6,6 +6,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
+import ScrollingPartners from "@/components/home/scrolling-partners";
 
 export default function Home() {
   return (
@@ -67,9 +68,10 @@ export default function Home() {
           </CardContent>
         </Card>
       </div>
-      <div className="flex flex-col mx-10 pb-16 space-y-12 items-center">
+      <div className="w-full flex flex-col pb-16 space-y-12 items-center relative overflow-hidden">
         <h2 className="text-6xl text-primary">Partners</h2>
-        <div className="flex flex-col md:flex-row gap-24 items-start md:items-center">
+        <ScrollingPartners />
+        {/* <div className="flex flex-col md:flex-row gap-24 items-start md:items-center">
           <div className="flex flex-row gap-4 items-center">
             <Image
               src="/icons/layer-zero.png"
@@ -113,9 +115,9 @@ export default function Home() {
               width={120}
               height={32}
             />
-            {/* <p className="text-xl text-black">Sonic Labs</p> */}
+            {/* <p className="text-xl text-black">Sonic Labs</p> 
           </div>
-        </div>
+        </div> */}
       </div>
     </main>
   );
