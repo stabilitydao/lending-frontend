@@ -54,6 +54,10 @@ export const navLinks = [
     label: "Governance",
     href: "/governance",
   },
+  {
+    label: "Presale",
+    href: "/presale",
+  }
 ];
 
 export const portfolioData = [

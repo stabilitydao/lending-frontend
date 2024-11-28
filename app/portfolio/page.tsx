@@ -12,7 +12,7 @@ export default function Page() {
   const chainImageSrc = useChainLogo();
 
   return (
-    <div className="bg-card p-4 h-full rounded-lg mx-10 my-24 flex flex-col gap-6 shadow-2xl">
+    <div className="bg-card p-4 h-full rounded-lg mx-10 my-[150px] flex flex-col gap-6 shadow-2xl">
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-2">
           <h1 className="text-primary text-lg font-semibold">Portfolio</h1>
