@@ -1,30 +1,39 @@
-datasource db {
-  provider = "mongodb"
-  url      = env("DATABASE_URL") // MongoDB connection URL
-}
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 generator client {
   provider = "prisma-client-js"
 }
 
-model PresaleInvestor {
-    id                  String @id @default(auto()) @map("_id") @db.ObjectId
-    wallet_address      String @unique 
+datasource db {
+  provider = "postgresql"
+  // Uses connection pooling
+  url = env("POSTGRES_PRISMA_URL")
+}
+
+
+model PresaleInvestData {
+    id          Int       @id @default(autoincrement())
+    tx_hash             String @unique
+    wallet_address      String 
     option              Int
     ve_period           Int
-    usdc_amount_arb     Float
-    usdt_amount_arb     Float
-    ax_amount_fantom    Float
-    lz_amount_fantom    Float
-    usdc_amount_base    Float
-    usdt_amount_base    Float
-    selfReferralCode    String
-    friendReferralCode  String
-    createdAt           DateTime @default(now())
+    currency            String
+    chain               String
+    amount              Float
 }
 
 model ValidReferralCode {
-    id                  String @id @default(auto()) @map("_id") @db.ObjectId
+    id          Int       @id @default(autoincrement())
     wallet_address      String @unique
-    referralCode        String
+    referralCode        String 
+}
+
+model InvestorData {
+    id          Int       @id @default(autoincrement())
+    wallet_address      String @unique
+    selfReferralCode    String
+    friendReferralCode  String
 }

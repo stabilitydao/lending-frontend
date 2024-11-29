@@ -6,11 +6,16 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "../ui/separator";
 import { Badge } from "../ui/badge";
 import Image from "next/image";
+import { useAccount, useConnect, useDisconnect } from "wagmi";
 
 export const PresaleModal = () => {
     const [availableCoins, setAvailableCoins] = useState<string[]>(["USDC", "USDT"]);
     const [isOpen, setOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<string>("USDC");
+    const [selectedMode, setSelectedMode] = useState<string>("vested");
+    const [selectedLockTime, setSelectedLockTime] = useState<string>("7");
+
+    const { isConnected, address } = useAccount();  // Getting wallet connection status
 
     const toggleDropdown = () => setOpen(!isOpen);
 
@@ -20,10 +25,6 @@ export const PresaleModal = () => {
             setOpen(false);
         }
     }
-
-    const [selectedMode, setSelectedMode] = useState<string>("vested");
-
-    const [selectedLockTime, setSelectedLockTime] = useState<string>("7");
 
     const handleModeChange = (
         value: string
@@ -36,6 +37,16 @@ export const PresaleModal = () => {
     ) => {
         setSelectedLockTime(value);
     };
+
+    const handleGetReferralCode = () => {
+        if (!isConnected) {
+            alert("Please connect your wallet to get the referral code.");
+            return;
+        }
+        alert(`Getting referral code for wallet: ${address}`);
+        // Add referral code logic here
+    };
+
     <Badge
         variant="accent"
         className="absolute rounded-full right-2 px-1 flex items-center gap-2"
@@ -95,7 +106,9 @@ export const PresaleModal = () => {
                     className="bg-primary placeholder:text-accent text-left text-accent rounded-full pl-16 pr-[5.2rem] w-1/2"
                     placeholder="Insert referal code"
                 />
-                <Button className="w-1/2">Get Referal Code</Button>
+                <Button className="w-1/2" onClick={handleGetReferralCode}>
+                    Get Referral Code
+                </Button>
             </div>
             <div className="mt-4 justify-center  place-items-center grid">
                 <div className="flex items-center gap-4">
