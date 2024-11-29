@@ -447,3 +447,12 @@ export const borrowData: BorrowData[] = [
     collateralFactor: 0.5,
   },
 ];
+
+export const presaleTokenAddr = {
+  Base_USDC: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+  Base_USDT: "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
+  Fantom_axUSDC: "0x1B6382DBDEa11d97f24495C9A90b7c88469134a4",
+  Fantom_lzUSDC: "0x28a92dde19D9989F39A49905d7C9C2FAc7799bDf",
+  Arb_USDC: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+  Arb_USDT: "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
+};

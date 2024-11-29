@@ -1,0 +1,30 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL") // MongoDB connection URL
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model PresaleInvestor {
+    id                  String @id @default(auto()) @map("_id") @db.ObjectId
+    wallet_address      String @unique 
+    option              Int
+    ve_period           Int
+    usdc_amount_arb     Float
+    usdt_amount_arb     Float
+    ax_amount_fantom    Float
+    lz_amount_fantom    Float
+    usdc_amount_base    Float
+    usdt_amount_base    Float
+    selfReferralCode    String
+    friendReferralCode  String
+    createdAt           DateTime @default(now())
+}
+
+model ValidReferralCode {
+    id                  String @id @default(auto()) @map("_id") @db.ObjectId
+    wallet_address      String @unique
+    referralCode        String
+}

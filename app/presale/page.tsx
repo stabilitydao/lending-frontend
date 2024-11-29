@@ -1,5 +1,3 @@
-import { LPStaking } from "@/components/governance/lp-staking";
-import { SingleStake } from "@/components/governance/single-stake";
 import { PresaleModal } from "@/components/presale/presale-modal";
 import { SwitchChain } from "@/components/switch-chain";
 
