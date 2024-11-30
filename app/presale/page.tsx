@@ -1,7 +1,12 @@
+"use client";
 import { PresaleModal } from "@/components/presale/presale-modal";
 import { SwitchChain } from "@/components/switch-chain";
+import { useState } from "react";
 
 export default function Page() {
+    const [balance, setBalance] = useState<string>("-1");
+    const [selectedCoin, setSelectedCoin] = useState<string>("USDC");
+
     return (
         <div className="bg-card p-4 h-full rounded-lg mx-10 mx-auto my-[150px] flex flex-col gap-6 shadow-2xl w-full max-w-lg">
             <div className="flex flex-col justify-evenly gap-4">
@@ -9,9 +14,9 @@ export default function Page() {
                 <div className="flex justify-end">
                     <SwitchChain />
                 </div>
-                <p className="text-primary text-base font-semibold text-left">Wallet Balance:   <span className="text-[#f22321]">xxxx USDC</span></p>
+                <p className="text-primary text-base font-semibold text-left">Wallet Balance:   <span className="text-[#f22321]">{balance} {selectedCoin}</span></p>
 
-                <PresaleModal />
+                <PresaleModal setBalance={setBalance} setSelectedCoin={setSelectedCoin} />
             </div>
         </div>
     );

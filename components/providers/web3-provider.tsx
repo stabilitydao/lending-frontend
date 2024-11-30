@@ -1,21 +1,19 @@
 "use client";
 import { useState, useEffect } from "react";
 import { WagmiProvider, createConfig, http } from "wagmi";
-import { mainnet, polygon, arbitrum, bsc, base, optimism } from "wagmi/chains";
+import { arbitrum, base, fantom, sepolia } from "wagmi/chains";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConnectKitProvider, getDefaultConfig } from "connectkit";
 
 const config = createConfig(
   getDefaultConfig({
-    chains: [mainnet, polygon, arbitrum, bsc, base, optimism],
+    chains: [arbitrum, base, fantom, sepolia],
     transports: {
       // RPC URL for each chain
-      [mainnet.id]: http(mainnet.rpcUrls.default.http[0]),
-      [polygon.id]: http(polygon.rpcUrls.default.http[0]),
       [arbitrum.id]: http(arbitrum.rpcUrls.default.http[0]),
-      [bsc.id]: http(bsc.rpcUrls.default.http[0]),
       [base.id]: http(base.rpcUrls.default.http[0]),
-      [optimism.id]: http(optimism.rpcUrls.default.http[0]),
+      [fantom.id]: http(fantom.rpcUrls.default.http[0]),
+      [sepolia.id]: http(sepolia.rpcUrls.default.http[0]),
     },
 
     // Required API Keys

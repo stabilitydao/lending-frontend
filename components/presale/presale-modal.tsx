@@ -1,81 +1,197 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "../ui/separator";
-import { Badge } from "../ui/badge";
 import Image from "next/image";
-import { useAccount, useConnect, useDisconnect } from "wagmi";
+import { useBalance } from "@/hooks/useBalance";
+import { useChainId, useAccount, useWriteContract, useChains } from "wagmi";
+import { PresaleContractABI, contractAddress } from "@/lib/constants";
+import axios from "axios";
+import { bytesToBigInt, toBytes, parseUnits } from "viem";
 
-export const PresaleModal = () => {
+interface Props {
+    setBalance: Function
+    setSelectedCoin: Function
+}
+
+export const PresaleModal = (props: Props) => {
+    const chainId = useChainId();
+    const chains = useChains();
+    const { data: hash, writeContract } = useWriteContract()
     const [availableCoins, setAvailableCoins] = useState<string[]>(["USDC", "USDT"]);
+    const [availableFantomCoins, setAvailableFantomCoins] = useState<string[]>(["axUSDC", "lzUSDT"]);
     const [isOpen, setOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<string>("USDC");
-    const [selectedMode, setSelectedMode] = useState<string>("vested");
-    const [selectedLockTime, setSelectedLockTime] = useState<string>("7");
+    const [selectedMode, setSelectedMode] = useState<number>(1);
+    const [selectedLockTime, setSelectedLockTime] = useState<number>(7);
 
     const { isConnected, address } = useAccount();  // Getting wallet connection status
+
+    const [getReferalCode, setGetReferalCode] = useState<boolean>(false);
+    const [referalCode, setReferalCode] = useState<string>("");
+    const [insertReferalCode, setInsertReferalCode] = useState<boolean>(false);
+    const [friendReferalCode, setFriendReferalCode] = useState<string>("");
+    const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
+    const [inputAmount, setInputAmount] = useState<string>("0");
+
+    const balance = useBalance(selectedItem);
+
+    useEffect(() => {
+        props.setBalance(balance);
+    }, [balance])
 
     const toggleDropdown = () => setOpen(!isOpen);
 
     const handleItemClick = (coin: string) => {
         if (selectedItem != coin) {
             setSelectedItem(coin);
+            props.setSelectedCoin(coin);
             setOpen(false);
         }
     }
 
     const handleModeChange = (
-        value: string
+        value: number
     ) => {
         setSelectedMode(value);
     };
 
     const handleLockTimeChange = (
-        value: string
+        value: number
     ) => {
         setSelectedLockTime(value);
     };
 
-    const handleGetReferralCode = () => {
-        if (!isConnected) {
-            alert("Please connect your wallet to get the referral code.");
+    const handleGetReferalCode = async () => {
+        if (!isConnected)
             return;
-        }
-        alert(`Getting referral code for wallet: ${address}`);
-        // Add referral code logic here
-    };
+        const url = "/api/presale"; // Your API endpoint
 
-    <Badge
-        variant="accent"
-        className="absolute rounded-full right-2 px-1 flex items-center gap-2"
-    >
-        {/* <Image
-                    src={farm.imageSrc1!}
-                    alt={farm.tokenSymbol1!}
-                    width={10}
-                    height={10}
-                />
-                {farm.tokenSymbol1} */}
-    </Badge>
+        // Ensure the wallet address is passed correctly
+        const body = {
+            action: "assignReferralCode",
+            wallet_address: address // Replace with the actual wallet address
+        };
+
+        fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(body),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log("Referral code assigned:", data);
+                setReferalCode(data.selfReferralCode);
+                setGetReferalCode(true)
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+            });
+    }
+
+    const handleShare = async () => {
+        try {
+            const shareLink = 'www.vicunafinance.com/presale/?ref=' + referalCode;
+            await navigator.clipboard.writeText(shareLink);
+        } catch (err) {
+            console.error('Failed to copy text: ', err);
+        }
+    }
+
+    const handleConfirmReferalCode = () => {
+        if (!isConnected)
+            return;
+        const action = 'verifyFriendReferralCode';
+        const walletAddress = address;
+
+        // Construct the URL with query parameters
+        const url = `/api/presale?action=${action}&wallet_address=${walletAddress}&friendReferralCode=${friendReferalCode}`;
+
+        // Send GET request with the constructed URL
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Response data:', data);
+                if (data.isValid) {
+                    setIsConfirmed(true)
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+    const handleMaxAmount = () => {
+        setInputAmount(balance)
+    }
+
+    const handlePurchase = () => {
+        const currentChain = chains.find((chain) => chain.id === chainId);
+        let abi: any = [];
+        let tokenAddress: string = "";
+        switch (currentChain?.name) {
+            case "Base":
+                abi = PresaleContractABI["Base"];
+                tokenAddress = contractAddress["Sepolia"];
+                break;
+            case "Arbitrum":
+                abi = PresaleContractABI["Arbitrum"];
+                tokenAddress = contractAddress["Arbitrum"];
+                break;
+            case "Fantom":
+                abi = PresaleContractABI["Fantom"];
+                tokenAddress = contractAddress["Fantom"];
+                break;
+            case "Sepolia":
+                abi = PresaleContractABI["Sepolia"];
+                tokenAddress = contractAddress["Sepolia"];
+                break;
+        }
+        const amountInWei = parseUnits(inputAmount, 6);
+        writeContract({
+            address: `0x${tokenAddress.replace("0x", "")}`,
+            abi,
+            functionName: 'deposit',
+            args: [
+                `0x${address?.replace("0x", "")}`,      // tokenAddress (address of the token)
+                selectedMode,                         // _buyerOption (your buyer option, e.g., 1)
+                selectedMode == 1 ? 7 : selectedLockTime,                        // _period (e.g., 30 days)
+                amountInWei,  // _amount (convert amount to the token's decimals)
+                referalCode == '' ? '' : referalCode,     // _selfReferralCode (your referral code)
+                friendReferalCode == '' ? '' : friendReferalCode    // _friendReferralCode (friend's referral code)
+            ]
+        })
+    }
+
     return (
         <div className="relative flex flex-col items-center">
             <div className="relative flex items-center w-full mb-6">
                 <Button
                     size={"sm"}
                     className="absolute left-2 h-6 z-10 bg-purple-200 hover:bg-purple-300 text-primary"
+                    onClick={handleMaxAmount}
                 >
                     MAX
                 </Button>
                 <Input
-                    className="bg-primary placeholder:text-accent text-right text-accent rounded-full pl-16 pr-[5.5rem]"
+                    className="bg-primary placeholder:text-accent text-right text-accent rounded-full pl-16 pr-[7rem]"
                     placeholder="$0.00"
+                    onChange={(e) => setInputAmount(e.target.value)}
+                    value={inputAmount}
                 />
                 <div className='absolute right-2 h-6 z-10 bg-purple-200 hover:bg-purple-300 text-primary rounded-full'>
                     <div className='flex flex-row items-center cursor-pointer px-2' onClick={toggleDropdown}>
                         <Image
-                            src={`/icons/coins/${selectedItem.toLowerCase()}.png`}
+                            src={`/icons/coins/${chainId == 250 ? "USDC" : selectedItem.toLowerCase()}.png`}
                             alt={selectedItem}
                             width={15}
                             height={15}
@@ -85,30 +201,82 @@ export const PresaleModal = () => {
                     {
                         isOpen && (
                             <div className={`bg-purple-200 rounded px-2 mt-1 cursor-pointer`}>
-                                {availableCoins.map((item, index) => (
-                                    <div className="flex flex-row items-center" onClick={e => handleItemClick(e.target.id)} id={item} key={index}>
-                                        <Image
-                                            src={`/icons/coins/${item.toLowerCase()}.png`}
-                                            alt={selectedItem}
-                                            width={15}
-                                            height={15}
-                                        />
-                                        {item}
-                                    </div>
-                                ))}
+                                {
+                                    chainId == 250 ? (
+                                        availableFantomCoins.map((item, index) => (
+                                            <div className="flex flex-row items-center" onClick={e => handleItemClick(e.target.id)} id={item} key={index}>
+                                                <Image
+                                                    src={`/icons/coins/USDC.png`}
+                                                    alt={selectedItem}
+                                                    width={15}
+                                                    height={15}
+                                                />
+                                                {item}
+                                            </div>
+                                        ))
+                                    )
+                                        : (
+                                            availableCoins.map((item, index) => (
+                                                <div className="flex flex-row items-center" onClick={e => handleItemClick(e.target.id)} id={item} key={index}>
+                                                    <Image
+                                                        src={`/icons/coins/${item.toLowerCase()}.png`}
+                                                        alt={selectedItem}
+                                                        width={15}
+                                                        height={15}
+                                                    />
+                                                    {item}
+                                                </div>
+                                            ))
+                                        )
+                                }
                             </div>
                         )
                     }
                 </div>
             </div>
             <div className="relative flex items-center gap-2 w-full">
-                <Input
+                {/* <Input
                     className="bg-primary placeholder:text-accent text-left text-accent rounded-full pl-16 pr-[5.2rem] w-1/2"
                     placeholder="Insert referal code"
-                />
-                <Button className="w-1/2" onClick={handleGetReferralCode}>
-                    Get Referral Code
-                </Button>
+                /> */}
+                {
+                    !isConfirmed && insertReferalCode && (
+                        <div className="w-1/2 flex flex-row items-center justify-end rounded-full border border-[#3e375d]">
+                            {/* <p className="text-primary text-center flex-1 tracking-[5px]">Y48D</p> */}
+                            <input
+                                className="bg-input text-primary border-none outline-none text-left rounded-full flex-1 text-center w-full"
+                                maxLength={4}
+                                autoFocus
+                                onChange={(e) => setFriendReferalCode(e.target.value)}
+                            />
+                            <Button size="sm" className="w-1/2" onClick={handleConfirmReferalCode}>Confirm</Button>
+                        </div>
+                    )
+                }
+                {
+                    !isConfirmed && !insertReferalCode &&
+                    (
+                        <Button className="w-1/2" onClick={() => setInsertReferalCode(true)}>Insert referal code</Button>
+                    )
+                }
+                {
+                    isConfirmed && (
+                        <p className="text-primary text-center w-1/2 tracking-[5px] border border-[#3e375d] rounded-full h-full py-2">{friendReferalCode}</p>
+                    )
+                }
+                {
+                    getReferalCode ? (
+                        <div className="w-1/2 flex flex-row items-center justify-end rounded-full border border-[#3e375d]">
+                            <p className="text-primary text-center flex-1 tracking-[5px]">{referalCode}</p>
+                            <Button size="sm" className="w-1/2" onClick={handleShare}>Share</Button>
+                        </div>
+                    )
+                        :
+                        (
+                            <Button className="w-1/2" onClick={handleGetReferalCode}>Get Referal Code</Button>
+                        )
+                }
+
             </div>
             <div className="mt-4 justify-center  place-items-center grid">
                 <div className="flex items-center gap-4">
@@ -127,11 +295,11 @@ export const PresaleModal = () => {
                             value="vested"
                             checked={
                                 selectedMode ===
-                                "vested"
+                                1
                             }
                             onChange={() =>
                                 handleModeChange(
-                                    "vested"
+                                    1
                                 )
                             }
                         />
@@ -146,11 +314,11 @@ export const PresaleModal = () => {
                             value="full"
                             checked={
                                 selectedMode ===
-                                "full"
+                                2
                             }
                             onChange={() =>
                                 handleModeChange(
-                                    "full"
+                                    2
                                 )
                             }
                         />
@@ -165,11 +333,11 @@ export const PresaleModal = () => {
                             value="hybrid"
                             checked={
                                 selectedMode ===
-                                "hybrid"
+                                3
                             }
                             onChange={() =>
                                 handleModeChange(
-                                    "hybrid"
+                                    3
                                 )
                             }
                         />
@@ -178,7 +346,7 @@ export const PresaleModal = () => {
                 </fieldset>
             </div>
             {
-                (selectedMode === "full" || selectedMode === "hybrid") && (
+                (selectedMode === 2 || selectedMode === 3) && (
                     <>
                         <div className="mt-4 justify-center  place-items-center grid">
                             <div className="flex items-center gap-4">
@@ -196,11 +364,11 @@ export const PresaleModal = () => {
                                         name="time"
                                         value="7"
                                         checked={
-                                            selectedLockTime === "7"
+                                            selectedLockTime === 7
                                         }
                                         onChange={() =>
                                             handleLockTimeChange(
-                                                "7"
+                                                7
                                             )
                                         }
                                     />
@@ -215,11 +383,11 @@ export const PresaleModal = () => {
                                         value="12"
                                         checked={
                                             selectedLockTime ===
-                                            "12"
+                                            12
                                         }
                                         onChange={() =>
                                             handleLockTimeChange(
-                                                "12"
+                                                12
                                             )
                                         }
                                     />
@@ -234,11 +402,11 @@ export const PresaleModal = () => {
                                         value="18"
                                         checked={
                                             selectedLockTime ===
-                                            "18"
+                                            18
                                         }
                                         onChange={() =>
                                             handleLockTimeChange(
-                                                "18"
+                                                18
                                             )
                                         }
                                     />
@@ -253,11 +421,11 @@ export const PresaleModal = () => {
                                         value="24"
                                         checked={
                                             selectedLockTime ===
-                                            "24"
+                                            24
                                         }
                                         onChange={() =>
                                             handleLockTimeChange(
-                                                "24"
+                                                24
                                             )
                                         }
                                     />
@@ -273,8 +441,8 @@ export const PresaleModal = () => {
                 <p className="text-primary w-full">Total Bonus Received : xx%</p>
             </div>
             <div className="mt-4 justify-center">
-                <Button>Purchase</Button>
+                <Button onClick={handlePurchase}>Purchase</Button>
             </div>
-        </div>
+        </div >
     )
 }

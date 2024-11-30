@@ -103,9 +103,9 @@ async function handleReferralCodeAssignment(walletAddress) {
             }
         });
 
-        return { message: `Referral code ${newCode} assigned successfully.`, selfCode: newCode };
+        return { message: `Referral code ${newCode} assigned successfully.`, selfReferralCode: newCode };
     } else {
-        return { message: "You already have a referral code assigned.", selfCode: user.selfReferralCode };
+        return { message: "You already have a referral code assigned.", selfReferralCode: user.selfReferralCode };
     }
 }
 
@@ -308,10 +308,10 @@ async function verifyFriendReferralCode(walletAddress, _friendReferralCode) {
 
         if (referralExists.length > 0 && user.selfReferralCode != _friendReferralCode) {
             isValidReferralCode = true;
-            return { result: "Referral code verified!", isValidReferralCode };
+            return { result: "Referral code verified!", isValid: isValidReferralCode };
         } else {
             isValidReferralCode = false;
-            return { result: "Referral code is invalid!", isValidReferralCode };
+            return { result: "Referral code is invalid!", isValid: isValidReferralCode };
         }
     } catch (error) {
         console.error("Error retrieving referral code:", error);
