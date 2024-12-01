@@ -1,6 +1,6 @@
 "use client";
 
-import { useAccount, useChainId, useChains, useContractRead } from "wagmi";
+import { useAccount, useChainId, useChains, useContractRead, useReadContract } from "wagmi";
 import { useState, useEffect } from "react";
 import { presaleTokenAddr, USDC_ABI } from "@/lib/constants";
 import { formatUnits } from "viem";
@@ -12,13 +12,12 @@ export const useBalance = (selectedCoin: string) => {
     const [coinAddress, setCoinAddress] = useState<string>("");
     const [balance, setBalance] = useState<string>("0");
 
-    const { data: rawBalance, isError, isLoading } = useContractRead({
+    const { data: rawBalance } = useReadContract({
         address: `0x${coinAddress}`,
         abi: USDC_ABI,
         functionName: 'balanceOf',
         args: [address],
-        chainId: chainId, // BSC Chain ID
-    });
+    })
 
     // Fetch token decimals
     const { data: decimals } = useContractRead({
@@ -57,11 +56,14 @@ export const useBalance = (selectedCoin: string) => {
     }, [chainId, chains, selectedCoin]);
 
     useEffect(() => {
-        const balance = rawBalance && decimals
-            ? formatUnits(rawBalance as bigint, decimals as number)
-            : '0';
-        setBalance(balance);
+        if (rawBalance != undefined) {
+            console.log(BigInt(rawBalance?.toString()))
+            const balance = rawBalance && decimals
+                ? formatUnits(rawBalance, 6) 
+                : '0';
+            setBalance(balance);
+        }
     }, [rawBalance, decimals])
 
-    return balance;
+    return { balance, coinAddress };
 };

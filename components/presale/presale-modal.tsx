@@ -1,15 +1,21 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { ClipLoader } from 'react-spinners';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "../ui/separator";
 import Image from "next/image";
 import { useBalance } from "@/hooks/useBalance";
-import { useChainId, useAccount, useWriteContract, useChains } from "wagmi";
+import { useChainId, useAccount, useWriteContract, useChains, useReadContract, useContractRead } from "wagmi";
+import { readContract, writeContract } from "viem/actions";
 import { PresaleContractABI, contractAddress } from "@/lib/constants";
 import axios from "axios";
-import { bytesToBigInt, toBytes, parseUnits } from "viem";
+import { bytesToBigInt, toBytes, parseUnits, formatUnits, createPublicClient, http, createWalletClient, custom } from "viem";
+import { useToast } from "../ui/use-toast";
+import { useContractAddress } from "@/hooks/useContractAddress";
+import { mainnet, sepolia } from "wagmi/chains";
+import { USDC_ABI } from "@/lib/constants";
 
 interface Props {
     setBalance: Function
@@ -19,7 +25,8 @@ interface Props {
 export const PresaleModal = (props: Props) => {
     const chainId = useChainId();
     const chains = useChains();
-    const { data: hash, writeContract } = useWriteContract()
+    const { toast } = useToast();
+    // const { data: hash, writeContract } = useWriteContract()
     const [availableCoins, setAvailableCoins] = useState<string[]>(["USDC", "USDT"]);
     const [availableFantomCoins, setAvailableFantomCoins] = useState<string[]>(["axUSDC", "lzUSDT"]);
     const [isOpen, setOpen] = useState(false);
@@ -31,12 +38,30 @@ export const PresaleModal = (props: Props) => {
 
     const [getReferalCode, setGetReferalCode] = useState<boolean>(false);
     const [referalCode, setReferalCode] = useState<string>("");
+    const [isGettingReferalCode, setIsGettingReferalCode] = useState<boolean>(false);
     const [insertReferalCode, setInsertReferalCode] = useState<boolean>(false);
     const [friendReferalCode, setFriendReferalCode] = useState<string>("");
     const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
+    const [isPurchasing, setIsPurchasing] = useState<boolean>(false);
     const [inputAmount, setInputAmount] = useState<string>("0");
 
-    const balance = useBalance(selectedItem);
+    const { balance, coinAddress } = useBalance(selectedItem);
+    const contractAddress = useContractAddress();
+
+    const { data: preSaleStatus, isFetching: isFetchingPreSaleStatus, refetch: refetchPreSaleStatus } = useReadContract({
+        address: `0x${contractAddress.replace("0x", "")}`,
+        abi: PresaleContractABI,
+        functionName: 'preSaleStatus',
+        chainId: chainId,
+    });
+
+    const { data: isWhiteListed, isFetching: isFetchingWhiteList, refetch: refetchWhiteList } = useReadContract({
+        address: `0x${contractAddress.replace("0x", "")}`,
+        abi: PresaleContractABI,
+        functionName: 'WhiteList',
+        args: [address],
+        chainId: chainId,
+    });
 
     useEffect(() => {
         props.setBalance(balance);
@@ -65,8 +90,20 @@ export const PresaleModal = (props: Props) => {
     };
 
     const handleGetReferalCode = async () => {
-        if (!isConnected)
+        setIsGettingReferalCode(true);
+        if (!isConnected) {
+            toast({
+                title: "",
+                description: "Wallet is not connected",
+                variant: "default",
+                style: {
+                    background: "rgb(255, 255, 255)",
+                    color: "rgb(0, 0, 0)",
+                },
+            });
             return;
+        }
+
         const url = "/api/presale"; // Your API endpoint
 
         // Ensure the wallet address is passed correctly
@@ -84,13 +121,13 @@ export const PresaleModal = (props: Props) => {
         })
             .then((response) => response.json())
             .then((data) => {
-                console.log("Referral code assigned:", data);
                 setReferalCode(data.selfReferralCode);
                 setGetReferalCode(true)
             })
             .catch((error) => {
                 console.error("Error:", error);
             });
+        setIsGettingReferalCode(false);
     }
 
     const handleShare = async () => {
@@ -98,13 +135,31 @@ export const PresaleModal = (props: Props) => {
             const shareLink = 'www.vicunafinance.com/presale/?ref=' + referalCode;
             await navigator.clipboard.writeText(shareLink);
         } catch (err) {
-            console.error('Failed to copy text: ', err);
+            toast({
+                title: "",
+                description: "Failed to copy text:",
+                variant: "default",
+                style: {
+                    background: "rgb(255, 255, 255)",
+                    color: "rgb(0, 0, 0)",
+                },
+            });
         }
     }
 
     const handleConfirmReferalCode = () => {
-        if (!isConnected)
+        if (!isConnected) {
+            toast({
+                title: "",
+                description: "Wallet is not connected",
+                variant: "default",
+                style: {
+                    background: "rgb(255, 255, 255)",
+                    color: "rgb(0, 0, 0)",
+                },
+            });
             return;
+        }
         const action = 'verifyFriendReferralCode';
         const walletAddress = address;
 
@@ -120,7 +175,6 @@ export const PresaleModal = (props: Props) => {
                 return response.json();
             })
             .then(data => {
-                console.log('Response data:', data);
                 if (data.isValid) {
                     setIsConfirmed(true)
                 }
@@ -134,42 +188,136 @@ export const PresaleModal = (props: Props) => {
         setInputAmount(balance)
     }
 
-    const handlePurchase = () => {
-        const currentChain = chains.find((chain) => chain.id === chainId);
-        let abi: any = [];
-        let tokenAddress: string = "";
-        switch (currentChain?.name) {
-            case "Base":
-                abi = PresaleContractABI["Base"];
-                tokenAddress = contractAddress["Sepolia"];
-                break;
-            case "Arbitrum":
-                abi = PresaleContractABI["Arbitrum"];
-                tokenAddress = contractAddress["Arbitrum"];
-                break;
-            case "Fantom":
-                abi = PresaleContractABI["Fantom"];
-                tokenAddress = contractAddress["Fantom"];
-                break;
-            case "Sepolia":
-                abi = PresaleContractABI["Sepolia"];
-                tokenAddress = contractAddress["Sepolia"];
-                break;
+    const handlePurchase = async () => {
+        if (!isConnected) {
+            toast({
+                title: "",
+                description: "Wallet is not connected",
+                variant: "default",
+                style: {
+                    background: "rgb(255, 255, 255)",
+                    color: "rgb(0, 0, 0)",
+                },
+            });
+            return;
         }
-        const amountInWei = parseUnits(inputAmount, 6);
-        writeContract({
-            address: `0x${tokenAddress.replace("0x", "")}`,
-            abi,
-            functionName: 'deposit',
-            args: [
-                `0x${address?.replace("0x", "")}`,      // tokenAddress (address of the token)
-                selectedMode,                         // _buyerOption (your buyer option, e.g., 1)
-                selectedMode == 1 ? 7 : selectedLockTime,                        // _period (e.g., 30 days)
-                amountInWei,  // _amount (convert amount to the token's decimals)
-                referalCode == '' ? '' : referalCode,     // _selfReferralCode (your referral code)
-                friendReferalCode == '' ? '' : friendReferalCode    // _friendReferralCode (friend's referral code)
-            ]
+        setIsPurchasing(true);
+        const client = createPublicClient({
+            chain: sepolia,
+            transport: http(),
         })
+        const resPresaleStatus = await readContract(client, {
+            address: `0x${contractAddress?.replace("0x", "")}`,
+            abi: PresaleContractABI,
+            functionName: 'preSaleStatus'
+        })
+        const presaleStatus = resPresaleStatus
+            ? formatUnits(resPresaleStatus as bigint, 0)
+            : '0';
+        console.log("presaleStatus: ", presaleStatus)
+        if (presaleStatus == '0') {
+            const whiteList = await readContract(client, {
+                address: `0x${contractAddress?.replace("0x", "")}`,
+                abi: PresaleContractABI,
+                functionName: 'WhiteList',
+                args: [address],
+            })
+            if (whiteList) {
+                const amountInWei = parseUnits(inputAmount, 6);
+                const allowance = await readContract(client, {
+                    address: `0x${coinAddress?.replace("0x", "")}`,
+                    abi: USDC_ABI,
+                    functionName: 'allowance',
+                    args: [
+                        address,
+                        contractAddress
+                    ]
+                })
+                console.log(contractAddress)
+                const walletClient = createWalletClient({
+                    chain: sepolia,
+                    transport: custom(window.ethereum)
+                })
+                if (allowance as bigint >= amountInWei) {
+                    console.log("Approved")
+                } else {
+                    const result = await walletClient.writeContract({
+                        address: '0xFBA3912Ca04dd458c843e2EE08967fC04f3579c2',
+                        abi: USDC_ABI,
+                        functionName: 'approve',
+                        args: [
+                            contractAddress,
+                            amountInWei
+                        ],
+                        account: `0x${address?.replace("0x", "")}`
+                    })
+                    console.log(result)
+                }
+
+                console.log("coinAddress: ", `0x${contractAddress.replace("0x", "")}`)
+                console.log("abi: ", PresaleContractABI)
+                console.log("selectedLockTime: ", selectedMode == 1 ? 7 : selectedLockTime)
+                console.log("amountInWei: ", amountInWei)
+                console.log("selectedMode: ", selectedMode)
+
+                const result = await walletClient.writeContract({
+                    address: `0x${contractAddress.replace("0x", "")}`,
+                    abi: PresaleContractABI,
+                    functionName: 'deposit',
+                    args: [
+                        `0x${coinAddress}`,      // tokenAddress (address of the token)
+                        selectedMode,                         // _buyerOption (your buyer option, e.g., 1)
+                        selectedMode == 1 ? 7 : selectedLockTime,                        // _period (e.g., 30 days)
+                        amountInWei,  // _amount (convert amount to the token's decimals)
+                        referalCode == '' ? '1234' : referalCode,     // _selfReferralCode (your referral code)
+                        friendReferalCode == '' ? '1234' : friendReferalCode    // _friendReferralCode (friend's referral code)
+                    ],
+                    account: `0x${address?.replace("0x", "")}`
+                })
+            } else {
+                toast({
+                    title: "",
+                    description: "You are not whitelisted",
+                    variant: "default",
+                    style: {
+                        background: "rgb(255, 255, 255)",
+                        color: "rgb(0, 0, 0)",
+                    },
+                });
+                setIsPurchasing(false);
+            }
+        } else if (presaleStatus == '1') {
+            const amountInWei = parseUnits(inputAmount, 6);
+            console.log("coinAddress: ", `0x${coinAddress}`)
+            console.log("selectedMode: ", selectedMode)
+            console.log("selectedLockTime: ", selectedMode == 1 ? 7 : selectedLockTime)
+            console.log("amountInWei: ", amountInWei)
+            console.log("selectedMode: ", selectedMode)
+            // writeContract({
+            //     address: `0x${contractAddress.replace("0x", "")}`,
+            //     abi: PresaleContractABI,
+            //     functionName: 'deposit',
+            //     args: [
+            //         `0x${coinAddress}`,      // tokenAddress (address of the token)
+            //         selectedMode,                         // _buyerOption (your buyer option, e.g., 1)
+            //         selectedMode == 1 ? 7 : selectedLockTime,                        // _period (e.g., 30 days)
+            //         amountInWei,  // _amount (convert amount to the token's decimals)
+            //         referalCode == '' ? '' : referalCode,     // _selfReferralCode (your referral code)
+            //         friendReferalCode == '' ? '' : friendReferalCode    // _friendReferralCode (friend's referral code)
+            //     ]
+            // })
+        } else if (presaleStatus == '2') {
+            toast({
+                title: "",
+                description: "Presale has ended.",
+                variant: "default",
+                style: {
+                    background: "rgb(255, 255, 255)",
+                    color: "rgb(0, 0, 0)",
+                },
+            });
+            setIsPurchasing(false);
+        }
     }
 
     return (
@@ -273,7 +421,7 @@ export const PresaleModal = (props: Props) => {
                     )
                         :
                         (
-                            <Button className="w-1/2" onClick={handleGetReferalCode}>Get Referal Code</Button>
+                            <Button className="w-1/2" onClick={handleGetReferalCode} disabled={isGettingReferalCode}>Get Referal Code</Button>
                         )
                 }
 
@@ -441,7 +589,7 @@ export const PresaleModal = (props: Props) => {
                 <p className="text-primary w-full">Total Bonus Received : xx%</p>
             </div>
             <div className="mt-4 justify-center">
-                <Button onClick={handlePurchase}>Purchase</Button>
+                <Button onClick={handlePurchase} disabled={isPurchasing}>{isPurchasing ? <ClipLoader size={20} color="white" /> : "Purchase"}</Button>
             </div>
         </div >
     )
