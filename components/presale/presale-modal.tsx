@@ -2,40 +2,56 @@
 
 import { useEffect, useState } from "react";
 import { ClipLoader } from 'react-spinners';
+import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "../ui/separator";
-import Image from "next/image";
-import { useBalance } from "@/hooks/useBalance";
-import { useChainId, useAccount, useWriteContract, useChains, useReadContract, useContractRead } from "wagmi";
-import { readContract, writeContract } from "viem/actions";
-import { PresaleContractABI, contractAddress } from "@/lib/constants";
-import axios from "axios";
-import { bytesToBigInt, toBytes, parseUnits, formatUnits, createPublicClient, http, createWalletClient, custom } from "viem";
+import { useChainId, useAccount, useWriteContract, useChains, usePublicClient } from "wagmi";
+import { createConfig } from '@wagmi/core'
+import { parseUnits, formatUnits, createPublicClient, createWalletClient, custom, http } from "viem";
+import { readContract } from "viem/actions";
+import { sepolia, base, arbitrum, fantom } from 'viem/chains'
 import { useToast } from "../ui/use-toast";
 import { useContractAddress } from "@/hooks/useContractAddress";
-import { mainnet, sepolia } from "wagmi/chains";
+import { useApproved } from "@/hooks/useApproved";
+import { useBalance } from "@/hooks/useBalance";
+import { useHardCap } from "@/hooks/useHardCap";
+import { PresaleContractABI } from "@/lib/constants";
 import { USDC_ABI } from "@/lib/constants";
+import { PresaleBonus } from "@/lib/constants";
+import { usePresaleBonus } from "@/hooks/usePresaleBonus";
+
 
 interface Props {
     setBalance: Function
     setSelectedCoin: Function
+    setHardCap: Function
+    setTotalDeposited: Function
 }
+
+const client = createPublicClient({
+    chain: sepolia,
+    transport: http(),
+})
 
 export const PresaleModal = (props: Props) => {
     const chainId = useChainId();
-    const chains = useChains();
+    const { isConnected, address } = useAccount();
     const { toast } = useToast();
-    // const { data: hash, writeContract } = useWriteContract()
-    const [availableCoins, setAvailableCoins] = useState<string[]>(["USDC", "USDT"]);
-    const [availableFantomCoins, setAvailableFantomCoins] = useState<string[]>(["axUSDC", "lzUSDT"]);
-    const [isOpen, setOpen] = useState(false);
+
     const [selectedItem, setSelectedItem] = useState<string>("USDC");
     const [selectedMode, setSelectedMode] = useState<number>(1);
     const [selectedLockTime, setSelectedLockTime] = useState<number>(7);
 
-    const { isConnected, address } = useAccount();  // Getting wallet connection status
+    const { balance, coinAddress } = useBalance(selectedItem);
+    const contractAddress = useContractAddress();
+    const { hardCap, totlDepositedAmount } = useHardCap(contractAddress);
+    const bonusPercent = usePresaleBonus(selectedMode, selectedLockTime);
 
+
+    const [availableCoins, setAvailableCoins] = useState<string[]>(["USDC", "USDT"]);
+    const [availableFantomCoins, setAvailableFantomCoins] = useState<string[]>(["axUSDC", "lzUSDT"]);
+    const [isOpen, setOpen] = useState(false);
     const [getReferalCode, setGetReferalCode] = useState<boolean>(false);
     const [referalCode, setReferalCode] = useState<string>("");
     const [isGettingReferalCode, setIsGettingReferalCode] = useState<boolean>(false);
@@ -43,25 +59,29 @@ export const PresaleModal = (props: Props) => {
     const [friendReferalCode, setFriendReferalCode] = useState<string>("");
     const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
     const [isPurchasing, setIsPurchasing] = useState<boolean>(false);
+    const [isApproving, setIsApproving] = useState<boolean>(false);
     const [inputAmount, setInputAmount] = useState<string>("0");
 
-    const { balance, coinAddress } = useBalance(selectedItem);
-    const contractAddress = useContractAddress();
+    const [walletClient, setWalletClient] = useState<any>();
 
-    const { data: preSaleStatus, isFetching: isFetchingPreSaleStatus, refetch: refetchPreSaleStatus } = useReadContract({
-        address: `0x${contractAddress.replace("0x", "")}`,
-        abi: PresaleContractABI,
-        functionName: 'preSaleStatus',
-        chainId: chainId,
-    });
+    useEffect(() => {
+        if (typeof window !== 'undefined' && window.ethereum) {
+            const clientTemp = createWalletClient({
+                chain: sepolia,
+                transport: custom(window.ethereum),
+            });
+            setWalletClient(clientTemp);
+        }
+    }, []);
 
-    const { data: isWhiteListed, isFetching: isFetchingWhiteList, refetch: refetchWhiteList } = useReadContract({
-        address: `0x${contractAddress.replace("0x", "")}`,
-        abi: PresaleContractABI,
-        functionName: 'WhiteList',
-        args: [address],
-        chainId: chainId,
-    });
+
+
+    useEffect(() => {
+        props.setHardCap(hardCap);
+        props.setTotalDeposited(totlDepositedAmount)
+    }, [hardCap, totlDepositedAmount])
+
+    const { checkingApprove, isApproved } = useApproved(inputAmount, contractAddress, coinAddress);
 
     useEffect(() => {
         props.setBalance(balance);
@@ -104,12 +124,11 @@ export const PresaleModal = (props: Props) => {
             return;
         }
 
-        const url = "/api/presale"; // Your API endpoint
+        const url = "/api/presale";
 
-        // Ensure the wallet address is passed correctly
         const body = {
             action: "assignReferralCode",
-            wallet_address: address // Replace with the actual wallet address
+            wallet_address: address
         };
 
         fetch(url, {
@@ -163,10 +182,8 @@ export const PresaleModal = (props: Props) => {
         const action = 'verifyFriendReferralCode';
         const walletAddress = address;
 
-        // Construct the URL with query parameters
         const url = `/api/presale?action=${action}&wallet_address=${walletAddress}&friendReferralCode=${friendReferalCode}`;
 
-        // Send GET request with the constructed URL
         fetch(url)
             .then(response => {
                 if (!response.ok) {
@@ -188,6 +205,81 @@ export const PresaleModal = (props: Props) => {
         setInputAmount(balance)
     }
 
+    const handleApprove = async () => {
+        setIsApproving(true);
+        const amountInWei = parseUnits(inputAmount, 6);
+        const resultApprove = await walletClient.writeContract({
+            address: `0x${coinAddress}`,
+            abi: USDC_ABI,
+            functionName: 'approve',
+            args: [
+                contractAddress,
+                amountInWei
+            ],
+            account: `0x${address?.replace("0x", "")}`,
+        })
+        console.log("resultApprove: ", resultApprove)
+        const receipt = await client.waitForTransactionReceipt({ hash: `0x${resultApprove.replace("0x", "")}`, confirmations: 1 });
+        if (receipt.status == "success") {
+            handlePurchase();
+        } else {
+            toast({
+                title: "",
+                description: "Failed to approve",
+                variant: "default",
+                style: {
+                    background: "rgb(255, 255, 255)",
+                    color: "rgb(0, 0, 0)",
+                },
+            });
+        }
+        setIsApproving(false);
+        console.log("resultApprove: ", receipt)
+    }
+
+    const handleDeposit = async () => {
+        const amountInWei = parseUnits(inputAmount, 6);
+        const resultDeposit = await walletClient.writeContract({
+            address: `0x${contractAddress.replace("0x", "")}`,
+            abi: PresaleContractABI,
+            functionName: 'deposit',
+            args: [
+                `0x${coinAddress}`,      // tokenAddress (address of the token)
+                selectedMode,                         // _buyerOption (your buyer option, e.g., 1)
+                selectedMode == 1 ? 7 : selectedLockTime,                        // _period (e.g., 30 days)
+                amountInWei,  // _amount (convert amount to the token's decimals)
+                // referalCode == '' ? '1234' : referalCode,     // _selfReferralCode (your referral code)
+                // friendReferalCode == '' ? '1234' : friendReferalCode    // _friendReferralCode (friend's referral code)
+            ],
+            account: `0x${address?.replace("0x", "")}`
+        })
+        console.log("resultDeposit: ", resultDeposit)
+        const receipt = await client.waitForTransactionReceipt({ hash: `0x${resultDeposit.replace("0x", "")}`, confirmations: 1 });
+        if (receipt.status == "success") {
+            toast({
+                title: "",
+                description: "Purchased successfully.",
+                variant: "default",
+                style: {
+                    background: "rgb(255, 255, 255)",
+                    color: "rgb(0, 0, 0)",
+                },
+            });
+        } else {
+            toast({
+                title: "",
+                description: "Failed to purchase",
+                variant: "default",
+                style: {
+                    background: "rgb(255, 255, 255)",
+                    color: "rgb(0, 0, 0)",
+                },
+            });
+        }
+        console.log("resultDeposit: ", receipt)
+        setIsPurchasing(false);
+    }
+
     const handlePurchase = async () => {
         if (!isConnected) {
             toast({
@@ -201,19 +293,21 @@ export const PresaleModal = (props: Props) => {
             });
             return;
         }
+        if (!isApproved) {
+            handleApprove();
+            return;
+        }
         setIsPurchasing(true);
-        const client = createPublicClient({
-            chain: sepolia,
-            transport: http(),
-        })
+
         const resPresaleStatus = await readContract(client, {
             address: `0x${contractAddress?.replace("0x", "")}`,
             abi: PresaleContractABI,
-            functionName: 'preSaleStatus'
+            functionName: 'preSaleStatus',
         })
         const presaleStatus = resPresaleStatus
             ? formatUnits(resPresaleStatus as bigint, 0)
             : '0';
+
         console.log("presaleStatus: ", presaleStatus)
         if (presaleStatus == '0') {
             const whiteList = await readContract(client, {
@@ -223,57 +317,7 @@ export const PresaleModal = (props: Props) => {
                 args: [address],
             })
             if (whiteList) {
-                const amountInWei = parseUnits(inputAmount, 6);
-                const allowance = await readContract(client, {
-                    address: `0x${coinAddress?.replace("0x", "")}`,
-                    abi: USDC_ABI,
-                    functionName: 'allowance',
-                    args: [
-                        address,
-                        contractAddress
-                    ]
-                })
-                console.log(contractAddress)
-                const walletClient = createWalletClient({
-                    chain: sepolia,
-                    transport: custom(window.ethereum)
-                })
-                if (allowance as bigint >= amountInWei) {
-                    console.log("Approved")
-                } else {
-                    const result = await walletClient.writeContract({
-                        address: '0xFBA3912Ca04dd458c843e2EE08967fC04f3579c2',
-                        abi: USDC_ABI,
-                        functionName: 'approve',
-                        args: [
-                            contractAddress,
-                            amountInWei
-                        ],
-                        account: `0x${address?.replace("0x", "")}`
-                    })
-                    console.log(result)
-                }
-
-                console.log("coinAddress: ", `0x${contractAddress.replace("0x", "")}`)
-                console.log("abi: ", PresaleContractABI)
-                console.log("selectedLockTime: ", selectedMode == 1 ? 7 : selectedLockTime)
-                console.log("amountInWei: ", amountInWei)
-                console.log("selectedMode: ", selectedMode)
-
-                const result = await walletClient.writeContract({
-                    address: `0x${contractAddress.replace("0x", "")}`,
-                    abi: PresaleContractABI,
-                    functionName: 'deposit',
-                    args: [
-                        `0x${coinAddress}`,      // tokenAddress (address of the token)
-                        selectedMode,                         // _buyerOption (your buyer option, e.g., 1)
-                        selectedMode == 1 ? 7 : selectedLockTime,                        // _period (e.g., 30 days)
-                        amountInWei,  // _amount (convert amount to the token's decimals)
-                        referalCode == '' ? '1234' : referalCode,     // _selfReferralCode (your referral code)
-                        friendReferalCode == '' ? '1234' : friendReferalCode    // _friendReferralCode (friend's referral code)
-                    ],
-                    account: `0x${address?.replace("0x", "")}`
-                })
+                handleDeposit();
             } else {
                 toast({
                     title: "",
@@ -287,25 +331,7 @@ export const PresaleModal = (props: Props) => {
                 setIsPurchasing(false);
             }
         } else if (presaleStatus == '1') {
-            const amountInWei = parseUnits(inputAmount, 6);
-            console.log("coinAddress: ", `0x${coinAddress}`)
-            console.log("selectedMode: ", selectedMode)
-            console.log("selectedLockTime: ", selectedMode == 1 ? 7 : selectedLockTime)
-            console.log("amountInWei: ", amountInWei)
-            console.log("selectedMode: ", selectedMode)
-            // writeContract({
-            //     address: `0x${contractAddress.replace("0x", "")}`,
-            //     abi: PresaleContractABI,
-            //     functionName: 'deposit',
-            //     args: [
-            //         `0x${coinAddress}`,      // tokenAddress (address of the token)
-            //         selectedMode,                         // _buyerOption (your buyer option, e.g., 1)
-            //         selectedMode == 1 ? 7 : selectedLockTime,                        // _period (e.g., 30 days)
-            //         amountInWei,  // _amount (convert amount to the token's decimals)
-            //         referalCode == '' ? '' : referalCode,     // _selfReferralCode (your referral code)
-            //         friendReferalCode == '' ? '' : friendReferalCode    // _friendReferralCode (friend's referral code)
-            //     ]
-            // })
+            handleDeposit();
         } else if (presaleStatus == '2') {
             toast({
                 title: "",
@@ -352,7 +378,7 @@ export const PresaleModal = (props: Props) => {
                                 {
                                     chainId == 250 ? (
                                         availableFantomCoins.map((item, index) => (
-                                            <div className="flex flex-row items-center" onClick={e => handleItemClick(e.target.id)} id={item} key={index}>
+                                            <div className="flex flex-row items-center" onClick={e => handleItemClick(e.currentTarget.id)} id={item} key={index}>
                                                 <Image
                                                     src={`/icons/coins/USDC.png`}
                                                     alt={selectedItem}
@@ -365,7 +391,7 @@ export const PresaleModal = (props: Props) => {
                                     )
                                         : (
                                             availableCoins.map((item, index) => (
-                                                <div className="flex flex-row items-center" onClick={e => handleItemClick(e.target.id)} id={item} key={index}>
+                                                <div className="flex flex-row items-center" onClick={e => handleItemClick(e.currentTarget.id)} id={item} key={index}>
                                                     <Image
                                                         src={`/icons/coins/${item.toLowerCase()}.png`}
                                                         alt={selectedItem}
@@ -585,11 +611,11 @@ export const PresaleModal = (props: Props) => {
                 )
             }
             <div className="mt-4 justify-start place-items-center w-full">
-                <p className="text-primary w-full">Value of Total Positions : xx$</p>
-                <p className="text-primary w-full">Total Bonus Received : xx%</p>
+                <p className="text-primary w-full">Value of Total Positions : ${Number(inputAmount) + Number(inputAmount) / 100 * bonusPercent}</p>
+                <p className="text-primary w-full">Total Bonus Received : {bonusPercent}%</p>
             </div>
             <div className="mt-4 justify-center">
-                <Button onClick={handlePurchase} disabled={isPurchasing}>{isPurchasing ? <ClipLoader size={20} color="white" /> : "Purchase"}</Button>
+                <Button onClick={handlePurchase} disabled={isPurchasing || checkingApprove || isApproving}>{isPurchasing || checkingApprove || isApproving ? <ClipLoader size={20} color="white" /> : isApproved ? "Purchase" : "Approve"}</Button>
             </div>
         </div >
     )

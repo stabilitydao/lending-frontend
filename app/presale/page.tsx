@@ -6,6 +6,8 @@ import { useState } from "react";
 export default function Page() {
     const [balance, setBalance] = useState<string>("-1");
     const [selectedCoin, setSelectedCoin] = useState<string>("USDC");
+    const [hardCap, setHardCap] = useState<number>(0);
+    const [totalDeposited, setTotalDeposited] = useState<number>(0);
 
     return (
         <div className="bg-card p-4 h-full rounded-lg mx-10 mx-auto my-[150px] flex flex-col gap-6 shadow-2xl w-full max-w-lg">
@@ -15,8 +17,15 @@ export default function Page() {
                     <SwitchChain />
                 </div>
                 <p className="text-primary text-base font-semibold text-left">Wallet Balance:   <span className="text-[#f22321]">{balance} {selectedCoin}</span></p>
+                <p className="text-primary text-base font-semibold text-left">HardCap:   <span className="text-[#f22321]">{hardCap} {selectedCoin}</span></p>
+                <p className="text-primary text-base font-semibold text-left">Total deposited amount:   <span className="text-[#f22321]">{totalDeposited} {selectedCoin}</span></p>
 
-                <PresaleModal setBalance={setBalance} setSelectedCoin={setSelectedCoin} />
+                <PresaleModal
+                    setBalance={setBalance}
+                    setSelectedCoin={setSelectedCoin}
+                    setHardCap={setHardCap}
+                    setTotalDeposited={setTotalDeposited}
+                />
             </div>
         </div>
     );

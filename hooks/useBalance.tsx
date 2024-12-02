@@ -57,9 +57,8 @@ export const useBalance = (selectedCoin: string) => {
 
     useEffect(() => {
         if (rawBalance != undefined) {
-            console.log(BigInt(rawBalance?.toString()))
             const balance = rawBalance && decimals
-                ? formatUnits(rawBalance, 6) 
+                ? formatUnits(rawBalance as bigint, 6) 
                 : '0';
             setBalance(balance);
         }
