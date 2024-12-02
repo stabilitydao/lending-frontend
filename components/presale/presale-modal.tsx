@@ -250,74 +250,82 @@ export const PresaleModal = (props: Props) => {
     const handleApprove = async () => {
         setIsApproving(true);
         const amountInWei = parseUnits(inputAmount, 6);
-        const resultApprove = await walletClient.writeContract({
-            address: `0x${coinAddress}`,
-            abi: USDC_ABI,
-            functionName: 'approve',
-            args: [
-                contractAddress,
-                amountInWei
-            ],
-            account: `0x${address?.replace("0x", "")}`,
-        })
-        console.log("resultApprove: ", resultApprove)
-        const receipt = await client.waitForTransactionReceipt({ hash: `0x${resultApprove.replace("0x", "")}`, confirmations: 1 });
-        if (receipt.status == "success") {
-            handlePurchase();
-        } else {
-            toast({
-                title: "",
-                description: "Failed to approve",
-                variant: "default",
-                style: {
-                    background: "rgb(255, 255, 255)",
-                    color: "rgb(0, 0, 0)",
-                },
-            });
+        try {
+            const resultApprove = await walletClient.writeContract({
+                address: `0x${coinAddress}`,
+                abi: USDC_ABI,
+                functionName: 'approve',
+                args: [
+                    contractAddress,
+                    amountInWei
+                ],
+                account: `0x${address?.replace("0x", "")}`,
+            })
+            console.log("resultApprove: ", resultApprove)
+            const receipt = await client.waitForTransactionReceipt({ hash: `0x${resultApprove.replace("0x", "")}`, confirmations: 1 });
+            if (receipt.status == "success") {
+                handlePurchase();
+            } else {
+                toast({
+                    title: "",
+                    description: "Failed to approve",
+                    variant: "default",
+                    style: {
+                        background: "rgb(255, 255, 255)",
+                        color: "rgb(0, 0, 0)",
+                    },
+                });
+            }
+            setIsApproving(false);
+            console.log("resultApprove: ", receipt)
+        } catch (error) {
+            setIsApproving(false);
         }
-        setIsApproving(false);
-        console.log("resultApprove: ", receipt)
     }
 
     const handleDeposit = async () => {
-        const amountInWei = parseUnits(inputAmount, 6);
-        const resultDeposit = await walletClient.writeContract({
-            address: `0x${contractAddress.replace("0x", "")}`,
-            abi: PresaleContractABI,
-            functionName: 'deposit',
-            args: [
-                `0x${coinAddress}`,      // tokenAddress (address of the token)
-                selectedMode,                         // _buyerOption (your buyer option, e.g., 1)
-                selectedMode == 1 ? 7 : selectedLockTime,                        // _period (e.g., 30 days)
-                amountInWei,  // _amount (convert amount to the token's decimals)
-                referalCode == '' ? '1234' : referalCode,     // _selfReferralCode (your referral code)
-                friendReferalCode == '' ? '1234' : friendReferalCode    // _friendReferralCode (friend's referral code)
-            ],
-            account: `0x${address?.replace("0x", "")}`
-        })
-        const receipt = await client.waitForTransactionReceipt({ hash: `0x${resultDeposit.replace("0x", "")}`, confirmations: 1 });
-        if (receipt.status == "success") {
-            toast({
-                title: "",
-                description: "Purchased successfully.",
-                variant: "default",
-                style: {
-                    background: "rgb(255, 255, 255)",
-                    color: "rgb(0, 0, 0)",
-                },
-            });
-        } else {
-            toast({
-                title: "",
-                description: "Failed to purchase",
-                variant: "default",
-                style: {
-                    background: "rgb(255, 255, 255)",
-                    color: "rgb(0, 0, 0)",
-                },
-            });
+        try {
+            const amountInWei = parseUnits(inputAmount, 6);
+            const resultDeposit = await walletClient.writeContract({
+                address: `0x${contractAddress.replace("0x", "")}`,
+                abi: PresaleContractABI,
+                functionName: 'deposit',
+                args: [
+                    `0x${coinAddress}`,      // tokenAddress (address of the token)
+                    selectedMode,                         // _buyerOption (your buyer option, e.g., 1)
+                    selectedMode == 1 ? 7 : selectedLockTime,                        // _period (e.g., 30 days)
+                    amountInWei,  // _amount (convert amount to the token's decimals)
+                    referalCode == '' ? '1234' : referalCode,     // _selfReferralCode (your referral code)
+                    friendReferalCode == '' ? '1234' : friendReferalCode    // _friendReferralCode (friend's referral code)
+                ],
+                account: `0x${address?.replace("0x", "")}`
+            })
+            const receipt = await client.waitForTransactionReceipt({ hash: `0x${resultDeposit.replace("0x", "")}`, confirmations: 1 });
+            if (receipt.status == "success") {
+                toast({
+                    title: "",
+                    description: "Purchased successfully.",
+                    variant: "default",
+                    style: {
+                        background: "rgb(255, 255, 255)",
+                        color: "rgb(0, 0, 0)",
+                    },
+                });
+            } else {
+                toast({
+                    title: "",
+                    description: "Failed to purchase",
+                    variant: "default",
+                    style: {
+                        background: "rgb(255, 255, 255)",
+                        color: "rgb(0, 0, 0)",
+                    },
+                });
+            }
+            handleSaveDepositDetail(resultDeposit);
+        } catch (error) {
+            setIsPurchasing(false);
         }
-        handleSaveDepositDetail(resultDeposit);
     }
 
     const handleSaveDepositDetail = (resultDeposit: string) => {
