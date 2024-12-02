@@ -311,9 +311,12 @@ async function verifyFriendReferralCode(walletAddress, _friendReferralCode) {
         if (referralExists.length > 0 && user.selfReferralCode != _friendReferralCode) {
             isValidReferralCode = true;
             return { result: "Referral code verified!", isValid: isValidReferralCode };
+        } else if (user.selfReferralCode == _friendReferralCode) {
+            isValidReferralCode = false;
+            return { result: "Self referral isn't allowed!", isValid: isValidReferralCode };
         } else {
             isValidReferralCode = false;
-            return { result: "Referral code is invalid!", isValid: isValidReferralCode };
+            return { result: "Invalid ref code!", isValid: isValidReferralCode };
         }
     } catch (error) {
         console.error("Error retrieving referral code:", error);

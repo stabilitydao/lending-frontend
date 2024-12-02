@@ -86,6 +86,11 @@ export const PresaleModal = (props: Props) => {
             setInsertReferalCode(true);
             setFriendReferalCode(props.referCode);
         }
+        const savedReferCode = localStorage.getItem("self_refer_code");
+        if (savedReferCode != null && savedReferCode != "") {
+            setReferalCode(savedReferCode);
+            setGetReferalCode(true);
+        }
     }, [])
 
     const [walletClient, setWalletClient] = useState<any>();
@@ -167,6 +172,7 @@ export const PresaleModal = (props: Props) => {
             .then((response) => response.json())
             .then((data) => {
                 setReferalCode(data.selfReferralCode);
+                localStorage.setItem("self_refer_code", data.selfReferralCode);
                 setGetReferalCode(true)
                 setIsGettingReferalCode(false);
             })
@@ -180,6 +186,15 @@ export const PresaleModal = (props: Props) => {
         try {
             const shareLink = 'www.vicunafinance.com/presale/?ref=' + referalCode;
             await navigator.clipboard.writeText(shareLink);
+            toast({
+                title: "",
+                description: "Link is copied to clipboard",
+                variant: "default",
+                style: {
+                    background: "rgb(255, 255, 255)",
+                    color: "rgb(0, 0, 0)",
+                },
+            });
         } catch (err) {
             toast({
                 title: "",
