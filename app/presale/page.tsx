@@ -19,9 +19,9 @@ export default function Page() {
                 <div className="flex justify-end">
                     <SwitchChain />
                 </div>
-                <p className="text-primary text-base font-semibold text-left">Wallet Balance:   <span className="text-[#f22321]">{balance} {selectedCoin}</span></p>
-                <p className="text-primary text-base font-semibold text-left">HardCap:   <span className="text-[#f22321]">${hardCap}</span></p>
-                <p className="text-primary text-base font-semibold text-left">Total deposited amount:   <span className="text-[#f22321]">${totalDeposited}</span></p>
+                <p className="text-primary text-base font-semibold text-left">Wallet Balance:   <span className="text-[#f22321]">{Number(balance).toLocaleString()} {selectedCoin}</span></p>
+                <p className="text-primary text-base font-semibold text-left">HardCap:   <span className="text-[#f22321]">${hardCap.toLocaleString()}</span></p>
+                <p className="text-primary text-base font-semibold text-left">Total deposited amount:   <span className="text-[#f22321]">${totalDeposited.toLocaleString()}</span></p>
 
                 <PresaleModal
                     setBalance={setBalance}

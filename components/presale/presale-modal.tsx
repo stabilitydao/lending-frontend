@@ -694,7 +694,7 @@ export const PresaleModal = (props: Props) => {
                 )
             }
             <div className="mt-4 justify-start place-items-center w-full">
-                <p className="text-primary w-full">Value of Total Positions : ${Number(inputAmount) + Number(inputAmount) / 100 * bonusPercent}</p>
+                <p className="text-primary w-full">Value of Total Positions : ${(Number(inputAmount) + Number(inputAmount) / 100 * bonusPercent).toLocaleString()}</p>
                 <p className="text-primary w-full">Total Bonus Received : {bonusPercent}%</p>
             </div>
             <div className="mt-4 justify-center">
