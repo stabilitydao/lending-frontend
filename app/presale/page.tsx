@@ -2,8 +2,11 @@
 import { PresaleModal } from "@/components/presale/presale-modal";
 import { SwitchChain } from "@/components/switch-chain";
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 export default function Page() {
+    const searchParams = useSearchParams();
+    let refer = searchParams.get("refer");
     const [balance, setBalance] = useState<string>("-1");
     const [selectedCoin, setSelectedCoin] = useState<string>("USDC");
     const [hardCap, setHardCap] = useState<number>(0);
@@ -17,14 +20,15 @@ export default function Page() {
                     <SwitchChain />
                 </div>
                 <p className="text-primary text-base font-semibold text-left">Wallet Balance:   <span className="text-[#f22321]">{balance} {selectedCoin}</span></p>
-                <p className="text-primary text-base font-semibold text-left">HardCap:   <span className="text-[#f22321]">{hardCap} {selectedCoin}</span></p>
-                <p className="text-primary text-base font-semibold text-left">Total deposited amount:   <span className="text-[#f22321]">{totalDeposited} {selectedCoin}</span></p>
+                <p className="text-primary text-base font-semibold text-left">HardCap:   <span className="text-[#f22321]">${hardCap}</span></p>
+                <p className="text-primary text-base font-semibold text-left">Total deposited amount:   <span className="text-[#f22321]">${totalDeposited}</span></p>
 
                 <PresaleModal
                     setBalance={setBalance}
                     setSelectedCoin={setSelectedCoin}
                     setHardCap={setHardCap}
                     setTotalDeposited={setTotalDeposited}
+                    referCode={refer}
                 />
             </div>
         </div>

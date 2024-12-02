@@ -112,10 +112,12 @@ async function handleReferralCodeAssignment(walletAddress) {
 async function deposit(txHash, walletAddress, amount, currency, chain, option, ve_period, friendReferralCode) {
     let user;
 
+    console.log("wallet", walletAddress);
     if (friendReferralCode != "") {
         let { _, isValidReferralCode } = verifyFriendReferralCode(walletAddress, friendReferralCode);
         if (!isValidReferralCode) {
-            return { error: "Invalid referral code!" };
+            // return { error: "Invalid referral code!" };
+            friendReferralCode = "";
         }
     }
     try {

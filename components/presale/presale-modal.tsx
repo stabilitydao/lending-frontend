@@ -6,9 +6,9 @@ import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "../ui/separator";
-import { useChainId, useAccount, useWriteContract, useChains, usePublicClient } from "wagmi";
+import { useChainId, useAccount, useWriteContract, useChains, usePublicClient, useSwitchChain } from "wagmi";
 import { createConfig } from '@wagmi/core'
-import { parseUnits, formatUnits, createPublicClient, createWalletClient, custom, http } from "viem";
+import { parseUnits, formatUnits, createPublicClient, createWalletClient, custom, http, Chain } from "viem";
 import { readContract } from "viem/actions";
 import { sepolia, base, arbitrum, fantom } from 'viem/chains'
 import { useToast } from "../ui/use-toast";
@@ -27,15 +27,33 @@ interface Props {
     setSelectedCoin: Function
     setHardCap: Function
     setTotalDeposited: Function
+    referCode: string | null
 }
+
+const RPC_URL = "https://ethereum-sepolia.blockpi.network/v1/rpc/public";
 
 const client = createPublicClient({
     chain: sepolia,
-    transport: http(),
+    transport: http(RPC_URL),
 })
 
 export const PresaleModal = (props: Props) => {
     const chainId = useChainId();
+    const { chains, switchChain, error, isPending } = useSwitchChain();
+    const [connectedChain, setConnectedChain] = useState<Chain | null>(null);
+    const [availableChains, setAvailableChains] = useState<Chain[]>([]);
+
+    useEffect(() => {
+        if (chainId) {
+            const currentChain = chains.find((c) => c.id === chainId);
+            setConnectedChain(currentChain || null);
+            setAvailableChains([...chains].filter((c) => c.id !== chainId));
+        } else {
+            setConnectedChain(null);
+            setAvailableChains([...chains]);
+        }
+    }, [chainId, chains]);
+
     const { isConnected, address } = useAccount();
     const { toast } = useToast();
 
@@ -57,10 +75,18 @@ export const PresaleModal = (props: Props) => {
     const [isGettingReferalCode, setIsGettingReferalCode] = useState<boolean>(false);
     const [insertReferalCode, setInsertReferalCode] = useState<boolean>(false);
     const [friendReferalCode, setFriendReferalCode] = useState<string>("");
+    const [friendReferalCodeConfirm, setFriendReferalCodeConfirm] = useState<boolean>(false);
     const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
     const [isPurchasing, setIsPurchasing] = useState<boolean>(false);
     const [isApproving, setIsApproving] = useState<boolean>(false);
     const [inputAmount, setInputAmount] = useState<string>("0");
+
+    useEffect(() => {
+        if (props.referCode != null && props.referCode != "") {
+            setInsertReferalCode(true);
+            setFriendReferalCode(props.referCode);
+        }
+    }, [])
 
     const [walletClient, setWalletClient] = useState<any>();
 
@@ -142,11 +168,12 @@ export const PresaleModal = (props: Props) => {
             .then((data) => {
                 setReferalCode(data.selfReferralCode);
                 setGetReferalCode(true)
+                setIsGettingReferalCode(false);
             })
             .catch((error) => {
                 console.error("Error:", error);
+                setIsGettingReferalCode(false);
             });
-        setIsGettingReferalCode(false);
     }
 
     const handleShare = async () => {
@@ -179,6 +206,7 @@ export const PresaleModal = (props: Props) => {
             });
             return;
         }
+        setFriendReferalCodeConfirm(true);
         const action = 'verifyFriendReferralCode';
         const walletAddress = address;
 
@@ -187,17 +215,31 @@ export const PresaleModal = (props: Props) => {
         fetch(url)
             .then(response => {
                 if (!response.ok) {
+                    setFriendReferalCodeConfirm(false);
                     throw new Error('Network response was not ok');
                 }
                 return response.json();
             })
             .then(data => {
+                console.log(data)
                 if (data.isValid) {
                     setIsConfirmed(true)
+                } else {
+                    toast({
+                        title: "",
+                        description: "Referal code is invalid",
+                        variant: "default",
+                        style: {
+                            background: "rgb(255, 255, 255)",
+                            color: "rgb(0, 0, 0)",
+                        },
+                    });
                 }
+                setFriendReferalCodeConfirm(false);
             })
             .catch(error => {
                 console.error('Error:', error);
+                setFriendReferalCodeConfirm(false);
             });
     }
 
@@ -248,12 +290,11 @@ export const PresaleModal = (props: Props) => {
                 selectedMode,                         // _buyerOption (your buyer option, e.g., 1)
                 selectedMode == 1 ? 7 : selectedLockTime,                        // _period (e.g., 30 days)
                 amountInWei,  // _amount (convert amount to the token's decimals)
-                // referalCode == '' ? '1234' : referalCode,     // _selfReferralCode (your referral code)
-                // friendReferalCode == '' ? '1234' : friendReferalCode    // _friendReferralCode (friend's referral code)
+                referalCode == '' ? '1234' : referalCode,     // _selfReferralCode (your referral code)
+                friendReferalCode == '' ? '1234' : friendReferalCode    // _friendReferralCode (friend's referral code)
             ],
             account: `0x${address?.replace("0x", "")}`
         })
-        console.log("resultDeposit: ", resultDeposit)
         const receipt = await client.waitForTransactionReceipt({ hash: `0x${resultDeposit.replace("0x", "")}`, confirmations: 1 });
         if (receipt.status == "success") {
             toast({
@@ -276,8 +317,41 @@ export const PresaleModal = (props: Props) => {
                 },
             });
         }
-        console.log("resultDeposit: ", receipt)
-        setIsPurchasing(false);
+        handleSaveDepositDetail(resultDeposit);
+    }
+
+    const handleSaveDepositDetail = (resultDeposit: string) => {
+        const url = "/api/presale";
+
+        const body = {
+            action: "deposit",
+            txHash: resultDeposit,
+            wallet_address: address,
+            amount: Number(inputAmount),
+            currency: selectedItem,
+            chain: connectedChain?.name,
+            option: selectedMode,
+            ve_period: selectedLockTime,
+            friendReferralCode: friendReferalCode
+        };
+        console.log(body)
+
+        fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(body),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data)
+                setIsPurchasing(false);
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+                setIsGettingReferalCode(false);
+            });
     }
 
     const handlePurchase = async () => {
@@ -422,8 +496,9 @@ export const PresaleModal = (props: Props) => {
                                 maxLength={4}
                                 autoFocus
                                 onChange={(e) => setFriendReferalCode(e.target.value)}
+                                value={friendReferalCode}
                             />
-                            <Button size="sm" className="w-1/2" onClick={handleConfirmReferalCode}>Confirm</Button>
+                            <Button size="sm" className="w-1/2" disabled={friendReferalCodeConfirm} onClick={handleConfirmReferalCode}>{friendReferalCodeConfirm ? <ClipLoader size={20} color="white" /> : "Confirm"}</Button>
                         </div>
                     )
                 }
@@ -447,7 +522,7 @@ export const PresaleModal = (props: Props) => {
                     )
                         :
                         (
-                            <Button className="w-1/2" onClick={handleGetReferalCode} disabled={isGettingReferalCode}>Get Referal Code</Button>
+                            <Button className="w-1/2" onClick={handleGetReferalCode} disabled={isGettingReferalCode}>{isGettingReferalCode ? <ClipLoader size={20} color="white" /> : "Get Referal Code"}</Button>
                         )
                 }
 
