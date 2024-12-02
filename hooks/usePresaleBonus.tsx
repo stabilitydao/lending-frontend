@@ -7,20 +7,20 @@ export const usePresaleBonus = (selectedMode: number, selectedLockTime: number) 
 
     useEffect(() => {
         if (selectedMode == 1) {
-            setBonusPercent(0);
+            setBonusPercent(PresaleBonus["0"]);
         } else {
             switch (selectedLockTime) {
                 case 7:
-                    setBonusPercent(PresaleBonus["7"]);
+                    setBonusPercent(selectedMode == 2 ? PresaleBonus["7"][0] : PresaleBonus["7"][1]);
                     return;
                 case 12:
-                    setBonusPercent(PresaleBonus["12"]);
+                    setBonusPercent(selectedMode == 2 ? PresaleBonus["12"][0] : PresaleBonus["12"][1]);
                     return;
                 case 18:
-                    setBonusPercent(PresaleBonus["18"]);
+                    setBonusPercent(selectedMode == 2 ? PresaleBonus["18"][0] : PresaleBonus["18"][1]);
                     return;
                 case 24:
-                    setBonusPercent(PresaleBonus["24"]);
+                    setBonusPercent(selectedMode == 2 ? PresaleBonus["24"][0] : PresaleBonus["24"][1]);
                     return;
                 default:
                     setBonusPercent(0);
