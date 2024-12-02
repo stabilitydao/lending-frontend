@@ -1,0 +1,39 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  // Uses connection pooling
+  url = env("POSTGRES_PRISMA_URL")
+}
+
+
+model PresaleInvestData {
+    id          Int       @id @default(autoincrement())
+    tx_hash             String @unique
+    wallet_address      String 
+    option              Int
+    ve_period           Int
+    currency            String
+    chain               String
+    amount              Float
+}
+
+model ValidReferralCode {
+    id          Int       @id @default(autoincrement())
+    wallet_address      String @unique
+    referralCode        String 
+}
+
+model InvestorData {
+    id          Int       @id @default(autoincrement())
+    wallet_address      String @unique
+    selfReferralCode    String
+    friendReferralCode  String
+}

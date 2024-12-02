@@ -3,7 +3,7 @@ import { BorrowTable } from "@/components/borrow/borrow-table";
 
 export default function Page() {
   return (
-    <div className=" p-4 h-full rounded-lg mx-10 my-24 flex flex-col gap-4">
+    <div className=" p-4 h-full rounded-lg mx-10 my-[150px] flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <SearchFilter route="borrow" />
       </div>
