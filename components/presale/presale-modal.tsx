@@ -236,7 +236,6 @@ export const PresaleModal = (props: Props) => {
                 return response.json();
             })
             .then(data => {
-                console.log(data)
                 if (data.isValid) {
                     setIsConfirmed(true)
                 } else {
@@ -276,10 +275,9 @@ export const PresaleModal = (props: Props) => {
                 ],
                 account: `0x${address?.replace("0x", "")}`,
             })
-            console.log("resultApprove: ", resultApprove)
             const receipt = await client.waitForTransactionReceipt({ hash: `0x${resultApprove.replace("0x", "")}`, confirmations: 1 });
             if (receipt.status == "success") {
-                handlePurchase();
+                handleDeposit();
             } else {
                 toast({
                     title: "",
@@ -292,7 +290,6 @@ export const PresaleModal = (props: Props) => {
                 });
             }
             setIsApproving(false);
-            console.log("resultApprove: ", receipt)
         } catch (error) {
             setIsApproving(false);
         }
@@ -357,7 +354,6 @@ export const PresaleModal = (props: Props) => {
             ve_period: selectedLockTime,
             friendReferralCode: friendReferalCode
         };
-        console.log(body)
 
         fetch(url, {
             method: "POST",
@@ -368,7 +364,6 @@ export const PresaleModal = (props: Props) => {
         })
             .then((response) => response.json())
             .then((data) => {
-                console.log(data)
                 setIsPurchasing(false);
             })
             .catch((error) => {
@@ -390,10 +385,7 @@ export const PresaleModal = (props: Props) => {
             });
             return;
         }
-        if (!isApproved) {
-            handleApprove();
-            return;
-        }
+
         setIsPurchasing(true);
 
         const resPresaleStatus = await readContract(client, {
@@ -405,7 +397,6 @@ export const PresaleModal = (props: Props) => {
             ? formatUnits(resPresaleStatus as bigint, 0)
             : '0';
 
-        console.log("presaleStatus: ", presaleStatus)
         if (presaleStatus == '0') {
             const whiteList = await readContract(client, {
                 address: `0x${contractAddress?.replace("0x", "")}`,
@@ -414,7 +405,12 @@ export const PresaleModal = (props: Props) => {
                 args: [address],
             })
             if (whiteList) {
-                handleDeposit();
+                if (!isApproved) {
+                    handleApprove();
+                    return;
+                } else {
+                    handleDeposit();
+                }
             } else {
                 toast({
                     title: "",
@@ -428,7 +424,12 @@ export const PresaleModal = (props: Props) => {
                 setIsPurchasing(false);
             }
         } else if (presaleStatus == '1') {
-            handleDeposit();
+            if (!isApproved) {
+                handleApprove();
+                return;
+            } else {
+                handleDeposit();
+            }
         } else if (presaleStatus == '2') {
             toast({
                 title: "",
@@ -477,7 +478,7 @@ export const PresaleModal = (props: Props) => {
                                         availableFantomCoins.map((item, index) => (
                                             <div className="flex flex-row items-center" onClick={e => handleItemClick(e.currentTarget.id)} id={item} key={index}>
                                                 <Image
-                                                    src={`/icons/coins/USDC.png`}
+                                                    src={`/icons/coins/usdc.png`}
                                                     alt={selectedItem}
                                                     width={15}
                                                     height={15}
