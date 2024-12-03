@@ -497,7 +497,7 @@ export const PresaleModal = (props: Props) => {
                                         availableFantomCoins.map((item, index) => (
                                             <div className="flex flex-row items-center" onClick={e => handleItemClick(e.currentTarget.id)} id={item} key={index}>
                                                 <Image
-                                                    src={`/icons/coins/usdc.png`}
+                                                    src={`/icons/coins/${item.toLowerCase()}.png`}
                                                     alt={selectedItem}
                                                     width={15}
                                                     height={15}
