@@ -93,6 +93,14 @@ export const PresaleModal = (props: Props) => {
         }
     }, [])
 
+    useEffect(() => {
+        if (chainId == 250) {
+            setSelectedItem(availableFantomCoins[0]);
+        } else {
+            setSelectedItem(availableCoins[0]);
+        }
+    }, [chainId])
+
     const [walletClient, setWalletClient] = useState<any>();
 
     useEffect(() => {
@@ -472,7 +480,7 @@ export const PresaleModal = (props: Props) => {
                     value={inputAmount}
                 />
                 <div className='absolute right-2 h-6 z-10 bg-purple-200 hover:bg-purple-300 text-primary rounded-full'>
-                    <div className='flex flex-row items-center cursor-pointer px-2' onClick={toggleDropdown}>
+                    <div className='flex flex-row items-center cursor-pointer px-2 111' onClick={toggleDropdown}>
                         <Image
                             src={`/icons/coins/${chainId == 250 ? "usdc" : selectedItem.toLowerCase()}.png`}
                             alt={selectedItem}
