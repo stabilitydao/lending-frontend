@@ -68,7 +68,7 @@ export const PresaleModal = (props: Props) => {
 
 
     const [availableCoins, setAvailableCoins] = useState<string[]>(["USDC", "USDT"]);
-    const [availableFantomCoins, setAvailableFantomCoins] = useState<string[]>(["USDC", "USDT"]);
+    const [availableFantomCoins, setAvailableFantomCoins] = useState<string[]>(["axUSDC", "lzUSDC"]);
     const [isOpen, setOpen] = useState(false);
     const [getReferalCode, setGetReferalCode] = useState<boolean>(false);
     const [referalCode, setReferalCode] = useState<string>("");
@@ -494,18 +494,18 @@ export const PresaleModal = (props: Props) => {
                             <div className={`bg-purple-200 rounded px-2 mt-1 cursor-pointer`}>
                                 {
                                     chainId == 250 ? (
-                                        availableFantomCoins.map((item, index) => (
-                                            <div className="flex flex-row items-center" onClick={e => handleItemClick(e.currentTarget.id)} id={item} key={index}>
-                                                <Image
-                                                    src={`/icons/coins/${item.toLowerCase()}.png`}
-                                                    alt={selectedItem}
-                                                    width={15}
-                                                    height={15}
-                                                />
-                                                {item}
-                                            </div>
-                                        ))
-                                    )
+                                            availableFantomCoins.map((item, index) => (
+                                                <div className="flex flex-row items-center" onClick={e => handleItemClick(e.currentTarget.id)} id={item} key={index}>
+                                                    <Image
+                                                        src={`/icons/coins/usdc.png`}
+                                                        alt={selectedItem}
+                                                        width={15}
+                                                        height={15}
+                                                    />
+                                                    {item}
+                                                </div>
+                                            ))
+                                        )
                                         : (
                                             availableCoins.map((item, index) => (
                                                 <div className="flex flex-row items-center" onClick={e => handleItemClick(e.currentTarget.id)} id={item} key={index}>
