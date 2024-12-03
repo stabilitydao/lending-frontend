@@ -68,7 +68,7 @@ export const PresaleModal = (props: Props) => {
 
 
     const [availableCoins, setAvailableCoins] = useState<string[]>(["USDC", "USDT"]);
-    const [availableFantomCoins, setAvailableFantomCoins] = useState<string[]>(["axUSDC", "lzUSDT"]);
+    const [availableFantomCoins, setAvailableFantomCoins] = useState<string[]>(["axUSDC", "lzUSDC"]);
     const [isOpen, setOpen] = useState(false);
     const [getReferalCode, setGetReferalCode] = useState<boolean>(false);
     const [referalCode, setReferalCode] = useState<string>("");
@@ -474,7 +474,7 @@ export const PresaleModal = (props: Props) => {
                 <div className='absolute right-2 h-6 z-10 bg-purple-200 hover:bg-purple-300 text-primary rounded-full'>
                     <div className='flex flex-row items-center cursor-pointer px-2' onClick={toggleDropdown}>
                         <Image
-                            src={`/icons/coins/${chainId == 250 ? "USDC" : selectedItem.toLowerCase()}.png`}
+                            src={`/icons/coins/${chainId == 250 ? "usdc" : selectedItem.toLowerCase()}.png`}
                             alt={selectedItem}
                             width={15}
                             height={15}
