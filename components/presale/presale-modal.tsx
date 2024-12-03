@@ -394,7 +394,7 @@ export const PresaleModal = (props: Props) => {
             });
             return;
         }
-        if (allowance < parseUnits(inputAmount, 6)) {
+        if (Number(allowance) != 0 && allowance < parseUnits(inputAmount, 6)) {
             toast({
                 title: "",
                 description: "You are allowed to purchase $" + Number(formatUnits(allowance as bigint, 6)).toLocaleString(),
@@ -494,18 +494,18 @@ export const PresaleModal = (props: Props) => {
                             <div className={`bg-purple-200 rounded px-2 mt-1 cursor-pointer`}>
                                 {
                                     chainId == 250 ? (
-                                            availableFantomCoins.map((item, index) => (
-                                                <div className="flex flex-row items-center" onClick={e => handleItemClick(e.currentTarget.id)} id={item} key={index}>
-                                                    <Image
-                                                        src={`/icons/coins/usdc.png`}
-                                                        alt={selectedItem}
-                                                        width={15}
-                                                        height={15}
-                                                    />
-                                                    {item}
-                                                </div>
-                                            ))
-                                        )
+                                        availableFantomCoins.map((item, index) => (
+                                            <div className="flex flex-row items-center" onClick={e => handleItemClick(e.currentTarget.id)} id={item} key={index}>
+                                                <Image
+                                                    src={`/icons/coins/usdc.png`}
+                                                    alt={selectedItem}
+                                                    width={15}
+                                                    height={15}
+                                                />
+                                                {item}
+                                            </div>
+                                        ))
+                                    )
                                         : (
                                             availableCoins.map((item, index) => (
                                                 <div className="flex flex-row items-center" onClick={e => handleItemClick(e.currentTarget.id)} id={item} key={index}>
