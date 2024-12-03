@@ -68,7 +68,7 @@ export const PresaleModal = (props: Props) => {
 
 
     const [availableCoins, setAvailableCoins] = useState<string[]>(["USDC", "USDT"]);
-    const [availableFantomCoins, setAvailableFantomCoins] = useState<string[]>(["axUSDC", "lzUSDC"]);
+    const [availableFantomCoins, setAvailableFantomCoins] = useState<string[]>(["USDC", "USDT"]);
     const [isOpen, setOpen] = useState(false);
     const [getReferalCode, setGetReferalCode] = useState<boolean>(false);
     const [referalCode, setReferalCode] = useState<string>("");
