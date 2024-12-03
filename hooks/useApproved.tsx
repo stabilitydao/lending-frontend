@@ -12,10 +12,11 @@ const client = createPublicClient({
     transport: http(),
 })
 
-export const useApproved = (inputAmount: string, contractAddress: string, coinAddress: string) => {
+export const useApproved = (inputAmount: string, contractAddress: string, coinAddress: string, isPurchasing: boolean, isApproving: boolean) => {
     const chainId = useChainId();
     const chains = useChains();
     const { address } = useAccount();
+    const [allowance, setAllowance] = useState<bigint>(BigInt(0));
     const [checkingApprove, setCheckingApprove] = useState<boolean>(false);
     const [isApproved, setIsApproved] = useState<boolean>(false);
 
@@ -32,6 +33,7 @@ export const useApproved = (inputAmount: string, contractAddress: string, coinAd
                     contractAddress
                 ]
             })
+            setAllowance(allowance as bigint);
             if (allowance as bigint >= amountInWei) {
                 setIsApproved(true)
             } else {
@@ -44,7 +46,7 @@ export const useApproved = (inputAmount: string, contractAddress: string, coinAd
             checkApprove();
         }
 
-    }, [chainId, chains, inputAmount, contractAddress, coinAddress]);
+    }, [chainId, chains, inputAmount, contractAddress, coinAddress, isPurchasing, isApproving]);
 
-    return { checkingApprove, isApproved };
+    return { checkingApprove, isApproved, allowance };
 };

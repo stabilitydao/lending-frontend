@@ -112,7 +112,7 @@ export const PresaleModal = (props: Props) => {
         props.setTotalDeposited(totlDepositedAmount)
     }, [hardCap, totlDepositedAmount])
 
-    const { checkingApprove, isApproved } = useApproved(inputAmount, contractAddress, coinAddress);
+    const { checkingApprove, isApproved, allowance } = useApproved(inputAmount, contractAddress, coinAddress, isPurchasing, isApproving);
 
     useEffect(() => {
         props.setBalance(balance);
@@ -241,7 +241,7 @@ export const PresaleModal = (props: Props) => {
                 } else {
                     toast({
                         title: "",
-                        description: "Referal code is invalid",
+                        description: data.resultMessge,
                         variant: "default",
                         style: {
                             background: "rgb(255, 255, 255)",
@@ -296,6 +296,7 @@ export const PresaleModal = (props: Props) => {
     }
 
     const handleDeposit = async () => {
+        setIsPurchasing(true);
         try {
             const amountInWei = parseUnits(inputAmount, 6);
             const resultDeposit = await walletClient.writeContract({
@@ -385,8 +386,18 @@ export const PresaleModal = (props: Props) => {
             });
             return;
         }
-
-        setIsPurchasing(true);
+        if (allowance < parseUnits(inputAmount, 6)) {
+            toast({
+                title: "",
+                description: "You are allowed to purchase $" + Number(formatUnits(allowance as bigint, 6)).toLocaleString(),
+                variant: "default",
+                style: {
+                    background: "rgb(255, 255, 255)",
+                    color: "rgb(0, 0, 0)",
+                },
+            });
+            return;
+        }
 
         const resPresaleStatus = await readContract(client, {
             address: `0x${contractAddress?.replace("0x", "")}`,
@@ -714,7 +725,7 @@ export const PresaleModal = (props: Props) => {
                 <p className="text-primary w-full">Total Bonus Received : {bonusPercent}%</p>
             </div>
             <div className="mt-4 justify-center">
-                <Button onClick={handlePurchase} disabled={isPurchasing || checkingApprove || isApproving}>{isPurchasing || checkingApprove || isApproving ? <ClipLoader size={20} color="white" /> : isApproved ? "Purchase" : "Approve"}</Button>
+                <Button onClick={handlePurchase} disabled={isPurchasing || checkingApprove || isApproving}>{(isPurchasing || checkingApprove || isApproving) ? <span className="flex"><ClipLoader size={20} color="white" />{isPurchasing ? "Purchasing..." : "Approving..."}</span> : (isApproved ? "Purchase" : "Approve")}</Button>
             </div>
         </div >
     )
