@@ -113,6 +113,37 @@ export const PresaleModal = (props: Props) => {
         }
     }, []);
 
+    useEffect(() => {
+        if (typeof window !== 'undefined' && window.ethereum) {
+            window.ethereum.on('accountsChanged', (accounts: string[]) => {
+                if (accounts.length > 0) {
+                    // Handle wallet switch
+                    const newWalletAddress = accounts[0];
+                    setReferalCode(""); // Clear the current referral code
+                    setGetReferalCode(false); // Reset the state for displaying referral code
+                    checkReferralCode(newWalletAddress);
+                }
+            });
+        }
+    }, []);
+
+    const checkReferralCode = (walletAddress: string) => {
+        const savedReferCode = localStorage.getItem(`self_refer_code_${walletAddress}`);
+        if (savedReferCode) {
+            setReferalCode(savedReferCode); // Set referral code if it exists
+            setGetReferalCode(true); // Indicate that the referral code exists
+        } else {
+            setReferalCode(""); // No referral code for this wallet
+            setGetReferalCode(false); // Show the "Generate Referral Code" button
+        }
+    };
+
+    // Initial check when component mounts or wallet changes
+    useEffect(() => {
+        if (isConnected && address) {
+            checkReferralCode(address);
+        }
+    }, [isConnected, address]);
 
 
     useEffect(() => {
@@ -177,11 +208,22 @@ export const PresaleModal = (props: Props) => {
             },
             body: JSON.stringify(body),
         })
-            .then((response) => response.json())
+            .then((response) => {
+                if (!response.ok) {
+                    setIsGettingReferalCode(false);
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json(); // Proceed to parse the JSON if status is 200
+            })
             .then((data) => {
-                setReferalCode(data.selfReferralCode);
-                localStorage.setItem("self_refer_code", data.selfReferralCode);
-                setGetReferalCode(true)
+                if (data.selfReferralCode) {
+                    const referralKey = `self_refer_code_${address}`; // Use walletAddress-specific key
+                    setReferalCode(data.selfReferralCode); // Set the referral code for UI
+                    localStorage.setItem(referralKey, data.selfReferralCode); // Save to localStorage with wallet-specific key
+                    setGetReferalCode(true); // Update UI to show the referral code
+                } else {
+                    console.error("Error: Referral code not received in response");
+                }
                 setIsGettingReferalCode(false);
             })
             .catch((error) => {

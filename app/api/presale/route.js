@@ -57,6 +57,26 @@ async function handleReferralCodeAssignment(walletAddress) {
             selfReferralCode: '',
         };
 
+        let newCode = generateRandomCode(4);
+        let referralExists;
+
+        try {
+            referralExists = await prisma.validReferralCode.findMany({
+                where: { referralCode: newCode }
+            });
+        } catch (error) {
+            console.log("error from find - ", error);
+        }
+
+        while (referralExists.length > 0) {
+            newCode = generateRandomCode(4);
+            referralExists = await prisma.validReferralCode.findMany({
+                where: { referralCode: newCode }
+            });
+        }
+
+        newUserData.selfReferralCode = newCode;
+
         // Create the new user
         try {
             await prisma.InvestorData.create({
