@@ -5,9 +5,15 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { SearchIcon } from "lucide-react";
 import Image from "next/image";
-import { chainIcons } from "@/lib/constants";
+import { chainIcons, projectData } from "@/lib/constants";
 
-export const SearchFilter = ({ route }: { route: string }) => {
+export const SearchFilter = ({
+  route,
+  isFilteringProjects,
+}: {
+  route: string;
+  isFilteringProjects: boolean;
+}) => {
   const chainId = useChainId();
   const chains = useChains();
   const router = useRouter();
@@ -53,6 +59,38 @@ export const SearchFilter = ({ route }: { route: string }) => {
     );
   };
 
+  const [selectedProjects, setSelectedProjects] = useState<string[]>(() => {
+    const projectParam = searchParams.get("project");
+    if (projectParam) return projectParam.split("+");
+
+    return [];
+  });
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      const params = new URLSearchParams();
+      if (search) {
+        params.set("search", search.toLowerCase());
+      }
+      if (selectedProjects.length > 0) {
+        params.set("project", selectedProjects.join("+"));
+      }
+      router.push(
+        `/${route}${params.toString() ? `?${params.toString()}` : ""}`
+      );
+    }, 300);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [search, selectedProjects, router, route]);
+
+  const handleProjectClick = (project: string) => {
+    setSelectedProjects((prev) =>
+      prev.includes(project)
+        ? prev.filter((p) => p !== project)
+        : [...prev, project]
+    );
+  };
+
   return (
     <div className="flex flex-col lg:flex-row items-start gap-6 lg:gap-4 lg:items-center justify-between">
       <div className="relative w-full max-w-sm">
@@ -66,7 +104,39 @@ export const SearchFilter = ({ route }: { route: string }) => {
         <SearchIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary  h-5 w-5" />
       </div>
       <div className="flex space-x-6">
-        {chainIcons?.map((icon, index) => {
+        {isFilteringProjects
+          ? projectData?.map((project, index) => {
+              const isSelected = selectedProjects.includes(project.name);
+              return (
+                <Image
+                  key={index}
+                  src={project.icon}
+                  alt={project.name}
+                  width={34}
+                  height={34}
+                  className={`cursor-pointer w-[72px] h-6 object-contain object-center ${
+                    isSelected ? "rounded-full opacity-100" : "opacity-50"
+                  }`}
+                  onClick={() => handleProjectClick(project.name)}
+                />
+              );
+            })
+          : chainIcons?.find((icon) => icon.includes("sonic")) && (
+              <Image
+                src={chainIcons?.find((icon) => icon.includes("sonic")) || ""}
+                alt="Chain"
+                width={34}
+                height={34}
+                className={`cursor-pointer w-6 h-6 object-contain object-center ${
+                  selectedChains.includes("sonic")
+                    ? "rounded-full opacity-100"
+                    : "opacity-50"
+                }`}
+                onClick={() => handleChainClick("sonic")}
+              />
+            )}
+        {/* change to JUST sonic logo */}
+        {/* {chainIcons?.map((icon, index) => {
           const processedChain = icon
             .replace("/icons/coins/", "")
             .replace(".png", "")
@@ -86,7 +156,7 @@ export const SearchFilter = ({ route }: { route: string }) => {
               onClick={() => handleChainClick(icon)}
             />
           );
-        })}
+        })} */}
       </div>
     </div>
   );

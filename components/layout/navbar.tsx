@@ -104,9 +104,28 @@ export const Navbar = () => {
             </p>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuItem>Docs</DropdownMenuItem>
-            <DropdownMenuItem>Blog</DropdownMenuItem>
+            <DropdownMenuItem>
+              <a
+                href="https://vicuna-finance.gitbook.io/vicuna-finance-sonic"
+                target="_blank"
+                rel="noreferrer"
+                className="w-full"
+              >
+                Docs
+              </a>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <a
+                href="https://medium.com/@vicunafinance"
+                target="_blank"
+                rel="noreferrer"
+                className="w-full"
+              >
+                Blog
+              </a>
+            </DropdownMenuItem>
             <DropdownMenuItem>Audits</DropdownMenuItem>
+            <DropdownMenuItem>Presale</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
