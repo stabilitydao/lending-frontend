@@ -89,7 +89,13 @@ export const PresaleModal = (props: Props) => {
       setAvailableChains([...chains].filter((c) => c.id !== chainId));
       const clientTemp = createWalletClient({
         chain: currentChain,
-        transport: custom(window.ethereum),
+        transport: http(
+          RPC_URLS[
+            connectedChain?.name
+              .replace(/\s+/g, "")
+              .toLowerCase() as keyof typeof RPC_URLS
+          ],
+        ),
       });
       setWalletClient(clientTemp);
     } else {
@@ -372,6 +378,7 @@ export const PresaleModal = (props: Props) => {
     setIsApproving(true);
     const amountInWei = parseUnits(inputAmount, 6);
     try {
+      console.log("coinAddress: ", coinAddress);
       const resultApprove = await walletClient.writeContract({
         address: `0x${coinAddress}`,
         abi: USDC_ABI,
