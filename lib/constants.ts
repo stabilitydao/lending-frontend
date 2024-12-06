@@ -482,8 +482,15 @@ export const presaleTokenAddr = {
 export const contractAddress = {
   Sepolia: "0xA3A1598D737c61f17Ba4F7353650150F29E772D4",
   Base: "0x5C7B3155F079BEac6B2854c1992EdCAFb8b30D4d",
-  Fantom: "",
+  Fantom: "0xFC8F6320eFECa5232706a25d069d8159c65e3969",
   Arbitrum: "0xe787F3040FAE5B473055A9AA902Acd267b3F43D9",
+};
+
+export const RPC_URLS = {
+  sepolia: "https://ethereum-sepolia.blockpi.network/v1/rpc/public",
+  base: "https://base-rpc.publicnode.com", // Replace with actual Base RPC URL
+  arbitrumone: "https://arbitrum-one-rpc.publicnode.com", // Replace with actual Arbitrum RPC URL
+  fantom: "https://fantom-rpc.publicnode.com", // Replace with actual Fantom RPC URL
 };
 
 export const USDC_ABI = [

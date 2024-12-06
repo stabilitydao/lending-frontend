@@ -2,12 +2,12 @@
 
 import { useAccount, useChainId, useChains } from "wagmi";
 import { useState, useEffect } from "react";
-import { USDC_ABI } from "@/lib/constants";
+import { USDC_ABI, RPC_URLS } from "@/lib/constants";
 import { createPublicClient, http, parseUnits } from "viem";
 import { sepolia } from "viem/chains";
 import { readContract } from "viem/actions";
 
-const client = createPublicClient({
+let client = createPublicClient({
   chain: sepolia,
   transport: http(),
 });
@@ -30,6 +30,27 @@ export const useApproved = (
     const checkApprove = async () => {
       setCheckingApprove(true);
       const amountInWei = parseUnits(inputAmount, 6);
+      const currentChain = chains.find((c) => c.id === chainId);
+      // Create public client based on connectedChain
+      console.log("currentChain: ", currentChain);
+      console.log(
+        "RPC_URLS: ",
+        RPC_URLS[
+          currentChain?.name
+            .replace(/\s+/g, "")
+            .toLowerCase() as keyof typeof RPC_URLS
+        ],
+      );
+      client = createPublicClient({
+        chain: currentChain || sepolia, // Default to Sepolia if not set
+        transport: http(
+          RPC_URLS[
+            currentChain?.name
+              .replace(/\s+/g, "")
+              .toLowerCase() as keyof typeof RPC_URLS
+          ],
+        ),
+      });
       const allowance = await readContract(client, {
         address: `0x${coinAddress?.replace("0x", "")}`,
         abi: USDC_ABI,

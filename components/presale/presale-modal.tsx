@@ -36,7 +36,7 @@ import {
   PresaleContractABIArbitrum,
   PresaleContractABIBase,
 } from "@/lib/constants";
-import { USDC_ABI } from "@/lib/constants";
+import { USDC_ABI, RPC_URLS } from "@/lib/constants";
 import { PresaleBonus } from "@/lib/constants";
 import { usePresaleBonus } from "@/hooks/usePresaleBonus";
 
@@ -48,19 +48,14 @@ interface Props {
   referCode: string | null;
 }
 
-const RPC_URLS = {
-  sepolia: "https://ethereum-sepolia.blockpi.network/v1/rpc/public",
-  base: "https://base-rpc.publicnode.com", // Replace with actual Base RPC URL
-  arbitrum: "https://arbitrum-one-rpc.publicnode.com", // Replace with actual Arbitrum RPC URL
-  fantom: "https://fantom-rpc.publicnode.com", // Replace with actual Fantom RPC URL
-};
-
 export const PresaleModal = (props: Props) => {
   const chainId = useChainId();
   const { chains, switchChain, error, isPending } = useSwitchChain();
   const [connectedChain, setConnectedChain] = useState<Chain>();
   const [availableChains, setAvailableChains] = useState<Chain[]>([]);
-  const [presaleContractABI, setPresaleContractABI] = useState<Object[]>([]);
+  const [presaleContractABI, setPresaleContractABI] = useState<Object[]>(
+    PresaleContractABISepolia,
+  );
 
   const contractAddress = useContractAddress();
 
@@ -68,7 +63,11 @@ export const PresaleModal = (props: Props) => {
   const client = createPublicClient({
     chain: connectedChain || sepolia, // Default to Sepolia if not set
     transport: http(
-      RPC_URLS[connectedChain?.name.toLowerCase() as keyof typeof RPC_URLS],
+      RPC_URLS[
+        connectedChain?.name
+          .replace(/\s+/g, "")
+          .toLowerCase() as keyof typeof RPC_URLS
+      ],
     ),
   });
 
@@ -88,6 +87,11 @@ export const PresaleModal = (props: Props) => {
       }
       setConnectedChain(currentChain);
       setAvailableChains([...chains].filter((c) => c.id !== chainId));
+      const clientTemp = createWalletClient({
+        chain: currentChain,
+        transport: custom(window.ethereum),
+      });
+      setWalletClient(clientTemp);
     } else {
       setConnectedChain(sepolia);
       setAvailableChains([...chains]);
@@ -394,6 +398,7 @@ export const PresaleModal = (props: Props) => {
       }
       setIsApproving(false);
     } catch (error) {
+      console.log(error);
       setIsApproving(false);
     }
   };
@@ -443,6 +448,7 @@ export const PresaleModal = (props: Props) => {
       }
       handleSaveDepositDetail(resultDeposit);
     } catch (error) {
+      console.log("error: ", error);
       setIsPurchasing(false);
     }
   };
@@ -507,6 +513,7 @@ export const PresaleModal = (props: Props) => {
       return;
     }
 
+    console.log("presaleContractABI: ", presaleContractABI);
     const resPresaleStatus = await readContract(client, {
       address: `0x${contractAddress?.replace("0x", "")}`,
       abi: presaleContractABI,
@@ -515,7 +522,6 @@ export const PresaleModal = (props: Props) => {
     const presaleStatus = resPresaleStatus
       ? formatUnits(resPresaleStatus as bigint, 0)
       : "0";
-
     if (presaleStatus == "0") {
       const whiteList = await readContract(client, {
         address: `0x${contractAddress?.replace("0x", "")}`,
