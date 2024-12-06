@@ -82,6 +82,15 @@ async function handleReferralCodeAssignment(walletAddress) {
             await prisma.InvestorData.create({
                 data: newUserData
             });
+
+            await prisma.ValidReferralCode.create({
+                data: {
+                    wallet_address: walletAddress,
+                    referralCode: newCode
+                }
+            });
+
+            return { message: `Referral code ${newCode} assigned successfully.`, selfReferralCode: newCode };
         } catch (error) {
             console.error("Error creating user:", error);
             return { error: "An error occurred while creating the user." };
@@ -330,6 +339,14 @@ async function verifyFriendReferralCode(walletAddress, _friendReferralCode) {
 
         if (referralExists.length > 0 && user.selfReferralCode != _friendReferralCode) {
             isValidReferralCode = true;
+
+            await prisma.InvestorData.update({
+                where: { wallet_address: walletAddress },
+                data: {
+                    friendReferralCode: _friendReferralCode,
+                }
+            });
+
             return { result: "Referral code verified!", isValid: isValidReferralCode };
         } else if (user.selfReferralCode == _friendReferralCode) {
             isValidReferralCode = false;

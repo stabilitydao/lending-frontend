@@ -32,15 +32,7 @@ export const useApproved = (
       const amountInWei = parseUnits(inputAmount, 6);
       const currentChain = chains.find((c) => c.id === chainId);
       // Create public client based on connectedChain
-      console.log("currentChain: ", currentChain);
-      console.log(
-        "RPC_URLS: ",
-        RPC_URLS[
-          currentChain?.name
-            .replace(/\s+/g, "")
-            .toLowerCase() as keyof typeof RPC_URLS
-        ],
-      );
+      console.log("address: ", address);
       client = createPublicClient({
         chain: currentChain || sepolia, // Default to Sepolia if not set
         transport: http(
@@ -51,17 +43,19 @@ export const useApproved = (
           ],
         ),
       });
-      const allowance = await readContract(client, {
-        address: `0x${coinAddress?.replace("0x", "")}`,
-        abi: USDC_ABI,
-        functionName: "allowance",
-        args: [address, contractAddress],
-      });
-      setAllowance(allowance as bigint);
-      if ((allowance as bigint) >= amountInWei) {
-        setIsApproved(true);
-      } else {
-        setIsApproved(false);
+      if (address) {
+        const allowance = await readContract(client, {
+          address: `0x${coinAddress?.replace("0x", "")}`,
+          abi: USDC_ABI,
+          functionName: "allowance",
+          args: [address, contractAddress],
+        });
+        setAllowance(allowance as bigint);
+        if ((allowance as bigint) >= amountInWei) {
+          setIsApproved(true);
+        } else {
+          setIsApproved(false);
+        }
       }
       setCheckingApprove(false);
     };

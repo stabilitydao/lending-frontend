@@ -89,7 +89,13 @@ export const PresaleModal = (props: Props) => {
       setAvailableChains([...chains].filter((c) => c.id !== chainId));
       const clientTemp = createWalletClient({
         chain: currentChain,
-        transport: custom(window.ethereum),
+        transport: http(
+          RPC_URLS[
+            connectedChain?.name
+              .replace(/\s+/g, "")
+              .toLowerCase() as keyof typeof RPC_URLS
+          ],
+        ),
       });
       setWalletClient(clientTemp);
     } else {
@@ -136,13 +142,9 @@ export const PresaleModal = (props: Props) => {
 
   useEffect(() => {
     if (props.referCode != null && props.referCode != "") {
-      setInsertReferalCode(true);
+      setInsertReferalCode(false);
+      setIsConfirmed(true);
       setFriendReferalCode(props.referCode);
-    }
-    const savedReferCode = localStorage.getItem("self_refer_code");
-    if (savedReferCode != null && savedReferCode != "") {
-      setReferalCode(savedReferCode);
-      setGetReferalCode(true);
     }
   }, []);
 
@@ -190,6 +192,17 @@ export const PresaleModal = (props: Props) => {
     } else {
       setReferalCode(""); // No referral code for this wallet
       setGetReferalCode(false); // Show the "Generate Referral Code" button
+    }
+
+    const savedFriendReferCode = localStorage.getItem(
+        `friend_refer_code_${walletAddress}`,
+    );
+    if (savedFriendReferCode) {
+      setFriendReferalCode(savedFriendReferCode);
+      setIsConfirmed(true);
+    } else {
+      setFriendReferalCode("");
+      setIsConfirmed(false);
     }
   };
 
@@ -291,7 +304,7 @@ export const PresaleModal = (props: Props) => {
   const handleShare = async () => {
     try {
       const currentDomain = window.location.origin; // Gets the current domain
-      const shareLink = `${currentDomain}/presale/?ref=${referalCode}`;
+      const shareLink = `${currentDomain}/presale/?refer=${referalCode}`;
       await navigator.clipboard.writeText(shareLink);
       toast({
         title: "",
@@ -345,6 +358,8 @@ export const PresaleModal = (props: Props) => {
       .then((data) => {
         if (data.isValid) {
           setIsConfirmed(true);
+          const referralKey = `friend_refer_code_${walletAddress}`;
+          localStorage.setItem(referralKey, friendReferalCode);
         } else {
           toast({
             title: "",
@@ -372,6 +387,7 @@ export const PresaleModal = (props: Props) => {
     setIsApproving(true);
     const amountInWei = parseUnits(inputAmount, 6);
     try {
+      console.log("coinAddress: ", coinAddress);
       const resultApprove = await walletClient.writeContract({
         address: `0x${coinAddress}`,
         abi: USDC_ABI,

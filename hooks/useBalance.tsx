@@ -36,6 +36,7 @@ export const useBalance = (selectedCoin: string) => {
   useEffect(() => {
     const currentChain = chains.find((chain) => chain.id === chainId);
     let coinAddress = "";
+    console.log("currentChain: ", currentChain);
     if (selectedCoin == "USDC") {
       if (currentChain?.name == "Base") {
         coinAddress = presaleTokenAddr["Base_USDC"];
@@ -58,6 +59,7 @@ export const useBalance = (selectedCoin: string) => {
       }
     }
     coinAddress = coinAddress.replace("0x", "");
+    console.log("coinAddress: ", coinAddress);
     setCoinAddress(coinAddress);
   }, [chainId, chains, selectedCoin]);
 

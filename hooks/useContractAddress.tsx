@@ -18,13 +18,10 @@ export const useContractAddress = () => {
       address = contractAddress["Base"];
     } else if (currentChain?.name === "Arbitrum One") {
       address = contractAddress["Arbitrum"];
-      console.log("address: ", address);
     } else if (currentChain?.name === "Fantom") {
       address = contractAddress["Fantom"];
-      console.log("address: ", address);
     } else if (currentChain?.name === "Sepolia") {
       address = contractAddress["Sepolia"];
-      console.log("address: ", address);
     }
     setSelectedContractAddress(address);
   }, [chainId, chains]);
