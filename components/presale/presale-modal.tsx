@@ -234,7 +234,8 @@ export const PresaleModal = (props: Props) => {
 
     const handleShare = async () => {
         try {
-            const shareLink = 'www.vicunafinance.com/presale/?ref=' + referalCode;
+            const currentDomain = window.location.origin; // Gets the current domain
+            const shareLink = `${currentDomain}/presale/?ref=${referalCode}`;
             await navigator.clipboard.writeText(shareLink);
             toast({
                 title: "",

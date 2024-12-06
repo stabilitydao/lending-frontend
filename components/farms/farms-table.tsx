@@ -90,7 +90,9 @@ export const FarmsTable = () => {
               <TableRow className="text-primary border-t-background cursor-pointer hover:bg-background/50 relative">
                 <TableCell>
                   <div className="absolute top-0 left-1">
-                    <ChainBookmark src={farm.chainImageSrc!} />
+                    {/* change to JUST sonic logo */}
+                    <ChainBookmark src={"/icons/coins/sonic.svg"} />
+                    {/* <ChainBookmark src={farm.chainImageSrc!} /> */}
                   </div>
                   <div className="flex items-center gap-10">
                     <DoubleAvatar

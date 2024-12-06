@@ -4,8 +4,8 @@ import { FarmsTable } from "@/components/farms/farms-table";
 export default function Page() {
   return (
     <div className=" p-4 h-full rounded-lg mx-10 my-[150px] flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <SearchFilter route="farms" />
+      <div className="flex flex-col sm:flex-row gap-8 sm:gap-2 items-center justify-between">
+        <SearchFilter route="farms" isFilteringProjects={true} />
         <div className="flex items-center space-x-4">
           <p className="text-primary">
             Network TVL:

@@ -20,7 +20,7 @@ export const LPStaking = () => {
         <div className="flex flex-col gap-10">
           <div className="flex flex-row items-center gap-2">
             <Image src="/logo.svg" alt="logo" width={50} height={50} />
-            <p className="text-3xl font-semibold">ViFi - ETH veLP</p>
+            <p className="text-3xl font-semibold">ViFi - S veLP</p>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-2">
@@ -51,10 +51,10 @@ export const LPStaking = () => {
                 <p>0.0141</p>
                 <Avatar className="w-9 h-9 bg-background p-1">
                   <AvatarImage
-                    src="/icons/coins/ethereum.png"
+                    src="/icons/coins/sonic.svg"
                     className="object-contain"
                   />
-                  <AvatarFallback>ETH</AvatarFallback>
+                  <AvatarFallback>Sonic</AvatarFallback>
                 </Avatar>
               </div>
               <div className="text-lg font-medium flex flex-row items-center gap-2">
