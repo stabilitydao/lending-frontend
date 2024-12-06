@@ -17,7 +17,7 @@ export const useApproved = (
   contractAddress: string,
   coinAddress: string,
   isPurchasing: boolean,
-  isApproving: boolean,
+  isApproving: boolean
 ) => {
   const chainId = useChainId();
   const chains = useChains();
@@ -40,7 +40,7 @@ export const useApproved = (
             currentChain?.name
               .replace(/\s+/g, "")
               .toLowerCase() as keyof typeof RPC_URLS
-          ],
+          ]
         ),
       });
       if (address) {

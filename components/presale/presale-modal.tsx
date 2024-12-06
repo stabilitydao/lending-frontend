@@ -386,7 +386,6 @@ export const PresaleModal = (props: Props) => {
     setIsApproving(true);
     const amountInWei = parseUnits(inputAmount, 6);
     try {
-      console.log("chainId: ", chainId);
       console.log("walletAddress: ", `0x${address?.replace("0x", "")}`);
       // Check and switch to the correct chain
       if (chainId !== connectedChain?.id) {
