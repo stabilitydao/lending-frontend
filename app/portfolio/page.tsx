@@ -16,14 +16,21 @@ export default function Page() {
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-2">
           <h1 className="text-primary text-lg font-semibold">Portfolio</h1>
-          {chainImageSrc ? (
+          {/* change to sonic logo */}
+          <Image
+            src={"/icons/coins/sonic.svg"}
+            alt="Chain logo"
+            width={20}
+            height={20}
+          />
+          {/* {chainImageSrc ? (
             <Image
               src={chainImageSrc}
               alt="Chain logo"
               width={20}
               height={20}
             />
-          ) : null}
+          ) : null} */}
         </div>
         <p className="text-primary text-sm font-light">
           Track all of your positions in one place
