@@ -54,27 +54,23 @@ export const PresaleModal = (props: Props) => {
   const [connectedChain, setConnectedChain] = useState<Chain>();
   const [availableChains, setAvailableChains] = useState<Chain[]>([]);
   const [presaleContractABI, setPresaleContractABI] = useState<Object[]>(
-    PresaleContractABISepolia,
+    PresaleContractABISepolia
   );
+  const [walletClient, setWalletClient] = useState<any>();
+  const { isConnected, address } = useAccount();
 
   const contractAddress = useContractAddress();
 
   // Create public client based on connectedChain
   const client = createPublicClient({
     chain: connectedChain || sepolia, // Default to Sepolia if not set
-    transport: http(
-      RPC_URLS[
-        connectedChain?.name
-          .replace(/\s+/g, "")
-          .toLowerCase() as keyof typeof RPC_URLS
-      ],
-    ),
+    transport: custom(window.ethereum!),
   });
 
   useEffect(() => {
     if (chainId) {
       const currentChain = chains.find((c) => c.id === chainId);
-
+      console.log("currentChain: ", currentChain?.name);
       let address: string = "";
       if (currentChain?.name == "Base") {
         setPresaleContractABI(PresaleContractABIBase);
@@ -87,16 +83,12 @@ export const PresaleModal = (props: Props) => {
       }
       setConnectedChain(currentChain);
       setAvailableChains([...chains].filter((c) => c.id !== chainId));
+      console.log("chainId: ", chainId);
       const clientTemp = createWalletClient({
         chain: currentChain,
-        transport: http(
-          RPC_URLS[
-            connectedChain?.name
-              .replace(/\s+/g, "")
-              .toLowerCase() as keyof typeof RPC_URLS
-          ],
-        ),
+        transport: custom(window.ethereum!),
       });
+      console.log("clientTemp: ", clientTemp);
       setWalletClient(clientTemp);
     } else {
       setConnectedChain(sepolia);
@@ -104,7 +96,6 @@ export const PresaleModal = (props: Props) => {
     }
   }, [chainId, chains]);
 
-  const { isConnected, address } = useAccount();
   const { toast } = useToast();
 
   const [selectedItem, setSelectedItem] = useState<string>("USDC");
@@ -114,7 +105,7 @@ export const PresaleModal = (props: Props) => {
   const { balance, coinAddress } = useBalance(selectedItem);
   const { hardCap, totlDepositedAmount } = useHardCap(
     contractAddress,
-    presaleContractABI,
+    presaleContractABI
   );
   const bonusPercent = usePresaleBonus(selectedMode, selectedLockTime);
 
@@ -156,15 +147,23 @@ export const PresaleModal = (props: Props) => {
     }
   }, [chainId]);
 
-  const [walletClient, setWalletClient] = useState<any>();
-
   useEffect(() => {
+    console.log("Here!!!");
     if (typeof window !== "undefined" && window.ethereum) {
-      const clientTemp = createWalletClient({
-        chain: connectedChain,
-        transport: custom(window.ethereum),
-      });
-      setWalletClient(clientTemp);
+      console.log("connectedChain: ", connectedChain);
+      if (connectedChain) {
+        const clientTemp = createWalletClient({
+          chain: connectedChain,
+          transport: custom(window.ethereum!),
+        });
+        setWalletClient(clientTemp);
+      } else {
+        const clientTemp = createWalletClient({
+          chain: arbitrum,
+          transport: custom(window.ethereum!),
+        });
+        setWalletClient(clientTemp);
+      }
     }
   }, []);
 
@@ -184,7 +183,7 @@ export const PresaleModal = (props: Props) => {
 
   const checkReferralCode = (walletAddress: string) => {
     const savedReferCode = localStorage.getItem(
-      `self_refer_code_${walletAddress}`,
+      `self_refer_code_${walletAddress}`
     );
     if (savedReferCode) {
       setReferalCode(savedReferCode); // Set referral code if it exists
@@ -195,7 +194,7 @@ export const PresaleModal = (props: Props) => {
     }
 
     const savedFriendReferCode = localStorage.getItem(
-        `friend_refer_code_${walletAddress}`,
+      `friend_refer_code_${walletAddress}`
     );
     if (savedFriendReferCode) {
       setFriendReferalCode(savedFriendReferCode);
@@ -223,7 +222,7 @@ export const PresaleModal = (props: Props) => {
     contractAddress,
     coinAddress,
     isPurchasing,
-    isApproving,
+    isApproving
   );
 
   useEffect(() => {
@@ -387,13 +386,25 @@ export const PresaleModal = (props: Props) => {
     setIsApproving(true);
     const amountInWei = parseUnits(inputAmount, 6);
     try {
-      console.log("coinAddress: ", coinAddress);
+      console.log("walletAddress: ", `0x${address?.replace("0x", "")}`);
+      // Check and switch to the correct chain
+      if (chainId !== connectedChain?.id) {
+        console.log("Switching to the correct chain...");
+        await walletClient.switchChain({ chainId: connectedChain?.id });
+        // Update the wallet client after switching
+        const updatedClient = createWalletClient({
+          chain: connectedChain,
+          transport: custom(window.ethereum!),
+        });
+        setWalletClient(updatedClient);
+      }
       const resultApprove = await walletClient.writeContract({
         address: `0x${coinAddress}`,
         abi: USDC_ABI,
         functionName: "approve",
         args: [contractAddress, amountInWei],
         account: `0x${address?.replace("0x", "")}`,
+        chain: connectedChain,
       });
       const receipt = await client.waitForTransactionReceipt({
         hash: `0x${resultApprove.replace("0x", "")}`,
@@ -414,7 +425,7 @@ export const PresaleModal = (props: Props) => {
       }
       setIsApproving(false);
     } catch (error) {
-      console.log(error);
+      console.log("error: ", error);
       setIsApproving(false);
     }
   };
