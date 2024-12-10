@@ -10,6 +10,7 @@ RUN npm install
 # Rebuild the source code only when needed
 FROM node:20-alpine3.20 AS builder
 RUN apk add --no-cache git
+RUN apk add --no-cache openssl
 
 WORKDIR /app
 COPY . .
