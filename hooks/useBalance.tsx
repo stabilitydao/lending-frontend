@@ -43,8 +43,6 @@ export const useBalance = (selectedCoin: string) => {
         coinAddress = presaleTokenAddr["Arb_USDC"];
       } else if (currentChain?.name == "Fantom") {
         coinAddress = presaleTokenAddr["Fantom_axUSDC"];
-      } else if (currentChain?.name == "Sepolia") {
-        coinAddress = presaleTokenAddr["Test_USDC"];
       }
     } else if (selectedCoin == "USDT") {
       if (currentChain?.name == "Base") {
@@ -53,8 +51,6 @@ export const useBalance = (selectedCoin: string) => {
         coinAddress = presaleTokenAddr["Arb_USDT"];
       } else if (currentChain?.name == "Fantom") {
         coinAddress = presaleTokenAddr["Fantom_lzUSDC"];
-      } else if (currentChain?.name == "Sepolia") {
-        coinAddress = presaleTokenAddr["Test_USDT"];
       }
     } else if (selectedCoin == "axUSDC") {
       coinAddress = presaleTokenAddr["Fantom_axUSDC"];
