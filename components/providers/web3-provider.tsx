@@ -1,19 +1,18 @@
 "use client";
 import { useState, useEffect } from "react";
 import { WagmiProvider, createConfig, http } from "wagmi";
-import { arbitrum, base, fantom, sepolia } from "wagmi/chains";
+import { arbitrum, base, fantom } from "wagmi/chains";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConnectKitProvider, getDefaultConfig } from "connectkit";
 
 const config = createConfig(
   getDefaultConfig({
-    chains: [arbitrum, base, fantom, sepolia],
+    chains: [arbitrum, base, fantom],
     transports: {
       // RPC URL for each chain
       [arbitrum.id]: http(arbitrum.rpcUrls.default.http[0]),
       [base.id]: http(base.rpcUrls.default.http[0]),
       [fantom.id]: http(fantom.rpcUrls.default.http[0]),
-      [sepolia.id]: http(sepolia.rpcUrls.default.http[0]),
     },
 
     // Required API Keys
@@ -21,7 +20,7 @@ const config = createConfig(
 
     // Required App Info
     appName: "Vicuna Finance",
-  })
+  }),
 );
 
 const queryClient = new QueryClient();
