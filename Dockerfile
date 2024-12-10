@@ -1,7 +1,6 @@
 # Install dependencies only when needed
 FROM node:lts-alpine AS deps
 RUN apk add --no-cache libc6-compat
-RUN apk add --no-cache openssl
 RUN apk add --no-cache git
 WORKDIR /app
 COPY package.json package*.json ./
@@ -10,7 +9,6 @@ RUN npm install --legacy-peer-deps
 # Rebuild the source code only when needed
 FROM node:lts-alpine AS builder
 RUN apk add --no-cache git
-RUN apk add --no-cache openssl
 
 WORKDIR /app
 COPY . .
