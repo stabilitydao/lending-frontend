@@ -2,6 +2,7 @@
 FROM node:lts-alpine AS deps
 RUN apk add --no-cache libc6-compat
 RUN apk add --no-cache git
+RUN apk add --no-cache libssl1.1
 WORKDIR /app
 COPY package.json package*.json ./
 RUN npm install
@@ -9,6 +10,7 @@ RUN npm install
 # Rebuild the source code only when needed
 FROM node:lts-alpine AS builder
 RUN apk add --no-cache git
+RUN apk add --no-cache libssl1.1
 WORKDIR /app
 COPY . .
 COPY .env .
@@ -20,6 +22,7 @@ RUN npm run build
 # Production image, copy all the files and run next
 FROM node:lts-alpine AS runner
 WORKDIR /app
+RUN apk add --no-cache libssl1.1
 
 ENV NODE_ENV production
 
