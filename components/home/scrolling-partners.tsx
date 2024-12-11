@@ -104,14 +104,22 @@ const ScrollingPartners = () => {
           {/* Render the partners and double them for smooth scrolling */}
           {displayedPartners.map((partner, index) => (
             <div key={index} className="flex flex-row gap-4 items-center">
-              <div className="relative size-8 shrink-0">
+              {/* <div className="relative size-8 shrink-0">
                 <Image
                   src={partner.logo}
                   alt={`${partner.name} logo`}
                   layout="fill"
                   objectFit="contain"
                 />
-              </div>
+              </div> */}
+              <Image
+                src={partner.logo}
+                alt={`${partner.name} logo`}
+                width={32}
+                height={32}
+                className="w-auto h-8"
+                // quality={100}
+              />
               <p className="text-xl text-black text-nowrap">{partner.name}</p>
             </div>
           ))}

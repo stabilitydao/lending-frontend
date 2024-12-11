@@ -11,6 +11,7 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
+  SheetClose,
 } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import {
@@ -146,21 +147,25 @@ export const Navbar = () => {
             </SheetHeader>
             <div className="flex flex-col gap-4 mt-4">
               {/* add presale link */}
-              <Link
-                href={"/presale"}
-                key={"presale"}
-                className="flex items-center gap-2"
-              >
-                <span className="text-primary font-bold">Presale</span>
-              </Link>
-              {navItems.map((item, i) => (
+              <SheetClose asChild>
                 <Link
-                  href={item.href}
-                  key={i}
+                  href={"/presale"}
+                  key={"presale"}
                   className="flex items-center gap-2"
                 >
-                  <span className="text-primary font-bold">{item.name}</span>
+                  <span className="text-primary font-bold">Presale</span>
                 </Link>
+              </SheetClose>
+              {navItems.map((item, i) => (
+                <SheetClose asChild key={i}>
+                  <Link
+                    href={item.href}
+                    key={i}
+                    className="flex items-center gap-2"
+                  >
+                    <span className="text-primary font-bold">{item.name}</span>
+                  </Link>
+                </SheetClose>
               ))}
               <span className="text-primary font-bold">Audits</span>
               <span className="text-primary font-bold">Blog</span>

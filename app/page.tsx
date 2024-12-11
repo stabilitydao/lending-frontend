@@ -37,8 +37,9 @@ export default function Home() {
                   <Image
                     src="/icons/llama.svg"
                     alt="Llama icon"
-                    width={20}
-                    height={20}
+                    width={21}
+                    height={32}
+                    className="w-5 h-auto"
                   />
                   Yield farm while you sleep with Vicuna Finance's
                   high-performance, set-and-forget auto compounders
@@ -47,8 +48,9 @@ export default function Home() {
                   <Image
                     src="/icons/llama.svg"
                     alt="Llama icon"
-                    width={20}
-                    height={20}
+                    width={21}
+                    height={32}
+                    className="w-5 h-auto"
                   />
                   Amplify your rewards with leveraged yield farms and accelerate
                   asset growth-Stake $VIFI to earn fees + protocol revenue and
@@ -58,8 +60,9 @@ export default function Home() {
                   <Image
                     src="/icons/llama.svg"
                     alt="Llama icon"
-                    width={20}
-                    height={20}
+                    width={21}
+                    height={32}
+                    className="w-5 h-auto"
                   />
                   Borrowing and lending off crypto assets at high APR
                 </li>
