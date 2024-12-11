@@ -475,19 +475,15 @@ export const presaleTokenAddr = {
   Fantom_lzUSDC: "0x28a92dde19D9989F39A49905d7C9C2FAc7799bDf",
   Arb_USDC: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
   Arb_USDT: "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
-  Test_USDC: "0xF5205A61a3bf90041171F3c3Fa38D3404A8d3F6F",
-  Test_USDT: "0x58A8B2ed2c803F3972dfe20dd8DEEC635211EC2F",
 };
 
 export const contractAddress = {
-  Sepolia: "0xA3A1598D737c61f17Ba4F7353650150F29E772D4",
   Base: "0x5C7B3155F079BEac6B2854c1992EdCAFb8b30D4d",
   Fantom: "0xFC8F6320eFECa5232706a25d069d8159c65e3969",
   Arbitrum: "0xe787F3040FAE5B473055A9AA902Acd267b3F43D9",
 };
 
 export const RPC_URLS = {
-  sepolia: "https://ethereum-sepolia.blockpi.network/v1/rpc/public",
   base: "https://base-rpc.publicnode.com", // Replace with actual Base RPC URL
   arbitrumone: "https://arbitrum-one-rpc.publicnode.com", // Replace with actual Arbitrum RPC URL
   fantom: "https://fantom-rpc.publicnode.com", // Replace with actual Fantom RPC URL
@@ -888,299 +884,7 @@ export const HARDCAP = {
   Fantom: 300000,
   Arbitrum: 150000,
   Base: 150000,
-  Sepolia: 150000,
 };
-
-export const PresaleContractABISepolia = [
-  { inputs: [], stateMutability: "payable", type: "constructor" },
-  {
-    inputs: [{ internalType: "address", name: "owner", type: "address" }],
-    name: "OwnableInvalidOwner",
-    type: "error",
-  },
-  {
-    inputs: [{ internalType: "address", name: "account", type: "address" }],
-    name: "OwnableUnauthorizedAccount",
-    type: "error",
-  },
-  {
-    inputs: [{ internalType: "address", name: "token", type: "address" }],
-    name: "SafeERC20FailedOperation",
-    type: "error",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "depositor",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "depositedAmount",
-        type: "uint256",
-      },
-    ],
-    name: "Deposit",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "previousOwner",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "newOwner",
-        type: "address",
-      },
-    ],
-    name: "OwnershipTransferred",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "status",
-        type: "uint256",
-      },
-    ],
-    name: "PresaleStatus",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "addedAddress",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "bool",
-        name: "isWhitelisted",
-        type: "bool",
-      },
-    ],
-    name: "UpdateWhiteList",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "CoinAddress",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "withdrawAmount",
-        type: "uint256",
-      },
-    ],
-    name: "Withdraw",
-    type: "event",
-  },
-  {
-    inputs: [],
-    name: "USDC_ADDRESS",
-    outputs: [{ internalType: "address", name: "", type: "address" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "USDT_ADDRESS",
-    outputs: [{ internalType: "address", name: "", type: "address" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [{ internalType: "address", name: "", type: "address" }],
-    name: "WhiteList",
-    outputs: [{ internalType: "bool", name: "", type: "bool" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      { internalType: "address[]", name: "_addresses", type: "address[]" },
-      { internalType: "bool", name: "_status", type: "bool" },
-    ],
-    name: "batchUpdateWhiteList",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      { internalType: "address", name: "tokenAddress", type: "address" },
-      { internalType: "uint256", name: "_buyerOption", type: "uint256" },
-      { internalType: "uint256", name: "_period", type: "uint256" },
-      { internalType: "uint256", name: "_amount", type: "uint256" },
-      { internalType: "string", name: "_selfReferralCode", type: "string" },
-      { internalType: "string", name: "_friendReferralCode", type: "string" },
-    ],
-    name: "deposit",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [{ internalType: "address", name: "_address", type: "address" }],
-    name: "getInvestorIds",
-    outputs: [{ internalType: "uint256[]", name: "", type: "uint256[]" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [{ internalType: "address", name: "_address", type: "address" }],
-    name: "getInvestorInfo",
-    outputs: [
-      {
-        components: [
-          {
-            internalType: "address",
-            name: "depositorAddress",
-            type: "address",
-          },
-          { internalType: "uint256", name: "buyerOption", type: "uint256" },
-          { internalType: "uint256", name: "period", type: "uint256" },
-          { internalType: "uint256", name: "amount", type: "uint256" },
-          { internalType: "string", name: "selfReferralCode", type: "string" },
-          {
-            internalType: "string",
-            name: "friendReferralCode",
-            type: "string",
-          },
-        ],
-        internalType: "struct TokenPresale.InvestorInfoType[]",
-        name: "",
-        type: "tuple[]",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [{ internalType: "uint256", name: "_id", type: "uint256" }],
-    name: "getInvestorInfoById",
-    outputs: [
-      {
-        components: [
-          {
-            internalType: "address",
-            name: "depositorAddress",
-            type: "address",
-          },
-          { internalType: "uint256", name: "buyerOption", type: "uint256" },
-          { internalType: "uint256", name: "period", type: "uint256" },
-          { internalType: "uint256", name: "amount", type: "uint256" },
-          { internalType: "string", name: "selfReferralCode", type: "string" },
-          {
-            internalType: "string",
-            name: "friendReferralCode",
-            type: "string",
-          },
-        ],
-        internalType: "struct TokenPresale.InvestorInfoType",
-        name: "",
-        type: "tuple",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "hardCap",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "id",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "multiSigWallet",
-    outputs: [{ internalType: "address", name: "", type: "address" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "owner",
-    outputs: [{ internalType: "address", name: "", type: "address" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "preSaleStatus",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "renounceOwnership",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [{ internalType: "uint256", name: "_status", type: "uint256" }],
-    name: "setPresaleStatus",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "totalDepositedAmount",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [{ internalType: "address", name: "newOwner", type: "address" }],
-    name: "transferOwnership",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      { internalType: "address", name: "tokenAddress", type: "address" },
-      { internalType: "uint256", name: "_amount", type: "uint256" },
-    ],
-    name: "withdraw",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-];
 
 export const PresaleContractABIBase = [
   {
@@ -2151,6 +1855,505 @@ export const PresaleContractABIArbitrum = [
     ],
     stateMutability: "view",
     type: "function",
+  },
+];
+
+export const PresaleContractAPIFantom = [
+  {
+    inputs: [],
+    stateMutability: "payable",
+    type: "constructor",
+    payable: true,
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "owner",
+        type: "address",
+      },
+    ],
+    name: "OwnableInvalidOwner",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "account",
+        type: "address",
+      },
+    ],
+    name: "OwnableUnauthorizedAccount",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "ReentrancyGuardReentrantCall",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "token",
+        type: "address",
+      },
+    ],
+    name: "SafeERC20FailedOperation",
+    type: "error",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "depositor",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "depositedAmount",
+        type: "uint256",
+      },
+    ],
+    name: "Deposit",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "previousOwner",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
+      },
+    ],
+    name: "OwnershipTransferred",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "status",
+        type: "uint256",
+      },
+    ],
+    name: "PresaleStatus",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "addedAddress",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "bool",
+        name: "isWhitelisted",
+        type: "bool",
+      },
+    ],
+    name: "UpdateWhiteList",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "CoinAddress",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "withdrawAmount",
+        type: "uint256",
+      },
+    ],
+    name: "Withdraw",
+    type: "event",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "WhiteList",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+    constant: true,
+  },
+  {
+    inputs: [],
+    name: "axlUSDC_ADDRESS",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+    constant: true,
+  },
+  {
+    inputs: [],
+    name: "hardCap",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+    constant: true,
+  },
+  {
+    inputs: [],
+    name: "id",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+    constant: true,
+  },
+  {
+    inputs: [],
+    name: "lzUSDC_ADDRESS",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+    constant: true,
+  },
+  {
+    inputs: [],
+    name: "multiSigWallet",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+    constant: true,
+  },
+  {
+    inputs: [],
+    name: "owner",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+    constant: true,
+  },
+  {
+    inputs: [],
+    name: "preSaleStatus",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+    constant: true,
+  },
+  {
+    inputs: [],
+    name: "renounceOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "totalDepositedAmount",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+    constant: true,
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
+      },
+    ],
+    name: "transferOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "tokenAddress",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "_buyerOption",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_period",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_amount",
+        type: "uint256",
+      },
+      {
+        internalType: "string",
+        name: "_selfReferralCode",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "_friendReferralCode",
+        type: "string",
+      },
+    ],
+    name: "deposit",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "tokenAddress",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "_amount",
+        type: "uint256",
+      },
+    ],
+    name: "withdraw",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address[]",
+        name: "_addresses",
+        type: "address[]",
+      },
+      {
+        internalType: "bool",
+        name: "_status",
+        type: "bool",
+      },
+    ],
+    name: "batchUpdateWhiteList",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_status",
+        type: "uint256",
+      },
+    ],
+    name: "setPresaleStatus",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_address",
+        type: "address",
+      },
+    ],
+    name: "getInvestorIds",
+    outputs: [
+      {
+        internalType: "uint256[]",
+        name: "",
+        type: "uint256[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+    constant: true,
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_id",
+        type: "uint256",
+      },
+    ],
+    name: "getInvestorInfoById",
+    outputs: [
+      {
+        components: [
+          {
+            internalType: "address",
+            name: "depositorAddress",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "buyerOption",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "period",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "amount",
+            type: "uint256",
+          },
+          {
+            internalType: "string",
+            name: "selfReferralCode",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "friendReferralCode",
+            type: "string",
+          },
+        ],
+        internalType: "struct TokenPresaleFantom.InvestorInfoType",
+        name: "",
+        type: "tuple",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+    constant: true,
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_address",
+        type: "address",
+      },
+    ],
+    name: "getInvestorInfo",
+    outputs: [
+      {
+        components: [
+          {
+            internalType: "address",
+            name: "depositorAddress",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "buyerOption",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "period",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "amount",
+            type: "uint256",
+          },
+          {
+            internalType: "string",
+            name: "selfReferralCode",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "friendReferralCode",
+            type: "string",
+          },
+        ],
+        internalType: "struct TokenPresaleFantom.InvestorInfoType[]",
+        name: "",
+        type: "tuple[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+    constant: true,
   },
 ];
 

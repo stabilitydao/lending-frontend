@@ -25,16 +25,16 @@ import {
   Chain,
 } from "viem";
 import { readContract } from "viem/actions";
-import { sepolia, base, arbitrum, fantom } from "viem/chains";
+import { base, arbitrum, fantom } from "viem/chains";
 import { useToast } from "../ui/use-toast";
 import { useContractAddress } from "@/hooks/useContractAddress";
 import { useApproved } from "@/hooks/useApproved";
 import { useBalance } from "@/hooks/useBalance";
 import { useHardCap } from "@/hooks/useHardCap";
 import {
-  PresaleContractABISepolia,
   PresaleContractABIArbitrum,
   PresaleContractABIBase,
+  PresaleContractAPIFantom,
 } from "@/lib/constants";
 import { USDC_ABI, RPC_URLS } from "@/lib/constants";
 import { PresaleBonus } from "@/lib/constants";
@@ -54,7 +54,7 @@ export const PresaleModal = (props: Props) => {
   const [connectedChain, setConnectedChain] = useState<Chain>();
   const [availableChains, setAvailableChains] = useState<Chain[]>([]);
   const [presaleContractABI, setPresaleContractABI] = useState<Object[]>(
-    PresaleContractABISepolia
+    PresaleContractABIArbitrum,
   );
   const [walletClient, setWalletClient] = useState<any>();
   const { isConnected, address } = useAccount();
@@ -63,7 +63,7 @@ export const PresaleModal = (props: Props) => {
 
   // Create public client based on connectedChain
   const client = createPublicClient({
-    chain: connectedChain || sepolia, // Default to Sepolia if not set
+    chain: connectedChain || arbitrum, // Default to Arbitrum if not set
     transport: custom(window.ethereum!),
   });
 
@@ -77,9 +77,7 @@ export const PresaleModal = (props: Props) => {
       } else if (currentChain?.name == "Arbitrum") {
         setPresaleContractABI(PresaleContractABIArbitrum);
       } else if (currentChain?.name == "Fantom") {
-        setPresaleContractABI(PresaleContractABISepolia);
-      } else if (currentChain?.name == "Sepolia") {
-        setPresaleContractABI(PresaleContractABISepolia);
+        setPresaleContractABI(PresaleContractAPIFantom);
       }
       setConnectedChain(currentChain);
       setAvailableChains([...chains].filter((c) => c.id !== chainId));
@@ -91,7 +89,7 @@ export const PresaleModal = (props: Props) => {
       console.log("clientTemp: ", clientTemp);
       setWalletClient(clientTemp);
     } else {
-      setConnectedChain(sepolia);
+      setConnectedChain(arbitrum);
       setAvailableChains([...chains]);
     }
   }, [chainId, chains]);
@@ -105,7 +103,7 @@ export const PresaleModal = (props: Props) => {
   const { balance, coinAddress } = useBalance(selectedItem);
   const { hardCap, totlDepositedAmount } = useHardCap(
     contractAddress,
-    presaleContractABI
+    presaleContractABI,
   );
   const bonusPercent = usePresaleBonus(selectedMode, selectedLockTime);
 
@@ -183,7 +181,7 @@ export const PresaleModal = (props: Props) => {
 
   const checkReferralCode = (walletAddress: string) => {
     const savedReferCode = localStorage.getItem(
-      `self_refer_code_${walletAddress}`
+      `self_refer_code_${walletAddress}`,
     );
     if (savedReferCode) {
       setReferalCode(savedReferCode); // Set referral code if it exists
@@ -194,7 +192,7 @@ export const PresaleModal = (props: Props) => {
     }
 
     const savedFriendReferCode = localStorage.getItem(
-      `friend_refer_code_${walletAddress}`
+      `friend_refer_code_${walletAddress}`,
     );
     if (savedFriendReferCode) {
       setFriendReferalCode(savedFriendReferCode);
@@ -222,7 +220,7 @@ export const PresaleModal = (props: Props) => {
     contractAddress,
     coinAddress,
     isPurchasing,
-    isApproving
+    isApproving,
   );
 
   useEffect(() => {

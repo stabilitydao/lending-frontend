@@ -4,11 +4,11 @@ import { useAccount, useChainId, useChains } from "wagmi";
 import { useState, useEffect } from "react";
 import { USDC_ABI, RPC_URLS } from "@/lib/constants";
 import { createPublicClient, http, parseUnits } from "viem";
-import { sepolia } from "viem/chains";
+import { arbitrum } from "viem/chains";
 import { readContract } from "viem/actions";
 
 let client = createPublicClient({
-  chain: sepolia,
+  chain: arbitrum,
   transport: http(),
 });
 
@@ -17,7 +17,7 @@ export const useApproved = (
   contractAddress: string,
   coinAddress: string,
   isPurchasing: boolean,
-  isApproving: boolean
+  isApproving: boolean,
 ) => {
   const chainId = useChainId();
   const chains = useChains();
@@ -34,13 +34,13 @@ export const useApproved = (
       // Create public client based on connectedChain
       console.log("address: ", address);
       client = createPublicClient({
-        chain: currentChain || sepolia, // Default to Sepolia if not set
+        chain: currentChain || arbitrum, // Default to Arbitrum if not set
         transport: http(
           RPC_URLS[
             currentChain?.name
               .replace(/\s+/g, "")
               .toLowerCase() as keyof typeof RPC_URLS
-          ]
+          ],
         ),
       });
       if (address) {

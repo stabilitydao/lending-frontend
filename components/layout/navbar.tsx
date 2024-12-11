@@ -125,7 +125,11 @@ export const Navbar = () => {
               </a>
             </DropdownMenuItem>
             <DropdownMenuItem>Audits</DropdownMenuItem>
-            <DropdownMenuItem>Presale</DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link href={"/presale"} className="w-full">
+                Presale
+              </Link>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -141,6 +145,14 @@ export const Navbar = () => {
               <SheetTitle>Menu</SheetTitle>
             </SheetHeader>
             <div className="flex flex-col gap-4 mt-4">
+              {/* add presale link */}
+              <Link
+                href={"/presale"}
+                key={"presale"}
+                className="flex items-center gap-2"
+              >
+                <span className="text-primary font-bold">Presale</span>
+              </Link>
               {navItems.map((item, i) => (
                 <Link
                   href={item.href}
