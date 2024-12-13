@@ -54,40 +54,81 @@ export const PresaleModal = (props: Props) => {
   const [connectedChain, setConnectedChain] = useState<Chain>();
   const [availableChains, setAvailableChains] = useState<Chain[]>([]);
   const [presaleContractABI, setPresaleContractABI] = useState<Object[]>(
-    PresaleContractABIArbitrum,
+    PresaleContractABIArbitrum
   );
   const [walletClient, setWalletClient] = useState<any>();
   const { isConnected, address } = useAccount();
 
   const contractAddress = useContractAddress();
 
+  // ORIGINAL
   // Create public client based on connectedChain
-  const client = createPublicClient({
-    chain: connectedChain || arbitrum, // Default to Arbitrum if not set
-    transport: custom(window.ethereum!),
-  });
+  // const client = createPublicClient({
+  //   chain: connectedChain || arbitrum, // Default to Arbitrum if not set
+  //   transport: custom(window.ethereum!),
+  // });
+
+  // Fix by setting the client only when window is defined (client-side)
+  const [client, setClient] = useState<any>(null); // Initialize as null or an appropriate type
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.ethereum) {
+      const clientInstance = createPublicClient({
+        chain: connectedChain || arbitrum, // Default to Arbitrum if not set
+        transport: custom(window.ethereum),
+      });
+      setClient(clientInstance); // Update the state with the client instance
+    } else {
+      console.error(
+        "Ethereum provider not found. Please install MetaMask or another wallet."
+      );
+      // Optionally, use a fallback transport
+      const fallbackClient = createPublicClient({
+        chain: connectedChain || arbitrum,
+        transport: http(),
+      });
+      setClient(fallbackClient);
+    }
+  }, [connectedChain]);
 
   useEffect(() => {
     if (chainId) {
       const currentChain = chains.find((c) => c.id === chainId);
       console.log("currentChain: ", currentChain?.name);
+
+      if (!currentChain) {
+        console.warn("No chain found for the given chainId");
+        return;
+      }
+
       let address: string = "";
-      if (currentChain?.name == "Base") {
+      if (currentChain.name === "Base") {
         setPresaleContractABI(PresaleContractABIBase);
-      } else if (currentChain?.name == "Arbitrum") {
+      } else if (currentChain.name === "Arbitrum") {
         setPresaleContractABI(PresaleContractABIArbitrum);
-      } else if (currentChain?.name == "Fantom") {
+      } else if (currentChain.name === "Fantom") {
         setPresaleContractABI(PresaleContractAPIFantom);
       }
+
       setConnectedChain(currentChain);
       setAvailableChains([...chains].filter((c) => c.id !== chainId));
       console.log("chainId: ", chainId);
-      const clientTemp = createWalletClient({
-        chain: currentChain,
-        transport: custom(window.ethereum!),
-      });
-      console.log("clientTemp: ", clientTemp);
-      setWalletClient(clientTemp);
+
+      // Check for `window.ethereum`
+      if (typeof window.ethereum === "undefined") {
+        console.warn("No wallet extension detected");
+        return;
+      }
+
+      try {
+        const clientTemp = createWalletClient({
+          chain: currentChain,
+          transport: custom(window.ethereum),
+        });
+        console.log("clientTemp: ", clientTemp);
+        setWalletClient(clientTemp);
+      } catch (error) {
+        console.error("Failed to create wallet client:", error);
+      }
     } else {
       setConnectedChain(arbitrum);
       setAvailableChains([...chains]);
@@ -103,7 +144,7 @@ export const PresaleModal = (props: Props) => {
   const { balance, coinAddress } = useBalance(selectedItem);
   const { hardCap, totlDepositedAmount } = useHardCap(
     contractAddress,
-    presaleContractABI,
+    presaleContractABI
   );
   const bonusPercent = usePresaleBonus(selectedMode, selectedLockTime);
 
@@ -181,7 +222,7 @@ export const PresaleModal = (props: Props) => {
 
   const checkReferralCode = (walletAddress: string) => {
     const savedReferCode = localStorage.getItem(
-      `self_refer_code_${walletAddress}`,
+      `self_refer_code_${walletAddress}`
     );
     if (savedReferCode) {
       setReferalCode(savedReferCode); // Set referral code if it exists
@@ -192,7 +233,7 @@ export const PresaleModal = (props: Props) => {
     }
 
     const savedFriendReferCode = localStorage.getItem(
-      `friend_refer_code_${walletAddress}`,
+      `friend_refer_code_${walletAddress}`
     );
     if (savedFriendReferCode) {
       setFriendReferalCode(savedFriendReferCode);
@@ -220,7 +261,7 @@ export const PresaleModal = (props: Props) => {
     contractAddress,
     coinAddress,
     isPurchasing,
-    isApproving,
+    isApproving
   );
 
   useEffect(() => {
@@ -446,6 +487,7 @@ export const PresaleModal = (props: Props) => {
         ],
         account: `0x${address?.replace("0x", "")}`,
       });
+
       const receipt = await client.waitForTransactionReceipt({
         hash: `0x${resultDeposit.replace("0x", "")}`,
         confirmations: 1,
@@ -539,6 +581,7 @@ export const PresaleModal = (props: Props) => {
     }
 
     console.log("presaleContractABI: ", presaleContractABI);
+
     const resPresaleStatus = await readContract(client, {
       address: `0x${contractAddress?.replace("0x", "")}`,
       abi: presaleContractABI,
