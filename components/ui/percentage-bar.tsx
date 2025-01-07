@@ -1,14 +1,18 @@
-"use client";
-
 import { useState, useEffect, useRef } from "react";
 
 export const PercentageBar = ({
+  percentage: externalPercentage = 0,
   onChange,
 }: {
+  percentage?: number;
   onChange?: (percentage: number) => void;
 }) => {
-  const [percentage, setPercentage] = useState(0);
+  const [percentage, setPercentage] = useState(externalPercentage);
   const barRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setPercentage(externalPercentage);
+  }, [externalPercentage]);
 
   const handleMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -30,22 +34,15 @@ export const PercentageBar = ({
     document.addEventListener("mouseup", handleMouseUp);
   };
 
-  useEffect(() => {
-    onChange?.(percentage);
-  }, [percentage, onChange]);
-
   return (
     <div className="w-full">
-      {/* <div className="mb-2 text-center text-primary font-semibold">
-        {percentage}%
-      </div> */}
       <div
         ref={barRef}
         className="relative h-3 bg-primary rounded-full cursor-pointer mb-4"
         onMouseDown={handleMouseDown}
       >
         <div
-          className="absolute top-0 left-0 h-full rounded-full transition-all"
+          className="absolute top-0 left-0 h-full bg-accent rounded-full transition-all"
           style={{ width: `${percentage}%` }}
         />
         <div

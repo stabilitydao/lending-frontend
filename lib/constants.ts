@@ -109,68 +109,73 @@ export const projectData = [
   },
 ];
 
-export const vaultData: VaultData[] = [
-  {
-    vaultName: "ETH-USDC",
-    vaultTVL: 3180000,
-    vaultDexTVL: 110300000,
-    vBoost: true,
-    wallets: 0,
-    deposited: 0,
-    apy: 19.6,
-    daily: 0.05,
-    imageSrc2: "/icons/coins/ethereum.png",
-    imageSrc1: "/icons/coins/usdc.png",
-  },
-  {
-    vaultName: "wstETH-ETH",
-    vaultTVL: 345140,
-    vaultDexTVL: 10900000,
-    vBoost: false,
-    wallets: 0,
-    deposited: 0,
-    apy: 11.0,
-    daily: 0.03,
-    imageSrc1: "/icons/coins/ethereum.png",
-    imageSrc2: "/icons/coins/wsteth.png",
-  },
-  {
-    vaultName: "ARB-ETH",
-    vaultTVL: 521180,
-    vaultDexTVL: 8400000,
-    vBoost: false,
-    wallets: 0,
-    deposited: 0,
-    apy: 14.5,
-    daily: 0.04,
-    imageSrc1: "/icons/coins/ethereum.png",
-    imageSrc2: "/icons/coins/arbitrum one.png",
-  },
-  {
-    vaultName: "GMX-ETH",
-    vaultTVL: 636210,
-    vaultDexTVL: 916530,
-    vBoost: false,
-    wallets: 0,
-    deposited: 0,
-    apy: 117.0,
-    daily: 0.32,
-    imageSrc1: "/icons/coins/ethereum.png",
-    imageSrc2: "/icons/coins/gmx.png",
-  },
-  {
-    vaultName: "wBTC-USDT",
-    vaultTVL: 287530,
-    vaultDexTVL: 2170000,
-    vBoost: false,
-    wallets: 0,
-    deposited: 0,
-    apy: 12.5,
-    daily: 0.03,
-    imageSrc2: "/icons/coins/wbtc.png",
-    imageSrc1: "/icons/coins/usdt.png",
-  },
-];
+// export const vaultData: VaultData[] = [
+//   {
+//     vaultName: "ETH-USDC",
+//     vaultAddress: "0xe4776c7e51b7cB7E3240426Ef00Af5b55aE374d4",
+//     vaultTVL: 3180000,
+//     vaultDexTVL: 110300000,
+//     vBoost: true,
+//     wallets: 0,
+//     deposited: 0,
+//     apy: 19.6,
+//     daily: 0.05,
+//     imageSrc2: "/icons/coins/ethereum.png",
+//     imageSrc1: "/icons/coins/usdc.png",
+//   },
+//   {
+//     vaultName: "wstETH-ETH",
+//     vaultAddress: "0xe4776c7e51b7cB7E3240426Ef00Af5b55aE374d4",
+//     vaultTVL: 345140,
+//     vaultDexTVL: 10900000,
+//     vBoost: false,
+//     wallets: 0,
+//     deposited: 0,
+//     apy: 11.0,
+//     daily: 0.03,
+//     imageSrc1: "/icons/coins/ethereum.png",
+//     imageSrc2: "/icons/coins/wsteth.png",
+//   },
+//   {
+//     vaultName: "ARB-ETH",
+//     vaultAddress: "0xe4776c7e51b7cB7E3240426Ef00Af5b55aE374d4",
+//     vaultTVL: 521180,
+//     vaultDexTVL: 8400000,
+//     vBoost: false,
+//     wallets: 0,
+//     deposited: 1,
+//     apy: 14.5,
+//     daily: 0.04,
+//     imageSrc1: "/icons/coins/ethereum.png",
+//     imageSrc2: "/icons/coins/arbitrum one.png",
+//   },
+//   {
+//     vaultName: "GMX-ETH",
+//     vaultAddress: "0xe4776c7e51b7cB7E3240426Ef00Af5b55aE374d4",
+//     vaultTVL: 636210,
+//     vaultDexTVL: 916530,
+//     vBoost: false,
+//     wallets: 0,
+//     deposited: 0,
+//     apy: 117.0,
+//     daily: 0.32,
+//     imageSrc1: "/icons/coins/ethereum.png",
+//     imageSrc2: "/icons/coins/gmx.png",
+//   },
+//   {
+//     vaultName: "wBTC-USDT",
+//     vaultAddress: "0xe4776c7e51b7cB7E3240426Ef00Af5b55aE374d4",
+//     vaultTVL: 287530,
+//     vaultDexTVL: 2170000,
+//     vBoost: false,
+//     wallets: 0,
+//     deposited: 0,
+//     apy: 12.5,
+//     daily: 0.03,
+//     imageSrc2: "/icons/coins/wbtc.png",
+//     imageSrc1: "/icons/coins/usdt.png",
+//   },
+// ];
 
 export const farmsData: FarmData[] = [
   {
@@ -487,6 +492,7 @@ export const RPC_URLS = {
   base: "https://base-rpc.publicnode.com", // Replace with actual Base RPC URL
   arbitrumone: "https://arbitrum-one-rpc.publicnode.com", // Replace with actual Arbitrum RPC URL
   fantom: "https://fantom-rpc.publicnode.com", // Replace with actual Fantom RPC URL
+  // sonic: "https://rpc.testnet.soniclabs.com"
 };
 
 export const USDC_ABI = [

@@ -47,16 +47,10 @@ export const SwitchChain = () => {
   }, [error, toast]);
 
   return (
-    <div className="relative">
-      {isOpen && (
-        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[40]" />
-      )}
-      <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
-        <DropdownMenuTrigger asChild>
-          <Button
-            disabled={isPending}
-            variant="default"
-            className="flex items-center justify-start gap-2 "
+    <Button
+      disabled={isPending}
+      variant="default"
+      className="flex items-center justify-start gap-2 "
           >
             {connectedChain && (
               <Image
@@ -67,32 +61,58 @@ export const SwitchChain = () => {
               />
             )}
             <span className="hidden sm:inline">
-              {connectedChain ? connectedChain.name : "Select Chain"}
-            </span>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="z-50 p-2 space-y-2">
-          {availableChains.map((c) => (
-            <DropdownMenuItem
-              key={c.id}
-              className="flex items-center gap-4"
-              onClick={() => {
-                switchChain?.({ chainId: c.id });
-                setIsOpen(false);
-              }}
-            >
-              <Image
-                src={`/icons/coins/${c.name.toLowerCase()}.png`}
-                alt={`${c.name} icon`}
-                width={16}
-                height={16}
-                className="mr-2"
-              />
-              {c.name}
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
+        {connectedChain ? connectedChain.name : "Select Chain"}
+      </span>
+    </Button>
   );
+
+  // return (
+  //   <div className="relative">
+  //     {isOpen && (
+  //       <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[40]" />
+  //     )}
+  //     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+  //       <DropdownMenuTrigger asChild>
+  //         <Button
+  //           disabled={isPending}
+  //           variant="default"
+  //           className="flex items-center justify-start gap-2 "
+  //         >
+  //           {connectedChain && (
+  //             <Image
+  //               src={`/icons/coins/${connectedChain.name.toLowerCase()}.png`}
+  //               alt={`${connectedChain.name} icon`}
+  //               width={16}
+  //               height={16}
+  //             />
+  //           )}
+  //           <span className="hidden sm:inline">
+  //             {connectedChain ? connectedChain.name : "Select Chain"}
+  //           </span>
+  //         </Button>
+  //       </DropdownMenuTrigger>
+  //       <DropdownMenuContent className="z-50 p-2 space-y-2">
+  //         {availableChains.map((c) => (
+  //           <DropdownMenuItem
+  //             key={c.id}
+  //             className="flex items-center gap-4"
+  //             onClick={() => {
+  //               switchChain?.({ chainId: c.id });
+  //               setIsOpen(false);
+  //             }}
+  //           >
+  //             <Image
+  //               src={`/icons/coins/${c.name.toLowerCase()}.png`}
+  //               alt={`${c.name} icon`}
+  //               width={16}
+  //               height={16}
+  //               className="mr-2"
+  //             />
+  //             {c.name}
+  //           </DropdownMenuItem>
+  //         ))}
+  //       </DropdownMenuContent>
+  //     </DropdownMenu>
+  //   </div>
+  // );
 };

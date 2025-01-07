@@ -1,0 +1,50 @@
+[
+    {
+        "id": "equalizer-ws-usdc",
+        "name": "wS-USDC",
+        "vaultAddress": "0xc83CE82CEb536a6bCf6678EC4B308A6739057050",
+        "token0Name": "wS",
+        "token1Name": "USDC",
+        "imageSrc0": "/icons/coins/sonic.png",
+        "imageSrc1": "/icons/coins/usdc.png",
+        "kind": "v7",
+        "chainId": 146,
+        "lpUrl": "https://equalizer.exchange/liquidity"
+    },
+    {
+        "id": "equalizer-ws-equal",
+        "name": "wS-EQUAL",
+        "vaultAddress": "0x3D66328c513ed56D5dB02eE7dFBF5D0E1d90836D",
+        "token0Name": "wS",
+        "token1Name": "EQUAL",
+        "imageSrc0": "/icons/coins/sonic.png",
+        "imageSrc1": "/icons/coins/equal.png",
+        "kind": "v7",
+        "chainId": 146,
+        "lpUrl": "https://equalizer.exchange/liquidity"
+    },
+    {
+        "id": "equalizer-ws-sts",
+        "name": "wS-stS",
+        "vaultAddress": "0x9418FDfcDdC546ADb990a575e2a31E4D30c2e36C",
+        "token0Name": "wS",
+        "token1Name": "stS",
+        "imageSrc0": "/icons/coins/sonic.png",
+        "imageSrc1": "/icons/coins/sts.png",
+        "kind": "v7",
+        "chainId": 146,
+        "lpUrl": "https://equalizer.exchange/liquidity"
+    },
+    {
+        "id": "beets-ws-sts",
+        "name": "Staked Sonic Symphony",
+        "vaultAddress": "0x02D742f182D2a588c54E7DC998aD19f9D795bC51",
+        "token0Name": "wS",
+        "token1Name": "stS",
+        "imageSrc0": "/icons/coins/sonic.png",
+        "imageSrc1": "/icons/coins/sts.png",
+        "kind": "v7",
+        "chainId": 146,
+        "lpUrl": "https://beets.fi/pools?networks=SONIC"
+    }
+]
