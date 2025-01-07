@@ -25,7 +25,7 @@ export const socialLinks = [
   },
   {
     imageSrc: "/icons/social/docs.png",
-    url: "https://vicuna-finance.gitbook.io/vicuna-finance",
+    url: "https://vicuna-finance.gitbook.io/vicuna-finance-sonic",
   },
   // {
   //   imageSrc: "/icons/social/telegram.png",
