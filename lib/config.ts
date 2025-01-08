@@ -3,7 +3,7 @@ import { http, createConfig } from 'wagmi'
 import { defineChain } from "viem";
 
 const sonic = /*#__PURE__*/ defineChain({
-  id: 164,
+  id: 146,
   name: 'Sonic',
   nativeCurrency: {
     decimals: 18,

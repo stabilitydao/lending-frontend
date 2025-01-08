@@ -1,15 +1,15 @@
 [
     {
         "id": "equalizer-ws-usdc",
-        "name": "wS-USDC",
+        "name": "wS-USDC.e",
         "vaultAddress": "0xc83CE82CEb536a6bCf6678EC4B308A6739057050",
         "token0Name": "wS",
-        "token1Name": "USDC",
+        "token1Name": "USDC.e",
         "imageSrc0": "/icons/coins/sonic.png",
         "imageSrc1": "/icons/coins/usdc.png",
         "kind": "v7",
         "chainId": 146,
-        "lpUrl": "https://equalizer.exchange/liquidity"
+        "lpUrl": "https://equalizer.exchange/liquidity/0xdc85F86d5E3189e0d4a776e6Ae3B3911eC7B0133/add "
     },
     {
         "id": "equalizer-ws-equal",
@@ -21,7 +21,7 @@
         "imageSrc1": "/icons/coins/equal.png",
         "kind": "v7",
         "chainId": 146,
-        "lpUrl": "https://equalizer.exchange/liquidity"
+        "lpUrl": "https://equalizer.exchange/liquidity/0x139f8eCC5fC8Ef11226a83911FEBecC08476cfB1/add "
     },
     {
         "id": "equalizer-ws-sts",
@@ -33,7 +33,7 @@
         "imageSrc1": "/icons/coins/sts.png",
         "kind": "v7",
         "chainId": 146,
-        "lpUrl": "https://equalizer.exchange/liquidity"
+        "lpUrl": "https://equalizer.exchange/liquidity/0xB75C9073ea00AbDa9ff420b5Ae46fEe248993380/add "
     },
     {
         "id": "beets-ws-sts",
@@ -45,6 +45,18 @@
         "imageSrc1": "/icons/coins/sts.png",
         "kind": "v7",
         "chainId": 146,
-        "lpUrl": "https://beets.fi/pools?networks=SONIC"
+        "lpUrl": "https://beets.fi/pools/sonic/v2/0x374641076b68371e69d03c417dac3e5f236c32fa000000000000000000000006/add-liquidity"
+    },
+    {
+        "id": "beets-usdc-scusd",
+        "name": "Ringing Stable Beets",
+        "vaultAddress": "0x02D742f182D2a588c54E7DC998aD19f9D795bC51",
+        "token0Name": "USDC.e",
+        "token1Name": "stS",
+        "imageSrc0": "/icons/coins/usdc.png",
+        "imageSrc1": "/icons/coins/scusdc.png",
+        "kind": "v7",
+        "chainId": 146,
+        "lpUrl": "https://beets.fi/pools/sonic/v2/0xcd4d2b142235d5650ffa6a38787ed0b7d7a51c0c000000000000000000000037/add-liquidity"
     }
 ]

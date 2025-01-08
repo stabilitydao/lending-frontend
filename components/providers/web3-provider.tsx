@@ -7,7 +7,7 @@ import { ConnectKitProvider, getDefaultConfig } from "connectkit";
 import { defineChain } from "viem";
 
 const sonic = /*#__PURE__*/ defineChain({
-  id: 164,
+  id: 146,
   name: 'Sonic',
   nativeCurrency: {
     decimals: 18,
@@ -49,6 +49,7 @@ export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     setHydrate(true);
   }, []);
+  
   return (
     <>
       {hydrate && (

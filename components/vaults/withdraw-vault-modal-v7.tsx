@@ -28,6 +28,8 @@ import { Address, formatEther, parseEther } from 'viem';
 import BeefyVaultV7 from "@/config/BeefyVaultV7.json";
 import { readContract, waitForTransactionReceipt } from '@wagmi/core'
 import { ExternalLinkIcon } from "lucide-react";
+import { useNetworkSwitch } from "@/hooks/useNetworkSwitch";
+
 
 export const WithdrawVaultModalV7 = ({
     vault,
@@ -53,7 +55,7 @@ export const WithdrawVaultModalV7 = ({
     const [refreshKey, setRefreshKey] = useState(0);
 
     const [calculatedShares, setCalculatedShares] = useState<string | null>(null);
-
+    const {isSwitching, isWrongChain, switchToSonicMainnet} = useNetworkSwitch();
 
     const handleWithdraw = async () => {
         try {
@@ -70,7 +72,7 @@ export const WithdrawVaultModalV7 = ({
                 throw new Error("Transaction hash is null or undefined");
             }
 
-            console.log('Withdraw:', `https://testnet.soniclabs.com/tx/${result}`);
+            console.log('Withdraw:', `https://explorer.soniclabs.com/tx/${result}`);
             setTransactionHash(result);
             const receipt = await waitForTransactionReceipt(config as Config, { hash: result as `0x${string}` });
 
@@ -90,9 +92,10 @@ export const WithdrawVaultModalV7 = ({
 
     const checkBalance = async () => {
         try {
-            if (!address) {
+            if (!address || address == undefined) {
                 console.error("Invalid user address");
                 setAvailableBalance("0");
+                return;
             }
 
             const balance = await readContract(config as Config, {
@@ -108,7 +111,7 @@ export const WithdrawVaultModalV7 = ({
 
             return balance;
         } catch (err) {
-            console.error(`Error fetching balance for ${vault.vaultAddress}:`, err);
+            console.error(`Error fetching v7 balance for ${vault.vaultAddress}:`, err);
             setAvailableBalance("0");
         }
     };
@@ -290,17 +293,28 @@ export const WithdrawVaultModalV7 = ({
                             </div>
                         )}
 
-                        <Button className="flex items-center gap-2"
-                            onClick={() => {
-                                handleWithdraw();
-                            }}
-                            disabled={isLoading || !isAmountValid}
-                        >
-                            <Withdraw className="w-5 h-5" /> Withdraw
-                        </Button>
+                        {!isWrongChain && <Button className="flex items-center gap-2"
+                                onClick={() => {
+                                    handleWithdraw();
+                                }}
+                                disabled={isLoading || !isAmountValid}
+                            >
+                                <Withdraw className="w-5 h-5" /> Withdraw
+                            </Button>
+                        }
+
+                        {isWrongChain && (
+                            <Button
+                                className=""
+                                onClick={switchToSonicMainnet}
+                                disabled={isSwitching}
+                            >
+                                {isSwitching ? "Switching..." : "Switch to Sonic"}
+                            </Button>
+                        )}
 
                         {transactionHash && isLoading && <p className="mx-auto font-bold">Waiting for transaction to be confirmed...</p>}
-                        {transactionHash && !isLoading && <a href={`https://testnet.soniclabs.com/tx/${transactionHash}`} target="_blank" className="mx-auto font-bold flex gap-2 items-center">Transaction confirmed! <ExternalLinkIcon className="w-4 h-4 text-primary" /></a>}
+                        {transactionHash && !isLoading && <a href={`https://explorer.soniclabs.com/tx/${transactionHash}`} target="_blank" className="mx-auto font-bold flex gap-2 items-center">Transaction confirmed! <ExternalLinkIcon className="w-4 h-4 text-primary" /></a>}
 
                         <div className="flex flex-col gap-2 border border-background text-xs rounded-2xl p-4">
                             <div className="flex items-center justify-between">

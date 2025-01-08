@@ -29,6 +29,7 @@ import { readContract } from '@wagmi/core'
 import BeefyVaultCLM from "@/config/BeefyVaultConcLiq.json";
 import { Deposit } from "../icons/deposit";
 import { ExternalLinkIcon } from "lucide-react";
+import { useNetworkSwitch } from "@/hooks/useNetworkSwitch";
 
 export const DepositVaultModalCLM = ({
   vault,
@@ -65,6 +66,7 @@ export const DepositVaultModalCLM = ({
   const [transactionHash, setTransactionHash] = useState<string | null>(null);
 
   const [refreshKey, setRefreshKey] = useState(0);
+  const {isSwitching, isWrongChain, switchToSonicMainnet} = useNetworkSwitch(); 
 
   const checkAllowance = async (tokenAddress: string, spenderAddress: string) => {
     try {
@@ -172,7 +174,7 @@ export const DepositVaultModalCLM = ({
         throw new Error("Transaction hash is null or undefined");
       }
 
-      console.log('Deposit:', `https://testnet.soniclabs.com/tx/${result}`);
+      console.log('Deposit:', `https://explorer.soniclabs.com/tx/${result}`);
       setTransactionHash(result);
 
       const receipt = await waitForTransactionReceipt(config as Config, { hash: result as `0x${string}` });
@@ -212,7 +214,7 @@ export const DepositVaultModalCLM = ({
 
   const checkBalance = async (tokenAddress: string, userAddress: string | undefined) => {
     try {
-      if (!userAddress || userAddress === "undefined") {
+      if (!userAddress || userAddress == undefined) {
         console.error("Invalid user address:", userAddress);
         return BigInt(0);
       }
@@ -226,7 +228,7 @@ export const DepositVaultModalCLM = ({
 
       return balance;
     } catch (err) {
-      console.error(`Error fetching balance for ${tokenAddress}:`, err);
+      console.error(`Error fetching clm balance for ${tokenAddress}:`, err);
       return BigInt(0);
     }
   };
@@ -570,7 +572,7 @@ export const DepositVaultModalCLM = ({
             )}
 
             {(requiresApproval0 || requiresApproval1) && <div className="flex gap-2 w-full">
-              {requiresApproval0 && <Button
+              {requiresApproval0 && !isWrongChain && <Button
                 className="flex items-center gap-2 w-full"
                 onClick={() => handleApprove(token0Address!, amount0, 0)}
                 disabled={isLoading || !isAmountValid0}
@@ -579,7 +581,7 @@ export const DepositVaultModalCLM = ({
                 Approve {vault?.token0Name}
               </Button>}
 
-              {requiresApproval1 && <Button
+              {requiresApproval1 && !isWrongChain && <Button
                 className="flex items-center gap-2 w-full"
                 onClick={() => handleApprove(token1Address!, amount1, 1)}
                 disabled={isLoading || !isAmountValid1}
@@ -589,7 +591,17 @@ export const DepositVaultModalCLM = ({
               </Button>}
             </div>}
 
-            {!requiresApproval0 && !requiresApproval1 && <Button
+            {isWrongChain && (
+              <Button
+                  className=""
+                  onClick={switchToSonicMainnet}
+                  disabled={isSwitching}
+              >
+                  {isSwitching ? "Switching..." : "Switch to Sonic"}
+              </Button>
+            )}
+
+            {!requiresApproval0 && !requiresApproval1 && !isWrongChain && <Button
               className={cn(
                 "flex items-center gap-2",
                 isWrong && "opacity-50 cursor-not-allowed"
@@ -604,7 +616,7 @@ export const DepositVaultModalCLM = ({
             </Button>}
 
             {transactionHash && isLoading && <p className="mx-auto font-bold">Waiting for transaction to be confirmed...</p>}
-            {transactionHash && !isLoading && <a href={`https://testnet.soniclabs.com/tx/${transactionHash}`} target="_blank" className="mx-auto font-bold flex gap-2 items-center">Transaction confirmed! <ExternalLinkIcon className="w-4 h-4 text-primary" /></a>}
+            {transactionHash && !isLoading && <a href={`https://explorer.soniclabs.com/tx/${transactionHash}`} target="_blank" className="mx-auto font-bold flex gap-2 items-center">Transaction confirmed! <ExternalLinkIcon className="w-4 h-4 text-primary" /></a>}
 
             {/* Fees, TODO: Implement */}
             <div className="flex flex-col gap-2 border border-background text-xs rounded-2xl p-4">

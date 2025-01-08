@@ -1,6 +1,6 @@
 "use client";
 
-import { Config, useAccount } from "wagmi";
+import { Config, useAccount, useChainId } from "wagmi";
 import {
     Dialog,
     DialogContent,
@@ -19,6 +19,7 @@ import { DoubleAvatar } from "@/components/ui/double-avatar";
 import { waitForTransactionReceipt } from "@wagmi/core";
 
 import { useWriteContract } from 'wagmi'
+import { useSwitchChain } from 'wagmi'
 import { config } from '@/lib/config'
 import { useEffect, useState } from "react";
 import { Address, formatEther, parseEther } from 'viem';
@@ -28,6 +29,8 @@ import { readContract } from '@wagmi/core'
 import BeefyVaultV7 from "@/config/BeefyVaultV7.json";
 import { Deposit } from "../icons/deposit";
 import { ExternalLinkIcon } from "lucide-react";
+import {ethers} from 'ethers'
+import { useNetworkSwitch } from "@/hooks/useNetworkSwitch";
 
 export const DepositVaultModalV7 = ({
     vault,
@@ -58,7 +61,9 @@ export const DepositVaultModalV7 = ({
     const [transactionHash, setTransactionHash] = useState<string | null>(null);
 
     const [calculatedShares, setCalculatedShares] = useState<string | null>(null);
-    const [refreshKey, setRefreshKey] = useState(0);
+    const [refreshKey, setRefreshKey] = useState(0);    
+
+    const {isSwitching, isWrongChain, switchToSonicMainnet} = useNetworkSwitch();
 
     const checkAllowance = async (tokenAddress: string, spenderAddress: string) => {
         try {
@@ -157,7 +162,7 @@ export const DepositVaultModalV7 = ({
                 throw new Error("Transaction hash is null or undefined");
             }
 
-            console.log('Deposit:', `https://testnet.soniclabs.com/tx/${result}`);
+            console.log('Deposit:', `https://explorer.soniclabs.com/tx/${result}`);
             setTransactionHash(result);
 
             const receipt = await waitForTransactionReceipt(config as Config, { hash: result as `0x${string}` });
@@ -196,7 +201,7 @@ export const DepositVaultModalV7 = ({
 
     const checkBalance = async (tokenAddress: string, userAddress: string | undefined) => {
         try {
-            if (!userAddress || userAddress === "undefined") {
+            if (!userAddress || userAddress == undefined) {
                 console.error("Invalid user address:", userAddress);
                 return BigInt(0);
             }
@@ -210,7 +215,7 @@ export const DepositVaultModalV7 = ({
 
             return balance;
         } catch (err) {
-            console.error(`Error fetching balance for ${tokenAddress}:`, err);
+            console.error(`Error fetching v7 balance for ${tokenAddress}:`, err);
             return BigInt(0);
         }
     };
@@ -354,11 +359,11 @@ export const DepositVaultModalV7 = ({
 
                     <DialogDescription className="flex flex-col gap-8 text-primary">
                         <div className="flex items-center justify-between">
-                          <span className="font-semibold">Deposit</span>
-                          <a target="_blank" href={vault.lpUrl} className="flex items-center gap-2 font-semibold  ">
-                            Add Liquidity{" "}
-                            <ExternalLinkIcon className="w-4 h-4 text-primary" />
-                          </a>
+                            <span className="font-semibold">Deposit</span>
+                            <a target="_blank" href={vault.lpUrl} className="flex items-center gap-2 font-semibold  ">
+                                Add Liquidity{" "}
+                                <ExternalLinkIcon className="w-4 h-4 text-primary" />
+                            </a>
                         </div>
                         <div className="flex flex-col gap-2">
                             <div>
@@ -445,7 +450,7 @@ export const DepositVaultModalV7 = ({
                             </Button>}
                         </div>}
 
-                        {!requiresApproval && <Button
+                        {!requiresApproval && !isWrongChain && <Button
                             className={cn(
                                 "flex items-center gap-2",
                                 isWrong && "opacity-50 cursor-not-allowed"
@@ -459,8 +464,18 @@ export const DepositVaultModalV7 = ({
                             <Deposit className="w-5 h-5" /> Deposit
                         </Button>}
 
+                        {isWrongChain && (
+                            <Button
+                                className=""
+                                onClick={switchToSonicMainnet}
+                                disabled={isSwitching}
+                            >
+                                {isSwitching ? "Switching..." : "Switch to Sonic"}
+                            </Button>
+                        )}
+
                         {transactionHash && isLoading && <p className="mx-auto font-bold">Waiting for transaction to be confirmed...</p>}
-                        {transactionHash && !isLoading && <a href={`https://testnet.soniclabs.com/tx/${transactionHash}`} target="_blank" className="mx-auto font-bold flex gap-2 items-center">Transaction confirmed! <ExternalLinkIcon className="w-4 h-4 text-primary" /></a>}
+                        {transactionHash && !isLoading && <a href={`https://explorer.soniclabs.com/tx/${transactionHash}`} target="_blank" className="mx-auto font-bold flex gap-2 items-center">Transaction confirmed! <ExternalLinkIcon className="w-4 h-4 text-primary" /></a>}
 
                         {/* Fees, TODO: Implement */}
                         <div className="flex flex-col gap-2 border border-background text-xs rounded-2xl p-4">

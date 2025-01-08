@@ -492,7 +492,7 @@ export const RPC_URLS = {
   base: "https://base-rpc.publicnode.com", // Replace with actual Base RPC URL
   arbitrumone: "https://arbitrum-one-rpc.publicnode.com", // Replace with actual Arbitrum RPC URL
   fantom: "https://fantom-rpc.publicnode.com", // Replace with actual Fantom RPC URL
-  // sonic: "https://rpc.testnet.soniclabs.com"
+  // sonic: "https://rpc.soniclabs.com"
 };
 
 export const USDC_ABI = [
