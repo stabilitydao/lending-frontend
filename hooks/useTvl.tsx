@@ -7,7 +7,7 @@ type TVLData = {
   };
 };
 
-const fetchTVL = async (): Promise<TVLData | undefined> => {
+export const fetchTVL = async (): Promise<TVLData | undefined> => {
   try {
     const response = await axios.get("https://vicuna.orthae.xyz/tvl");
     const tvlData = response.data;
@@ -26,5 +26,5 @@ export const useTvl = () => {
     });
   }, []);
 
-  return {tvl}
+  return { tvl }
 }

@@ -5,6 +5,7 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableCellWP,
   TableHead,
   TableHeader,
   TableRow,
@@ -85,24 +86,24 @@ export const VaultTable = () => {
               let walletBalanceEth = "0"
               let vaultBalanceEth0 = "0"
               let vaultBalanceEth1 = "0"
-              if(address && address != undefined){
-              const vaultBalance = await readContract(config as Config, {
-                abi: BeefyVaultCLM.abi,
-                address: vault.vaultAddress as Address,
-                functionName: "balances",
-              }) as [bigint, bigint];
+              if (address && address != undefined) {
+                const vaultBalance = await readContract(config as Config, {
+                  abi: BeefyVaultCLM.abi,
+                  address: vault.vaultAddress as Address,
+                  functionName: "balances",
+                }) as [bigint, bigint];
 
-              const balance = await readContract(config as Config, {
-                abi: BeefyVaultCLM.abi,
-                address: vault.vaultAddress as Address,
-                functionName: "balanceOf",
-                args: [address as Address],
-              }) as bigint;
+                const balance = await readContract(config as Config, {
+                  abi: BeefyVaultCLM.abi,
+                  address: vault.vaultAddress as Address,
+                  functionName: "balanceOf",
+                  args: [address as Address],
+                }) as bigint;
 
-              walletBalanceEth = parseFloat(formatEther(balance)).toFixed(4).replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "");
-              vaultBalanceEth0 = parseFloat(formatEther(vaultBalance[0])).toFixed(4).replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "");
-              vaultBalanceEth1 = parseFloat(formatEther(vaultBalance[1])).toFixed(4).replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "");
-            }
+                walletBalanceEth = parseFloat(formatEther(balance)).toFixed(9).replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "");
+                vaultBalanceEth0 = parseFloat(formatEther(vaultBalance[0])).toFixed(9).replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "");
+                vaultBalanceEth1 = parseFloat(formatEther(vaultBalance[1])).toFixed(9).replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "");
+              }
 
               return {
                 ...vault,
@@ -120,38 +121,38 @@ export const VaultTable = () => {
               let depositedBalanceEth = "0";
               let walletBalanceEth = "0";
 
-              if(address && address != undefined){
+              if (address && address != undefined) {
 
-              const balance = await readContract(config as Config, {
-                abi: BeefyVaultV7.abi,
-                address: vault.vaultAddress as Address,
-                functionName: "balanceOf",
-                args: [address as Address],
-              }) as bigint;
+                const balance = await readContract(config as Config, {
+                  abi: BeefyVaultV7.abi,
+                  address: vault.vaultAddress as Address,
+                  functionName: "balanceOf",
+                  args: [address as Address],
+                }) as bigint;
 
-              const tokenAddress = await readContract(config as Config, {
-                abi: BeefyVaultV7.abi,
-                address: vault.vaultAddress as Address,
-                functionName: 'want'
-              });
+                const tokenAddress = await readContract(config as Config, {
+                  abi: BeefyVaultV7.abi,
+                  address: vault.vaultAddress as Address,
+                  functionName: 'want'
+                });
 
-              if (!tokenAddress) {
-                throw new Error('Invalid response from want function');
+                if (!tokenAddress) {
+                  throw new Error('Invalid response from want function');
+                }
+
+                const walletBalance = await readContract(config as Config, {
+                  abi: BeefyVaultV7.abi,
+                  address: tokenAddress as Address,
+                  functionName: "balanceOf",
+                  args: [address as Address],
+                }) as bigint;
+
+                console.log("V7 ", { balance, walletBalance })
+
+                depositedBalanceEth = parseFloat(formatEther(balance)).toFixed(9).replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "");
+                // const vaultBalanceEth0 = parseFloat(formatEther(vaultBalance)).toFixed(4).replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "");
+                walletBalanceEth = parseFloat(formatEther(walletBalance)).toFixed(9).replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "");
               }
-
-              const walletBalance = await readContract(config as Config, {
-                abi: BeefyVaultV7.abi,
-                address: tokenAddress as Address,
-                functionName: "balanceOf",
-                args: [address as Address],
-              }) as bigint;
-
-              console.log("V7 ", { balance, walletBalance })
-
-              depositedBalanceEth = parseFloat(formatEther(balance)).toFixed(9).replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "");
-              // const vaultBalanceEth0 = parseFloat(formatEther(vaultBalance)).toFixed(4).replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "");
-              walletBalanceEth = parseFloat(formatEther(walletBalance)).toFixed(9).replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "");
-            }
               return {
                 ...vault,
                 wallet: walletBalanceEth,
@@ -165,7 +166,7 @@ export const VaultTable = () => {
             }
           } catch (error) {
             console.error(`Error fetching data for vault ${vault.id}:`, error);
-            return {...vault};
+            return { ...vault };
           }
         })
       );
@@ -173,8 +174,8 @@ export const VaultTable = () => {
       setVaults(updatedVaults as VaultDataPlus[]);
     };
 
-    fetchVaultData(); 
-  }, [address, refreshKey, breakdown]);
+    fetchVaultData();
+  }, [address, refreshKey, breakdown, tvl]);
 
   const handleVaultChange = (value: string) =>
     setVault(value === "personal" ? address || "all" : value);
@@ -201,6 +202,11 @@ export const VaultTable = () => {
           </TableHead>
           <TableHead className="text-muted uppercase">
             <div className="flex items-center gap-2 cursor-pointer">
+              Eligible For
+            </div>
+          </TableHead>
+          <TableHead className="text-muted uppercase">
+            <div className="flex items-center gap-2 cursor-pointer">
               Wallet <FilterIcon />
             </div>
           </TableHead>
@@ -223,9 +229,23 @@ export const VaultTable = () => {
         </TableHeader>
         <TableBody>
           {vaults.map((vault, index) => (
-            <TableRow key={index} className="text-primary border-t-background">
+            <TableRow key={index} className="relative text-primary border-t-background">
               <TableCell>
-                <div className="flex items-center  gap-10">
+                {vault.dexImage === "/icons/dex/equalizer.svg" ? (
+                  <div className="absolute flex items-center left-[-9px] h-[calc(100%-32px)]">
+                    <Image src={vault.dexImage} alt={""} height={50} width={50} />
+                  </div>
+                ) : vault.dexImage === "/icons/dex/beets.fi.svg" ? (
+                  <div className="absolute flex items-center left-[0] h-[calc(100%-32px)]">
+                    <Image src={vault.dexImage} alt={""} height={28} width={28} />
+                  </div>
+                ) : (
+                  <div className="absolute flex items-center left-[0] h-[calc(100%-32px)]">
+                    <Image src={vault.dexImage} alt={""} height={28} width={28} />
+                  </div>
+                )}
+
+                <div className="flex items-center gap-10 ml-8">
                   <DoubleAvatar
                     firstSrc={vault?.imageSrc1!}
                     secondSrc={vault?.imageSrc0!}
@@ -258,6 +278,15 @@ export const VaultTable = () => {
                   </div>
                 </div>
               </TableCell>
+
+              {/* Eligible For */}
+              <TableCellWP>
+                <div className="flex flex-col border">
+                  <div className="flex justify-between items-center gap-1 px-[6px] font-semibold border-b text-xs">Gems <div className="relative w-3 h-3"><Image src={'/icons/incentives/gems-05.png'} alt={""} fill /></div></div>
+                  <div className="flex justify-between items-center gap-1 px-[6px] font-semibold border-b text-xs">Points <div className="relative w-3 h-3"><Image src={'/icons/incentives/Sonic_Black.svg'} alt={""} fill /></div></div>
+                  <div className="flex justify-between items-center gap-1 px-[6px] font-semibold text-xs">Airdrop <div className="relative w-3 h-3"><Image src={'/icons/incentives/Parachuting-08.png'} alt={""} fill /></div></div>
+                </div>
+              </TableCellWP>
 
               <TableCell>{vault?.wallet ?? "0"}</TableCell>
 

@@ -90,6 +90,18 @@ const TableCell = React.forwardRef<
 ));
 TableCell.displayName = "TableCell";
 
+const TableCellWP = React.forwardRef<
+  HTMLTableCellElement,
+  React.TdHTMLAttributes<HTMLTableCellElement>
+>(({ className, ...props }, ref) => (
+  <td
+    ref={ref}
+    className={cn("px-4 align-middle [&:has([role=checkbox])]:pr-0", className)}
+    {...props}
+  />
+));
+TableCell.displayName = "TableCellWP";
+
 const TableCaption = React.forwardRef<
   HTMLTableCaptionElement,
   React.HTMLAttributes<HTMLTableCaptionElement>
@@ -110,5 +122,6 @@ export {
   TableHead,
   TableRow,
   TableCell,
+  TableCellWP,
   TableCaption,
 };
