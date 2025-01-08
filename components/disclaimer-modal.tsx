@@ -45,7 +45,7 @@ export const DisclaimerModal = ({
             <p>
               By accessing the Vicuna Finance website, you agree to the{" "}
               <a
-                href="https://vicuna-finance.gitbook.io/vicuna-finance/other-info/terms-of-use"
+                href="https://vicuna-finance.gitbook.io/vicuna-finance-sonic/other-info/terms-of-use"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="underline text-blue-400"
@@ -58,7 +58,7 @@ export const DisclaimerModal = ({
               We use cookies to provide you with the best experience and to help
               improve our website and application. Please read our{" "}
               <a
-                href="https://vicuna-finance.gitbook.io/vicuna-finance/other-info/cookie-policy"
+                href="https://vicuna-finance.gitbook.io/vicuna-finance-sonic/other-info/cookie-policy"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="underline text-blue-400"
