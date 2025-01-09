@@ -19,6 +19,7 @@ export type VaultDataPlus = {
   token1Name: string;
   imageSrc0?: string;
   imageSrc1?: string;
+  dexImage: string;
   kind: "clm" | "v7";
   lpUrl: string;
   chainId: number;

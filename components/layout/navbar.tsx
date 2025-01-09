@@ -44,7 +44,6 @@ export const Navbar = () => {
             <p className="text-[16px] font-extralight">Finance</p>
           </div>
         </Link>
-        <p className="mt-2 font-extralight text-primary">(Work In Progress)</p>
       </div>
       {/* <Link href="/">
         <Image
