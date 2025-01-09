@@ -19,7 +19,6 @@ export const Footer = () => {
               </p>
             </div>
           </Link>
-          <p className="mt-4 font-extralight text-primary">(Work In Progress)</p>
         </div>
         {/* <Link href="/">
           <Image src="/logo.png" alt="Llama icon" width={300} height={300} />

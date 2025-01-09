@@ -1,4 +1,5 @@
 import { SearchFilter } from "@/components/search-filter";
+import { NetworkTvl } from "@/components/vaults/network-tvl";
 import { VaultTable } from "@/components/vaults/vault-table";
 
 export default function Page() {
@@ -7,10 +8,7 @@ export default function Page() {
       <div className="flex flex-col sm:flex-row gap-8 sm:gap-2 items-center justify-between">
         <SearchFilter route="vaults" isFilteringProjects={true} />
         <div className="flex items-center space-x-4">
-          <p className="text-primary">
-            Network TVL:
-            <span className="font-semibold"> $24,325,784.58</span>
-          </p>
+          <NetworkTvl />
         </div>
       </div>
       <div className="flex flex-col gap-4 bg-card p-4 rounded-lg shadow-xl">

@@ -104,7 +104,7 @@ export const SearchFilter = ({
         <SearchIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary  h-5 w-5" />
       </div>
       <div className="flex space-x-6">
-        {isFilteringProjects
+        {/* {isFilteringProjects
           ? projectData?.map((project, index) => {
               const isSelected = selectedProjects.includes(project.name);
               return (
@@ -134,7 +134,7 @@ export const SearchFilter = ({
                 }`}
                 onClick={() => handleChainClick("sonic")}
               />
-            )}
+            )} */}
         {/* change to JUST sonic logo */}
         {/* {chainIcons?.map((icon, index) => {
           const processedChain = icon

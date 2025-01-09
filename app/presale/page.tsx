@@ -3,6 +3,7 @@ import { PresaleModal } from "@/components/presale/presale-modal";
 import { SwitchChain } from "@/components/switch-chain";
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
+import Image from "next/image";
 
 export default function Page() {
   const searchParams = useSearchParams();
@@ -13,38 +14,46 @@ export default function Page() {
   const [totalDeposited, setTotalDeposited] = useState<number>(0);
 
   return (
-    <div className="bg-card p-4 h-full rounded-lg mx-10 mx-auto my-[150px] flex flex-col gap-6 shadow-2xl w-full max-w-lg">
-      <div className="flex flex-col justify-evenly gap-4">
-        <h1 className="text-primary text-lg font-semibold text-[#f22321] text-center">
-          Vicuna Finance Presale
-        </h1>
-        <div className="flex justify-end">
-          <SwitchChain />
-        </div>
-        <p className="text-primary text-base font-semibold text-left">
-          Wallet Balance:{" "}
-          <span className="text-[#f22321]">
-            {Number(balance).toLocaleString()} {selectedCoin}
-          </span>
-        </p>
-        <p className="text-primary text-base font-semibold text-left">
-          HardCap:{" "}
-          <span className="text-[#f22321]">${hardCap.toLocaleString()}</span>
-        </p>
-        <p className="text-primary text-base font-semibold text-left">
-          Total deposited amount:{" "}
-          <span className="text-[#f22321]">
-            ${totalDeposited.toLocaleString()}
-          </span>
-        </p>
+    <div className="relative">
+      <div className="bg-card p-4 h-full rounded-lg mx-10 mx-auto my-[150px] flex flex-col gap-6 shadow-2xl w-full max-w-lg blur-md">
+        <div className="flex flex-col justify-evenly gap-4">
+          <h1 className="text-primary text-lg font-semibold text-[#f22321] text-center">
+            Vicuna Finance Presale
+          </h1>
+          <div className="flex justify-end">
+            <SwitchChain />
+          </div>
+          <p className="text-primary text-base font-semibold text-left">
+            Wallet Balance:{" "}
+            <span className="text-[#f22321]">
+              {Number(balance).toLocaleString()} {selectedCoin}
+            </span>
+          </p>
+          <p className="text-primary text-base font-semibold text-left">
+            HardCap:{" "}
+            <span className="text-[#f22321]">${hardCap.toLocaleString()}</span>
+          </p>
+          <p className="text-primary text-base font-semibold text-left">
+            Total deposited amount:{" "}
+            <span className="text-[#f22321]">
+              ${totalDeposited.toLocaleString()}
+            </span>
+          </p>
 
-        <PresaleModal
-          setBalance={setBalance}
-          setSelectedCoin={setSelectedCoin}
-          setHardCap={setHardCap}
-          setTotalDeposited={setTotalDeposited}
-          referCode={refer}
-        />
+          <PresaleModal
+            setBalance={setBalance}
+            setSelectedCoin={setSelectedCoin}
+            setHardCap={setHardCap}
+            setTotalDeposited={setTotalDeposited}
+            referCode={refer}
+          />
+        </div>
+      </div>
+
+      <div className="absolute inset-0 flex items-center justify-center z-50">
+        <div className="relative w-[750px] h-[250px] rounded-[50px] shadow-2xl">
+          <Image src={"/work-in-progress.png"} alt={""} fill />
+        </div>
       </div>
     </div>
   );

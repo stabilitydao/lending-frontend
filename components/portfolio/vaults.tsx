@@ -11,9 +11,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { PlusIcon, X } from "lucide-react";
 import { DoubleAvatar } from "../ui/double-avatar";
-import { DepositVaultModal } from "../vaults/deposit-vault-modal";
-import { WithdrawVaultModal } from "../vaults/withdraw-vault-modal";
-import { vaultData } from "@/lib/constants";
+import { DepositVaultModalCLM } from "../vaults/deposit-vault-modal-clm";
+import { WithdrawVaultModalCLM } from "../vaults/withdraw-vault-modal-clm";
+import vaultData from "@/config/sonic.json";
 
 export const Vaults = () => {
   return (
@@ -61,18 +61,26 @@ export const Vaults = () => {
           </TableBody>
         </Table>
         <div className="flex items-end lg:items-center justify-end lg:justify-center gap-4 pt-2 lg:pt-0">
-          <DepositVaultModal vault={vaultData[0]}>
+          <DepositVaultModalCLM
+            vault={{
+              ...vaultData[0],
+              kind: vaultData[0].kind as "clm" | "v7",
+            }}
+          >
             <Button size={"sm"}>
               <PlusIcon className="w-4 h-4 mr-2" />
               Add
             </Button>
-          </DepositVaultModal>
-          <WithdrawVaultModal vault={vaultData[0]}>
+          </DepositVaultModalCLM>
+          <WithdrawVaultModalCLM vault={{
+            ...vaultData[0],
+            kind: vaultData[0].kind as "clm" | "v7",
+          }}>
             <Button size={"sm"}>
               <X className="w-4 h-4 mr-2" />
               Close
             </Button>
-          </WithdrawVaultModal>
+          </WithdrawVaultModalCLM>
         </div>
       </CardContent>
     </Card>

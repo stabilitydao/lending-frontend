@@ -33,7 +33,9 @@ export const DisclaimerModal = ({
         <DialogHeader>
           <DialogTitle className="text-center py-10">
             Welcome to Vicuna Finance
-          <p className="mt-4 text-center font-extralight">(Work In Progress)</p>
+            <p className="mt-4 text-center font-extralight">
+              (Work In Progress)
+            </p>
           </DialogTitle>
         </DialogHeader>
         <DialogDescription>

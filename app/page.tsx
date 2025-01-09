@@ -7,6 +7,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import ScrollingPartners from "@/components/home/scrolling-partners";
+import { NetworkTvl } from "@/components/vaults/network-tvl";
 
 export default function Home() {
   return (
@@ -20,7 +21,7 @@ export default function Home() {
           priority
         />
         <div className="absolute top-28 right-20 bg-background/60 text-black px-12 py-6 rounded">
-          Network TVL: $24,325,784.58
+          <NetworkTvl />
         </div>
       </div>
       <div className="flex flex-col mx-4 md:mx-10 py-16">

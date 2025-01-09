@@ -5,28 +5,62 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableCellWP,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import { DoubleAvatar } from "@/components/ui/double-avatar";
-import { formatNumberWithSuffix } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
-import { vaultData } from "@/lib/constants";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useAccount } from "wagmi";
+import { Config, useAccount } from "wagmi";
 import { AssetFilter } from "../asset-filter";
-import { DepositVaultModal } from "./deposit-vault-modal";
-import { WithdrawVaultModal } from "./withdraw-vault-modal";
+import { DepositVaultModalCLM } from "./deposit-vault-modal-clm";
+import { WithdrawVaultModalCLM } from "./withdraw-vault-modal-clm";
+import { DepositVaultModalV7 } from "./deposit-vault-modal-v7";
+import { WithdrawVaultModalV7 } from "./withdraw-vault-modal-v7";
 import { FilterIcon } from "../icons/filter";
+
+import vaultData from "@/config/sonic.json";
+import { BreakdownData, VaultDataPlus } from "@/types/vault";
+
+import BeefyVaultCLM from "@/config/BeefyVaultConcLiq.json";
+import BeefyVaultV7 from "@/config/BeefyVaultV7.json";
+import { readContract } from '@wagmi/core'
+import { config } from '@/lib/config'
+import { Address, formatEther } from "viem";
+import axios from 'axios';
+import { useTvl } from "@/hooks/useTvl";
+import { formatNumberWithSuffix } from "@/lib/utils";
+
+const fetchBreakdown = async () => {
+  try {
+    const response = await axios.get("https://vicuna.orthae.xyz/apy/breakdown");
+    const breakdownData = response.data;
+    return breakdownData;
+  } catch (error) {
+    console.error("Error fetching APY:", error);
+  }
+};
 
 export const VaultTable = () => {
   const { address } = useAccount();
   const router = useRouter();
   const searchParams = useSearchParams();
-
+  const [vaults, setVaults] = useState<VaultDataPlus[]>(vaultData as VaultDataPlus[]);
   const [vault, setVault] = useState(searchParams.get("vault") || "all");
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const { tvl } = useTvl();
+
+  const [breakdown, setBreakdown] = useState<BreakdownData>();
+
+  useEffect(() => {
+    fetchBreakdown().then((data) => {
+      setBreakdown(data);
+    });
+  }, []);
 
   const updateURL = useCallback(
     (vault: string) => {
@@ -43,15 +77,115 @@ export const VaultTable = () => {
     updateURL(vault);
   }, [vault, updateURL]);
 
+  useEffect(() => {
+    const fetchVaultData = async () => {
+      const updatedVaults = await Promise.all(
+        vaultData.map(async (vault) => {
+          try {
+            if (vault.kind === "clm") {
+              let walletBalanceEth = "0"
+              let vaultBalanceEth0 = "0"
+              let vaultBalanceEth1 = "0"
+              if (address && address != undefined) {
+                const vaultBalance = await readContract(config as Config, {
+                  abi: BeefyVaultCLM.abi,
+                  address: vault.vaultAddress as Address,
+                  functionName: "balances",
+                }) as [bigint, bigint];
+
+                const balance = await readContract(config as Config, {
+                  abi: BeefyVaultCLM.abi,
+                  address: vault.vaultAddress as Address,
+                  functionName: "balanceOf",
+                  args: [address as Address],
+                }) as bigint;
+
+                walletBalanceEth = parseFloat(formatEther(balance)).toFixed(9).replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "");
+                vaultBalanceEth0 = parseFloat(formatEther(vaultBalance[0])).toFixed(9).replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "");
+                vaultBalanceEth1 = parseFloat(formatEther(vaultBalance[1])).toFixed(9).replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "");
+              }
+
+              return {
+                ...vault,
+                wallet: walletBalanceEth,
+                deposited: {
+                  token0: parseFloat(vaultBalanceEth0),
+                  token1: parseFloat(vaultBalanceEth1),
+                },
+                breakdown: breakdown ? breakdown[vault.id] : undefined,
+                tvl: tvl?.["146"] ? tvl["146"][vault.id] : 0
+              };
+            }
+
+            if (vault.kind === "v7") {
+              let depositedBalanceEth = "0";
+              let walletBalanceEth = "0";
+
+              if (address && address != undefined) {
+
+                const balance = await readContract(config as Config, {
+                  abi: BeefyVaultV7.abi,
+                  address: vault.vaultAddress as Address,
+                  functionName: "balanceOf",
+                  args: [address as Address],
+                }) as bigint;
+
+                const tokenAddress = await readContract(config as Config, {
+                  abi: BeefyVaultV7.abi,
+                  address: vault.vaultAddress as Address,
+                  functionName: 'want'
+                });
+
+                if (!tokenAddress) {
+                  throw new Error('Invalid response from want function');
+                }
+
+                const walletBalance = await readContract(config as Config, {
+                  abi: BeefyVaultV7.abi,
+                  address: tokenAddress as Address,
+                  functionName: "balanceOf",
+                  args: [address as Address],
+                }) as bigint;
+
+                console.log("V7 ", { balance, walletBalance })
+
+                depositedBalanceEth = parseFloat(formatEther(balance)).toFixed(9).replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "");
+                // const vaultBalanceEth0 = parseFloat(formatEther(vaultBalance)).toFixed(4).replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "");
+                walletBalanceEth = parseFloat(formatEther(walletBalance)).toFixed(9).replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "");
+              }
+              return {
+                ...vault,
+                wallet: walletBalanceEth,
+                deposited: {
+                  token0: parseFloat(depositedBalanceEth),
+                  token1: 0,
+                },
+                breakdown: breakdown ? breakdown[vault.id] : undefined,
+                tvl: tvl?.["146"] ? tvl["146"][vault.id] : 0
+              };
+            }
+          } catch (error) {
+            console.error(`Error fetching data for vault ${vault.id}:`, error);
+            return { ...vault };
+          }
+        })
+      );
+
+      setVaults(updatedVaults as VaultDataPlus[]);
+    };
+
+    fetchVaultData();
+  }, [address, refreshKey, breakdown, tvl]);
+
   const handleVaultChange = (value: string) =>
     setVault(value === "personal" ? address || "all" : value);
 
   return (
     <div className="p-4">
-      <AssetFilter />
+      {/* <AssetFilter /> */}
       <Table>
         <TableHeader className="border-b border-background">
-          <TableHead className="flex items-center gap-4 h-24 font-bold text-base ">
+          <TableHead className="flex items-center gap-4 h-16 font-bold text-base ">
             Vaults
             <div className="flex items-center gap-4 justify-center">
               <Tabs value={vault} onValueChange={handleVaultChange}>
@@ -59,55 +193,75 @@ export const VaultTable = () => {
                   <TabsTrigger value="all" className="text-primary">
                     All Vaults
                   </TabsTrigger>
-                  <TabsTrigger value="personal" className="text-primary">
+                  {/* <TabsTrigger value="personal" className="text-primary">
                     My Vaults
-                  </TabsTrigger>
+                  </TabsTrigger> */}
                 </TabsList>
               </Tabs>
             </div>
           </TableHead>
           <TableHead className="text-muted uppercase">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 cursor-pointer">
+              Eligible For
+            </div>
+          </TableHead>
+          <TableHead className="text-muted uppercase">
+            <div className="flex items-center gap-2 cursor-pointer">
               Wallet <FilterIcon />
             </div>
           </TableHead>
           <TableHead className="text-muted uppercase">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 cursor-pointer">
               Deposited <FilterIcon />
             </div>
           </TableHead>
           <TableHead className="text-muted uppercase">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 cursor-pointer">
               APY <FilterIcon />
             </div>
           </TableHead>
           <TableHead className="text-muted uppercase">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 cursor-pointer">
               Daily <FilterIcon />
             </div>
           </TableHead>
           <TableHead></TableHead>
         </TableHeader>
         <TableBody>
-          {vaultData.map((vault, index) => (
-            <TableRow key={index} className="text-primary border-t-background">
+          {vaults.map((vault, index) => (
+            <TableRow key={index} className="relative text-primary border-t-background">
               <TableCell>
-                <div className="flex items-center  gap-10">
+                {vault.dexImage === "/icons/dex/equalizer.svg" ? (
+                  <div className="absolute flex items-center left-[-9px] h-[calc(100%-32px)]">
+                    <Image src={vault.dexImage} alt={""} height={50} width={50} />
+                  </div>
+                ) : vault.dexImage === "/icons/dex/beets.fi.svg" ? (
+                  <div className="absolute flex items-center left-[0] h-[calc(100%-32px)]">
+                    <Image src={vault.dexImage} alt={""} height={28} width={28} />
+                  </div>
+                ) : (
+                  <div className="absolute flex items-center left-[0] h-[calc(100%-32px)]">
+                    <Image src={vault.dexImage} alt={""} height={28} width={28} />
+                  </div>
+                )}
+
+                <div className="flex items-center gap-10 ml-8">
                   <DoubleAvatar
-                    firstSrc={vault.imageSrc1!}
-                    secondSrc={vault.imageSrc2!}
-                    firstAlt={vault.vaultName}
-                    secondAlt={vault.vaultName}
+                    firstSrc={vault?.imageSrc1!}
+                    secondSrc={vault?.imageSrc0!}
+                    firstAlt={vault?.token1Name!}
+                    secondAlt={vault?.token0Name!}
                   />
                   <div className="flex flex-col gap-2">
-                    <p className="text-lg ">{vault.vaultName}</p>
-                    <p className="text-sm font-light">
-                      TVL: {formatNumberWithSuffix(vault.vaultTVL)}
+                    <p className="text-lg ">{vault.name}</p>
+                    <p className="text-xs font-light">
+                      TVL: {formatNumberWithSuffix(vault.tvl ?? 0)}
                     </p>
-                    <p className="text-sm font-light">
-                      Dex TVL: {formatNumberWithSuffix(vault.vaultDexTVL)}
-                    </p>
-                    {vault.vBoost && (
+                    {/* <p className="text-sm font-light">
+                      Dex TVL: {formatNumberWithSuffix(vault.vaultTVL ?? 0)}
+                    </p>  */}
+                    {/* VBoost here */}
+                    {false && (
                       <Badge
                         variant={"accent"}
                         className="flex items-center justify-between"
@@ -124,14 +278,43 @@ export const VaultTable = () => {
                   </div>
                 </div>
               </TableCell>
-              <TableCell>{vault.wallets}</TableCell>
-              <TableCell>{vault.deposited}</TableCell>
-              <TableCell className="text-green-500">{vault.apy}%</TableCell>
-              <TableCell>{vault.daily}%</TableCell>
-              <TableCell className="flex gap-10 justify-center pt-10">
-                <DepositVaultModal vault={vault} />
-                <WithdrawVaultModal vault={vault} />
-              </TableCell>
+
+              {/* Eligible For */}
+              <TableCellWP>
+                <div className="flex flex-col border">
+                  <div className="flex justify-between items-center gap-1 px-[6px] font-semibold border-b text-xs">Gems <div className="relative w-3 h-3"><Image src={'/icons/incentives/gems-05.png'} alt={""} fill /></div></div>
+                  <div className="flex justify-between items-center gap-1 px-[6px] font-semibold border-b text-xs">Points <div className="relative w-3 h-3"><Image src={'/icons/incentives/Sonic_Black.svg'} alt={""} fill /></div></div>
+                  <div className="flex justify-between items-center gap-1 px-[6px] font-semibold text-xs">Airdrop <div className="relative w-3 h-3"><Image src={'/icons/incentives/Parachuting-08.png'} alt={""} fill /></div></div>
+                </div>
+              </TableCellWP>
+
+              <TableCell>{vault?.wallet ?? "0"}</TableCell>
+
+              {vault.kind === "clm" ?
+                <TableCell>
+                  {vault?.name.split("-")[0]} {vault?.deposited?.token0 ?? "0"} <br /> {vault?.name.split("-")[1]} {vault?.deposited?.token1 ?? "0"}
+                </TableCell> : <TableCell>
+                  {vault?.deposited?.token0 ?? "0"}
+                </TableCell>
+              }
+
+              {/* Apy */}
+              <TableCell className="text-green-500">{typeof vault?.breakdown?.totalApy === "number"
+                ? (vault.breakdown.totalApy * 100).toFixed(3)
+                : 0}%</TableCell>
+
+              {/* Daily */}
+              <TableCell>{vault?.breakdown?.tradingApr ? (vault?.breakdown?.tradingApr * 100 / 365).toFixed(3) ?? 0 : vault?.breakdown?.vaultApr !== undefined
+                ? (vault.breakdown.vaultApr * 100 / 365).toFixed(3) : 0}%</TableCell>
+
+              {vault.kind === "clm" ? <TableCell className="flex gap-10 justify-center items-center">
+                <DepositVaultModalCLM vault={vault} onApprove={() => setRefreshKey((prevKey) => prevKey + 1)} />
+                <WithdrawVaultModalCLM vault={vault} onApprove={() => setRefreshKey((prevKey) => prevKey + 1)} />
+              </TableCell> : <TableCell className="flex gap-10 justify-center items-center">
+                <DepositVaultModalV7 vault={vault} onApprove={() => setRefreshKey((prevKey) => prevKey + 1)} />
+                <WithdrawVaultModalV7 vault={vault} onApprove={() => setRefreshKey((prevKey) => prevKey + 1)} />
+              </TableCell>}
+
             </TableRow>
           ))}
         </TableBody>
