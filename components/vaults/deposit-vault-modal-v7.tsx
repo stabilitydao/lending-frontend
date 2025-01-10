@@ -29,7 +29,6 @@ import { readContract } from '@wagmi/core'
 import BeefyVaultV7 from "@/config/BeefyVaultV7.json";
 import { Deposit } from "../icons/deposit";
 import { ExternalLinkIcon } from "lucide-react";
-import {ethers} from 'ethers'
 import { useNetworkSwitch } from "@/hooks/useNetworkSwitch";
 
 export const DepositVaultModalV7 = ({
@@ -61,9 +60,11 @@ export const DepositVaultModalV7 = ({
     const [transactionHash, setTransactionHash] = useState<string | null>(null);
 
     const [calculatedShares, setCalculatedShares] = useState<string | null>(null);
-    const [refreshKey, setRefreshKey] = useState(0);    
+    const [refreshKey, setRefreshKey] = useState(0);
 
-    const {isSwitching, isWrongChain, switchToSonicMainnet} = useNetworkSwitch();
+    const [inputSource, setInputSource] = useState<"input" | "slider">("input");
+
+    const { isSwitching, isWrongChain, switchToSonicMainnet } = useNetworkSwitch();
 
     const checkAllowance = async (tokenAddress: string, spenderAddress: string) => {
         try {
@@ -250,7 +251,8 @@ export const DepositVaultModalV7 = ({
             const balance = await checkBalance(tokenAddress.toString(), address);
 
             // Save balances as formatted ether
-            setAvailableBalance(formatEther(balance as bigint));
+            formatAvailableBalance(formatEther(balance as bigint))
+            // setAvailableBalance(formatEther(balance as bigint));
         } catch (err) {
             console.error('Error fetching max deposit amounts:', err);
         }
@@ -264,8 +266,9 @@ export const DepositVaultModalV7 = ({
                 functionName: "getPricePerFullShare",
             }) as bigint;
 
+
             const shares = parseFloat(parseEther(amount).toString()) / parseFloat(vaultPrice.toString());
-            setCalculatedShares(shares.toString());
+            setCalculatedShares(shares.toFixed(16).replace(/\.?0+$/, ""));
         } catch (err) {
             console.error("Error fetching price per share:", err);
         }
@@ -274,12 +277,30 @@ export const DepositVaultModalV7 = ({
     const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
 
-        const regex = /^(\d*\.?\d*)$/;
+        setInputSource("input");
+
+        const regex = /^\d*\.?\d{0,10}$/;
+
+        if (value == '') {
+            setPercentage(0);
+        }
 
         if (regex.test(value)) {
             setAmount(value);
         }
     };
+
+    const handleAvailableDisplay = () => {
+        const availableAmount = parseFloat(availableBalance);
+        const truncatedAmount = Math.floor(availableAmount * Math.pow(10, 10)) / Math.pow(10, 10);
+        return truncatedAmount.toFixed(10).replace(/\.?0+$/, "");
+    }
+
+    const formatAvailableBalance = (availableTemp: string) => {
+        const availableAmount = parseFloat(availableTemp);
+        const truncatedAmount = Math.floor(availableAmount * Math.pow(10, 10)) / Math.pow(10, 10);
+        setAvailableBalance(truncatedAmount.toFixed(10).replace(/\.?0+$/, ""));
+    }
 
     // TODO: debounce
     useEffect(() => {
@@ -292,9 +313,15 @@ export const DepositVaultModalV7 = ({
     }, [amount, requiresApproval]);
 
     useEffect(() => {
-        const availableAmount = parseFloat(availableBalance);
-        const newAmount = (availableAmount * (percentage / 100));
-        setAmount(Number(newAmount.toFixed(10)).toString());
+        if (inputSource === "slider") {
+            const availableAmount = parseFloat(availableBalance);
+            const newAmount = (availableAmount * (percentage / 100));
+
+            const truncatedAmount = Math.floor(newAmount * Math.pow(10, 10)) / Math.pow(10, 10);
+            const formattedAmount = truncatedAmount.toFixed(10).replace(/\.?0+$/, "");
+
+            setAmount(formattedAmount);
+        }
     }, [percentage, availableBalance]);
 
     useEffect(() => {
@@ -367,12 +394,12 @@ export const DepositVaultModalV7 = ({
                         </div>
                         <div className="flex flex-col gap-2">
                             <div>
-                                <span className="font-semibold">Available: {parseFloat(availableBalance).toLocaleString()}</span>
+                                <span className="font-semibold">Available: {handleAvailableDisplay()}</span>
                                 <div className="relative flex items-center">
                                     <Button
                                         size={"sm"}
                                         className="absolute left-2 h-6 z-10 bg-purple-200 text-primary"
-                                        onClick={() => setAmount(parseFloat(availableBalance).toString())}
+                                        onClick={() => setAmount(parseFloat(availableBalance).toFixed(10).replace(/\.?0+$/, ""))}
                                     >
                                         MAX
                                     </Button>
@@ -402,7 +429,7 @@ export const DepositVaultModalV7 = ({
                                 <div className="mt-4">
                                     <PercentageBar
                                         percentage={percentage}
-                                        onChange={(newPercentage) => setPercentage(newPercentage)}
+                                        onChange={(newPercentage) => { setPercentage(newPercentage); setInputSource("slider") }}
                                     />
                                 </div>
                             </div>
@@ -428,6 +455,7 @@ export const DepositVaultModalV7 = ({
 
                                             {vault?.token0Name}-{vault?.token1Name}
                                         </Badge>
+
                                         <span>{calculatedShares}</span>
                                     </div>
                                 </div>

@@ -66,7 +66,7 @@ export const DepositVaultModalCLM = ({
   const [transactionHash, setTransactionHash] = useState<string | null>(null);
 
   const [refreshKey, setRefreshKey] = useState(0);
-  const {isSwitching, isWrongChain, switchToSonicMainnet} = useNetworkSwitch(); 
+  const { isSwitching, isWrongChain, switchToSonicMainnet } = useNetworkSwitch();
 
   const checkAllowance = async (tokenAddress: string, spenderAddress: string) => {
     try {
@@ -593,11 +593,11 @@ export const DepositVaultModalCLM = ({
 
             {isWrongChain && (
               <Button
-                  className=""
-                  onClick={switchToSonicMainnet}
-                  disabled={isSwitching}
+                className=""
+                onClick={switchToSonicMainnet}
+                disabled={isSwitching}
               >
-                  {isSwitching ? "Switching..." : "Switch to Sonic"}
+                {isSwitching ? "Switching..." : "Switch to Sonic"}
               </Button>
             )}
 
