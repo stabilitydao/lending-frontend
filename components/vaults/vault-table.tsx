@@ -338,8 +338,8 @@ export const VaultTable = () => {
                 : 0}%</TableCell>
 
               {/* Daily */}
-              <TableCell>{vault?.breakdown?.tradingApr ? (vault?.breakdown?.tradingApr * 100 / 365).toFixed(3) ?? 0 : vault?.breakdown?.vaultApr !== undefined
-                ? (vault.breakdown.vaultApr * 100 / 365).toFixed(3) : 0}%</TableCell>
+              <TableCell>{vault?.breakdown?.tradingApr ? (vault?.breakdown?.tradingApr * 100 / 365).toFixed(4) ?? 0 : vault?.breakdown?.vaultApr !== undefined
+                ? (vault.breakdown.vaultApr * 100 / 365).toFixed(4) : 0}%</TableCell>
 
               {vault.kind === "clm" ? <TableCell className="flex gap-10 justify-center items-center">
                 <DepositVaultModalCLM vault={vault} onApprove={() => setRefreshKey((prevKey) => prevKey + 1)} />
