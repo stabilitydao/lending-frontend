@@ -15,6 +15,14 @@ export const PercentageBar = ({
   }, [externalPercentage]);
 
   const handleMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (barRef.current) {
+      const rect = barRef.current.getBoundingClientRect();
+      const x = Math.max(0, Math.min(event.clientX - rect.left, rect.width));
+      const newPercentage = Math.round((x / rect.width) * 100);
+      setPercentage(newPercentage);
+      onChange?.(newPercentage);
+    }
+
     const handleMouseMove = (e: MouseEvent) => {
       if (barRef.current) {
         const rect = barRef.current.getBoundingClientRect();
@@ -42,7 +50,7 @@ export const PercentageBar = ({
         onMouseDown={handleMouseDown}
       >
         <div
-          className="absolute top-0 left-0 h-full bg-accent rounded-full transition-all"
+          className="absolute top-0 left-0 h-full bg-accent rounded-full"
           style={{ width: `${percentage}%` }}
         />
         <div

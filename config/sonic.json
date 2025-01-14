@@ -39,6 +39,19 @@
         "lpUrl": "https://equalizer.exchange/liquidity/0xB75C9073ea00AbDa9ff420b5Ae46fEe248993380/add "
     },
     {
+        "id": "equalizer-usdc-weth",
+        "name": "USDC.e-wETH",
+        "vaultAddress": "0x8079B4700d90ACF56d820C706Ac3cB922e5f2eC2",
+        "token0Name": "USDC.e",
+        "token1Name": "wETH",
+        "imageSrc0": "/icons/coins/usdc.png",
+        "imageSrc1": "/icons/coins/ethereum.png",
+        "dexImage": "/icons/dex/equalizer.svg",
+        "kind": "v7",
+        "chainId": 146,
+        "lpUrl": "https://equalizer.exchange/liquidity/0xbCbC5777537c0D0462fb82BA48Eeb6cb361E853f/add "
+    },
+    {
         "id": "beets-ws-sts",
         "name": "Staked Sonic Symphony",
         "vaultAddress": "0x02D742f182D2a588c54E7DC998aD19f9D795bC51",
@@ -63,5 +76,18 @@
         "kind": "v7",
         "chainId": 146,
         "lpUrl": "https://beets.fi/pools/sonic/v2/0xcd4d2b142235d5650ffa6a38787ed0b7d7a51c0c000000000000000000000037/add-liquidity"
+    },
+    {
+        "id": "beets-scusd-sts",
+        "name": "Put A Ring On It",
+        "vaultAddress": "0xca830eaE0b3F65c6FB4fD824F1b442956fE5D424",
+        "token0Name": "scUSDC",
+        "token1Name": "stS",
+        "imageSrc0": "/icons/coins/scusdc.png",
+        "imageSrc1": "/icons/coins/sts.png",
+        "dexImage": "/icons/dex/beets.fi.svg",
+        "kind": "v7",
+        "chainId": 146,
+        "lpUrl": "https://beets.fi/pools/sonic/v2/0x25ca5451cd5a50ab1d324b5e64f32c0799661891000200000000000000000018/add-liquidity"
     }
 ]
