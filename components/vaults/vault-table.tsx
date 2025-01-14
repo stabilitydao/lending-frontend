@@ -23,7 +23,7 @@ import { WithdrawVaultModalV7 } from "./withdraw-vault-modal-v7";
 import { FilterIcon } from "../icons/filter";
 
 import vaultData from "@/config/sonic.json";
-import { BreakdownData, VaultDataPlus } from "@/types/vault";
+import { BreakdownData, VaultDataPlus, LpsData } from "@/types/vault";
 
 import BeefyVaultCLM from "@/config/BeefyVaultConcLiq.json";
 import BeefyVaultV7 from "@/config/BeefyVaultV7.json";
@@ -44,6 +44,16 @@ const fetchBreakdown = async () => {
   }
 };
 
+const fetchLps = async () => {
+  try {
+    const response = await axios.get("https://vicuna.orthae.xyz/lps");
+    const lpsData = response.data;
+    return lpsData;
+  } catch (error) {
+    console.error("Error fetching APY:", error);
+  }
+};
+
 export const VaultTable = () => {
   const { address } = useAccount();
   const router = useRouter();
@@ -55,10 +65,15 @@ export const VaultTable = () => {
   const { tvl } = useTvl();
 
   const [breakdown, setBreakdown] = useState<BreakdownData>();
+  const [lps, setLps] = useState<LpsData>();
 
   useEffect(() => {
     fetchBreakdown().then((data) => {
       setBreakdown(data);
+    });
+
+    fetchLps().then((data) => {
+      setLps(data);
     });
   }, []);
 
@@ -79,6 +94,9 @@ export const VaultTable = () => {
 
   useEffect(() => {
     const fetchVaultData = async () => {
+      if (!lps) {
+        return;
+      }
       const updatedVaults = await Promise.all(
         vaultData.map(async (vault) => {
           try {
@@ -121,6 +139,9 @@ export const VaultTable = () => {
               let depositedBalanceEth = "0";
               let walletBalanceEth = "0";
 
+              let depositedBalanceUSD = "0";
+              let walletBalanceUSD = "0";
+
               if (address && address != undefined) {
 
                 const balance = await readContract(config as Config, {
@@ -147,17 +168,22 @@ export const VaultTable = () => {
                   args: [address as Address],
                 }) as bigint;
 
-                console.log("V7 ", { balance, walletBalance })
-
                 depositedBalanceEth = parseFloat(formatEther(balance)).toFixed(9).replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "");
-                // const vaultBalanceEth0 = parseFloat(formatEther(vaultBalance)).toFixed(4).replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "");
                 walletBalanceEth = parseFloat(formatEther(walletBalance)).toFixed(9).replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "");
+
+                depositedBalanceUSD = (parseFloat(formatEther(balance)) * lps?.[vault.id]).toFixed(9).replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "");
+                walletBalanceUSD = (parseFloat(formatEther(walletBalance)) * lps?.[vault.id]).toFixed(9).replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "");
               }
               return {
                 ...vault,
                 wallet: walletBalanceEth,
+                walletUSD: walletBalanceUSD,
                 deposited: {
                   token0: parseFloat(depositedBalanceEth),
+                  token1: 0,
+                },
+                depositedUSD: {
+                  token0: parseFloat(depositedBalanceUSD),
                   token1: 0,
                 },
                 breakdown: breakdown ? breakdown[vault.id] : undefined,
@@ -175,7 +201,7 @@ export const VaultTable = () => {
     };
 
     fetchVaultData();
-  }, [address, refreshKey, breakdown, tvl]);
+  }, [address, refreshKey, breakdown, tvl, lps]);
 
   const handleVaultChange = (value: string) =>
     setVault(value === "personal" ? address || "all" : value);
@@ -288,13 +314,21 @@ export const VaultTable = () => {
                 </div>
               </TableCellWP>
 
-              <TableCell>{vault?.wallet ?? "0"}</TableCell>
+              <TableCell>
+                <div className="flex flex-col">
+                  <span className="font-light text-sm">{vault?.wallet ?? "0"}</span>
+                  <span className="font-light text-sm">${vault?.walletUSD ?? "0"}</span>
+                </div>
+              </TableCell>
 
               {vault.kind === "clm" ?
                 <TableCell>
                   {vault?.name.split("-")[0]} {vault?.deposited?.token0 ?? "0"} <br /> {vault?.name.split("-")[1]} {vault?.deposited?.token1 ?? "0"}
                 </TableCell> : <TableCell>
-                  {vault?.deposited?.token0 ?? "0"}
+                  <div className="flex flex-col">
+                    <span className="font-light text-sm">{vault?.deposited?.token0 ?? "0"}</span>
+                    <span className="font-light text-sm">${vault?.depositedUSD?.token0 ?? "0"}</span>
+                  </div>
                 </TableCell>
               }
 

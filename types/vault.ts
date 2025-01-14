@@ -1,11 +1,11 @@
 export type VaultData = {
-  id: string,
-  name: string,
-  vaultAddress: string,
-  token0Name: string,
-  token1Name: string,
-  imageSrc0?: string,
-  imageSrc1?: string
+  id: string;
+  name: string;
+  vaultAddress: string;
+  token0Name: string;
+  token1Name: string;
+  imageSrc0?: string;
+  imageSrc1?: string;
   kind: "clm" | "v7";
   chainId: number;
   lpUrl: string;
@@ -24,7 +24,12 @@ export type VaultDataPlus = {
   lpUrl: string;
   chainId: number;
   wallet: string;
+  walletUSD: string;
   deposited: {
+    token0: number;
+    token1: number;
+  };
+  depositedUSD: {
     token0: number;
     token1: number;
   };
@@ -39,5 +44,9 @@ export type BreakdownData = {
     totalApy: number;
     vaultApr?: number;
     tradingApr?: number;
-  }
+  };
+};
+
+export type LpsData = {
+  [vaultId: string]: number;
 };
