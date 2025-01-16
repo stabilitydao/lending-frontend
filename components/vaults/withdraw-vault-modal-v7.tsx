@@ -12,7 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { VaultData } from "@/types/vault";
 
-import { Input } from "@/components/ui/input";
+import { VaultInput } from "@/components/ui/vaultInput";
 import { Badge } from "@/components/ui/badge";
 import { InfoTooltip } from "@/components/ui/info-tooltip";
 import { PercentageBar } from "@/components/ui/percentage-bar";
@@ -22,7 +22,7 @@ import { Withdraw } from "@/components/icons/withdraw";
 import { useWriteContract } from 'wagmi'
 
 import { config } from '@/lib/config'
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Address, formatEther, parseEther } from 'viem';
 
 import BeefyVaultV7 from "@/config/BeefyVaultV7.json";
@@ -59,6 +59,9 @@ export const WithdrawVaultModalV7 = ({
     const { isSwitching, isWrongChain, switchToSonicMainnet } = useNetworkSwitch();
 
     const [inputSource, setInputSource] = useState<"input" | "slider">("input");
+
+    const [isFocused, setIsFocused] = useState(false);
+    const inputRef = useRef<HTMLInputElement>(null);
 
     const handleWithdraw = async () => {
         try {
@@ -257,33 +260,46 @@ export const WithdrawVaultModalV7 = ({
 
                         <div className="mt-4">
                             <span className="font-semibold">Available: {handleAvailableDisplay()}</span>
-                            <div className="relative flex items-center">
+                            <div
+                                className={`relative flex items-center bg-primary rounded-2xl px-3 py-2 w-full ${isFocused ? "focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2" : ""
+                                    }`}
+                                onClick={() => {
+                                    inputRef.current?.focus();
+                                    setIsFocused(true);
+                                }}
+                            >
                                 <Button
-                                    size={"sm"}
+                                    size="sm"
                                     className="absolute left-2 h-6 z-10 bg-purple-200 text-primary"
-                                    onClick={() => setAmount(handleAvailableDisplay())}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setAmount(handleAvailableDisplay());
+                                    }}
                                 >
                                     MAX
                                 </Button>
-                                <Input
-                                    className="bg-primary placeholder:text-accent text-right text-accent rounded-2xl pl-16 pr-[9.0rem]"
+                                <VaultInput
+                                    ref={inputRef}
+                                    className="bg-primary placeholder:text-accent text-right text-accent pl-16 pr-[0.5rem] h-full"
                                     placeholder="0.00"
                                     value={amount}
                                     onChange={handleShareChange}
+                                    onFocus={() => setIsFocused(true)}
+                                    onBlur={() => setIsFocused(false)}
                                 />
-                                <div className="absolute right-2 flex items-center">
+                                <div className="flex items-center w-max ml-2">
                                     <Badge
                                         variant="accent"
-                                        className="rounded-lg flex items-center gap-2 px-1"
+                                        className="rounded-lg flex items-center gap-2 px-2 py-1 whitespace-nowrap"
+                                        onClick={(e) => e.stopPropagation()}
                                     >
                                         <DoubleAvatar
                                             firstSrc={vault?.imageSrc1!}
                                             secondSrc={vault?.imageSrc0!}
                                             firstAlt={vault?.name!}
                                             secondAlt={vault?.name!}
-                                            size={"small"}
+                                            size="small"
                                         />
-
                                         {vault?.token0Name}-{vault?.token1Name}
                                     </Badge>
                                 </div>
