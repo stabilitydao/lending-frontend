@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { VaultData } from "@/types/vault";
-import { Input } from "@/components/ui/input";
+import { VaultInput } from "@/components/ui/vaultInput";
 import { Badge } from "@/components/ui/badge";
 import { InfoTooltip } from "@/components/ui/info-tooltip";
 import { PercentageBar } from "@/components/ui/percentage-bar";
@@ -21,7 +21,7 @@ import { waitForTransactionReceipt } from "@wagmi/core";
 import { useWriteContract } from 'wagmi'
 import { useSwitchChain } from 'wagmi'
 import { config } from '@/lib/config'
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Address, formatEther, parseEther } from 'viem';
 import { cn } from "@/lib/utils";
 import { readContract } from '@wagmi/core'
@@ -65,6 +65,9 @@ export const DepositVaultModalV7 = ({
     const [inputSource, setInputSource] = useState<"input" | "slider">("input");
 
     const { isSwitching, isWrongChain, switchToSonicMainnet } = useNetworkSwitch();
+
+    const [isFocused, setIsFocused] = useState(false);
+    const inputRef = useRef<HTMLInputElement>(null);
 
     const checkAllowance = async (tokenAddress: string, spenderAddress: string) => {
         try {
@@ -376,8 +379,8 @@ export const DepositVaultModalV7 = ({
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-6 pb-10">
                         <DoubleAvatar
-                            firstSrc={vault?.imageSrc0!}
-                            secondSrc={vault?.imageSrc1!}
+                            firstSrc={vault?.imageSrc1!}
+                            secondSrc={vault?.imageSrc0!}
                             firstAlt={vault?.token0Name!}
                             secondAlt={vault?.token1Name!}
                         />{" "}
@@ -395,24 +398,38 @@ export const DepositVaultModalV7 = ({
                         <div className="flex flex-col gap-2">
                             <div>
                                 <span className="font-semibold">Available: {handleAvailableDisplay()}</span>
-                                <div className="relative flex items-center">
+                                <div
+                                    className={`relative flex items-center bg-primary rounded-2xl px-3 py-2 w-full ${isFocused ? "focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2" : ""
+                                        }`}
+                                    onClick={() => {
+                                        inputRef.current?.focus();
+                                        setIsFocused(true);
+                                    }}
+                                >
                                     <Button
                                         size={"sm"}
                                         className="absolute left-2 h-6 z-10 bg-purple-200 text-primary"
-                                        onClick={() => setAmount(parseFloat(availableBalance).toFixed(10).replace(/\.?0+$/, ""))}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setAmount(parseFloat(availableBalance).toFixed(10).replace(/\.?0+$/, ""))
+                                        }}
                                     >
                                         MAX
                                     </Button>
-                                    <Input
-                                        className="bg-primary placeholder:text-accent text-right text-accent rounded-2xl pl-16 pr-[9rem]"
+                                    <VaultInput
+                                        ref={inputRef}
+                                        className="bg-primary placeholder:text-accent text-right text-accent pl-16 pr-[0.5rem] h-full"
                                         placeholder="0.00"
                                         value={amount}
                                         onChange={handleAmountChange}
+                                        onFocus={() => setIsFocused(true)}
+                                        onBlur={() => setIsFocused(false)}
                                     />
-                                    <div className="absolute right-2 flex items-center">
+                                    <div className="flex items-center w-max ml-2">
                                         <Badge
                                             variant="accent"
-                                            className="rounded-lg flex items-center gap-2 px-1"
+                                            className="rounded-lg flex items-center gap-2 px-2 py-1 whitespace-nowrap"
+                                            onClick={(e) => e.stopPropagation()}
                                         >
                                             <DoubleAvatar
                                                 firstSrc={vault?.imageSrc1!}
@@ -421,7 +438,6 @@ export const DepositVaultModalV7 = ({
                                                 secondAlt={vault?.name!}
                                                 size={"small"}
                                             />
-
                                             {vault.token0Name}-{vault.token1Name}
                                         </Badge>
                                     </div>
