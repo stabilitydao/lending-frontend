@@ -143,6 +143,32 @@
         "lpUrl": "https://equalizer.exchange/liquidity/0x04F1b3Ce71Cde381097A0601213DEF55CF336589/add"
     },
     {
+        "id": "equalizer-ws-thc",
+        "name": "wS-THC",
+        "vaultAddress": "0x89fcD4093719e1d539F4A7953c53020C7b6d2e2E",
+        "token0Name": "wS",
+        "token1Name": "THC",
+        "imageSrc0": "/icons/coins/sonic.png",
+        "imageSrc1": "/icons/coins/thc.png",
+        "dexImage": "/icons/dex/equalizer.svg",
+        "kind": "v7",
+        "chainId": 146,
+        "lpUrl": "https://equalizer.exchange/liquidity/0x3E6daa42268a5097De68ab39e48B860B9B55f589/add "
+    },
+    {
+        "id": "equalizer-ws-whale",
+        "name": "wS-WHALE",
+        "vaultAddress": "0x85C404ea674651851daA1e62A33bF145b1153E65",
+        "token0Name": "wS",
+        "token1Name": "WHALE",
+        "imageSrc0": "/icons/coins/sonic.png",
+        "imageSrc1": "/icons/coins/whale.png",
+        "dexImage": "/icons/dex/equalizer.svg",
+        "kind": "v7",
+        "chainId": 146,
+        "lpUrl": "https://equalizer.exchange/liquidity/0x8D2b12D0DC9BB13C62d213EFbEa10fD0bfCe3C88/add "
+    },
+    {
         "id": "beets-ws-sts",
         "name": "Staked Sonic Symphony",
         "vaultAddress": "0x02D742f182D2a588c54E7DC998aD19f9D795bC51",

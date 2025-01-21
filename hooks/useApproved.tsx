@@ -32,14 +32,13 @@ export const useApproved = (
       const amountInWei = parseUnits(inputAmount, 6);
       const currentChain = chains.find((c) => c.id === chainId);
       // Create public client based on connectedChain
-      console.log("address: ", address);
       client = createPublicClient({
         chain: currentChain || arbitrum, // Default to Arbitrum if not set
         transport: http(
           RPC_URLS[
-            currentChain?.name
-              .replace(/\s+/g, "")
-              .toLowerCase() as keyof typeof RPC_URLS
+          currentChain?.name
+            .replace(/\s+/g, "")
+            .toLowerCase() as keyof typeof RPC_URLS
           ],
         ),
       });
