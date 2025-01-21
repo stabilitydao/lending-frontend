@@ -31,16 +31,19 @@ import { ExternalLinkIcon } from "lucide-react";
 import { useNetworkSwitch } from "@/hooks/useNetworkSwitch";
 import { setBalance } from "viem/actions";
 
+interface WithdrawVaultModalV7Props {
+    vault: VaultData;
+    lps?: number
+    children?: React.ReactNode;
+    onApprove?: () => void;
+}
 
 export const WithdrawVaultModalV7 = ({
     vault,
+    lps,
     children,
     onApprove,
-}: {
-    vault: VaultData;
-    children?: React.ReactNode;
-    onApprove?: () => void;
-}) => {
+}: WithdrawVaultModalV7Props) => {
     const { address } = useAccount();
     const [availableBalance, setAvailableBalance] = useState<string>("0");
     const { writeContractAsync } = useWriteContract();
@@ -56,6 +59,7 @@ export const WithdrawVaultModalV7 = ({
     const [refreshKey, setRefreshKey] = useState(0);
 
     const [calculatedShares, setCalculatedShares] = useState<string | null>(null);
+    const [calculatedSharesUSD, setCalculatedSharesUSD] = useState<string | null>(null);
     const { isSwitching, isWrongChain, switchToSonicMainnet } = useNetworkSwitch();
 
     const [inputSource, setInputSource] = useState<"input" | "slider">("input");
@@ -78,7 +82,6 @@ export const WithdrawVaultModalV7 = ({
                 throw new Error("Transaction hash is null or undefined");
             }
 
-            console.log('Withdraw:', `https://explorer.soniclabs.com/tx/${result}`);
             setTransactionHash(result);
             const receipt = await waitForTransactionReceipt(config as Config, { hash: result as `0x${string}` });
 
@@ -111,8 +114,6 @@ export const WithdrawVaultModalV7 = ({
                 args: [address as Address],
             });
 
-            console.log("Balance: ", balance)
-
             // setAvailableBalance(formatEther(balance as bigint));
             formatAvailableBalance(formatEther(balance as bigint))
 
@@ -131,8 +132,14 @@ export const WithdrawVaultModalV7 = ({
                 functionName: "getPricePerFullShare",
             }) as bigint;
 
-            const shares = parseFloat(parseEther(amount).toString()) / parseFloat(vaultPrice.toString());
+            const shares = parseFloat(amount) * parseFloat(formatEther(vaultPrice));
             setCalculatedShares(shares.toFixed(16).replace(/\.?0+$/, ""));
+
+            if (lps) {
+                setCalculatedSharesUSD((shares * lps * parseFloat(formatEther(vaultPrice))).toFixed(2).replace(/\.?0+$/, ""));
+            } else {
+                setCalculatedSharesUSD("-")
+            }
         } catch (err) {
             console.error("Error fetching price per share:", err);
         }
@@ -331,7 +338,11 @@ export const WithdrawVaultModalV7 = ({
 
                                             {vault?.token0Name}-{vault?.token1Name}
                                         </Badge>
-                                        <span>{calculatedShares}</span>
+
+                                        <div className="flex flex-col">
+                                            <span>{calculatedShares}</span>
+                                            <span>${calculatedSharesUSD}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

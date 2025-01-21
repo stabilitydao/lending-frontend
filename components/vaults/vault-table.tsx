@@ -127,8 +127,8 @@ export const VaultTable = () => {
                 ...vault,
                 wallet: walletBalanceEth,
                 deposited: {
-                  token0: parseFloat(vaultBalanceEth0),
-                  token1: parseFloat(vaultBalanceEth1),
+                  token0: vaultBalanceEth0,
+                  token1: vaultBalanceEth1,
                 },
                 breakdown: breakdown ? breakdown[vault.id] : undefined,
                 tvl: tvl?.["146"] ? tvl["146"][vault.id] : 0
@@ -168,23 +168,29 @@ export const VaultTable = () => {
                   args: [address as Address],
                 }) as bigint;
 
+                const vaultPrice = await readContract(config as Config, {
+                  abi: BeefyVaultV7.abi,
+                  address: vault.vaultAddress as Address,
+                  functionName: "getPricePerFullShare",
+                }) as bigint;
+
                 depositedBalanceEth = parseFloat(formatEther(balance)).toFixed(9).replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "");
                 walletBalanceEth = parseFloat(formatEther(walletBalance)).toFixed(9).replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "");
 
-                depositedBalanceUSD = (parseFloat(formatEther(balance)) * lps?.[vault.id]).toFixed(2).replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "");
-                walletBalanceUSD = (parseFloat(formatEther(walletBalance)) * lps?.[vault.id]).toFixed(2).replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "");
+                depositedBalanceUSD = (parseFloat(formatEther(balance)) * lps?.[vault.id] * parseFloat(formatEther(vaultPrice))).toFixed(2).replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "");
+                walletBalanceUSD = (parseFloat(formatEther(walletBalance)) * lps?.[vault.id] * parseFloat(formatEther(vaultPrice))).toFixed(2).replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "");
               }
               return {
                 ...vault,
                 wallet: walletBalanceEth,
                 walletUSD: walletBalanceUSD,
                 deposited: {
-                  token0: parseFloat(depositedBalanceEth),
-                  token1: 0,
+                  token0: depositedBalanceEth,
+                  token1: "0",
                 },
                 depositedUSD: {
-                  token0: parseFloat(depositedBalanceUSD),
-                  token1: 0,
+                  token0: depositedBalanceUSD,
+                  token1: "0",
                 },
                 breakdown: breakdown ? breakdown[vault.id] : undefined,
                 tvl: tvl?.["146"] ? tvl["146"][vault.id] : 0
@@ -345,8 +351,8 @@ export const VaultTable = () => {
                 <DepositVaultModalCLM vault={vault} onApprove={() => setRefreshKey((prevKey) => prevKey + 1)} />
                 <WithdrawVaultModalCLM vault={vault} onApprove={() => setRefreshKey((prevKey) => prevKey + 1)} />
               </TableCell> : <TableCell className="flex gap-10 justify-center items-center">
-                <DepositVaultModalV7 vault={vault} onApprove={() => setRefreshKey((prevKey) => prevKey + 1)} />
-                <WithdrawVaultModalV7 vault={vault} onApprove={() => setRefreshKey((prevKey) => prevKey + 1)} />
+                <DepositVaultModalV7 vault={vault} lps={lps?.[vault.id]} onApprove={() => setRefreshKey((prevKey) => prevKey + 1)} />
+                <WithdrawVaultModalV7 vault={vault} lps={lps?.[vault.id]} onApprove={() => setRefreshKey((prevKey) => prevKey + 1)} />
               </TableCell>}
 
             </TableRow>

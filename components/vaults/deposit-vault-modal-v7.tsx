@@ -31,15 +31,19 @@ import { Deposit } from "../icons/deposit";
 import { ExternalLinkIcon } from "lucide-react";
 import { useNetworkSwitch } from "@/hooks/useNetworkSwitch";
 
-export const DepositVaultModalV7 = ({
-    vault,
-    children,
-    onApprove,
-}: {
+interface DepositVaultModalV7Props {
     vault: VaultData;
+    lps?: number
     children?: React.ReactNode;
     onApprove?: () => void;
-}) => {
+}
+
+export const DepositVaultModalV7 = ({
+    vault,
+    lps,
+    children,
+    onApprove,
+}: DepositVaultModalV7Props) => {
     const { isDisconnected, address } = useAccount();
 
     const { writeContractAsync } = useWriteContract();
@@ -60,6 +64,7 @@ export const DepositVaultModalV7 = ({
     const [transactionHash, setTransactionHash] = useState<string | null>(null);
 
     const [calculatedShares, setCalculatedShares] = useState<string | null>(null);
+    const [calculatedSharesUSD, setCalculatedSharesUSD] = useState<string | null>(null);
     const [refreshKey, setRefreshKey] = useState(0);
 
     const [inputSource, setInputSource] = useState<"input" | "slider">("input");
@@ -71,7 +76,6 @@ export const DepositVaultModalV7 = ({
 
     const checkAllowance = async (tokenAddress: string, spenderAddress: string) => {
         try {
-            console.log('Checking allowance for', { tokenAddress, spenderAddress })
 
             const currentAllowance = await readContract(config as Config, {
                 abi: BeefyVaultV7.abi,
@@ -79,8 +83,6 @@ export const DepositVaultModalV7 = ({
                 functionName: 'allowance',
                 args: [address as Address, spenderAddress as Address],
             });
-
-            console.log('Result for:', { tokenAddress, currentAllowance });
 
             return currentAllowance as unknown as bigint;
         } catch (err) {
@@ -92,11 +94,8 @@ export const DepositVaultModalV7 = ({
     const handleAllowance = async () => {
         const currentAllowance0 = await checkAllowance(tokenAddress, vault.vaultAddress);
 
-        console.log({ currentAllowance0, want0: parseEther(amount) })
-
         if (currentAllowance0 < parseEther(amount)) {
             setRequiresApproval(true);
-            console.log('Requires approval for token0')
         } else {
             setRequiresApproval(false);
         }
@@ -111,7 +110,6 @@ export const DepositVaultModalV7 = ({
                 args: [spenderAddress as Address, parseEther(amount.toString())],
             });
 
-            console.log("Approval transaction confirmed:", tx);
             setTransactionHash(tx);
             return tx;
         } catch (err) {
@@ -153,8 +151,6 @@ export const DepositVaultModalV7 = ({
 
             const depositAmount = parseEther(amount.toString());
 
-            console.log("Deposited val: ", depositAmount)
-
             const result = await writeContractAsync({
                 abi: BeefyVaultV7.abi,
                 address: vault.vaultAddress as Address,
@@ -166,12 +162,9 @@ export const DepositVaultModalV7 = ({
                 throw new Error("Transaction hash is null or undefined");
             }
 
-            console.log('Deposit:', `https://explorer.soniclabs.com/tx/${result}`);
             setTransactionHash(result);
 
             const receipt = await waitForTransactionReceipt(config as Config, { hash: result as `0x${string}` });
-
-            console.log("Transaction confirmed:", receipt);
 
             setRefreshKey((prevKey) => prevKey + 1);
 
@@ -197,7 +190,6 @@ export const DepositVaultModalV7 = ({
                 functionName: 'depositAll'
             });
 
-            console.log("DepositAll executed successfully:", result);
         } catch (error) {
             console.error("Error executing depositAll:", error);
         }
@@ -272,6 +264,12 @@ export const DepositVaultModalV7 = ({
 
             const shares = parseFloat(parseEther(amount).toString()) / parseFloat(vaultPrice.toString());
             setCalculatedShares(shares.toFixed(16).replace(/\.?0+$/, ""));
+
+            if (lps) {
+                setCalculatedSharesUSD((shares * lps * parseFloat(formatEther(vaultPrice))).toFixed(2).replace(/\.?0+$/, ""));
+            } else {
+                setCalculatedSharesUSD("-")
+            }
         } catch (err) {
             console.error("Error fetching price per share:", err);
         }
@@ -472,7 +470,10 @@ export const DepositVaultModalV7 = ({
                                             {vault?.token0Name}-{vault?.token1Name}
                                         </Badge>
 
-                                        <span>{calculatedShares}</span>
+                                        <div className="flex flex-col">
+                                            <span>{calculatedShares}</span>
+                                            <span>${calculatedSharesUSD}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
