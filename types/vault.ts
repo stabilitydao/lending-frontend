@@ -26,12 +26,12 @@ export type VaultDataPlus = {
   wallet: string;
   walletUSD: string;
   deposited: {
-    token0: number;
-    token1: number;
+    token0: string;
+    token1: string;
   };
   depositedUSD: {
-    token0: number;
-    token1: number;
+    token0: string;
+    token1: string;
   };
   tvl: number;
 } & BreakdownData;
