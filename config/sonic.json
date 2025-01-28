@@ -171,7 +171,7 @@
     {
         "id": "swapx-ichi-ws-swapx-ws",
         "name": "wS-SWPx (wS)",
-        "vaultAddress": "0x6B8bEC87ABA964310CE1a0fcB47a5f240B6b018b",
+        "vaultAddress": "0x183d7f69F581A97A5343dF8828b1303bf9eC27b0",
         "token0Name": "wS",
         "token1Name": "SWPx",
         "imageSrc0": "/icons/coins/ws_token.png",
@@ -184,7 +184,7 @@
     {
         "id": "swapx-ichi-ws-usdc-ws",
         "name": "wS-USDC.e (wS)",
-        "vaultAddress": "0xABD10FA20928d51a4Cc1d3d90efBe846Db1B607c",
+        "vaultAddress": "0xb57A91b7DD83E2E3B7cDf17D0912B03Bc0bf7327",
         "token0Name": "wS",
         "token1Name": "USDC.e",
         "imageSrc0": "/icons/coins/ws_token.png",
@@ -197,7 +197,7 @@
     {
         "id": "swapx-ichi-ws-sacra-sacra",
         "name": "wS-SACRA (SACRA)",
-        "vaultAddress": "0xF49Cc96cC98B9638013d5ce4f31B542725B86447",
+        "vaultAddress": "0xE253373E5e424BE330DC41837054462f6e6d66aE",
         "token0Name": "wS",
         "token1Name": "SACRA",
         "imageSrc0": "/icons/coins/ws_token.png",
@@ -210,7 +210,7 @@
     {
         "id": "swapx-ichi-usdc-swapx-usdc",
         "name": "USDC.e-SWPx (USDC)",
-        "vaultAddress": "0x0B970F777acAF035c5A28D2317089B62D40d3B97",
+        "vaultAddress": "0xc90781e2fbBb748Dae79EE179173eF0C783476e8",
         "token0Name": "USDC.e",
         "token1Name": "SWPx",
         "imageSrc0": "/icons/coins/usdc.png",
@@ -223,7 +223,7 @@
     {
         "id": "swapx-ichi-usdc-weth-usdc",
         "name": "USDC.e-wETH (USDC)",
-        "vaultAddress": "0x183467269787dE70D3c769a9aEDb927AA461cBb5",
+        "vaultAddress": "0x1d9cf65B2468075A38fFE5d32D83E31AC1539Ccc",
         "token0Name": "USDC.e",
         "token1Name": "wETH",
         "imageSrc0": "/icons/coins/usdc.png",
@@ -235,12 +235,12 @@
     },
     {
         "id": "swapx-ichi-usdc-weth-weth",
-        "name": "wETH-USDC.e (wETH)",
-        "vaultAddress": "0x8Fa22fab3E83F48125735A3E51f25B8E85cE91b3",
-        "token0Name": "wETH",
-        "token1Name": "USDC.e",
-        "imageSrc0": "/icons/coins/ethereum.png",
-        "imageSrc1": "/icons/coins/usdc.png",
+        "name": "USDC.e-wETH (wETH)",
+        "vaultAddress": "0x953fB377Ef19D29117C4F7020F4492a1692A493a",
+        "token0Name": "USDC.e",
+        "token1Name": "wETH",
+        "imageSrc0": "/icons/coins/usdc.png",
+        "imageSrc1": "/icons/coins/ethereum.png",
         "dexImage": "/icons/dex/SwapX_Black.svg",
         "kind": "v7",
         "chainId": 146,
@@ -249,7 +249,7 @@
     {
         "id": "swapx-ichi-ws-sceth-ws",
         "name": "wS-scETH (wS)",
-        "vaultAddress": "0x2F40E631594150977e704B3815B9A1ed8fDCfb27",
+        "vaultAddress": "0xD6141D887E6A16f7AAbdFAf77ACfFC1b3Ee27be5",
         "token0Name": "wS",
         "token1Name": "scETH",
         "imageSrc0": "/icons/coins/ws_token.png",
@@ -262,7 +262,7 @@
     {
         "id": "swapx-ichi-usdc-scusd-usdc",
         "name": "USDC.e-scUSD (USDC)",
-        "vaultAddress": "0x739101a229456Bb3b4347Faa539E3C9eFf0d01dd",
+        "vaultAddress": "0xC36F478888dDDfa1a50f27442c610ac5dbA8C22A",
         "token0Name": "USDC.e",
         "token1Name": "scUSD",
         "imageSrc0": "/icons/coins/usdc.png",
@@ -275,7 +275,7 @@
     {
         "id": "swapx-ichi-ws-weth-ws",
         "name": "wS-wETH (wS)",
-        "vaultAddress": "0xF64A0e8F4fefFa0CC260c6A0bb881f1e6a8BF07F",
+        "vaultAddress": "0xB59f7edC55760DB39b4a69dc44eb0B34d66589d6",
         "token0Name": "wS",
         "token1Name": "wETH",
         "imageSrc0": "/icons/coins/ws_token.png",
@@ -288,7 +288,7 @@
     {
         "id": "swapx-ichi-ws-sts-ws",
         "name": "wS-stS (wS)",
-        "vaultAddress": "0x153E7314C52cB05581478C7e48265f344C8f8634",
+        "vaultAddress": "0xd50190C922f252dA3A8106f527F41dFFe1B16067",
         "token0Name": "wS",
         "token1Name": "stS",
         "imageSrc0": "/icons/coins/ws_token.png",
@@ -301,7 +301,7 @@
     {
         "id": "swapx-ichi-usdc-sts-usdc",
         "name": "USDC.e-stS (USDC)",
-        "vaultAddress": "0x241B91B8A75169679bB3CaD7Ac7CDd015396D11c",
+        "vaultAddress": "0x51D5871a9c865FEA9fAF86e48Cc5e999106baEe4",
         "token0Name": "USDC.e",
         "token1Name": "stS",
         "imageSrc0": "/icons/coins/usdc.png",
@@ -314,7 +314,7 @@
     {
         "id": "swapx-ichi-ws-os-os",
         "name": "wS-oS (oS)",
-        "vaultAddress": "0xcf9d6BA06da54b28aA063f0f1E076FFBb623D7d4",
+        "vaultAddress": "0xfe4812f9e6c7a098CBA5c43B8F2c4D9F87a4D6a7",
         "token0Name": "wS",
         "token1Name": "oS",
         "imageSrc0": "/icons/coins/ws_token.png",
@@ -327,7 +327,7 @@
     {
         "id": "swapx-ichi-usdc-scusd-scusd",
         "name": "USDC.e-scUSD (scUSD)",
-        "vaultAddress": "0xd4602A27F88042fF8D0A24bD1bE51f51Fa3cff2C",
+        "vaultAddress": "0x6De36C1Af417A438a69d4AAa3655022E52bbC606",
         "token0Name": "USDC.e",
         "token1Name": "scUSD",
         "imageSrc0": "/icons/coins/usdc.png",
@@ -340,7 +340,7 @@
     {
         "id": "swapx-ichi-ws-os-ws",
         "name": "wS-oS (wS)",
-        "vaultAddress": "0xd95FFE147760EC2277f714EB41e449D9B90D6097",
+        "vaultAddress": "0xF58653cCE3E68F769A75924dd83dD3bd24C04104",
         "token0Name": "wS",
         "token1Name": "oS",
         "imageSrc0": "/icons/coins/ws_token.png",
@@ -353,7 +353,7 @@
     {
         "id": "swapx-ichi-ws-sts-sts",
         "name": "wS-stS (stS)",
-        "vaultAddress": "0x3641eAF770cD2e97b36Dd3F38B60E33a8226fa21",
+        "vaultAddress": "0xf462864B174d7A084881A6F1E61553318E3D6471",
         "token0Name": "wS",
         "token1Name": "stS",
         "imageSrc0": "/icons/coins/ws_token.png",
