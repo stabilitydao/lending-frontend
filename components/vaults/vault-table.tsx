@@ -178,7 +178,7 @@ export const VaultTable = () => {
                 walletBalanceEth = parseFloat(formatEther(walletBalance)).toFixed(9).replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "");
 
                 depositedBalanceUSD = (parseFloat(formatEther(balance)) * lps?.[vault.id] * parseFloat(formatEther(vaultPrice))).toFixed(2).replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "");
-                walletBalanceUSD = (parseFloat(formatEther(walletBalance)) * parseFloat(formatEther(vaultPrice))).toFixed(2).replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "");
+                walletBalanceUSD = (parseFloat(formatEther(walletBalance)) * lps?.[vault.id]).toFixed(2).replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "");
               }
               return {
                 ...vault,
