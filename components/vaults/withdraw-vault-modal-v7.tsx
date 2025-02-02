@@ -136,7 +136,7 @@ export const WithdrawVaultModalV7 = ({
             setCalculatedShares(shares.toFixed(16).replace(/\.?0+$/, ""));
 
             if (lps) {
-                setCalculatedSharesUSD((shares * lps * parseFloat(formatEther(vaultPrice))).toFixed(2).replace(/\.?0+$/, ""));
+                setCalculatedSharesUSD((shares * lps).toFixed(2).replace(/\.?0+$/, ""));
             } else {
                 setCalculatedSharesUSD("-")
             }
