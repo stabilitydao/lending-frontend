@@ -25,6 +25,7 @@ import { useEffect, useRef, useState } from "react";
 import { Address, formatEther, parseEther } from 'viem';
 import { cn } from "@/lib/utils";
 import { readContract } from '@wagmi/core'
+import Decimal from 'decimal.js';
 
 import BeefyVaultV7 from "@/config/BeefyVaultV7.json";
 import { Deposit } from "../icons/deposit";
@@ -44,6 +45,8 @@ export const DepositVaultModalV7 = ({
     children,
     onApprove,
 }: DepositVaultModalV7Props) => {
+    Decimal.set({ precision: 50 });
+
     const { isDisconnected, address } = useAccount();
 
     const { writeContractAsync } = useWriteContract();
@@ -292,15 +295,18 @@ export const DepositVaultModalV7 = ({
     };
 
     const handleAvailableDisplay = () => {
-        const availableAmount = parseFloat(availableBalance);
-        const truncatedAmount = Math.floor(availableAmount * Math.pow(10, 10)) / Math.pow(10, 10);
-        return truncatedAmount.toFixed(10).replace(/\.?0+$/, "");
+        const [integerPart, fractionalPart] = availableBalance.split('.');
+        const truncatedFractionalPart = fractionalPart ? fractionalPart.slice(0, 10) : '';
+        const truncatedAmount = `${integerPart}.${truncatedFractionalPart}`;
+        return truncatedAmount.replace(/\.?0+$/, '').replace(/\.$/, "");
     }
 
     const formatAvailableBalance = (availableTemp: string) => {
-        const availableAmount = parseFloat(availableTemp);
-        const truncatedAmount = Math.floor(availableAmount * Math.pow(10, 10)) / Math.pow(10, 10);
-        setAvailableBalance(truncatedAmount.toFixed(10).replace(/\.?0+$/, ""));
+        const [integerPart, fractionalPart] = availableTemp.split('.');
+        const truncatedFractionalPart = fractionalPart ? fractionalPart.slice(0, 10) : '';
+        const truncatedAmount = `${integerPart}.${truncatedFractionalPart}`;
+
+        setAvailableBalance(truncatedAmount.replace(/\.?0+$/, '').replace(/\.$/, ""));
     }
 
     // TODO: debounce
@@ -315,23 +321,31 @@ export const DepositVaultModalV7 = ({
 
     useEffect(() => {
         if (inputSource === "slider") {
-            const availableAmount = parseFloat(availableBalance);
-            const newAmount = (availableAmount * (percentage / 100));
+            const availableAmount = new Decimal(availableBalance);
+            const percentageDecimal = new Decimal(percentage);
+            const newAmount = availableAmount.mul(percentageDecimal.div(100));
 
-            const truncatedAmount = Math.floor(newAmount * Math.pow(10, 10)) / Math.pow(10, 10);
-            const formattedAmount = truncatedAmount.toFixed(10).replace(/\.?0+$/, "");
+            const truncatedAmount = newAmount.toDecimalPlaces(10);
+            const formattedAmount = truncatedAmount.toFixed(10).replace(/\.?0+$/, "");;
 
             setAmount(formattedAmount);
         }
     }, [percentage, availableBalance]);
 
     useEffect(() => {
-        const availableAmount = parseFloat(availableBalance);
-        const newPercentage = (parseFloat(amount) / availableAmount) * 100;
-        if (!isNaN(newPercentage)) {
-            setPercentage(Math.min(Math.max(newPercentage, 0), 100));
+        if (amount) {
+            const availableAmount = new Decimal(availableBalance);
+            const amountDecimal = new Decimal(amount);
+            const newPercentage = amountDecimal.div(availableAmount).mul(100);
+
+            if (!isNaN(newPercentage.toNumber())) {
+                setPercentage(Math.min(Math.max(newPercentage.toNumber(), 0), 100));
+            }
+        } else {
+            setPercentage(0);
         }
     }, [amount, availableBalance]);
+
 
     useEffect(() => {
         const validateAmounts = () => {
@@ -409,7 +423,7 @@ export const DepositVaultModalV7 = ({
                                         className="absolute left-2 h-6 z-10 bg-purple-200 text-primary"
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            setAmount(parseFloat(availableBalance).toFixed(10).replace(/\.?0+$/, ""))
+                                            setAmount(availableBalance)
                                         }}
                                     >
                                         MAX
