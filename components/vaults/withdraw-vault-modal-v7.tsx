@@ -20,6 +20,7 @@ import { DoubleAvatar } from "@/components/ui/double-avatar";
 import { Withdraw } from "@/components/icons/withdraw";
 
 import { useWriteContract } from 'wagmi'
+import Decimal from 'decimal.js';
 
 import { config } from '@/lib/config'
 import { useEffect, useState, useRef } from "react";
@@ -44,6 +45,8 @@ export const WithdrawVaultModalV7 = ({
     children,
     onApprove,
 }: WithdrawVaultModalV7Props) => {
+    Decimal.set({ precision: 50 });
+
     const { address } = useAccount();
     const [availableBalance, setAvailableBalance] = useState<string>("0");
     const { writeContractAsync } = useWriteContract();
@@ -146,15 +149,18 @@ export const WithdrawVaultModalV7 = ({
     };
 
     const handleAvailableDisplay = () => {
-        const availableAmount = parseFloat(availableBalance);
-        const truncatedAmount = Math.floor(availableAmount * Math.pow(10, 10)) / Math.pow(10, 10);
-        return truncatedAmount.toFixed(10).replace(/\.?0+$/, "");
+        const [integerPart, fractionalPart] = availableBalance.split('.');
+        const truncatedFractionalPart = fractionalPart ? fractionalPart.slice(0, 10) : '';
+        const truncatedAmount = `${integerPart}.${truncatedFractionalPart}`;
+        return truncatedAmount.replace(/\.?0+$/, '').replace(/\.$/, "");
     }
 
     const formatAvailableBalance = (availableTemp: string) => {
-        const availableAmount = parseFloat(availableTemp);
-        const truncatedAmount = Math.floor(availableAmount * Math.pow(10, 10)) / Math.pow(10, 10);
-        setAvailableBalance(truncatedAmount.toFixed(10).replace(/\.?0+$/, ""));
+        const [integerPart, fractionalPart] = availableTemp.split('.');
+        const truncatedFractionalPart = fractionalPart ? fractionalPart.slice(0, 10) : '';
+        const truncatedAmount = `${integerPart}.${truncatedFractionalPart}`;
+
+        setAvailableBalance(truncatedAmount.replace(/\.?0+$/, '').replace(/\.$/, ""));
     }
 
     const handleSetup = async () => {
@@ -183,21 +189,28 @@ export const WithdrawVaultModalV7 = ({
 
     useEffect(() => {
         if (inputSource === "slider") {
-            const availableAmount = parseFloat(availableBalance);
-            let newAmount = (availableAmount * (percentage / 100));
+            const availableAmount = new Decimal(availableBalance);
+            const percentageDecimal = new Decimal(percentage);
+            const newAmount = availableAmount.mul(percentageDecimal.div(100));
 
-            const truncatedAmount = Math.floor(newAmount * Math.pow(10, 10)) / Math.pow(10, 10);
-            const formattedAmount = truncatedAmount.toFixed(10).replace(/\.?0+$/, "");
+            const truncatedAmount = newAmount.toDecimalPlaces(10);
+            const formattedAmount = truncatedAmount.toFixed(10).replace(/\.?0+$/, "");;
 
             setAmount(formattedAmount);
         }
     }, [percentage]);
 
     useEffect(() => {
-        const availableAmount = parseFloat(availableBalance);
-        const newPercentage = (parseFloat(amount) / availableAmount) * 100;
-        if (!isNaN(newPercentage)) {
-            setPercentage(Math.min(Math.max(newPercentage, 0), 100));
+        if (amount) {
+            const availableAmount = new Decimal(availableBalance);
+            const amountDecimal = new Decimal(amount);
+            const newPercentage = amountDecimal.div(availableAmount).mul(100);
+
+            if (!isNaN(newPercentage.toNumber())) {
+                setPercentage(Math.min(Math.max(newPercentage.toNumber(), 0), 100));
+            }
+        } else {
+            setPercentage(0);
         }
     }, [amount]);
 
