@@ -28,10 +28,10 @@ import {
 import { readContract } from "viem/actions";
 import { base, arbitrum, fantom } from "viem/chains";
 import { useToast } from "../ui/use-toast";
-import { useContractAddress } from "@/hooks/old/useContractAddress";
-import { useApproved } from "@/hooks/old/useApproved";
-import { useBalance } from "@/hooks/old/useBalance";
-import { useHardCap } from "@/hooks/old/useHardCap";
+import { useContractAddress } from "@/hooks/useContractAddress";
+import { useApproved } from "@/hooks/useApproved";
+import { useBalance } from "@/hooks/useBalance";
+import { useHardCap } from "@/hooks/useHardCap";
 import {
   PresaleContractABIArbitrum,
   PresaleContractABIBase,
@@ -39,7 +39,7 @@ import {
 } from "@/lib/constants";
 import { USDC_ABI, RPC_URLS } from "@/lib/constants";
 import { PresaleBonus } from "@/lib/constants";
-import { usePresaleBonus } from "@/hooks/old/usePresaleBonus";
+import { usePresaleBonus } from "@/hooks/usePresaleBonus";
 import { useAllowance } from "@/hooks";
 
 interface Props {
