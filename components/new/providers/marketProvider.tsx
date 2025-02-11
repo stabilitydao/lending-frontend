@@ -10,7 +10,9 @@ interface MarketContextType {
   setMarketID: (id: string) => void;
 }
 
-const MarketContext = createContext<MarketContextType | undefined>(undefined);
+const SeletectMarketContext = createContext<MarketContextType | undefined>(
+  undefined
+);
 
 export const MarketProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -30,16 +32,16 @@ export const MarketProvider: React.FC<{ children: React.ReactNode }> = ({
   const availableMarkets = Object.keys(MARKET_DEFINITIONS);
 
   return (
-    <MarketContext.Provider
+    <SeletectMarketContext.Provider
       value={{ marketID, marketDefinition, availableMarkets, setMarketID }}
     >
       {children}
-    </MarketContext.Provider>
+    </SeletectMarketContext.Provider>
   );
 };
 
-export const useMarket = (): MarketContextType => {
-  const context = useContext(MarketContext);
+export const contextUseSelectedMarket = (): MarketContextType => {
+  const context = useContext(SeletectMarketContext);
   if (!context) {
     throw new Error("useMarket must be used within a MarketProvider");
   }

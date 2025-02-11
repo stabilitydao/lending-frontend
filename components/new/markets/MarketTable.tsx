@@ -10,8 +10,8 @@ import {
 } from "@/components/ui/table";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { MarketModal } from "./MarketModal";
-import { useMarket, useSelectedMarket } from "@/hooks";
-import { Token } from "@/types";
+import { useMarket, useSearch, useSelectedMarket } from "@/hooks";
+import { MarketDefinition, Token } from "@/types";
 import { formatSuffix, trimmedNumber } from "@/helpers";
 import { useState } from "react";
 import Image from "next/image";
@@ -40,7 +40,7 @@ const FullEligibleRewards = () => (
   </div>
 );
 
-const BorrowLine = ({
+const MarketLine = ({
   token,
   onSelectToken,
 }: {
@@ -94,12 +94,13 @@ const BorrowLine = ({
   );
 };
 
-export const BorrowTable = () => {
+export const MarketTable = () => {
   const { marketDefinition } = useSelectedMarket();
   const [selectedToken, setSelectedToken] = useState<Token>(
     marketDefinition.tokens[0]
   );
   const [isModalOpen, setModalOpen] = useState(false);
+  const { filter } = useSearch("markets", (tokens: Token) => tokens.name);
 
   const onSelectToken = (token: Token) => {
     setSelectedToken(token);
@@ -134,8 +135,8 @@ export const BorrowTable = () => {
           </TableHead>
         </TableHeader>
         <TableBody>
-          {marketDefinition.tokens.map((token) => (
-            <BorrowLine
+          {filter(marketDefinition.tokens).map((token) => (
+            <MarketLine
               key={token.address}
               token={token}
               onSelectToken={onSelectToken}

@@ -9,6 +9,7 @@ import { Footer } from "@/components/layout/footer";
 import { Toaster } from "@/components/ui/toaster";
 import { ToastContainer } from "react-toastify";
 import { LocalIcon, MarketProvider } from "@/components";
+import { ProvidersWrapper } from "./providers";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -57,17 +58,12 @@ export default function RootLayout({
             </div>
           }
         />
-
-        <Web3Provider>
-          <DisclaimerProvider>
-            <MarketProvider>
-              <Navbar />
-              <main className="flex-grow">{children}</main>
-              <Toaster />
-              <Footer />
-            </MarketProvider>
-          </DisclaimerProvider>
-        </Web3Provider>
+        <ProvidersWrapper>
+          <Navbar />
+          <main className="flex-grow">{children}</main>
+          <Toaster />
+          <Footer />
+        </ProvidersWrapper>
       </body>
     </html>
   );

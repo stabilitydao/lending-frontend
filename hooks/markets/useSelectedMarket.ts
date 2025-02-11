@@ -1,7 +1,7 @@
-import { useMarket } from "@/components";
+import { contextUseSelectedMarket } from "@/components";
 
 const useSelectedMarket = () => {
-  return useMarket();
+  return contextUseSelectedMarket();
 };
 
 export { useSelectedMarket };
