@@ -35,6 +35,14 @@ export const scUSD: Token = {
   icon: "/icons/coins/scusdc.png",
 };
 
+export const USDT: Token = {
+  name: "USDT",
+  symbol: "USDT",
+  address: Addresses[sonic.id].TOKENS.USDT,
+  decimals: 6,
+  icon: "/icons/coins/usdt.png",
+};
+
 export const wETH: Token = {
   name: "Wrapped ETH",
   symbol: "wETH",
@@ -43,7 +51,7 @@ export const wETH: Token = {
   icon: "/icons/coins/wsteth.png",
 };
 
-const ALL_TOKENS = [S, wS, USDCE, scUSD, wETH];
+const ALL_TOKENS = [S, wS, USDCE, scUSD, wETH, USDT];
 
 export const isNativeToken = (token: Address, chainID: number) => {
   if (!Addresses[chainID]) return false;
