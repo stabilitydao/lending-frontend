@@ -51,7 +51,23 @@ export const wETH: Token = {
   icon: "/icons/coins/wsteth.png",
 };
 
-const ALL_TOKENS = [S, wS, USDCE, scUSD, wETH, USDT];
+export const wOS: Token = {
+  name: "Wrapped Origin Sonic",
+  symbol: "wOS",
+  address: Addresses[sonic.id].TOKENS.wOS,
+  decimals: 18,
+  icon: "/icons/coins/wos.png",
+};
+
+export const stS: Token = {
+  name: "Beets Staked Sonic",
+  symbol: "stS",
+  address: Addresses[sonic.id].TOKENS.stS,
+  decimals: 18,
+  icon: "/icons/coins/sts.png",
+};
+
+const ALL_TOKENS = [S, wS, USDCE, scUSD, wETH, USDT, wOS, stS];
 
 export const isNativeToken = (token: Address, chainID: number) => {
   if (!Addresses[chainID]) return false;
