@@ -1,19 +1,15 @@
 import { Address } from "viem";
-import { useIncentivesData, useMarketsRaw } from "@/hooks";
-import { Addresses, getTokenByAddress, isNativeToken } from "@/constants";
+import { useIncentivesData, useMarketsRaw, useWrappedIfNative } from "@/hooks";
+import { getTokenByAddress } from "@/constants";
 import { MarketInfo } from "@/types";
 import { bnToNumber } from "@/helpers";
-import { useChainId } from "wagmi";
 
 const RAY = 1e27;
 const BASIS_POINTS_DIVISOR = BigInt(10000);
 const PRICE_DECIMALS = 8;
 
 const useMarket = (tokenAddress: Address) => {
-  const chainID = useChainId();
-  if (isNativeToken(tokenAddress, chainID)) {
-    tokenAddress = Addresses[chainID].TOKENS.WRAPPED_NATIVE_TOKEN;
-  }
+  tokenAddress = useWrappedIfNative(tokenAddress);
   const { isMarketsDataLoading, marketsData, invalidateMarketsRawQuery } =
     useMarketsRaw();
 

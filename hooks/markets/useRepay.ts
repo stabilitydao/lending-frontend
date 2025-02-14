@@ -104,6 +104,9 @@ const useRepay = (token: Token) => {
     repay = () => {
       if (!isValidAddress) return;
       let amountBn = strToBn(amount, token.decimals);
+      if ((balance || BigInt(0)) - amountBn < BigInt(5e16)) {
+        amountBn = amountBn - BigInt(5e16);
+      }
       if (shouldUseMaxBN) {
         amountBn = MAXUINT256;
       }

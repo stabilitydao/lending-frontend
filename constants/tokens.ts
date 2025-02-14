@@ -48,7 +48,7 @@ export const wETH: Token = {
   symbol: "wETH",
   address: Addresses[sonic.id].TOKENS.wETH,
   decimals: 18,
-  icon: "/icons/coins/wsteth.png",
+  icon: "/icons/coins/eth.svg",
 };
 
 export const wOS: Token = {

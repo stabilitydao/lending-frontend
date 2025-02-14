@@ -1,8 +1,9 @@
 import { bnToNumber } from "@/helpers";
-import { useUserIncentivesDataRaw } from "@/hooks";
+import { useUserIncentivesDataRaw, useWrappedIfNative } from "@/hooks";
 import { Address } from "viem";
 
 const useUserIncentivesData = (tokenAddress: Address) => {
+  tokenAddress = useWrappedIfNative(tokenAddress);
   const {
     isUserIncentivesDataLoading,
     userIncentivesData,

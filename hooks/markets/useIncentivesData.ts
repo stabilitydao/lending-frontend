@@ -1,14 +1,9 @@
-import { Addresses, isNativeToken } from "@/constants";
 import { bnToNumber } from "@/helpers";
-import { useIncentivesDataRaw } from "@/hooks";
+import { useIncentivesDataRaw, useWrappedIfNative } from "@/hooks";
 import { Address } from "viem";
-import { useChainId } from "wagmi";
 
 const useIncentivesData = (tokenAddress: Address) => {
-  const chainID = useChainId();
-  if (isNativeToken(tokenAddress, chainID)) {
-    tokenAddress = Addresses[chainID].TOKENS.WRAPPED_NATIVE_TOKEN;
-  }
+  tokenAddress = useWrappedIfNative(tokenAddress);
   const {
     incentivesData,
     isIncentivesDataLoading,
