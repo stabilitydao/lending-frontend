@@ -7,6 +7,7 @@ import {
   useUserDisplayData,
   useInvalidate,
   useSelectedMarket,
+  useUserData,
 } from "@/hooks";
 import {
   useAccount,
@@ -33,17 +34,21 @@ const useBorrow = (token: Token) => {
   const { userAccountData } = useUserAccountData();
   const borrowAmountUSD = userAccountData.availableBorrowsBase;
   const { marketData } = useMarketRaw(token);
+  const { userData } = useUserData(token.address);
   const { marketDefinition } = useSelectedMarket();
   const { invalidateMarketState } = useInvalidate(token);
   const price = marketData?.priceInMarketReferenceCurrency;
+  const borrowCap = marketData?.borrowCap || BigInt(0);
+  const variableDebt = userData?.scaledVariableDebt || BigInt(0);
+  const availableLiquidity = marketData?.availableLiquidity || BigInt(0);
   let maxBorrow = minBn(
     borrowAmountUSD && price
       ? (((borrowAmountUSD * BigInt(10 ** token.decimals)) / price) *
           BigInt(999999)) /
           BigInt(1000000)
       : BigInt(0),
-    (marketData?.borrowCap || BigInt(0)) * BigInt(10 ** token.decimals),
-    marketData?.availableLiquidity
+    borrowCap * BigInt(10 ** token.decimals) - variableDebt,
+    (availableLiquidity * BigInt(10 ** 10 - 1)) / BigInt(10 ** 10)
   );
   const { chainIdToUse } = useCorrectChain();
   const { address: userAddress } = useAccount();
