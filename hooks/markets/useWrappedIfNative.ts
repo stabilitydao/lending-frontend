@@ -1,4 +1,4 @@
-import { Addresses, isNativeToken } from "@/constants";
+import { Addresses, isNativeToken, isWrappedNativeToken } from "@/constants";
 import { Address } from "viem";
 import { useChainId } from "wagmi";
 
@@ -10,4 +10,12 @@ const useWrappedIfNative = (address: Address) => {
   return address;
 };
 
-export { useWrappedIfNative };
+const useNativeIfWrapped = (address: Address) => {
+  const chainID = useChainId();
+  if (isWrappedNativeToken(address, chainID)) {
+    address = Addresses[chainID].TOKENS.NATIVE_TOKEN;
+  }
+  return address;
+};
+
+export { useWrappedIfNative, useNativeIfWrapped };

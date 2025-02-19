@@ -3,6 +3,7 @@ import {
   useIncentivesData,
   useMarketsRaw,
   useMerkleAPR,
+  useNativeIfWrapped,
   useWrappedIfNative,
 } from "@/hooks";
 import { getTokenByAddress } from "@/constants";
@@ -15,6 +16,7 @@ const PRICE_DECIMALS = 8;
 
 const useMarket = (tokenAddress: Address) => {
   tokenAddress = useWrappedIfNative(tokenAddress);
+  const potentiallyNativeTokenAddress = useNativeIfWrapped(tokenAddress);
   const { isMarketsDataLoading, marketsData, invalidateMarketsRawQuery } =
     useMarketsRaw();
   const { merklesAPRs, invalidateMerkleAPRQuery } = useMerkleAPR(tokenAddress);
@@ -39,7 +41,8 @@ const useMarket = (tokenAddress: Address) => {
   const token = getTokenByAddress(tokenAddress);
 
   const symbol = token?.symbol ?? rawMarket.symbol;
-  const name = token?.name ?? rawMarket.name;
+  const name =
+    getTokenByAddress(potentiallyNativeTokenAddress)?.name ?? rawMarket.name;
   const decimals = token?.decimals ?? bnToNumber(rawMarket.decimals);
   const icon = token?.icon ?? "/icons/coins/unknown.png";
 
