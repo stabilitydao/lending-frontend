@@ -5,7 +5,6 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableCellWP,
   TableHead,
   TableHeader,
   TableRow,
@@ -62,7 +61,6 @@ export const VaultTable = () => {
   );
   const { filter } = useSearch("vaults", (vault: VaultDataPlus) => vault.name);
   const [refreshKey, setRefreshKey] = useState(0);
-  console.log(filter(vaults));
 
   const { tvl } = useTvl();
 
@@ -342,11 +340,11 @@ export const VaultTable = () => {
               </TableCell>
 
               {/* Eligible For */}
-              <TableCellWP>
+              <TableCell>
                 <div className="relative flex justify-start w-full max-w-[72px] h-14">
                   <Image src={vault?.vaultReward} alt="reward" fill />
                 </div>
-              </TableCellWP>
+              </TableCell>
 
               <TableCell>
                 <div className="flex flex-col">

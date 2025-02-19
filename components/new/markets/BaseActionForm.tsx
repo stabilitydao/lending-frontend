@@ -123,18 +123,18 @@ export function BaseActionForm({
     <>
       <div className="flex items-center justify-between">
         <span>{title} Amount</span>
-        <div className="flex items-center gap-4">
+        <span className="flex items-center gap-4">
           Available:
           <span className="font-semibold">
             {formatSuffix(bnToNumber(balance, token.decimals))}{" "}
           </span>
-        </div>
-        <span className="absolute right-0 text-sm text-gray-500 transform translate-y-5">
+        </span>
+        <div className="absolute right-0 text-sm text-gray-500 transform translate-y-5">
           $
           {formatSuffix(
             bnToNumber(balance, token.decimals) * displayData.tokenPriceUSD
           )}{" "}
-        </span>
+        </div>
       </div>
 
       <div className="flex flex-col gap-8 pt-8">

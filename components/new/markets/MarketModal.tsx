@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect } from "react";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 import {
   Dialog,
@@ -295,6 +296,11 @@ export const MarketModal = ({
         if (!open && onClose) onClose();
       }}
     >
+      <VisuallyHidden>
+        <DialogDescription>
+          Perform supply, borrow, and repay actions
+        </DialogDescription>
+      </VisuallyHidden>
       <DialogContent
         autoFocus={false}
         className="bg-card text-primary overflow-y-auto pt-12 select-none"
@@ -360,13 +366,12 @@ export const MarketModal = ({
                 setActiveTab={setActiveTab}
               />
             </DialogTitle>
-
-            <DialogDescription className="flex flex-col gap-8 pt-10 text-primary">
+            <div className="text-sm flex flex-col gap-8 pt-10 text-primary">
               {isSupply && <SupplyForm token={token} market={market} />}
               {isWithdraw && <WithdrawForm token={token} market={market} />}
               {isBorrowTab && <BorrowForm token={token} market={market} />}
               {isRepay && <RepayForm token={token} market={market} />}
-            </DialogDescription>
+            </div>
           </DialogHeader>
         </div>
       </DialogContent>

@@ -3,3 +3,4 @@ export * from "./MarketTable";
 export * from "./MarketModal";
 export * from "./HealthBar";
 export * from "./MarketSelector";
+export * from "./MarketsTVL";

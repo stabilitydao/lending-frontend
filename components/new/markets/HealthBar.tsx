@@ -1,5 +1,4 @@
 "use client";
-import { Progress } from "@/components/ui/progress";
 import {
   Tooltip,
   TooltipContent,
@@ -11,6 +10,7 @@ import { Badge } from "lucide-react";
 import { HEALTHBAR_COLORS, healthData } from "@/constants";
 import { useUserAccountData } from "@/hooks";
 import { bnToNumber } from "@/helpers";
+import { StandardTooltip } from "@/components";
 
 const RangeTest = () => (
   <div>
@@ -90,36 +90,29 @@ export const HealthBar = () => {
   return (
     <div className="flex flex-col">
       <div className="flex items-center gap-4">
-        <text className="text-primary text-lg font-semibold">Health Bar</text>
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger>
-              <Question className="w-3 h-3 rounded-full" />
-            </TooltipTrigger>
-            <TooltipContent className="w-full p-4">
-              <div className="flex flex-col gap-2 w-full">
-                {HEALTHBAR_COLORS.map((color) => (
-                  <div
-                    key={color.name}
-                    className="flex items-center gap-4 justify-between"
-                  >
-                    <p className="flex-grow text-xs text-right text-foreground/70">
-                      {color.name}:{` `}
-                      {color.min === Infinity
-                        ? `${color.max}-`
-                        : color.max === Infinity
-                        ? `>${color.min}`
-                        : color.min === -Infinity
-                        ? `<${color.max}`
-                        : `${color.min} - ${color.max}`}
-                    </p>
-                    <Badge className={`${color.bg} text-white w-12`}></Badge>
-                  </div>
-                ))}
+        <div className="text-primary text-lg font-semibold">Health Bar</div>
+        <StandardTooltip>
+          <div className="flex flex-col gap-2 w-full">
+            {HEALTHBAR_COLORS.map((color) => (
+              <div
+                key={color.name}
+                className="flex items-center gap-4 justify-between"
+              >
+                <p className="flex-grow text-xs text-right text-foreground/70">
+                  {color.name}:{` `}
+                  {color.min === Infinity
+                    ? `${color.max}-`
+                    : color.max === Infinity
+                    ? `>${color.min}`
+                    : color.min === -Infinity
+                    ? `<${color.max}`
+                    : `${color.min} - ${color.max}`}
+                </p>
+                <Badge className={`${color.bg} text-white w-12`}></Badge>
               </div>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+            ))}
+          </div>
+        </StandardTooltip>
       </div>
       <HealthBarProgress value={healthFactor} />
       {/* <RangeTest /> */}
