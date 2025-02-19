@@ -10,7 +10,7 @@ import {
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { MarketModal } from "./MarketModal";
 import { useGemPrice, useMarket, useSearch, useSelectedMarket } from "@/hooks";
-import { Token } from "@/types";
+import { MarketDefinition, MarketInfo, Token } from "@/types";
 import { formatSuffix, trimmedNumber } from "@/helpers";
 import { useState } from "react";
 import Image from "next/image";
@@ -39,21 +39,35 @@ const FullEligibleRewards = () => (
   </div>
 );
 
-const MerkleNote = () => (
-  <div className="w-[300px]">
-    Merkle rewards are calculated using{" "}
-    <a
-      href="https://dexscreener.com/sonic/0x579638b5a13068caad302b39e64253056cb83ade"
-      target="_blank"
-      rel="noreferrer"
-      className="text-[#00FFFF] underline"
-    >
-      this
-    </a>{" "}
-    pool as a basis for the gem price. It is liable to change over time
-    depending on the price of the Sonic and other factors.
-  </div>
-);
+const MerkleNote = () => {
+  const { address } = useAccount();
+  const mekleLink = address
+    ? "https://app.merkl.xyz/user/" + address
+    : "https://app.merkl.xyz";
+  return (
+    <div className="w-[300px]">
+      <a
+        href={mekleLink}
+        target="_blank"
+        rel="noreferrer"
+        className="text-[#00FFFF] underline"
+      >
+        Merkle rewards
+      </a>{" "}
+      are calculated using{" "}
+      <a
+        href="https://dexscreener.com/sonic/0x579638b5a13068caad302b39e64253056cb83ade"
+        target="_blank"
+        rel="noreferrer"
+        className="text-[#00FFFF] underline"
+      >
+        this
+      </a>{" "}
+      pool as a basis for the gem price. It is liable to change over time
+      depending on the price of the Sonic and other factors.
+    </div>
+  );
+};
 
 const MarketLine = ({
   token,
@@ -62,8 +76,7 @@ const MarketLine = ({
   token: Token;
   onSelectToken: (token: Token) => void;
 }) => {
-  const { market, isMarketLoading, borrowIncentives, supplyIncentives } =
-    useMarket(token.address);
+  const { market, isMarketLoading } = useMarket(token.address);
   if (isMarketLoading || !market) return null;
   return (
     <TableRow
@@ -125,6 +138,50 @@ const MarketLine = ({
   );
 };
 
+import { FilterIcon } from "@/components/icons/filter";
+import { useAccount } from "wagmi";
+
+const SortableTableHead = ({
+  label,
+  extract,
+  sortBy,
+  setSortBy,
+  defaultOrder = "asc",
+}: {
+  label: string;
+  extract: (market: MarketInfo) => number | string;
+  sortBy: SortBy | null;
+  setSortBy: (sortBy: SortBy) => void;
+  defaultOrder?: "asc" | "desc";
+}) => {
+  const handleClick = () => {
+    setSortBy({
+      extract,
+      label,
+      order:
+        sortBy?.label === label
+          ? sortBy.order === "asc"
+            ? "desc"
+            : "asc"
+          : defaultOrder,
+    });
+  };
+
+  return (
+    <TableHead className="text-muted cursor-pointer" onClick={handleClick}>
+      <div className="flex items-center gap-2">
+        {label} <FilterIcon />
+      </div>
+    </TableHead>
+  );
+};
+
+type SortBy = {
+  extract: (market: MarketInfo) => number | string;
+  order: "asc" | "desc";
+  label: string;
+};
+
 export const MarketTable = () => {
   const { marketDefinition } = useSelectedMarket();
   const [selectedToken, setSelectedToken] = useState<Token>(
@@ -132,6 +189,7 @@ export const MarketTable = () => {
   );
   const [isModalOpen, setModalOpen] = useState(false);
   const { filter } = useSearch("markets", (tokens: Token) => tokens.name);
+  const [sortBy, setSortBy] = useState<SortBy | null>(null);
 
   const onSelectToken = (token: Token) => {
     setSelectedToken(token);
@@ -142,33 +200,77 @@ export const MarketTable = () => {
     setModalOpen(false);
   };
 
+  const tokenMarkets = marketDefinition.tokens.map((token) => {
+    const { market, isMarketLoading } = useMarket(token.address);
+    return { token, market: market ?? null, isMarketLoading };
+  });
+  const sort = (tokens: Token[]) => {
+    if (!sortBy) return tokens;
+
+    return tokens.slice().sort((a, b) => {
+      const marketA = tokenMarkets.find(
+        (tm) => tm.token.address === a.address
+      )?.market;
+      const marketB = tokenMarkets.find(
+        (tm) => tm.token.address === b.address
+      )?.market;
+
+      if (!marketA || !marketB) return 0;
+
+      const valA = sortBy.extract(marketA);
+      const valB = sortBy.extract(marketB);
+
+      return (valA > valB ? 1 : -1) * (sortBy.order === "asc" ? 1 : -1);
+    });
+  };
+
   return (
     <div className="p-4 gap-6 flex flex-col">
       <Table>
         <TableHeader className="h-8 border-b border-background">
           <TableRow>
-            <TableHead className="text-muted">
-              <div className="flex items-center gap-2">ASSET</div>
-            </TableHead>
+            <SortableTableHead
+              label="Asset"
+              extract={(tm) => tm.asset.name.toLowerCase()}
+              sortBy={sortBy}
+              setSortBy={setSortBy}
+              defaultOrder="asc"
+            />
             <TableHead className="text-muted">
               <div className="flex items-center gap-2">ELIGIBLE FOR</div>
             </TableHead>
-            <TableHead className="text-muted">
-              <div className="flex items-center gap-2">TOTAL SUPPLIED</div>
-            </TableHead>
-            <TableHead className="text-muted">
-              <div className="flex items-center gap-2">SUPPLY APY</div>
-            </TableHead>
-            <TableHead className="text-muted">
-              <div className="flex items-center gap-2">TOTAL BORROWED</div>
-            </TableHead>
-            <TableHead className="text-muted">
-              <div className="flex items-center gap-2">BORROW APY</div>
-            </TableHead>
+            <SortableTableHead
+              label="Total Supplied"
+              extract={(tm) => tm?.totalSupplied.value}
+              sortBy={sortBy}
+              setSortBy={setSortBy}
+              defaultOrder="desc"
+            />
+            <SortableTableHead
+              label="Supply APY"
+              extract={(tm) => tm?.supplyAPY}
+              sortBy={sortBy}
+              setSortBy={setSortBy}
+              defaultOrder="desc"
+            />
+            <SortableTableHead
+              label="Total Borrowed"
+              extract={(tm) => tm?.totalBorrowed.value}
+              sortBy={sortBy}
+              setSortBy={setSortBy}
+              defaultOrder="desc"
+            />
+            <SortableTableHead
+              label="Borrow APY"
+              extract={(tm) => tm?.borrowAPY}
+              sortBy={sortBy}
+              setSortBy={setSortBy}
+              defaultOrder="desc"
+            />
           </TableRow>
         </TableHeader>
         <TableBody>
-          {filter(marketDefinition.tokens).map((token) => (
+          {sort(filter(marketDefinition.tokens)).map((token) => (
             <MarketLine
               key={token.address}
               token={token}
