@@ -9,13 +9,7 @@ import {
 } from "@/components/ui/table";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { MarketModal } from "./MarketModal";
-import {
-  useMarket,
-  useMarketsTVL,
-  useSearch,
-  useSelectedMarket,
-  useProtocolTVL,
-} from "@/hooks";
+import { useMarket, useSearch, useSelectedMarket } from "@/hooks";
 import { Token } from "@/types";
 import { formatSuffix, trimmedNumber } from "@/helpers";
 import { useState } from "react";
@@ -100,7 +94,6 @@ const MarketLine = ({
 };
 
 export const MarketTable = () => {
-  const { marketsTVL } = useMarketsTVL();
   const { marketDefinition } = useSelectedMarket();
   const [selectedToken, setSelectedToken] = useState<Token>(
     marketDefinition.tokens[0]

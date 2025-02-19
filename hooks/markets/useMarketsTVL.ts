@@ -20,9 +20,18 @@ const useMarketsTVL = () => {
     ),
   });
 
-  const isMarketsTVLLoading = queries.some((query) => query.isLoading);
+  const isLoading = queries.some((query) => query.isLoading);
 
-  const marketsTVL = queries.reduce((totalTVL, { data: rawMarkets }) => {
+  if (isLoading) {
+    return {
+      isLoading,
+      tvl: undefined,
+      supplied: undefined,
+      borrowed: undefined,
+    };
+  }
+
+  const marketsSupplied = queries.reduce((totalTVL, { data: rawMarkets }) => {
     if (!rawMarkets) return totalTVL;
 
     return rawMarkets.reduce((marketTVL, rawMarket) => {
@@ -38,9 +47,30 @@ const useMarketsTVL = () => {
     }, totalTVL);
   }, 0);
 
+  const marketsBorrowed = queries.reduce(
+    (totalBorrowed, { data: rawMarkets }) => {
+      if (!rawMarkets) return totalBorrowed;
+      return rawMarkets.reduce((marketBorrowed, rawMarket) => {
+        const price = rawMarket.priceInMarketReferenceCurrency;
+        const totalBorrowed =
+          rawMarket.totalPrincipalStableDebt +
+          rawMarket.totalScaledVariableDebt;
+        const decimals = Number(rawMarket.decimals);
+        const totalBorrowedValue = bnToNumber(
+          totalBorrowed * price,
+          decimals + PRICE_DECIMALS
+        );
+        return marketBorrowed + Number(totalBorrowedValue);
+      }, totalBorrowed);
+    },
+    0
+  );
+
   return {
-    isMarketsTVLLoading,
-    marketsTVL: isMarketsTVLLoading ? undefined : marketsTVL,
+    isLoading,
+    tvl: marketsSupplied - marketsBorrowed,
+    supplied: marketsSupplied,
+    borrowed: marketsBorrowed,
   };
 };
 

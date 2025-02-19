@@ -4,7 +4,7 @@ import { useCallback } from "react";
 
 const useVaultsTVL = () => {
   const queryClient = useQueryClient();
-  const { data: vaultsTVL, isLoading: isVaultsTVLLoading } = useQuery({
+  const { data: tvl, isLoading } = useQuery({
     ...queryKeys.vaults.tvl(),
     staleTime: Infinity,
     refetchInterval: 30000,
@@ -16,8 +16,8 @@ const useVaultsTVL = () => {
     });
   }, [queryClient]);
   return {
-    isVaultsTVLLoading,
-    vaultsTVL,
+    isLoading,
+    tvl,
     invalidateVaultsTVLQuery,
   };
 };
