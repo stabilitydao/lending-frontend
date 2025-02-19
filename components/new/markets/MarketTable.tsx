@@ -9,12 +9,12 @@ import {
 } from "@/components/ui/table";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { MarketModal } from "./MarketModal";
-import { useMarket, useSearch, useSelectedMarket } from "@/hooks";
+import { useGemPrice, useMarket, useSearch, useSelectedMarket } from "@/hooks";
 import { Token } from "@/types";
 import { formatSuffix, trimmedNumber } from "@/helpers";
 import { useState } from "react";
 import Image from "next/image";
-import { HealthBar } from "@/components";
+import { HealthBar, StandardTooltip, ApyBreakdown } from "@/components";
 
 const FullEligibleRewards = () => (
   <div className="flex flex-col border">
@@ -36,6 +36,22 @@ const FullEligibleRewards = () => (
         <Image src={"/icons/incentives/Parachuting-08.png"} alt={""} fill />
       </div>
     </div>
+  </div>
+);
+
+const MerkleNote = () => (
+  <div className="w-[300px]">
+    Merkle rewards are calculated using{" "}
+    <a
+      href="https://dexscreener.com/sonic/0x579638b5a13068caad302b39e64253056cb83ade"
+      target="_blank"
+      rel="noreferrer"
+      className="text-[#00FFFF] underline"
+    >
+      this
+    </a>{" "}
+    pool as a basis for the gem price. It is liable to change over time
+    depending on the price of the Sonic and other factors.
   </div>
 );
 
@@ -76,8 +92,16 @@ const MarketLine = ({
         </p>
       </TableCell>
       <TableCell>
-        {market.supplyAPY > 0.01 ? trimmedNumber(market.supplyAPY, 2) : "<0.01"}
-        %
+        <div className="flex flex-row gap-1 items-center">
+          {market.supplyAPY > 0.01
+            ? trimmedNumber(market.supplyAPY, 2)
+            : "<0.01"}
+          %
+          <ApyBreakdown
+            breakdown={market.breakdown.supply}
+            note={<MerkleNote />}
+          />
+        </div>
       </TableCell>
       <TableCell>
         <p className="text-md">{formatSuffix(market.totalBorrowed.amount)}</p>
@@ -86,8 +110,16 @@ const MarketLine = ({
         </p>
       </TableCell>
       <TableCell>
-        {market.borrowAPY > 0.01 ? trimmedNumber(market.borrowAPY, 2) : "<0.01"}
-        %
+        <div className="flex flex-row gap-1 items-center">
+          {market.borrowAPY > 0.01
+            ? trimmedNumber(market.borrowAPY, 2)
+            : "<0.01"}
+          %
+          <ApyBreakdown
+            breakdown={market.breakdown.borrow}
+            note={<MerkleNote />}
+          />
+        </div>
       </TableCell>
     </TableRow>
   );
@@ -131,7 +163,7 @@ export const MarketTable = () => {
               <div className="flex items-center gap-2">TOTAL BORROWED</div>
             </TableHead>
             <TableHead className="text-muted">
-              <div className="flex items-center gap-2">INTEREST RATE</div>
+              <div className="flex items-center gap-2">BORROW APY</div>
             </TableHead>
           </TableRow>
         </TableHeader>
