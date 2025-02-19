@@ -18,6 +18,10 @@ export type MarketInfo = {
   };
   borrowAPY: number;
   collateralFactor: number;
+  breakdown: {
+    supply?: Record<string, number>;
+    borrow?: Record<string, number>;
+  };
 };
 
 export type UserDisplayData = {

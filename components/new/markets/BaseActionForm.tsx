@@ -166,7 +166,7 @@ export function BaseActionForm({
           <div className="flex items-center justify-between">
             <div className="flex flex-col">
               <div className="font-semibold">Borrowed</div>
-              <div>{market.borrowAPY.toFixed(2)}% Interest Rate</div>
+              <div>{market.borrowAPY.toFixed(2)}% Borrow APY</div>
             </div>
             <div className="flex flex-col ">
               <div className="text-md font-semibold">
