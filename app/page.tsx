@@ -7,7 +7,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import ScrollingPartners from "@/components/home/scrolling-partners";
-import { NetworkTvl } from "@/components/vaults/network-tvl";
+import { ProtocolTVL } from "@/components";
 
 export default function Home() {
   return (
@@ -21,7 +21,7 @@ export default function Home() {
           priority
         />
         <div className="absolute top-28 right-20 bg-background/60 text-black px-12 py-6 rounded">
-          <NetworkTvl />
+          <ProtocolTVL />
         </div>
       </div>
       <div className="flex flex-col mx-4 md:mx-10 py-16">

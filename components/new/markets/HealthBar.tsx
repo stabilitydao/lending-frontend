@@ -90,7 +90,7 @@ export const HealthBar = () => {
   return (
     <div className="flex flex-col">
       <div className="flex items-center gap-4">
-        <text className="text-primary text-lg font-semibold">Health Bar</text>
+        <div className="text-primary text-lg font-semibold">Health Bar</div>
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger>

@@ -3,15 +3,20 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableCellWP,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { MarketModal } from "./MarketModal";
-import { useMarket, useSearch, useSelectedMarket } from "@/hooks";
-import { MarketDefinition, Token } from "@/types";
+import {
+  useMarket,
+  useMarketsTVL,
+  useSearch,
+  useSelectedMarket,
+  useProtocolTVL,
+} from "@/hooks";
+import { Token } from "@/types";
 import { formatSuffix, trimmedNumber } from "@/helpers";
 import { useState } from "react";
 import Image from "next/image";
@@ -67,10 +72,10 @@ const MarketLine = ({
           </div>
         </div>
       </TableCell>
-      <TableCellWP>
+      <TableCell>
         <FullEligibleRewards />
-      </TableCellWP>
-      <TableCell className="flex flex-col">
+      </TableCell>
+      <TableCell>
         <p className="text-md">{formatSuffix(market.totalSupplied.amount)}</p>
         <p className="text-xs font-light">
           ${formatSuffix(market.totalSupplied.value)}
@@ -80,7 +85,7 @@ const MarketLine = ({
         {market.supplyAPY > 0.01 ? trimmedNumber(market.supplyAPY, 2) : "<0.01"}
         %
       </TableCell>
-      <TableCell className="flex flex-col">
+      <TableCell>
         <p className="text-md">{formatSuffix(market.totalBorrowed.amount)}</p>
         <p className="text-xs font-light">
           ${formatSuffix(market.totalBorrowed.value)}
@@ -95,6 +100,7 @@ const MarketLine = ({
 };
 
 export const MarketTable = () => {
+  const { marketsTVL } = useMarketsTVL();
   const { marketDefinition } = useSelectedMarket();
   const [selectedToken, setSelectedToken] = useState<Token>(
     marketDefinition.tokens[0]
@@ -115,24 +121,26 @@ export const MarketTable = () => {
     <div className="p-4 gap-6 flex flex-col">
       <Table>
         <TableHeader className="h-8 border-b border-background">
-          <TableHead className="text-muted">
-            <div className="flex items-center gap-2">ASSET</div>
-          </TableHead>
-          <TableHead className="text-muted">
-            <div className="flex items-center gap-2">ELIGIBLE FOR</div>
-          </TableHead>
-          <TableHead className="text-muted">
-            <div className="flex items-center gap-2">TOTAL SUPPLIED</div>
-          </TableHead>
-          <TableHead className="text-muted">
-            <div className="flex items-center gap-2">SUPPLY APY</div>
-          </TableHead>
-          <TableHead className="text-muted">
-            <div className="flex items-center gap-2">TOTAL BORROWED</div>
-          </TableHead>
-          <TableHead className="text-muted">
-            <div className="flex items-center gap-2">INTEREST RATE</div>
-          </TableHead>
+          <TableRow>
+            <TableHead className="text-muted">
+              <div className="flex items-center gap-2">ASSET</div>
+            </TableHead>
+            <TableHead className="text-muted">
+              <div className="flex items-center gap-2">ELIGIBLE FOR</div>
+            </TableHead>
+            <TableHead className="text-muted">
+              <div className="flex items-center gap-2">TOTAL SUPPLIED</div>
+            </TableHead>
+            <TableHead className="text-muted">
+              <div className="flex items-center gap-2">SUPPLY APY</div>
+            </TableHead>
+            <TableHead className="text-muted">
+              <div className="flex items-center gap-2">TOTAL BORROWED</div>
+            </TableHead>
+            <TableHead className="text-muted">
+              <div className="flex items-center gap-2">INTEREST RATE</div>
+            </TableHead>
+          </TableRow>
         </TableHeader>
         <TableBody>
           {filter(marketDefinition.tokens).map((token) => (

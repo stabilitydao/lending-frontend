@@ -16,3 +16,4 @@ export * from "./useIncentivesDataRaw";
 export * from "./useUserIncentivesDataRaw";
 export * from "./useIncentivesData";
 export * from "./useUserIncentivesData";
+export * from "./useMarketsTVL";

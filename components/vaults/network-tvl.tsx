@@ -5,7 +5,7 @@ import { useTvl } from "@/hooks/useTvl";
 import { formatNumberWithSuffix } from "@/lib/utils";
 
 export const NetworkTvl = () => {
-  const {tvl} = useTvl();
+  const { tvl } = useTvl();
 
   const tvlData = vaultData.reduce((acc, vault) => {
     const vaultTvl = tvl?.["146"][vault.id];
@@ -15,9 +15,13 @@ export const NetworkTvl = () => {
     return acc;
   }, 0);
 
-  return <p className="text-primary">
-  Network TVL:
-  <span className="font-semibold"> {formatNumberWithSuffix(tvlData ?? 0)}</span>
-</p>
-  
-}
+  return (
+    <p className="text-primary">
+      Vaults TVL:
+      <span className="font-semibold">
+        {" "}
+        {formatNumberWithSuffix(tvlData ?? 0)}
+      </span>
+    </p>
+  );
+};

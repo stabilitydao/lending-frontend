@@ -8,7 +8,7 @@ import {
   getUserIncentivesData,
 } from ".";
 
-export const marketsQueries = createQueryKeys("markets", {
+export const marketQueries = createQueryKeys("markets", {
   market: (marketID: string) => ({
     queryKey: [marketID],
     contextQueries: {
