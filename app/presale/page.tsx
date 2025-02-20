@@ -15,6 +15,10 @@ export default function Page() {
 
   return (
     <div className="relative">
+      <div className="absolute top-0 left-0 right-0 bg-[#f22321] text-white text-center p-2">
+        Vicuna presale is now over! This page is only here to let presale
+        participants see their balances.
+      </div>
       <div className="bg-card p-4 h-full rounded-lg mx-10 mx-auto my-[150px] flex flex-col gap-6 shadow-2xl w-full max-w-lg">
         <div className="flex flex-col justify-evenly gap-4">
           <h1 className="text-primary text-lg font-semibold text-[#f22321] text-center">

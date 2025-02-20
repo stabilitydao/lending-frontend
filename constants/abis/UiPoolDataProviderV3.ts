@@ -427,6 +427,11 @@ export const UiPoolDataProviderV3Abi = [
             name: "variableDebt",
             type: "uint256",
           },
+          {
+            internalType: "uint256",
+            name: "variableATokenBalance",
+            type: "uint256",
+          },
         ],
         internalType: "struct IUiPoolDataProviderV3.UserReserveData[]",
         name: "",
