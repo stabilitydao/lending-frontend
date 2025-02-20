@@ -105,7 +105,7 @@ const MarketLine = ({
         </p>
       </TableCell>
       <TableCell>
-        <div className="flex flex-row gap-1 items-center">
+        <div className="flex flex-row gap-1 items-center text-green-500">
           {market.supplyAPY > 0.01
             ? trimmedNumber(market.supplyAPY, 2)
             : "<0.01"}
@@ -123,10 +123,12 @@ const MarketLine = ({
         </p>
       </TableCell>
       <TableCell>
-        <div className="flex flex-row gap-1 items-center">
-          {market.borrowAPY > 0.01
-            ? trimmedNumber(market.borrowAPY, 2)
-            : "<0.01"}
+        <div
+          className={`flex flex-row gap-1 items-center ${
+            market.borrowAPY < 0.01 ? "text-red-500" : "text-green-500"
+          }`}
+        >
+          {trimmedNumber(market.borrowAPY, 2)}
           %
           <ApyBreakdown
             breakdown={market.breakdown.borrow}

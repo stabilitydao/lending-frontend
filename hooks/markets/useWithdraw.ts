@@ -40,15 +40,14 @@ const useWithdraw = (token: Token) => {
 
   const price = marketData?.priceInMarketReferenceCurrency || BigInt(1);
   const scale = marketData?.baseLTVasCollateral || BigInt(10000);
-  const abalance = userData?.scaledATokenBalance || BigInt(0);
-
+  const abalance = userData?.variableATokenBalance || BigInt(0);
   const maxWithdraw = minBn(
     abalance,
     (((((borrowAmountUSD * BigInt(10 ** token.decimals)) / price) *
       BigInt(10000)) /
       scale) *
-      BigInt(999999)) /
-      BigInt(1000000),
+      BigInt(99999999)) /
+      BigInt(100000000),
     marketData?.availableLiquidity
   );
 

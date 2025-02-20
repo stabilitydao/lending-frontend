@@ -14,7 +14,7 @@ const useUserDisplayData = (
   const healthFactor = userAccountData.healthFactor || BigInt(0);
   const { marketData } = useMarketRaw(token);
   const price = marketData?.priceInMarketReferenceCurrency || BigInt(1);
-  const abalance = userData?.scaledATokenBalance || BigInt(0);
+  const abalance = userData?.variableATokenBalance || BigInt(0);
 
   const collateralFactor = marketData?.baseLTVasCollateral || BigInt(1e4);
   const liquidationFactor =
