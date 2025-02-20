@@ -45,16 +45,26 @@ const MerkleNote = () => {
     ? "https://app.merkl.xyz/user/" + address
     : "https://app.merkl.xyz";
   return (
-    <div className="w-[300px]">
+    <div className="w-[300px]" onClick={(e) => e.stopPropagation()}>
       <a
         href={mekleLink}
         target="_blank"
         rel="noreferrer"
         className="text-[#00FFFF] underline"
       >
-        Merkle rewards
+        Merkl’s rewards
       </a>{" "}
-      are calculated using{" "}
+      (APYs) are calculated based on the amount of{" "}
+      <a
+        href="https://docs.soniclabs.com/funding/sonic-airdrop/sonic-gems"
+        target="_blank"
+        rel="noreferrer"
+        className="text-[#00FFFF] underline"
+      >
+        Gems
+      </a>{" "}
+      emitted as supply/borrowing rewards, as well as the current price of Gems,
+      which is tracked and displayed in{" "}
       <a
         href="https://dexscreener.com/sonic/0x579638b5a13068caad302b39e64253056cb83ade"
         target="_blank"
@@ -63,8 +73,7 @@ const MerkleNote = () => {
       >
         this
       </a>{" "}
-      pool as a basis for the gem price. It is liable to change over time
-      depending on the price of the Sonic and other factors.
+      liquidity pool.
     </div>
   );
 };
