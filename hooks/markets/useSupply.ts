@@ -19,6 +19,7 @@ import { AavePoolAbi, Addresses, NativeTokenGatewayAbi } from "@/constants";
 import {
   extractError,
   isAddressValid,
+  maxBn,
   strToBn,
   trimmedString,
 } from "@/helpers";
@@ -45,6 +46,12 @@ const useSupply = (token: Token) => {
     isApprovePending,
     setApproveAmount,
   } = useApproveToken(marketDefinition.AAVE_POOL, token.address);
+
+  const remainingSupplyCap = marketBnData?.supplyCap || BigInt(0);
+  const totalSupplied = marketBnData?.totalSupplied || BigInt(0);
+  const totalSupplyCap = remainingSupplyCap + totalSupplied;
+  const fakeSupplyCap = (totalSupplyCap * BigInt(9999)) / BigInt(10000);
+  const fakeSupplyCapLeft = maxBn(fakeSupplyCap - totalSupplied, BigInt(0));
 
   const {
     writeContract,
@@ -147,12 +154,11 @@ const useSupply = (token: Token) => {
   ]);
 
   const displayData = useUserDisplayData(token, "supply", amount);
-
   return {
     amount,
     setAmount,
     balance: balance || BigInt(0),
-    supplyCap: marketBnData?.supplyCap || BigInt(0),
+    supplyCap: fakeSupplyCapLeft,
     hasEnoughAllowance,
     supply,
     approve,

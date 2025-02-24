@@ -75,7 +75,8 @@ const useRepay = (token: Token) => {
     (balance || BigInt(0)) > (maxDebt || BigInt(0)) &&
     Number(amount) > bnToNumber(maxDebt, token.decimals) * 0.999;
 
-  if (shouldUseMaxBN) hasEnoughAllowance = allowance === MAXUINT256;
+  if (shouldUseMaxBN && !isNativeToken)
+    hasEnoughAllowance = allowance === MAXUINT256;
 
   let repay = () => {
     if (!isValidAddress) return;

@@ -90,6 +90,9 @@ const useUserDisplayData = (
         (strToBn(amount, token.decimals) * price) / BigInt(1e8),
         token.decimals
       );
+      if (-totalDebtDelta > bnToNumber(userAccountData.totalDebtBase, 8)) {
+        totalDebtDelta = -bnToNumber(userAccountData.totalDebtBase, 8);
+      }
       healthFactorDelta =
         -(bnToNumber(healthFactor, 18) * totalDebtDelta) /
         (bnToNumber(userAccountData.totalDebtBase, 8) + totalDebtDelta);

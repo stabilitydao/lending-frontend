@@ -13,6 +13,7 @@ export const DisclaimerProvider = ({
   const [showDisclaimer, setShowDisclaimer] = useState(true);
   const [cookiesAccepted, setCookiesAccepted] = useState(false);
   const [messageAccepted, setMessageAccepted] = useState(false);
+  const THIRTY_DAYS_IN_SECONDS = 30 * 24 * 60 * 60 * 1000;
 
   useEffect(() => {
     const cookiesStatus = cookies.get("vicuna-cookies");
@@ -33,8 +34,12 @@ export const DisclaimerProvider = ({
 
   const handleContinue = () => {
     if (cookiesAccepted && messageAccepted) {
-      cookies.set("vicuna-cookies", "accepted");
-      cookies.set("vicuna-message", "accepted");
+      cookies.set("vicuna-cookies", "accepted", {
+        expires: new Date(Date.now() + THIRTY_DAYS_IN_SECONDS),
+      });
+      cookies.set("vicuna-message", "accepted", {
+        expires: new Date(Date.now() + THIRTY_DAYS_IN_SECONDS),
+      });
       setShowDisclaimer(false);
     }
   };

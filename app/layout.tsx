@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
-import { Web3Provider } from "@/components/providers/web3-provider";
-import { DisclaimerProvider } from "@/components/providers/disclaimer-provider";
 import "react-toastify/dist/ReactToastify.css";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
