@@ -9,12 +9,12 @@ import {
 } from "@/components/ui/table";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { MarketModal } from "./MarketModal";
-import { useGemPrice, useMarket, useSearch, useSelectedMarket } from "@/hooks";
-import { MarketDefinition, MarketInfo, Token } from "@/types";
+import { useMarket, useMarkets, useSearch, useSelectedMarket } from "@/hooks";
+import { MarketInfo, Token } from "@/types";
 import { formatSuffix, trimmedNumber } from "@/helpers";
 import { useState } from "react";
 import Image from "next/image";
-import { HealthBar, StandardTooltip, ApyBreakdown } from "@/components";
+import { HealthBar, ApyBreakdown } from "@/components";
 
 const FullEligibleRewards = () => (
   <div className="flex flex-col border">
@@ -94,10 +94,21 @@ const MarketLine = ({
     >
       <TableCell>
         <div className="flex items-center gap-10">
-          <Avatar className="bg-transparent p-1.5">
-            <AvatarImage src={token.icon} className="object-contain" />
-            <AvatarFallback>{token.symbol}</AvatarFallback>
-          </Avatar>
+          <div className="flex flex-row gap-2 items-center">
+            <Avatar className="bg-transparent p-1.5">
+              <AvatarImage src={token.icon} className="object-contain" />
+              <AvatarFallback>{token.symbol}</AvatarFallback>
+            </Avatar>
+            {token.pair && (
+              <DoubleAvatar
+                firstSrc={token.pair[0].icon}
+                secondSrc={token.pair[1].icon}
+                firstAlt={token.pair[0].symbol}
+                secondAlt={token.pair[1].symbol}
+              />
+            )}
+          </div>
+
           <div className="flex flex-col">
             <p className="text-lg ">{token.name}</p>
             <p className="text-xs font-light">{token.symbol}</p>
@@ -134,7 +145,7 @@ const MarketLine = ({
       <TableCell>
         <div
           className={`flex flex-row gap-1 items-center ${
-            market.borrowAPY < 0.01 ? "text-red-500" : "text-green-500"
+            market.borrowAPY < 0 ? "text-red-500" : "text-green-500"
           }`}
         >
           {trimmedNumber(market.borrowAPY, 2)}
@@ -151,6 +162,7 @@ const MarketLine = ({
 
 import { FilterIcon } from "@/components/icons/filter";
 import { useAccount } from "wagmi";
+import { DoubleAvatar } from "@/components/ui/double-avatar";
 
 const SortableTableHead = ({
   label,
@@ -195,6 +207,8 @@ type SortBy = {
 
 export const MarketTable = () => {
   const { marketDefinition } = useSelectedMarket();
+  const { markets } = useMarkets();
+
   const [selectedToken, setSelectedToken] = useState<Token>(
     marketDefinition.tokens[0]
   );
@@ -211,20 +225,12 @@ export const MarketTable = () => {
     setModalOpen(false);
   };
 
-  const tokenMarkets = marketDefinition.tokens.map((token) => {
-    const { market, isMarketLoading } = useMarket(token.address);
-    return { token, market: market ?? null, isMarketLoading };
-  });
   const sort = (tokens: Token[]) => {
-    if (!sortBy) return tokens;
+    if (!sortBy || !markets) return tokens;
 
     return tokens.slice().sort((a, b) => {
-      const marketA = tokenMarkets.find(
-        (tm) => tm.token.address === a.address
-      )?.market;
-      const marketB = tokenMarkets.find(
-        (tm) => tm.token.address === b.address
-      )?.market;
+      const marketA = markets[a.address].market;
+      const marketB = markets[b.address].market;
 
       if (!marketA || !marketB) return 0;
 
