@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const getMerkleMarketsAPR = async () => {
+export const getMerklMarketsAPR = async () => {
   try {
     const response = await axios.get(
       "https://api.merkl.xyz/v4/opportunities?name=Vicuna&items=1000"
@@ -37,7 +37,7 @@ export const getMerkleMarketsAPR = async () => {
 
     return aprData;
   } catch (error) {
-    console.error("Error fetching Merkle market APRs:", error);
+    console.error("Error fetching Merkl market APRs:", error);
     return {};
   }
 };

@@ -2,7 +2,7 @@ import { Address } from "viem";
 import {
   useIncentivesData,
   useMarketsRaw,
-  useMerkleAPR,
+  useMerklAPR,
   useNativeIfWrapped,
   useWrappedIfNative,
 } from "@/hooks";
@@ -19,7 +19,7 @@ const useMarket = (tokenAddress: Address) => {
   const potentiallyNativeTokenAddress = useNativeIfWrapped(tokenAddress);
   const { isMarketsDataLoading, marketsData, invalidateMarketsRawQuery } =
     useMarketsRaw();
-  const { merklesAPRs, invalidateMerkleAPRQuery } = useMerkleAPR(tokenAddress);
+  const { merklsAPRs, invalidateMerklAPRQuery } = useMerklAPR(tokenAddress);
 
   const incentivesData = useIncentivesData(tokenAddress);
 
@@ -74,11 +74,11 @@ const useMarket = (tokenAddress: Address) => {
     (incentivesData.borrowIncentives.rewardsPerSecond * 3600 * 24 * 365) /
     totalBorrowedValue;
 
-  const merkleSupplyAPR = merklesAPRs?.supply ?? 0;
-  const merkleBorrowAPR = merklesAPRs?.borrow ?? 0;
+  const merklSupplyAPR = merklsAPRs?.supply ?? 0;
+  const merklBorrowAPR = merklsAPRs?.borrow ?? 0;
 
-  const totalSupplyAPR = supplyAPY + incentiveSupplyAPR + merkleSupplyAPR;
-  const totalBorrowAPR = borrowAPY + incentiveBorrowAPR + merkleBorrowAPR;
+  const totalSupplyAPR = supplyAPY + incentiveSupplyAPR + merklSupplyAPR;
+  const totalBorrowAPR = borrowAPY + incentiveBorrowAPR + merklBorrowAPR;
 
   const breakdown: MarketInfo["breakdown"] = {};
 
@@ -86,7 +86,7 @@ const useMarket = (tokenAddress: Address) => {
     Object.entries({
       "Supply APY": supplyAPY,
       "Incentives APY": incentiveSupplyAPR,
-      "Merkle Rewards": merkleSupplyAPR,
+      "Merkl Rewards": merklSupplyAPR,
     }).filter(([_, value]) => value !== 0)
   );
 
@@ -94,7 +94,7 @@ const useMarket = (tokenAddress: Address) => {
     Object.entries({
       "Borrow Rate": borrowAPY,
       "Incentives APY": incentiveBorrowAPR,
-      "Merkle Rewards": merkleBorrowAPR,
+      "Merkl Rewards": merklBorrowAPR,
     }).filter(([_, value]) => value !== 0)
   );
 
@@ -133,7 +133,7 @@ const useMarket = (tokenAddress: Address) => {
     },
     invalidateMarketQuery: (marketID: string) => {
       invalidateMarketsRawQuery(marketID);
-      invalidateMerkleAPRQuery();
+      invalidateMerklAPRQuery();
     },
     supplyIncentives: {
       ...incentivesData.supplyIncentives,
