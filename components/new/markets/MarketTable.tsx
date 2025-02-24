@@ -39,7 +39,7 @@ const FullEligibleRewards = () => (
   </div>
 );
 
-const MerkleNote = () => {
+const MerklNote = () => {
   const { address } = useAccount();
   const mekleLink = address
     ? "https://app.merkl.xyz/user/" + address
@@ -121,7 +121,7 @@ const MarketLine = ({
           %
           <ApyBreakdown
             breakdown={market.breakdown.supply}
-            note={<MerkleNote />}
+            note={<MerklNote />}
           />
         </div>
       </TableCell>
@@ -141,7 +141,7 @@ const MarketLine = ({
           %
           <ApyBreakdown
             breakdown={market.breakdown.borrow}
-            note={<MerkleNote />}
+            note={<MerklNote />}
           />
         </div>
       </TableCell>
