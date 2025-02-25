@@ -87,6 +87,46 @@ const MarketLine = ({
 }) => {
   const { market, isMarketLoading } = useMarket(token.address);
   if (isMarketLoading || !market) return null;
+  if (token.pair) {
+    return (
+      <TableRow
+        className="text-primary border-t-background cursor-pointer hover:bg-background/50"
+        onClick={() => onSelectToken(token)}
+      >
+        <TableCell>
+          <div className="flex items-center gap-10">
+            <div className="flex flex-row gap-2 items-center">
+              <Avatar className="bg-transparent p-1.5">
+                <AvatarImage src={token.icon} className="object-contain" />
+                <AvatarFallback>{token.symbol}</AvatarFallback>
+              </Avatar>
+              <DoubleAvatar
+                firstSrc={token.pair[0].icon}
+                secondSrc={token.pair[1].icon}
+                firstAlt={token.pair[0].symbol}
+                secondAlt={token.pair[1].symbol}
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <p className="text-lg ">{token.name}</p>
+              <p className="text-xs font-light">{token.symbol}</p>
+            </div>
+          </div>
+        </TableCell>
+        <TableCell />
+        <TableCell>
+          <p className="text-md">{formatSuffix(market.totalSupplied.amount)}</p>
+          <p className="text-xs font-light">
+            ${formatSuffix(market.totalSupplied.value)}
+          </p>
+        </TableCell>
+        <TableCell />
+        <TableCell />
+        <TableCell />
+      </TableRow>
+    );
+  }
   return (
     <TableRow
       className="text-primary border-t-background cursor-pointer hover:bg-background/50"
@@ -99,14 +139,6 @@ const MarketLine = ({
               <AvatarImage src={token.icon} className="object-contain" />
               <AvatarFallback>{token.symbol}</AvatarFallback>
             </Avatar>
-            {token.pair && (
-              <DoubleAvatar
-                firstSrc={token.pair[0].icon}
-                secondSrc={token.pair[1].icon}
-                firstAlt={token.pair[0].symbol}
-                secondAlt={token.pair[1].symbol}
-              />
-            )}
           </div>
 
           <div className="flex flex-col">

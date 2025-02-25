@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Address } from "viem";
 
 export const getMerklMarketsAPR = async () => {
   try {
@@ -8,30 +9,27 @@ export const getMerklMarketsAPR = async () => {
 
     const markets = response.data;
     const aprData: { [key: string]: { supply: number; borrow: number } } = {};
-
+    console.log("markets", markets);
     markets.forEach(
       (market: {
         chainId: number;
-        tokens: any[];
+        identifier: Address;
         name: string;
         apr: number;
       }) => {
         if (market.chainId !== 146) return;
+        const tokenAddress = market.identifier.toLowerCase();
+        if (!tokenAddress) return;
 
-        market.tokens.forEach((token) => {
-          const tokenAddress = token.address.toLowerCase();
-          if (!tokenAddress) return;
+        if (!aprData[tokenAddress]) {
+          aprData[tokenAddress] = { supply: 0, borrow: 0 };
+        }
 
-          if (!aprData[tokenAddress]) {
-            aprData[tokenAddress] = { supply: 0, borrow: 0 };
-          }
-
-          if (market.name.toLowerCase().includes("supply")) {
-            aprData[tokenAddress].supply = market.apr || 0;
-          } else if (market.name.toLowerCase().includes("borrow")) {
-            aprData[tokenAddress].borrow = market.apr || 0;
-          }
-        });
+        if (market.name.toLowerCase().includes("supply")) {
+          aprData[tokenAddress].supply = market.apr || 0;
+        } else if (market.name.toLowerCase().includes("borrow")) {
+          aprData[tokenAddress].borrow = market.apr || 0;
+        }
       }
     );
 

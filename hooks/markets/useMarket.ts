@@ -103,7 +103,6 @@ const useMarkets = () => {
 
     const supplyIncentive = supplyIncentives[tokenAddress];
     const borrowIncentive = borrowIncentives[tokenAddress];
-    const merklAPR = merklAPRs[tokenAddress];
 
     const incentiveSupplyAPR =
       (supplyIncentive.rewardsPerSecond * 3600 * 24 * 365) /
@@ -111,8 +110,11 @@ const useMarkets = () => {
     const incentiveBorrowAPR =
       (borrowIncentive.rewardsPerSecond * 3600 * 24 * 365) /
       (totalBorrowedValue + 1);
-    const merklSupplyAPR = merklAPR.supply;
-    const merklBorrowAPR = merklAPR.borrow;
+    const merklSupplyAPR =
+      merklAPRs[rawMarket.aTokenAddress.toLowerCase() as Address]?.supply || 0;
+    const merklBorrowAPR =
+      merklAPRs[rawMarket.variableDebtTokenAddress.toLowerCase() as Address]
+        ?.borrow || 0;
 
     const totalSupplyAPR = supplyAPY + incentiveSupplyAPR + merklSupplyAPR;
     const totalBorrowAPR = borrowAPY + incentiveBorrowAPR + merklBorrowAPR;
