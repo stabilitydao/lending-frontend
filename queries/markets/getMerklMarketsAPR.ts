@@ -9,7 +9,6 @@ export const getMerklMarketsAPR = async () => {
 
     const markets = response.data;
     const aprData: { [key: string]: { supply: number; borrow: number } } = {};
-    console.log("markets", markets);
     markets.forEach(
       (market: {
         chainId: number;
@@ -26,9 +25,9 @@ export const getMerklMarketsAPR = async () => {
         }
 
         if (market.name.toLowerCase().includes("supply")) {
-          aprData[tokenAddress].supply = market.apr || 0;
+          aprData[tokenAddress].supply += market.apr || 0;
         } else if (market.name.toLowerCase().includes("borrow")) {
-          aprData[tokenAddress].borrow = market.apr || 0;
+          aprData[tokenAddress].borrow += market.apr || 0;
         }
       }
     );
