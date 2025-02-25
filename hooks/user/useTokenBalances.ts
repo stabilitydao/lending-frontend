@@ -6,7 +6,7 @@ import { queryKeys } from "@/queries";
 import { isAddressValid } from "@/helpers";
 
 const useTokenBalances = (tokenAddresses: Address[]) => {
-  const { isCorrectChain, chainIdToUse: chainId } = useCorrectChain();
+  const { chainIdToUse: chainId } = useCorrectChain();
   const { address: userAddress } = useAccount();
 
   const validTokenAddresses = tokenAddresses.filter(isAddressValid);
@@ -15,7 +15,7 @@ const useTokenBalances = (tokenAddresses: Address[]) => {
       ...queryKeys.user
         .chain(userAddress!, chainId!)
         ._ctx.tokenBalance(tokenAddress),
-      enabled: isAddressValid(userAddress) && isCorrectChain,
+      enabled: isAddressValid(userAddress),
       refetchOnMount: false,
       refetchOnWindowFocus: true,
       staleTime: Infinity,
