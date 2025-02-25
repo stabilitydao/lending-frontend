@@ -10,10 +10,9 @@ import { useCallback } from "react";
 const useAllowance = (spenderAddress: Address, tokenAddress: Address) => {
   const queryClient = useQueryClient();
 
-  const { isCorrectChain, chainIdToUse: chainId } = useCorrectChain();
+  const { chainIdToUse: chainId } = useCorrectChain();
   const { address: approverAddress } = useAccount();
   const isEnabled =
-    isCorrectChain &&
     isAddressValid(approverAddress) &&
     isAddressValid(spenderAddress) &&
     isAddressValid(tokenAddress);

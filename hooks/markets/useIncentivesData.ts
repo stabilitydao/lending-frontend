@@ -1,74 +1,111 @@
+"use client";
+import { getWrappedIfNative } from "@/constants";
 import { bnToNumber } from "@/helpers";
-import { useIncentivesDataRaw, useWrappedIfNative } from "@/hooks";
+import { useIncentivesDataRaw } from "@/hooks";
 import { Address } from "viem";
+import { useChainId } from "wagmi";
 
-const useIncentivesData = (tokenAddress: Address) => {
-  tokenAddress = useWrappedIfNative(tokenAddress);
+type SubIncentiveData = {
+  rewardTokenAddress: Address;
+  emissionPerSecond: bigint;
+  rewardTokenDecimals: number;
+  rewardPriceFeed: bigint;
+};
+
+type IncentiveData = {
+  underlyingAsset: `0x${string}`;
+  aIncentiveData: {
+    rewardsTokenInformation: readonly SubIncentiveData[];
+  };
+  vIncentiveData: {
+    rewardsTokenInformation: readonly SubIncentiveData[];
+  };
+};
+
+const processIncentiveData = (incentiveData: readonly SubIncentiveData[]) => {
+  const tokenRewards: { tokenAddress: Address; rewardsPerSecond: number }[] =
+    [];
+
+  incentiveData.forEach((reward) => {
+    const tokenRewardPerSecond = bnToNumber(
+      reward.emissionPerSecond,
+      reward.rewardTokenDecimals
+    );
+
+    const priceFeed = bnToNumber(reward.rewardPriceFeed, 8);
+
+    const adjustedRewardPerSecond = tokenRewardPerSecond * priceFeed;
+    tokenRewards.push({
+      tokenAddress: reward.rewardTokenAddress,
+      rewardsPerSecond: adjustedRewardPerSecond,
+    });
+  });
+
+  return {
+    rewardsPerSecond: tokenRewards.reduce(
+      (sum, reward) => sum + reward.rewardsPerSecond,
+      0
+    ),
+    tokenRewards,
+  };
+};
+
+const processIncentivesData = (
+  data: readonly IncentiveData[],
+  filter: (data: IncentiveData) => readonly SubIncentiveData[]
+) => {
+  const incentives: Record<Address, { rewardsPerSecond: number }> = {};
+
+  data.forEach((market) => {
+    const incentivesData = processIncentiveData(filter(market));
+    incentives[market.underlyingAsset.toLowerCase() as Address] =
+      incentivesData;
+  });
+
+  return incentives;
+};
+
+const useIncentivesData = () => {
   const {
     incentivesData,
     isIncentivesDataLoading,
     invalidateIncentivesDataRawQuery,
   } = useIncentivesDataRaw();
 
-  if (isIncentivesDataLoading) {
-    return {
-      invalidateIncentiveDataQuery: invalidateIncentivesDataRawQuery,
-      supplyIncentives: {
-        rewardsPerSecond: 0,
-        tokenRewards: [] as {
-          tokenAddress: Address;
-          rewardsPerSecond: number;
-        }[],
-      },
-      borrowIncentives: {
-        rewardsPerSecond: 0,
-        tokenRewards: [] as {
-          tokenAddress: Address;
-          rewardsPerSecond: number;
-        }[],
-      },
-    };
-  }
-
-  const tokenIncentiveData = incentivesData!.find(
-    (data) => data.underlyingAsset.toLowerCase() === tokenAddress.toLowerCase()
-  );
-
-  const processIncentiveData = (
-    incentiveData: NonNullable<typeof incentivesData>[number]["aIncentiveData"]
-  ) => {
-    const tokenRewards: { tokenAddress: Address; rewardsPerSecond: number }[] =
-      [];
-
-    incentiveData.rewardsTokenInformation.forEach((reward) => {
-      const tokenRewardPerSecond = bnToNumber(
-        reward.emissionPerSecond,
-        reward.rewardTokenDecimals
-      );
-
-      const priceFeed = bnToNumber(reward.rewardPriceFeed, 8);
-
-      const adjustedRewardPerSecond = tokenRewardPerSecond * priceFeed;
-      tokenRewards.push({
-        tokenAddress: reward.rewardTokenAddress,
-        rewardsPerSecond: adjustedRewardPerSecond,
-      });
-    });
-
-    return {
-      rewardsPerSecond: tokenRewards.reduce(
-        (sum, reward) => sum + reward.rewardsPerSecond,
-        0
-      ),
-      tokenRewards,
-    };
-  };
-
   return {
-    invalidateIncentiveDataQuery: invalidateIncentivesDataRawQuery,
-    supplyIncentives: processIncentiveData(tokenIncentiveData!.aIncentiveData),
-    borrowIncentives: processIncentiveData(tokenIncentiveData!.vIncentiveData),
+    invalidateIncentivesDataQuery: invalidateIncentivesDataRawQuery,
+    supplyIncentives: incentivesData
+      ? processIncentivesData(
+          incentivesData,
+          (data) => data.aIncentiveData.rewardsTokenInformation
+        )
+      : undefined,
+    borrowIncentives: incentivesData
+      ? processIncentivesData(
+          incentivesData,
+          (data) => data.vIncentiveData.rewardsTokenInformation
+        )
+      : undefined,
+    isIncentivesDataLoading,
   };
 };
 
-export { useIncentivesData };
+const useIncentiveData = (tokenAddress: Address) => {
+  const chainID = useChainId();
+  tokenAddress = getWrappedIfNative(tokenAddress, chainID);
+  const {
+    supplyIncentives,
+    borrowIncentives,
+    invalidateIncentivesDataQuery,
+    isIncentivesDataLoading,
+  } = useIncentivesData();
+
+  return {
+    supplyIncentive: supplyIncentives?.[tokenAddress],
+    borrowIncentive: borrowIncentives?.[tokenAddress],
+    invalidateIncentiveDataQuery: invalidateIncentivesDataQuery,
+    isIncentiveDataLoading: isIncentivesDataLoading,
+  };
+};
+
+export { useIncentivesData, useIncentiveData };

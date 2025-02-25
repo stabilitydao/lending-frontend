@@ -7,16 +7,19 @@ import { isAddressValid } from "@/helpers";
 import { useCallback } from "react";
 
 const useTokenBalance = (tokenAddress: Address) => {
-  const { isCorrectChain, chainIdToUse: chainId } = useCorrectChain();
+  const { chainIdToUse: chainId } = useCorrectChain();
   const { address: userAddress } = useAccount();
   const areAddressesValid =
     isAddressValid(userAddress) && isAddressValid(tokenAddress);
   const client = useQueryClient();
+  console.log("chainId", chainId);
+  console.log("userAddress", userAddress);
+  console.log("tokenAddress", tokenAddress);
   const { data: balanceBn, isLoading } = useQuery({
     ...queryKeys.user
       .chain(userAddress!, chainId!)
       ._ctx.tokenBalance(tokenAddress),
-    enabled: areAddressesValid && isCorrectChain,
+    enabled: areAddressesValid,
     staleTime: Infinity,
     refetchInterval: 15000,
   });
@@ -27,6 +30,7 @@ const useTokenBalance = (tokenAddress: Address) => {
         ._ctx.tokenBalance(tokenAddress)
     );
   }, [client, tokenAddress, userAddress, chainId]);
+  console.log("balanceBn", balanceBn);
   return {
     isBalanceLoading: isLoading,
     balance: balanceBn,

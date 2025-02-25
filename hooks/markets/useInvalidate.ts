@@ -14,21 +14,21 @@ const useInvalidate = (token: Token) => {
   const { invalidateUserDataRawQuery } = useUserDataRaw();
   const { invalidateUserAccountDataQuery } = useUserAccountData();
   const { invalidateTokenBalanceQuery } = useTokenBalance(token.address);
-  const { invalidateIncentiveDataQuery } = useIncentivesData(token.address);
+  const { invalidateIncentivesDataQuery } = useIncentivesData();
   const { marketID } = useSelectedMarket();
 
   const invalidateMarketState = useCallback(() => {
     invalidateMarketsRawQuery(marketID);
     invalidateUserDataRawQuery(marketID);
     invalidateUserAccountDataQuery(marketID);
-    invalidateIncentiveDataQuery(marketID);
+    invalidateIncentivesDataQuery(marketID);
     invalidateTokenBalanceQuery();
   }, [
     invalidateMarketsRawQuery,
     invalidateUserDataRawQuery,
     invalidateUserAccountDataQuery,
     invalidateTokenBalanceQuery,
-    invalidateIncentiveDataQuery,
+    invalidateIncentivesDataQuery,
     marketID,
   ]);
 

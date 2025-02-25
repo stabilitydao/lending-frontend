@@ -11,4 +11,5 @@ export type Token = {
   address: Address;
   decimals: number;
   icon: string;
+  pair?: [Token, Token];
 };

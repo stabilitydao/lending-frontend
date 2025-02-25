@@ -9,7 +9,6 @@ import {
   useTokenBalance,
   useUserData,
   useUserDisplayData,
-  useMarketRaw,
 } from "@/hooks";
 import {
   useAccount,

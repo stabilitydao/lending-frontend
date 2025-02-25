@@ -1,6 +1,19 @@
 import { MarketDefinition } from "@/types";
 import { sonic } from "viem/chains";
-import { S, scUSD, USDCE, wETH, USDT, wOS, stS } from "@/constants";
+import {
+  S,
+  scUSD,
+  USDCE,
+  wETH,
+  USDT,
+  wOS,
+  stS,
+  SWAPX_OS_WS,
+  SWAPX_WS_OS,
+  SWAPX_STS_WS,
+  SWAPX_WS_STS,
+  wS,
+} from "@/constants";
 
 export const MARKET_DEFINITIONS: {
   [key: string]: MarketDefinition;
@@ -12,6 +25,13 @@ export const MARKET_DEFINITIONS: {
     NATIVE_TOKEN_GATEWAY: "0xbE0B2230B842be6A37188038a58755534dC9E999",
     chainID: sonic.id,
   },
+  // "Vault Markets": {
+  //   tokens: [SWAPX_OS_WS, SWAPX_WS_OS, SWAPX_STS_WS, SWAPX_WS_STS, S, wOS, stS],
+  //   POOL_ADDRESS_PROVIDER: "0x8047c361318704340d8736D187Fc80a0277687d5",
+  //   AAVE_POOL: "0xF2C096338B9bEbBbEc6c4e5d0Fd58ee5Af2E4a45",
+  //   NATIVE_TOKEN_GATEWAY: "0x0",
+  //   chainID: sonic.id,
+  // },
 };
 
 export const DEFAULT_MARKET_ID = "Main Protocol";
