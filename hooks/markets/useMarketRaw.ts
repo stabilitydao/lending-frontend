@@ -1,13 +1,13 @@
-import { useMarketsRaw, useWrappedIfNative } from "@/hooks";
-import { Token } from "@/types";
+import { useMarketsRaw } from "@/hooks";
+import { Token } from "@/constants";
 
 const useMarketRaw = (token: Token) => {
-  let tokenAddress = useWrappedIfNative(token.address);
+  token = token.isNative ? token.wrapperToken! : token;
   const { marketsData, isMarketsDataLoading, invalidateMarketsRawQuery } =
     useMarketsRaw();
   return {
     marketData: marketsData?.find(
-      (m) => m.underlyingAsset.toLowerCase() === tokenAddress.toLowerCase()
+      (m) => m.underlyingAsset.toLowerCase() === token.address
     ),
     isMarketsDataLoading,
     invalidateMarketRawQuery: invalidateMarketsRawQuery,

@@ -1,9 +1,7 @@
 "use client";
-import { getWrappedIfNative } from "@/constants";
 import { bnToNumber } from "@/helpers";
 import { useIncentivesDataRaw } from "@/hooks";
 import { Address } from "viem";
-import { useChainId } from "wagmi";
 
 type SubIncentiveData = {
   rewardTokenAddress: Address;
@@ -91,8 +89,6 @@ const useIncentivesData = () => {
 };
 
 const useIncentiveData = (tokenAddress: Address) => {
-  const chainID = useChainId();
-  tokenAddress = getWrappedIfNative(tokenAddress, chainID);
   const {
     supplyIncentives,
     borrowIncentives,

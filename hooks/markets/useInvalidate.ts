@@ -6,14 +6,14 @@ import {
   useUserDataRaw,
   useIncentivesData,
 } from "@/hooks";
-import { Token } from "@/types";
+import { Token } from "@/constants";
 import { useCallback } from "react";
 
 const useInvalidate = (token: Token) => {
   const { invalidateMarketsRawQuery } = useMarketsRaw();
   const { invalidateUserDataRawQuery } = useUserDataRaw();
   const { invalidateUserAccountDataQuery } = useUserAccountData();
-  const { invalidateTokenBalanceQuery } = useTokenBalance(token.address);
+  const { invalidateTokenBalanceQuery } = useTokenBalance(token);
   const { invalidateIncentivesDataQuery } = useIncentivesData();
   const { marketID } = useSelectedMarket();
 

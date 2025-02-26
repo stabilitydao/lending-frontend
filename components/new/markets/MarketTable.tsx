@@ -10,7 +10,7 @@ import {
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { MarketModal } from "./MarketModal";
 import { useMarket, useMarkets, useSearch, useSelectedMarket } from "@/hooks";
-import { MarketInfo, Token } from "@/types";
+import { MarketInfo } from "@/types";
 import { formatSuffix, trimmedNumber } from "@/helpers";
 import { useState } from "react";
 import Image from "next/image";
@@ -81,11 +81,13 @@ const MerklNote = () => {
 const MarketLine = ({
   token,
   onSelectToken,
+  withVault = false,
 }: {
   token: Token;
   onSelectToken: (token: Token) => void;
+  withVault?: boolean;
 }) => {
-  const { market, isMarketLoading } = useMarket(token.address);
+  const { market, isMarketLoading } = useMarket(token);
   if (isMarketLoading || !market) return null;
   if (token.pair) {
     return (
@@ -134,7 +136,11 @@ const MarketLine = ({
     >
       <TableCell>
         <div className="flex items-center gap-10">
-          <div className="flex flex-row gap-2 items-center">
+          <div
+            className={`flex flex-row gap-2 items-center ${
+              withVault && "w-[88px]"
+            }`}
+          >
             <Avatar className="bg-transparent p-1.5">
               <AvatarImage src={token.icon} className="object-contain" />
               <AvatarFallback>{token.symbol}</AvatarFallback>
@@ -195,6 +201,7 @@ const MarketLine = ({
 import { FilterIcon } from "@/components/icons/filter";
 import { useAccount } from "wagmi";
 import { DoubleAvatar } from "@/components/ui/double-avatar";
+import { Token } from "@/constants";
 
 const SortableTableHead = ({
   label,
@@ -259,8 +266,13 @@ export const MarketTable = () => {
 
   const sort = (tokens: Token[]) => {
     if (!sortBy || !markets) return tokens;
-
     return tokens.slice().sort((a, b) => {
+      if (a.isNative) {
+        a = a.wrapperToken!;
+      }
+      if (b.isNative) {
+        b = b.wrapperToken!;
+      }
       const marketA = markets[a.address].market;
       const marketB = markets[b.address].market;
 
@@ -272,6 +284,8 @@ export const MarketTable = () => {
       return (valA > valB ? 1 : -1) * (sortBy.order === "asc" ? 1 : -1);
     });
   };
+  const isWithVaults =
+    marketDefinition.tokens.findIndex((token) => token.pair) != -1;
 
   return (
     <div className="p-4 gap-6 flex flex-col">
@@ -324,6 +338,7 @@ export const MarketTable = () => {
               key={token.address}
               token={token}
               onSelectToken={onSelectToken}
+              withVault={isWithVaults}
             />
           ))}
         </TableBody>

@@ -15,7 +15,7 @@ import {
   useWaitForTransactionReceipt,
   useWriteContract,
 } from "wagmi";
-import { AavePoolAbi, Addresses, NativeTokenGatewayAbi } from "@/constants";
+import { AavePoolAbi, NativeTokenGatewayAbi } from "@/constants";
 import {
   bnToNumber,
   extractError,
@@ -25,12 +25,12 @@ import {
   strToBn,
   trimmedString,
 } from "@/helpers";
-import { Token } from "@/types";
+import { Token } from "@/constants";
 
 const useRepay = (token: Token) => {
   const [amount, setAmount] = useState("");
-  const { balance } = useTokenBalance(token.address);
-  const { userData } = useUserData(token.address);
+  const { balance } = useTokenBalance(token);
+  const { userData } = useUserData(token);
   const maxDebt = userData?.variableDebt;
   const { marketDefinition } = useSelectedMarket();
 
@@ -38,9 +38,6 @@ const useRepay = (token: Token) => {
   const { address: userAddress } = useAccount();
 
   const { allowance } = useAllowance(marketDefinition.AAVE_POOL, token.address);
-
-  const isNativeToken =
-    token.address === Addresses[chainIdToUse].TOKENS.NATIVE_TOKEN;
 
   const {
     approve,
@@ -65,16 +62,15 @@ const useRepay = (token: Token) => {
     });
   const isValidAddress = userAddress && isAddressValid(userAddress);
   let hasEnoughAllowance =
-    isNativeToken ||
+    token.isNative ||
     (!!allowance &&
       allowance > 0 &&
       allowance >= strToBn(amount, token.decimals));
-
   const shouldUseMaxBN =
     (balance || BigInt(0)) > (maxDebt || BigInt(0)) &&
     Number(amount) > bnToNumber(maxDebt, token.decimals) * 0.999;
 
-  if (shouldUseMaxBN && !isNativeToken)
+  if (shouldUseMaxBN && !token.isNative)
     hasEnoughAllowance = allowance === MAXUINT256;
 
   let repay = () => {
@@ -100,7 +96,7 @@ const useRepay = (token: Token) => {
       }
     );
   };
-  if (isNativeToken) {
+  if (token.isNative) {
     repay = () => {
       if (!isValidAddress) return;
       let amountBn = strToBn(amount, token.decimals);

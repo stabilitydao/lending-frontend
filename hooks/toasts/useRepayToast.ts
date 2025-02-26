@@ -1,4 +1,4 @@
-import { Token } from "@/types";
+import { Token } from "@/constants";
 import { useToast } from "@/hooks";
 
 export type RepayToastProps = {

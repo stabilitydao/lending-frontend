@@ -1,36 +1,26 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Address } from "viem";
 import { useAccount } from "wagmi";
-import { useCorrectChain } from "@/hooks";
 import { queryKeys } from "@/queries";
-import { isAddressValid } from "@/helpers";
 import { useCallback } from "react";
+import { Token } from "@/constants";
 
-const useTokenBalance = (tokenAddress: Address) => {
-  const { chainIdToUse: chainId } = useCorrectChain();
+const useTokenBalance = (token: Token) => {
   const { address: userAddress } = useAccount();
-  const areAddressesValid =
-    isAddressValid(userAddress) && isAddressValid(tokenAddress);
   const client = useQueryClient();
-  console.log("chainId", chainId);
-  console.log("userAddress", userAddress);
-  console.log("tokenAddress", tokenAddress);
   const { data: balanceBn, isLoading } = useQuery({
     ...queryKeys.user
-      .chain(userAddress!, chainId!)
-      ._ctx.tokenBalance(tokenAddress),
-    enabled: areAddressesValid,
+      .chain(userAddress!, token.chainID)
+      ._ctx.tokenBalance(token.address),
     staleTime: Infinity,
     refetchInterval: 15000,
   });
   const invalidateTokenBalanceQuery = useCallback(() => {
     client.invalidateQueries(
       queryKeys.user
-        .chain(userAddress!, chainId!)
-        ._ctx.tokenBalance(tokenAddress)
+        .chain(userAddress!, token.chainID)
+        ._ctx.tokenBalance(token.address)
     );
-  }, [client, tokenAddress, userAddress, chainId]);
-  console.log("balanceBn", balanceBn);
+  }, [client, token.address, userAddress, balanceBn]);
   return {
     isBalanceLoading: isLoading,
     balance: balanceBn,

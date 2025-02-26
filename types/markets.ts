@@ -1,5 +1,5 @@
 import { Address, Chain } from "viem";
-import { Token } from "@/types";
+import { Token } from "@/constants";
 
 export type MarketInfo = {
   asset: {
@@ -18,6 +18,7 @@ export type MarketInfo = {
   };
   borrowAPY: number;
   collateralFactor: number;
+  isBorrowEnabled: boolean;
   breakdown: {
     supply?: Record<string, number>;
     borrow?: Record<string, number>;

@@ -1,9 +1,10 @@
+import { Token } from "@/constants";
 import { bnToNumber } from "@/helpers";
-import { useUserIncentivesDataRaw, useWrappedIfNative } from "@/hooks";
+import { useUserIncentivesDataRaw } from "@/hooks";
 import { Address } from "viem";
 
-const useUserIncentivesData = (tokenAddress: Address) => {
-  tokenAddress = useWrappedIfNative(tokenAddress);
+const useUserIncentivesData = (token: Token) => {
+  token = token.isNative ? token.wrapperToken! : token;
   const {
     isUserIncentivesDataLoading,
     userIncentivesData,
@@ -31,7 +32,7 @@ const useUserIncentivesData = (tokenAddress: Address) => {
   }
 
   const tokenUserIncentiveData = userIncentivesData!.find(
-    (data) => data.underlyingAsset.toLowerCase() === tokenAddress.toLowerCase()
+    (data) => data.underlyingAsset.toLowerCase() === token.address
   );
 
   const processIncentiveData = (

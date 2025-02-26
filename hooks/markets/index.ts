@@ -1,5 +1,4 @@
 export * from "./useMerklAPR";
-export * from "./useWrappedIfNative";
 export * from "./useMarketsRaw";
 export * from "./useMarketRaw";
 export * from "./useMarket";

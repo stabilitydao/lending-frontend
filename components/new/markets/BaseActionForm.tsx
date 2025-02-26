@@ -4,10 +4,10 @@ import { Button, ChainButton } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PercentageBar } from "@/components/ui/percentage-bar";
 import { ArrowRight, CheckCheck } from "lucide-react";
-import { MarketInfo, Token, UserDisplayData } from "@/types";
+import { MarketInfo, UserDisplayData } from "@/types";
 import { bnToNumber, bnToStr, formatSuffix, trimmedNumber } from "@/helpers";
 import Image from "next/image";
-import { healthData } from "@/constants";
+import { healthData, Token } from "@/constants";
 
 const HealthDisplay = ({ healthFactor }: { healthFactor: number }) => (
   <span className={healthData(healthFactor).text}>
