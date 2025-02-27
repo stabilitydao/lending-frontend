@@ -100,8 +100,8 @@ const useRepay = (token: Token) => {
     repay = () => {
       if (!isValidAddress) return;
       let amountBn = strToBn(amount, token.decimals);
-      if ((balance || BigInt(0)) - amountBn < BigInt(5e16)) {
-        amountBn = amountBn - BigInt(5e16);
+      if ((balance || BigInt(0)) - amountBn < BigInt(1e18)) {
+        amountBn = amountBn - BigInt(1e18);
       }
       if (shouldUseMaxBN) {
         amountBn = MAXUINT256;
@@ -113,7 +113,7 @@ const useRepay = (token: Token) => {
           functionName: "repayETH",
           args: [userAddress, amountBn, BigInt(2), userAddress],
           chainId: chainIdToUse,
-          value: minBn(amountBn, (balance || BigInt(5e16)) - BigInt(5e16)),
+          value: minBn(amountBn, (balance || BigInt(1e18)) - BigInt(1e18)),
         },
         {
           onSuccess: (data) => pendingRepayToast(data),

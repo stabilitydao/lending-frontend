@@ -91,8 +91,8 @@ const useSupply = (token: Token) => {
     supply = () => {
       if (!isValidAddress) return;
       let amountBn = strToBn(amount, token.decimals);
-      if ((balance || BigInt(0)) - amountBn < BigInt(5e16)) {
-        amountBn = amountBn - BigInt(5e16);
+      if ((balance || BigInt(0)) - amountBn < BigInt(1e18)) {
+        amountBn = amountBn - BigInt(1e18);
       }
       writeContract(
         {
