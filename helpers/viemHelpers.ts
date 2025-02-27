@@ -32,8 +32,7 @@ export const bnToStr = (
   return formatUnits(bn, decimals);
 };
 export const strToBn = (str: string, decimals: number = 18) => {
-  const formattedStr = Number(str).toFixed(decimals);
-  return parseUnits(formattedStr, decimals);
+  return parseUnits(str, decimals);
 };
 export const numToBn = (num: number, decimals: number = 18) => {
   return parseUnits(num.toString(), decimals);

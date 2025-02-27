@@ -49,7 +49,6 @@ const useSupply = (token: Token) => {
   const totalSupplyCap = remainingSupplyCap + totalSupplied;
   const fakeSupplyCap = (totalSupplyCap * BigInt(9999)) / BigInt(10000);
   const fakeSupplyCapLeft = maxBn(fakeSupplyCap - totalSupplied, BigInt(0));
-
   const {
     writeContract,
     isPending,
@@ -88,7 +87,6 @@ const useSupply = (token: Token) => {
       }
     );
   };
-  console.log(token);
   if (token.isNative) {
     supply = () => {
       if (!isValidAddress) return;

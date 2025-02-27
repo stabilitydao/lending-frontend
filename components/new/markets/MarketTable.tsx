@@ -54,7 +54,7 @@ const MerklNote = () => {
       >
         Merkl’s rewards
       </a>{" "}
-      (APYs) are calculated based on the amount of{" "}
+      (APRs) are calculated based on the amount of{" "}
       <a
         href="https://docs.soniclabs.com/funding/sonic-airdrop/sonic-gems"
         target="_blank"
@@ -310,7 +310,7 @@ export const MarketTable = () => {
               defaultOrder="desc"
             />
             <SortableTableHead
-              label="Supply APY"
+              label="Supply APR"
               extract={(tm) => tm?.supplyAPY}
               sortBy={sortBy}
               setSortBy={setSortBy}
@@ -324,7 +324,7 @@ export const MarketTable = () => {
               defaultOrder="desc"
             />
             <SortableTableHead
-              label="Borrow APY"
+              label="Borrow APR"
               extract={(tm) => tm?.borrowAPY}
               sortBy={sortBy}
               setSortBy={setSortBy}

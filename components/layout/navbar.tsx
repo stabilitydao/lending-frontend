@@ -106,6 +106,26 @@ export const Navbar = () => {
           <DropdownMenuContent>
             <DropdownMenuItem>
               <a
+                href="https://app.rhino.fi/bridge/?refId=DeFi_VicunaFinance&chainIn=ARBITRUM&chainOut=SONIC"
+                target="_blank"
+                rel="noreferrer"
+                className="w-full"
+              >
+                Bridge
+              </a>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <a
+                href="https://app.magpiefi.xyz/swap"
+                target="_blank"
+                rel="noreferrer"
+                className="w-full"
+              >
+                Swap
+              </a>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <a
                 href="https://vicuna-finance.gitbook.io/vicuna-finance-sonic"
                 target="_blank"
                 rel="noreferrer"

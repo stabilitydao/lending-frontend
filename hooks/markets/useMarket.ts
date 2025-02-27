@@ -169,7 +169,6 @@ const useMarket = (token: Token) => {
     token = token.wrapperToken!;
   }
   const { isMarketsDataLoading, markets } = useMarkets();
-  console.log(markets?.[token.address]);
   return {
     isMarketsDataLoading,
     ...markets?.[token.address],
