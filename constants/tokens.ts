@@ -208,6 +208,66 @@ export const SWAPX_STS_WS = new Token({
     "https://swapx.fi/earn?orderBy=totalValueLockedUSD&orderDirection=desc&orderByCore=totalValueLockedUSD&orderDirectionCore=desc&ownerType=pools&filter=conc-liquidity&search=ws%2Fsts",
 });
 
+export const SWAPX_SCUSD_USDC = new Token({
+  name: "USDC.e-scUSD (scUSD)",
+  symbol: "scUSD-USDC",
+  address: "0x6De36C1Af417A438a69d4AAa3655022E52bbC606",
+  decimals: 18,
+  icon: "/icons/coins/SwapX_Black.svg",
+  pair: [scUSD, USDCE],
+  chainID: sonic.id,
+  buyLink:
+    "https://swapx.fi/earn?orderBy=totalValueLockedUSD&orderDirection=desc&orderByCore=totalValueLockedUSD&orderDirectionCore=desc&ownerType=pools&filter=conc-liquidity&search=usdc.e%2Fscusd",
+});
+
+export const SWAPX_USDC_SCUSD = new Token({
+  name: "USDC.e-scUSD (USDC.e)",
+  symbol: "USDC-scUSD",
+  address: "0xC36F478888dDDfa1a50f27442c610ac5dbA8C22A",
+  decimals: 18,
+  icon: "/icons/coins/SwapX_Black.svg",
+  pair: [USDCE, scUSD],
+  chainID: sonic.id,
+  buyLink:
+    "https://swapx.fi/earn?orderBy=totalValueLockedUSD&orderDirection=desc&orderByCore=totalValueLockedUSD&orderDirectionCore=desc&ownerType=pools&filter=conc-liquidity&search=usdc.e%2Fscusd",
+});
+
+export const SWAPX_USDC_USDT = new Token({
+  name: "USDT-USDC.e (USDC.e)",
+  symbol: "USDC-USDT",
+  address: "0xb8330F4027b6cb4402C5d02D535c87579cab2477",
+  decimals: 18,
+  icon: "/icons/coins/SwapX_Black.svg",
+  pair: [USDCE, USDT],
+  chainID: sonic.id,
+  buyLink:
+    "https://swapx.fi/earn?orderBy=totalValueLockedUSD&orderDirection=desc&orderByCore=totalValueLockedUSD&orderDirectionCore=desc&ownerType=pools&filter=conc-liquidity&search=usdc.e%2Fusdt",
+});
+
+export const SWAPX_USDT_USDC = new Token({
+  name: "USDT-USDC.e (USDT)",
+  symbol: "USDT-USDC",
+  address: "0xe10a0F4F7831fC7049F271686005F9a8D274fCeE",
+  decimals: 18,
+  icon: "/icons/coins/SwapX_Black.svg",
+  pair: [USDT, USDCE],
+  chainID: sonic.id,
+  buyLink:
+    "https://swapx.fi/earn?orderBy=totalValueLockedUSD&orderDirection=desc&orderByCore=totalValueLockedUSD&orderDirectionCore=desc&ownerType=pools&filter=conc-liquidity&search=usdc.e%2Fusdt",
+});
+
+export const BEETS_USDC_SCUSD = new Token({
+  name: "Ringing Stable Beets",
+  symbol: "BeetsRSB",
+  address: "0x037BB13Fb35dA590d1144B082F4b08Ff7C8c531C",
+  decimals: 18,
+  icon: "/icons/dex/beets.fi.svg",
+  pair: [USDCE, scUSD],
+  chainID: sonic.id,
+  buyLink:
+    "https://beets.fi/pools/sonic/v2/0xcd4d2b142235d5650ffa6a38787ed0b7d7a51c0c000000000000000000000037/add-liquidity",
+});
+
 export const getTokenByAddress = (address: string): Token | undefined => {
   return ALL_TOKENS.find((token) => token.address === address.toLowerCase());
 };
