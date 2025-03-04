@@ -4,4 +4,3 @@ export * from "./getUserReservesData";
 export * from "./getUserAccountData";
 export * from "./getIncentivesData";
 export * from "./getUserIncentivesData";
-export * from "./getMerklMarketsAPR";

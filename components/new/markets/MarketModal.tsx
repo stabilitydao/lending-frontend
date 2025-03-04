@@ -15,8 +15,8 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "../../ui/tabs";
 import { useState } from "react";
 import Image from "next/image";
-import { Deposit } from "../../icons/deposit";
-import { Withdraw } from "../../icons/withdraw";
+import { Deposit } from "@/components/icons/deposit";
+import { Withdraw } from "@/components/icons/withdraw";
 import { ExternalLinkIcon, RefreshCw } from "lucide-react";
 import { MarketInfo } from "@/types";
 import {
@@ -30,9 +30,7 @@ import {
 import { minBn } from "@/helpers";
 import { BaseActionForm } from "@/components";
 import Link from "next/link";
-import { useChainId } from "wagmi";
 import { Token } from "@/constants";
-import { set } from "react-hook-form";
 
 export interface MarketModalProps {
   token: Token;
@@ -322,16 +320,7 @@ export const MarketModal = ({
             {token.isNative ? "Use Wrapped" : "Use Native"}
           </Button>
         )}
-
-        <div className="relative w-full flex items-center justify-center mt-6">
-          <div className="flex items-center gap-4">
-            <Image src={token.icon} alt="logo" width={25} height={25} />
-            <div className="flex flex-col items-start gap-2">
-              <span className="text-sm font-semibold">{token.name}</span>
-              <span className="text-xs font-light">{token.symbol}</span>
-            </div>
-          </div>
-
+        <div className="absolute right-5 top-6">
           {token.pair ? (
             <>
               <button
@@ -393,8 +382,16 @@ export const MarketModal = ({
               <ExternalLinkIcon className="w-4 h-4 text-primary" />
             </Link>
           )}
+        </div>
 
-          {/* Popup Modal */}
+        <div className="relative w-full flex items-center justify-center mt-6">
+          <div className="flex items-center gap-4">
+            <Image src={token.icon} alt="logo" width={25} height={25} />
+            <div className="flex flex-col items-start gap-2">
+              <span className="text-sm font-semibold">{token.name}</span>
+              <span className="text-xs font-light">{token.symbol}</span>
+            </div>
+          </div>
         </div>
 
         <div className="absolute inset-0 flex items-center justify-center z-0 pointer-events-none">

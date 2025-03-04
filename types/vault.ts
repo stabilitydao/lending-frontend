@@ -1,54 +1,37 @@
-export type VaultData = {
+import { Token } from "@/constants";
+import { Address } from "viem";
+
+export type VaultDefinition = {
   id: string;
-  name: string;
-  vaultAddress: string;
-  token0Name: string;
-  token1Name: string;
-  imageSrc0?: string;
-  imageSrc1?: string;
-  vaultReward: string;
-  kind: "clm" | "v7";
+  receipt: Token;
+  lp: Token;
+  tokens: [Token, Token];
   chainId: number;
-  lpUrl: string;
 };
 
-export type VaultDataPlus = {
-  id: string;
+export type VaultAggregatedData = {
   name: string;
-  vaultAddress: string;
-  token0Name: string;
-  token1Name: string;
-  imageSrc0?: string;
-  imageSrc1?: string;
-  dexImage: string;
-  vaultReward: string;
-  kind: "clm" | "v7";
-  lpUrl: string;
-  chainId: number;
-  wallet: string;
-  walletUSD: string;
-  deposited: {
-    token0: string;
-    token1: string;
+  lp: {
+    balance: bigint;
+    display: number;
+    usdValue: number;
+    price: number;
   };
-  depositedUSD: {
-    token0: string;
-    token1: string;
+  receipt: {
+    balance: bigint;
+    display: number;
+    usdValue: number;
+    price: number;
   };
+  apr: number;
+  breakdown: Record<string, number>;
   tvl: number;
-} & BreakdownData;
-
-export type BreakdownData = {
-  [key: string]: {
-    beefyPerformanceFee: number;
-    compoundingsPerYear: number;
-    lpFee: number;
-    totalApy: number;
-    vaultApr?: number;
-    tradingApr?: number;
-  };
 };
 
-export type LpsData = {
-  [vaultId: string]: number;
+export type ProcessedVaultData = {
+  compoundingsPerYear: number;
+  beefyPerformanceFee: number;
+  lpFee: number;
+  apr: number;
+  breakdown: Record<string, number>;
 };

@@ -106,8 +106,8 @@ const useMarkets = () => {
 
     breakdown.supply = Object.fromEntries(
       Object.entries({
-        "Supply APY": supplyAPY,
-        "Incentives APY": incentiveSupplyAPR,
+        "Supply APR": supplyAPY,
+        "Incentives APR": incentiveSupplyAPR,
         "Merkl Rewards": merklSupplyAPR,
       }).filter(([_, value]) => value !== 0)
     );
@@ -115,7 +115,7 @@ const useMarkets = () => {
     breakdown.borrow = Object.fromEntries(
       Object.entries({
         "Borrow Rate": borrowAPY,
-        "Incentives APY": incentiveBorrowAPR,
+        "Incentives APR": incentiveBorrowAPR,
         "Merkl Rewards": merklBorrowAPR,
       }).filter(([_, value]) => value !== 0)
     );

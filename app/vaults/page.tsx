@@ -1,6 +1,6 @@
 "use client";
 import { SearchFilter, VaultsTVL } from "@/components";
-import { VaultTable } from "@/components/vaults/vault-table";
+import { VaultTable } from "@/components";
 
 export default function Page() {
   return (

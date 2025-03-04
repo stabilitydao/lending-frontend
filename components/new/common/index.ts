@@ -3,3 +3,7 @@ export * from "./SearchFilter";
 export * from "./TVL";
 export * from "./StandardTooltip";
 export * from "./ApyBreakdown";
+export * from "./SortableTableHead";
+export * from "./FullEligibleRewards";
+export * from "./MerklNote";
+export * from "./MaxInput";
