@@ -40,7 +40,7 @@ export const getVaultsBreakdown = async (): Promise<
         compoundingsPerYear: vault.compoundingsPerYear,
         beefyPerformanceFee: vault.beefyPerformanceFee,
         lpFee: vault.lpFee ?? 0,
-        apr: vault.totalApy,
+        apy: vault.totalApy,
         breakdown,
       };
     }

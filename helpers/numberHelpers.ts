@@ -60,6 +60,9 @@ export const QuadrillionsFormat = (
 };
 
 export function trimmedNumber(number = 0, precision = 0, useE = true) {
+  if (Math.abs(number) < 1e-6) {
+    return "0.00";
+  }
   //account for number being in e notation
   if (number.toString().includes("e")) {
     const [num, exponent] = number.toString().split("e");
@@ -104,8 +107,14 @@ export const formatSuffix = (num: number) => {
       return `${(num / 1000000).toFixed(2)}M`;
     case num >= 1e3:
       return `${(num / 1000).toFixed(2)}K`;
-    case num >= 0:
+    case num >= 1:
       return `${num.toFixed(2)}`;
+    case num > 0.000001:
+      return num.toPrecision(2);
+    case num > 0:
+      return num.toExponential(2);
+    case num === 0:
+      return "0";
     default:
       return null;
   }

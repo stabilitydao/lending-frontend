@@ -345,8 +345,12 @@ export const MarketModal = ({
                         >
                           this link
                         </Link>{" "}
-                        and create some LP (be sure to check "do not stake LP"
-                        if necessary). <br />
+                        and create some LP{" "}
+                        <span className="font-bold underline text-red-500">
+                          (be sure to check "do not stake LP" if you are using
+                          SwapX)
+                        </span>
+                        <br />
                         Note that on ICHI you must deposit{" "}
                         {token.pair![0].symbol} to receive the proper LP.
                       </li>
@@ -362,7 +366,7 @@ export const MarketModal = ({
                         >
                           vault
                         </Link>
-                        , then reload the page to refresh your vault balances.
+                        .
                       </li>
                       <li>
                         You can now use your vault shares to supply this market.

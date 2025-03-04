@@ -23,7 +23,7 @@ export type VaultAggregatedData = {
     usdValue: number;
     price: number;
   };
-  apr: number;
+  apy: number;
   breakdown: Record<string, number>;
   tvl: number;
 };
@@ -32,6 +32,6 @@ export type ProcessedVaultData = {
   compoundingsPerYear: number;
   beefyPerformanceFee: number;
   lpFee: number;
-  apr: number;
+  apy: number;
   breakdown: Record<string, number>;
 };

@@ -66,7 +66,7 @@ export function BaseActionForm({
     }
     const fraction = newPercentage / 100;
     const newAmount = fraction * numericBalance;
-    onChangeAmount(newAmount.toString());
+    onChangeAmount(newAmount.toFixed(token.decimals));
   };
 
   const hasBorrowLimitCurrent =

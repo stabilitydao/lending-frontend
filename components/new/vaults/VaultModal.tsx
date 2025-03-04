@@ -135,6 +135,7 @@ export const VaultModal = ({
         autoFocus={false}
         className="bg-card text-primary overflow-y-auto pt-12 select-none"
       >
+        <div tabIndex={0} aria-hidden="true" />
         <div className="absolute left-5 top-5">
           <Image
             src={vaultDefinition.receipt.icon}

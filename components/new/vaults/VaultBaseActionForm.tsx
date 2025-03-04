@@ -60,7 +60,7 @@ export const VaultBaseActionForm = ({
     }
     const fraction = newPercentage / 100;
     const newAmount = fraction * numericBalance;
-    onChangeAmount(newAmount.toString());
+    onChangeAmount(newAmount.toFixed(decimals));
   };
 
   const finalActionLabel = actionLabel ?? title;
@@ -97,7 +97,7 @@ export const VaultBaseActionForm = ({
           <div className="flex items-center justify-between">
             <div className="flex flex-col">
               <div className="font-semibold">Deposited</div>
-              <div>{vault.apr.toFixed(2)}% APR</div>
+              <div>{vault.apy.toFixed(2)}% APY</div>
             </div>
             <div className="flex flex-col">
               <div className="text-md font-semibold">

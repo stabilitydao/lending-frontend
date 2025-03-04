@@ -81,6 +81,7 @@ const useVaults = (vaultDefinitions: VaultDefinition[]) => {
       (vaultsBreakdown?.[vId]?.breakdown.tradingApr || 0) * 100;
     const merklSupplyAPR =
       merklAPRs?.[vaultDefinition.receipt.address.toLowerCase()]?.vault || 0;
+    const totalApy = (vaultsBreakdown?.[vId]?.apy || 0) * 100;
 
     const breakdown = Object.fromEntries(
       Object.entries({
@@ -91,7 +92,7 @@ const useVaults = (vaultDefinitions: VaultDefinition[]) => {
       }).filter(([_, value]) => value !== 0)
     );
 
-    const apr = vaultApr + liquidStakingApr + tradingApr + merklSupplyAPR;
+    const apy = merklSupplyAPR + totalApy;
     const tvl = vaultsTVL?.[vId] ?? 0;
 
     vaults[vId] = {
@@ -116,7 +117,7 @@ const useVaults = (vaultDefinitions: VaultDefinition[]) => {
             receiptPrice,
           price: receiptPrice,
         },
-        apr: apr,
+        apy: apy,
         breakdown,
         tvl,
       },

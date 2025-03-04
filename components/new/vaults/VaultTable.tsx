@@ -88,12 +88,12 @@ const VaultLine = ({
       </TableCell>
       <TableCell className="text-green-500">
         <div className="flex flex-row gap-1 items-center text-green-500">
-          {vault.apr.toFixed(2)}%
+          {vault.apy.toFixed(2)}%
           <ApyBreakdown breakdown={vault.breakdown} note={<MerklNote />} />
         </div>
       </TableCell>
       <TableCell className="text-green-500">
-        {(((1 + vault.apr / 100) ** (1 / 365) - 1) * 100).toPrecision(2)}%
+        {(((1 + vault.apy / 100) ** (1 / 365) - 1) * 100).toPrecision(2)}%
       </TableCell>
     </TableRow>
   );
@@ -168,14 +168,14 @@ export const VaultTable = () => {
             />
             <SortableTableHead
               label="APR"
-              extract={(v) => v.apr}
+              extract={(v) => v.apy}
               sortBy={sortBy}
               setSortBy={setSortBy}
               defaultOrder="desc"
             />
             <SortableTableHead
               label="DAILY"
-              extract={(v) => v.apr}
+              extract={(v) => v.apy}
               sortBy={sortBy}
               setSortBy={setSortBy}
               defaultOrder="desc"
