@@ -30,7 +30,7 @@ const processIncentiveData = (incentiveData: readonly SubIncentiveData[]) => {
       reward.rewardTokenDecimals
     );
 
-    const priceFeed = bnToNumber(reward.rewardPriceFeed, 8);
+    const priceFeed = bnToNumber(reward.rewardPriceFeed, 18);
 
     const adjustedRewardPerSecond = tokenRewardPerSecond * priceFeed;
     tokenRewards.push({

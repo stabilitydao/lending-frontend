@@ -1,11 +1,11 @@
 import { createQueryKeys } from "@lukemorales/query-key-factory";
 import {
   getLPsPrice,
-  getVaultReceiptPrice,
+  getVaultReceiptPrices,
   getVaultsBreakdown,
   getVaultsTVL,
 } from ".";
-import { getVaultById } from "@/constants";
+import { getVaultById, VAULTS } from "@/constants";
 
 export const vaultQueries = createQueryKeys("vaults", {
   tvl: () => ({
@@ -26,12 +26,12 @@ export const vaultQueries = createQueryKeys("vaults", {
       return await getLPsPrice();
     },
   }),
-  vaultReceiptPrice: (vaultId: string) => ({
-    queryKey: ["vaultReceiptPrice", vaultId],
+  vaultReceiptPrices: (chainId: number) => ({
+    queryKey: ["vaultReceiptPrices", chainId],
     queryFn: async () => {
-      const vault = getVaultById(vaultId);
-      if (!vault) throw new Error(`Vault ${vaultId} not found`);
-      return await getVaultReceiptPrice(vault);
+      return await getVaultReceiptPrices(
+        VAULTS.filter((v) => v.chainId === chainId)
+      );
     },
   }),
 });

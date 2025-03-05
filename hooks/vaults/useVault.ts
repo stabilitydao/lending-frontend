@@ -127,7 +127,7 @@ const useVaults = (vaultDefinitions: VaultDefinition[]) => {
         invalidateVaultsBreakdownDataQuery();
         invalidateVaultsTVLQuery();
         queryClient.invalidateQueries({
-          queryKey: queryKeys.vaults.vaultReceiptPrice(vaultDefinition.id)
+          queryKey: queryKeys.vaults.vaultReceiptPrices(vaultDefinition.chainId)
             .queryKey,
         }); // only invalidate this vault's receipt price
       },

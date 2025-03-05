@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from "react";
-import { useQueries, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { VaultDefinition } from "@/types";
 import { queryKeys } from "@/queries";
@@ -21,48 +21,39 @@ const useVaultsReceiptPrice = (
 ): UseVaultsReceiptPriceReturn => {
   const queryClient = useQueryClient();
 
-  const queries = useQueries({
-    queries: vaultDefinitions.map(
-      (vaultDef) =>
-        ({
-          ...queryKeys.vaults.vaultReceiptPrice(vaultDef.id),
-          staleTime: Infinity,
-          refetchInterval: 300000,
-          refetchOnWindowFocus: "always",
-        } as const)
-    ),
+  const chainId = vaultDefinitions[0]?.chainId;
+
+  const { data, isLoading } = useQuery({
+    ...queryKeys.vaults.vaultReceiptPrices(chainId),
+    staleTime: Infinity,
+    refetchInterval: 300000,
+    refetchOnWindowFocus: "always",
   });
 
-  const vaultsReceiptPrice: Record<string, SingleVaultReceiptPrice> =
-    useMemo(() => {
-      const record: Record<string, SingleVaultReceiptPrice> = {};
+  const vaultsReceiptPrice = useMemo(() => {
+    const record: Record<string, SingleVaultReceiptPrice> = {};
+    vaultDefinitions.forEach((vaultDef) => {
+      const price = data?.[vaultDef.id];
+      record[vaultDef.id] = {
+        vaultReceiptPrice: price,
+        isVaultReceiptPriceLoading: isLoading,
+        invalidateVaultReceiptPriceQuery: () => {
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.vaults.vaultReceiptPrices(chainId).queryKey,
+          });
+        },
+      };
+    });
+    return record;
+  }, [data, isLoading, chainId, vaultDefinitions, queryClient]);
 
-      vaultDefinitions.forEach((vaultDef, index) => {
-        const qResult = queries[index];
-        record[vaultDef.id] = {
-          vaultReceiptPrice: qResult.data,
-          isVaultReceiptPriceLoading: qResult.isLoading,
-          invalidateVaultReceiptPriceQuery: () => {
-            queryClient.invalidateQueries({
-              queryKey: queryKeys.vaults.vaultReceiptPrice(vaultDef.id)
-                .queryKey,
-            });
-          },
-        };
-      });
-
-      return record;
-    }, [queries, vaultDefinitions, queryClient]);
-
-  const isVaultsReceiptPriceLoading = queries.some((q) => q.isLoading);
+  const isVaultsReceiptPriceLoading = isLoading;
 
   const invalidateVaultsReceiptPriceQuery = useCallback(() => {
-    vaultDefinitions.forEach((vaultDef) => {
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.vaults.vaultReceiptPrice(vaultDef.id).queryKey,
-      });
+    queryClient.invalidateQueries({
+      queryKey: queryKeys.vaults.vaultReceiptPrices(chainId).queryKey,
     });
-  }, [queryClient, vaultDefinitions]);
+  }, [queryClient, chainId]);
 
   return {
     vaultsReceiptPrice,
@@ -75,7 +66,7 @@ const useVaultReceiptPrice = (
   vaultDefinition: VaultDefinition
 ): SingleVaultReceiptPrice => {
   const { vaultsReceiptPrice } = useVaultsReceiptPrice([vaultDefinition]);
-  return { ...vaultsReceiptPrice[vaultDefinition.id] };
+  return vaultsReceiptPrice[vaultDefinition.id];
 };
 
 export { useVaultsReceiptPrice, useVaultReceiptPrice };
