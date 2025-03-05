@@ -157,7 +157,7 @@ export const VAULT_SWAPX_WS_SHIBA: VaultDefinition = {
 };
 
 export const VAULT_SWAPX_ICHI_USDC_USDT_USDC: VaultDefinition = {
-  id: "swapx-ichi-usdc-usdt-usdc",
+  id: "swapx-ichi-usdt-usdc-usdc",
   receipt: SWAPX_ICHI_USDC_USDT_USDC,
   lp: SWAPX_ICHI_USDC_USDT_USDC_LP,
   tokens: [USDCe, USDT],
@@ -165,7 +165,7 @@ export const VAULT_SWAPX_ICHI_USDC_USDT_USDC: VaultDefinition = {
 };
 
 export const VAULT_SWAPX_ICHI_USDC_USDT_USDT: VaultDefinition = {
-  id: "swapx-ichi-usdc-usdt-usdt",
+  id: "swapx-ichi-usdt-usdc-usdt",
   receipt: SWAPX_ICHI_USDC_USDT_USDT,
   lp: SWAPX_ICHI_USDC_USDT_USDT_LP,
   tokens: [USDT, USDCe],
