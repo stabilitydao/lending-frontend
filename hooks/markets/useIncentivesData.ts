@@ -1,9 +1,7 @@
 "use client";
-import { getWrappedIfNative } from "@/constants";
 import { bnToNumber } from "@/helpers";
 import { useIncentivesDataRaw } from "@/hooks";
 import { Address } from "viem";
-import { useChainId } from "wagmi";
 
 type SubIncentiveData = {
   rewardTokenAddress: Address;
@@ -32,7 +30,7 @@ const processIncentiveData = (incentiveData: readonly SubIncentiveData[]) => {
       reward.rewardTokenDecimals
     );
 
-    const priceFeed = bnToNumber(reward.rewardPriceFeed, 8);
+    const priceFeed = bnToNumber(reward.rewardPriceFeed, 18);
 
     const adjustedRewardPerSecond = tokenRewardPerSecond * priceFeed;
     tokenRewards.push({
@@ -91,8 +89,6 @@ const useIncentivesData = () => {
 };
 
 const useIncentiveData = (tokenAddress: Address) => {
-  const chainID = useChainId();
-  tokenAddress = getWrappedIfNative(tokenAddress, chainID);
   const {
     supplyIncentives,
     borrowIncentives,

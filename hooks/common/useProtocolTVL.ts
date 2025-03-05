@@ -2,7 +2,7 @@ import { useMarketsTVL, useVaultsTVL } from "@/hooks";
 
 const useProtocolTVL = () => {
   const { tvl: marketsTVL, isLoading: isMarketsTVLLoading } = useMarketsTVL();
-  const { tvl: vaultsTVL, isLoading: isVaultsTVLLoading } = useVaultsTVL();
+  const { totalTVL: vaultsTVL, isLoading: isVaultsTVLLoading } = useVaultsTVL();
   if (isMarketsTVLLoading || isVaultsTVLLoading)
     return { isTVLLoading: true, tvl: undefined };
   return {

@@ -1,18 +1,14 @@
-import { ClientMap, isNativeToken, S } from "@/constants";
-import { Address, Chain } from "viem";
+import { ClientMap, Token } from "@/constants";
+import { Address } from "viem";
 import { erc20Abi } from "viem";
 
-export const getTokenBalance = async (
-  userAddress: Address,
-  chainID: Chain["id"],
-  token: Address
-) => {
-  const client = ClientMap[chainID];
-  if (isNativeToken(token, chainID)) {
+export const getTokenBalance = async (userAddress: Address, token: Token) => {
+  const client = ClientMap[token.chainID];
+  if (token.isNative) {
     return await client.getBalance({ address: userAddress });
   }
   return await client.readContract({
-    address: token,
+    address: token.address,
     abi: erc20Abi,
     functionName: "balanceOf",
     args: [userAddress],
@@ -21,11 +17,10 @@ export const getTokenBalance = async (
 
 export const getTokenBalances = async (
   userAddress: Address,
-  chainID: Chain["id"],
-  tokens: Address[]
+  tokens: Token[]
 ) => {
   const balances = await Promise.all(
-    tokens.map((token) => getTokenBalance(userAddress, chainID, token))
+    tokens.map((token) => getTokenBalance(userAddress, token))
   );
   const balanceByToken = Object.fromEntries(
     tokens.map((key, i) => [key, balances[i]])

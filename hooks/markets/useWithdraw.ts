@@ -27,11 +27,11 @@ import {
   strToBn,
   trimmedString,
 } from "@/helpers";
-import { Token } from "@/types";
+import { Token } from "@/constants";
 
 const useWithdraw = (token: Token) => {
   const [amount, setAmount] = useState("");
-  const { userData } = useUserData(token.address);
+  const { userData } = useUserData(token);
   const { userAccountData } = useUserAccountData();
   const borrowAmountUSD = userAccountData.availableBorrowsBase || BigInt(0);
   const { marketData } = useMarketRaw(token);
@@ -53,8 +53,6 @@ const useWithdraw = (token: Token) => {
 
   const { chainIdToUse } = useCorrectChain();
   const { address: userAddress } = useAccount();
-  const isNativeToken =
-    token.address === Addresses[chainIdToUse].TOKENS.NATIVE_TOKEN;
 
   const {
     writeContract,
@@ -100,7 +98,7 @@ const useWithdraw = (token: Token) => {
       }
     );
   };
-  if (isNativeToken) {
+  if (token.isNative) {
     withdraw = () => {
       if (!isValidAddress) return;
       let amountBn = strToBn(amount, token.decimals);

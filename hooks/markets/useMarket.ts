@@ -1,18 +1,8 @@
 import { Address } from "viem";
-import {
-  useIncentivesData,
-  useMarketsRaw,
-  useMerklAPRs,
-  useWrappedIfNative,
-} from "@/hooks";
-import {
-  getNativeIfWrapped,
-  getTokenByAddress,
-  getWrappedIfNative,
-} from "@/constants";
+import { useIncentivesData, useMarketsRaw, useMerklAPRs } from "@/hooks";
+import { getTokenByAddress, Token } from "@/constants";
 import { MarketInfo } from "@/types";
 import { bnToNumber } from "@/helpers";
-import { useChainId } from "wagmi";
 
 const RAY = 1e27;
 const BASIS_POINTS_DIVISOR = BigInt(10000);
@@ -52,7 +42,6 @@ const useMarkets = () => {
     invalidateIncentivesDataQuery(marketID);
     invalidateMerklAPRsQuery();
   };
-  const chainId = useChainId();
 
   if (!marketsData || !merklAPRs || !supplyIncentives || !borrowIncentives)
     return {
@@ -62,20 +51,14 @@ const useMarkets = () => {
       invalidateMarketsDataQuery,
     };
   for (const rawMarket of marketsData) {
-    const tokenAddress = getWrappedIfNative(
-      rawMarket.underlyingAsset,
-      chainId
-    ).toLowerCase() as Address;
-
-    const token = getTokenByAddress(tokenAddress);
-    const potentiallyNativeTokenAddress = getNativeIfWrapped(
-      tokenAddress,
-      chainId
-    );
+    let token = getTokenByAddress(rawMarket.underlyingAsset);
+    if (!token) {
+      console.error("Token not found", rawMarket.underlyingAsset);
+      continue;
+    }
 
     const symbol = token?.symbol ?? rawMarket.symbol;
-    const name =
-      getTokenByAddress(potentiallyNativeTokenAddress)?.name ?? rawMarket.name;
+    const name = rawMarket.name;
     const decimals = token?.decimals ?? bnToNumber(rawMarket.decimals);
     const icon = token?.icon ?? "/icons/coins/unknown.png";
 
@@ -101,15 +84,17 @@ const useMarkets = () => {
       decimals + PRICE_DECIMALS
     );
 
-    const supplyIncentive = supplyIncentives[tokenAddress];
-    const borrowIncentive = borrowIncentives[tokenAddress];
+    const supplyIncentive = supplyIncentives[token.address];
+    const borrowIncentive = borrowIncentives[token.address];
 
     const incentiveSupplyAPR =
-      (supplyIncentive.rewardsPerSecond * 3600 * 24 * 365) /
-      (totalSuppliedValue + 1);
+      ((supplyIncentive.rewardsPerSecond * 3600 * 24 * 365) /
+        (totalSuppliedValue + 1)) *
+      100;
     const incentiveBorrowAPR =
-      (borrowIncentive.rewardsPerSecond * 3600 * 24 * 365) /
-      (totalBorrowedValue + 1);
+      ((borrowIncentive.rewardsPerSecond * 3600 * 24 * 365) /
+        (totalBorrowedValue + 1)) *
+      100;
     const merklSupplyAPR =
       merklAPRs[rawMarket.aTokenAddress.toLowerCase() as Address]?.supply || 0;
     const merklBorrowAPR =
@@ -123,8 +108,8 @@ const useMarkets = () => {
 
     breakdown.supply = Object.fromEntries(
       Object.entries({
-        "Supply APY": supplyAPY,
-        "Incentives APY": incentiveSupplyAPR,
+        "Supply APR": supplyAPY,
+        "Incentives APR": incentiveSupplyAPR,
         "Merkl Rewards": merklSupplyAPR,
       }).filter(([_, value]) => value !== 0)
     );
@@ -132,7 +117,7 @@ const useMarkets = () => {
     breakdown.borrow = Object.fromEntries(
       Object.entries({
         "Borrow Rate": borrowAPY,
-        "Incentives APY": incentiveBorrowAPR,
+        "Incentives APR": incentiveBorrowAPR,
         "Merkl Rewards": merklBorrowAPR,
       }).filter(([_, value]) => value !== 0)
     );
@@ -154,6 +139,7 @@ const useMarkets = () => {
       },
       borrowAPY: totalBorrowAPR,
       collateralFactor: Number(collateralFactor),
+      isBorrowEnabled: rawMarket.borrowingEnabled,
       breakdown,
     };
 
@@ -180,12 +166,14 @@ const useMarkets = () => {
   };
 };
 
-const useMarket = (tokenAddress: Address) => {
-  tokenAddress = useWrappedIfNative(tokenAddress);
+const useMarket = (token: Token) => {
+  if (token.isNative) {
+    token = token.wrapperToken!;
+  }
   const { isMarketsDataLoading, markets } = useMarkets();
   return {
     isMarketsDataLoading,
-    ...markets?.[tokenAddress.toLowerCase() as Address],
+    ...markets?.[token.address],
   };
 };
 

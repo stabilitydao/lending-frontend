@@ -15,7 +15,7 @@ import {
   useWaitForTransactionReceipt,
   useWriteContract,
 } from "wagmi";
-import { AavePoolAbi, Addresses, NativeTokenGatewayAbi } from "@/constants";
+import { AavePoolAbi, NativeTokenGatewayAbi } from "@/constants";
 import {
   extractError,
   isAddressValid,
@@ -23,21 +23,18 @@ import {
   strToBn,
   trimmedString,
 } from "@/helpers";
-import { Token } from "@/types";
+import { Token } from "@/constants";
 
 const useSupply = (token: Token) => {
   const [amount, setAmount] = useState("");
-  const { balance } = useTokenBalance(token.address);
+  const { balance } = useTokenBalance(token);
   const { chainIdToUse } = useCorrectChain();
   const { address: userAddress } = useAccount();
-  const { marketBnData } = useMarket(token.address);
+  const { marketBnData } = useMarket(token);
   const { marketDefinition } = useSelectedMarket();
 
   const { allowance } = useAllowance(marketDefinition.AAVE_POOL, token.address);
   const { invalidateMarketState } = useInvalidate(token);
-  const isNativeToken =
-    token.address.toLowerCase() ===
-    Addresses[chainIdToUse].TOKENS.NATIVE_TOKEN.toLowerCase();
 
   const {
     approve,
@@ -52,7 +49,6 @@ const useSupply = (token: Token) => {
   const totalSupplyCap = remainingSupplyCap + totalSupplied;
   const fakeSupplyCap = (totalSupplyCap * BigInt(9999)) / BigInt(10000);
   const fakeSupplyCapLeft = maxBn(fakeSupplyCap - totalSupplied, BigInt(0));
-
   const {
     writeContract,
     isPending,
@@ -67,7 +63,7 @@ const useSupply = (token: Token) => {
     });
   const isValidAddress = userAddress && isAddressValid(userAddress);
   const hasEnoughAllowance =
-    isNativeToken ||
+    token.isNative ||
     (!!allowance &&
       allowance > 0 &&
       allowance >= strToBn(amount, token.decimals));
@@ -91,12 +87,12 @@ const useSupply = (token: Token) => {
       }
     );
   };
-  if (isNativeToken) {
+  if (token.isNative) {
     supply = () => {
       if (!isValidAddress) return;
       let amountBn = strToBn(amount, token.decimals);
-      if ((balance || BigInt(0)) - amountBn < BigInt(5e16)) {
-        amountBn = amountBn - BigInt(5e16);
+      if ((balance || BigInt(0)) - amountBn < BigInt(1e18)) {
+        amountBn = amountBn - BigInt(1e18);
       }
       writeContract(
         {

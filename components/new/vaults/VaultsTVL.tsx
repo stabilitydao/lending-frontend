@@ -3,6 +3,6 @@ import { useVaultsTVL } from "@/hooks";
 import { TVL } from "@/components";
 
 export const VaultsTVL = () => {
-  const { tvl } = useVaultsTVL();
-  return <TVL title="Vaults TVL" tvl={tvl} />;
+  const { totalTVL } = useVaultsTVL();
+  return <TVL title="Vaults TVL" tvl={totalTVL} />;
 };

@@ -1,13 +1,14 @@
-import { Token, UserDisplayData } from "@/types";
+import { UserDisplayData } from "@/types";
 import { useMarketRaw, useUserAccountData, useUserData } from "@/hooks";
 import { bnToNumber, strToBn } from "@/helpers";
+import { Token } from "@/constants";
 
 const useUserDisplayData = (
   token: Token,
   actionType: "supply" | "withdraw" | "borrow" | "repay",
   amount: string
 ) => {
-  const { userData } = useUserData(token.address);
+  const { userData } = useUserData(token);
   const { userAccountData } = useUserAccountData();
   const borrowAmountUSD = userAccountData.availableBorrowsBase || BigInt(0);
   const totalDebtUSD = userAccountData.totalDebtBase || BigInt(0);

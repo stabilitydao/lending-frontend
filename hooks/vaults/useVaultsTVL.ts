@@ -17,7 +17,12 @@ const useVaultsTVL = () => {
   }, [queryClient]);
   return {
     isLoading,
-    tvl,
+    totalTVL: tvl
+      ? Object.values(tvl).reduce((acc, v) => {
+          return acc + v;
+        }, 0)
+      : 0,
+    vaultsTVL: tvl,
     invalidateVaultsTVLQuery,
   };
 };

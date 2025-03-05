@@ -6,7 +6,6 @@ import {
   getUserAccountData,
   getUserReservesData,
   getUserIncentivesData,
-  getMerklMarketsAPR,
 } from ".";
 
 export const marketQueries = createQueryKeys("markets", {
@@ -43,12 +42,6 @@ export const marketQueries = createQueryKeys("markets", {
           return await getUserIncentivesData(marketID, user);
         },
       }),
-    },
-  }),
-  merklAPRs: () => ({
-    queryKey: ["merklAPRs"],
-    queryFn: async () => {
-      return await getMerklMarketsAPR();
     },
   }),
 });

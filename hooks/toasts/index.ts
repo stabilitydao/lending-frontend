@@ -4,3 +4,4 @@ export * from "./useSupplyToast";
 export * from "./useWithdrawToast";
 export * from "./useBorrowToast";
 export * from "./useRepayToast";
+export * from "./useDepositToast";

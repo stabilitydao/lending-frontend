@@ -1,13 +1,13 @@
 "use client";
 import React, { useEffect, useRef } from "react";
-import { Button, ChainButton } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { ChainButton } from "@/components/ui/button";
 import { PercentageBar } from "@/components/ui/percentage-bar";
 import { ArrowRight, CheckCheck } from "lucide-react";
-import { MarketInfo, Token, UserDisplayData } from "@/types";
+import { MarketInfo, UserDisplayData } from "@/types";
 import { bnToNumber, bnToStr, formatSuffix, trimmedNumber } from "@/helpers";
 import Image from "next/image";
-import { healthData } from "@/constants";
+import { healthData, Token } from "@/constants";
+import { MaxInput } from "@/components";
 
 const HealthDisplay = ({ healthFactor }: { healthFactor: number }) => (
   <span className={healthData(healthFactor).text}>
@@ -15,56 +15,6 @@ const HealthDisplay = ({ healthFactor }: { healthFactor: number }) => (
     {/* {trimmedNumber(healthFactor, 2)} */}
   </span>
 );
-
-const MaxInput = ({
-  amount,
-  max,
-  balance,
-  onChange,
-}: {
-  amount: string;
-  max: string;
-  balance: string;
-  onChange: (value: string) => void;
-}) => {
-  const handleMax = (input: string) => {
-    const strippedValue = input.replace(/[^0-9.]/g, "");
-    if (max && Number(strippedValue) > Number(max)) {
-      onChange(max);
-      return;
-    }
-    if (Number(strippedValue) > Number(balance)) {
-      onChange(balance);
-      return;
-    }
-    onChange(strippedValue);
-  };
-
-  useEffect(() => {
-    handleMax(amount);
-  }, [amount, max]);
-  return (
-    <div className="relative flex items-center">
-      <Button
-        size="sm"
-        className="absolute left-2 h-6 z-10 bg-purple-200 text-primary"
-        onClick={() => onChange(balance)}
-      >
-        MAX
-      </Button>
-
-      <Input
-        type="number"
-        className="bg-primary placeholder:text-accent text-right text-accent rounded-full pl-16 pr-4"
-        placeholder="0"
-        value={amount}
-        onChange={(e) => {
-          handleMax(e.target.value);
-        }}
-      />
-    </div>
-  );
-};
 
 interface BaseActionFormProps {
   token: Token;
@@ -110,9 +60,13 @@ export function BaseActionForm({
   if (sliderValue > 100) sliderValue = 100;
 
   const handleSliderChange = (newPercentage: number) => {
+    if (newPercentage == 100) {
+      onChangeAmount(bnToStr(balance, token.decimals));
+      return;
+    }
     const fraction = newPercentage / 100;
     const newAmount = fraction * numericBalance;
-    onChangeAmount(newAmount.toString());
+    onChangeAmount(newAmount.toFixed(token.decimals));
   };
 
   const hasBorrowLimitCurrent =
@@ -156,7 +110,7 @@ export function BaseActionForm({
             </div>
             <div className="flex flex-col ">
               <div className="text-md font-semibold">
-                {formatSuffix(displayData?.balance)}
+                {formatSuffix(displayData?.balance)} {token.symbol}
               </div>
               <div className="text-xs font-light text-right">
                 ${formatSuffix(displayData?.balanceValueUSD)}
@@ -200,11 +154,6 @@ export function BaseActionForm({
               />
             </div>
           </div>
-
-          {/* <div className="flex items-center justify-between">
-          <span className="font-semibold">Reward APR</span>
-          <span>{market.rewardAPY.toFixed(3)}</span>
-        </div> */}
         </div>
       </div>
       <div>

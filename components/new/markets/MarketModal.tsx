@@ -5,6 +5,7 @@ import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -14,27 +15,22 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "../../ui/tabs";
 import { useState } from "react";
 import Image from "next/image";
-import { Deposit } from "../../icons/deposit";
-import { Withdraw } from "../../icons/withdraw";
+import { Deposit } from "@/components/icons/deposit";
+import { Withdraw } from "@/components/icons/withdraw";
 import { ExternalLinkIcon, RefreshCw } from "lucide-react";
-import { MarketInfo, Token } from "@/types";
+import { MarketInfo } from "@/types";
 import {
   useBorrow,
   useMarket,
   useRepay,
+  useSearch,
   useSupply,
   useWithdraw,
 } from "@/hooks";
 import { minBn } from "@/helpers";
 import { BaseActionForm } from "@/components";
 import Link from "next/link";
-import {
-  getNativeToken,
-  getWrappedNativeToken,
-  isNativeToken,
-  isWrappedNativeToken,
-} from "@/constants";
-import { useChainId } from "wagmi";
+import { Token } from "@/constants";
 
 export interface MarketModalProps {
   token: Token;
@@ -248,11 +244,11 @@ export const MarketModal = ({
   isVisible,
   onClose,
 }: MarketModalProps) => {
-  const chainId = useChainId();
   const [isBorrow, setIsBorrow] = useState(defaultIsBorrow);
   const [activeTab, setActiveTab] = useState(
     defaultIsBorrow ? "borrow" : "supply"
   );
+  const [isOpen, setIsOpen] = useState(false);
 
   const toggleMode = useCallback(() => {
     setIsBorrow((prev) => !prev);
@@ -266,11 +262,9 @@ export const MarketModal = ({
   }, []);
 
   const toggleWrappedNativeToken = useCallback(() => {
-    if (isNativeToken(token.address, chainId)) {
-      setSelectedToken(getWrappedNativeToken(chainId));
-    } else if (isWrappedNativeToken(token.address, chainId)) {
-      setSelectedToken(getNativeToken(chainId));
-    }
+    if (token.wrapperToken?.wrappedToken?.isNative)
+      setSelectedToken(token.wrapperToken);
+    if (token.wrappedToken?.isNative) setSelectedToken(token.wrappedToken);
   }, [token]);
 
   useEffect(() => {
@@ -280,7 +274,8 @@ export const MarketModal = ({
     }
   }, [isVisible, defaultIsBorrow]);
 
-  const { market, isMarketLoading } = useMarket(token.address);
+  const { market, isMarketLoading } = useMarket(token);
+  const { setSearchQuery } = useSearch("vaults");
 
   if (isMarketLoading || !market) return null;
 
@@ -306,26 +301,92 @@ export const MarketModal = ({
         className="bg-card text-primary overflow-y-auto pt-12 select-none"
       >
         <div tabIndex={0} aria-hidden="true" />
-        <Button
-          variant="default"
-          className="w-[120px] z-[999] absolute left-4 top-4 items-center justify-center gap-2"
-          onClick={toggleMode}
-        >
-          <RefreshCw className="w-5 h-5" />
-          {isBorrow ? "Supply" : "Borrow"}
-        </Button>
-        {(isNativeToken(token.address, chainId) ||
-          isWrappedNativeToken(token.address, chainId)) && (
+        {market.isBorrowEnabled && (
+          <Button
+            variant="default"
+            className="w-[120px] z-[999] absolute left-4 top-4 items-center justify-center gap-2"
+            onClick={toggleMode}
+          >
+            <RefreshCw className="w-5 h-5" />
+            {isBorrow ? "Supply" : "Borrow"}
+          </Button>
+        )}
+        {(token.isNative || token.wrappedToken?.isNative) && (
           <Button
             className="w-[160px] z-[999] absolute left-[150px] top-4 items-center justify-center gap-2"
             onClick={toggleWrappedNativeToken}
           >
             <RefreshCw className="w-5 h-5" />
-            {isNativeToken(token.address, chainId)
-              ? "Use Wrapped"
-              : "Use Native"}
+            {token.isNative ? "Use Wrapped" : "Use Native"}
           </Button>
         )}
+        <div className="absolute right-5 top-6">
+          {token.pair ? (
+            <>
+              <button
+                onClick={() => setIsOpen(true)}
+                className="absolute right-0 mr-4 flex items-center gap-2 text-primary"
+              >
+                Get
+                <ExternalLinkIcon className="w-4 h-4" />
+              </button>
+              <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                <DialogContent className="w-[400px]">
+                  <DialogHeader>
+                    <DialogTitle>Supplying a vault-backed Market</DialogTitle>
+                  </DialogHeader>
+                  <DialogDescription>
+                    <ol className="list-decimal list-inside mt-2 text-white">
+                      <li>
+                        Go to{" "}
+                        <Link
+                          href={token.buyLink}
+                          className="text-blue-500 underline"
+                        >
+                          this link
+                        </Link>{" "}
+                        and create some LP{" "}
+                        <span className="font-bold underline text-red-500">
+                          (be sure to check "do not stake LP" if you are using
+                          SwapX)
+                        </span>
+                        <br />
+                        Note that on ICHI you must deposit{" "}
+                        {token.pair![0].symbol} to receive the proper LP.
+                      </li>
+                      <li>
+                        Deposit the LP in the corresponding{" "}
+                        <Link
+                          href="/vaults"
+                          target="_blank"
+                          className="text-blue-500 underline"
+                          onClick={() => {
+                            setSearchQuery(token.name);
+                          }}
+                        >
+                          vault
+                        </Link>
+                        .
+                      </li>
+                      <li>
+                        You can now use your vault shares to supply this market.
+                      </li>
+                    </ol>
+                  </DialogDescription>
+                </DialogContent>
+              </Dialog>
+            </>
+          ) : (
+            <Link
+              href={token.buyLink}
+              target="_blank"
+              className="absolute right-0 mr-4 flex items-center gap-2"
+            >
+              Get
+              <ExternalLinkIcon className="w-4 h-4 text-primary" />
+            </Link>
+          )}
+        </div>
 
         <div className="relative w-full flex items-center justify-center mt-6">
           <div className="flex items-center gap-4">
@@ -335,16 +396,6 @@ export const MarketModal = ({
               <span className="text-xs font-light">{token.symbol}</span>
             </div>
           </div>
-
-          <Link
-            // href={`https://equalizer.exchange/swap?fromToken=0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE&toToken=${token.address}`}
-            href="https://app.odos.xyz/swap?chainId=146"
-            target="_blank"
-            className="absolute right-0 mr-4 flex items-center gap-2"
-          >
-            Get
-            <ExternalLinkIcon className="w-4 h-4 text-primary" />
-          </Link>
         </div>
 
         <div className="absolute inset-0 flex items-center justify-center z-0 pointer-events-none">

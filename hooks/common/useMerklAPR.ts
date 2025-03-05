@@ -7,7 +7,7 @@ const useMerklAPRs = () => {
   const queryClient = useQueryClient();
 
   const { data: merklAPRs, isLoading: isMerklAPRsLoading } = useQuery({
-    ...queryKeys.markets.merklAPRs(),
+    ...queryKeys.common.merklAPRs(),
     staleTime: Infinity,
     refetchInterval: 30000,
     refetchOnWindowFocus: "always",
@@ -15,7 +15,7 @@ const useMerklAPRs = () => {
 
   const invalidateMerklAPRsQuery = useCallback(() => {
     queryClient.invalidateQueries({
-      queryKey: queryKeys.markets.merklAPRs().queryKey,
+      queryKey: queryKeys.common.merklAPRs().queryKey,
     });
   }, [queryClient]);
 

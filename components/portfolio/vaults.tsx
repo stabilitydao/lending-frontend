@@ -8,12 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { PlusIcon, X } from "lucide-react";
 import { DoubleAvatar } from "../ui/double-avatar";
-import { DepositVaultModalCLM } from "../vaults/deposit-vault-modal-clm";
-import { WithdrawVaultModalCLM } from "../vaults/withdraw-vault-modal-clm";
-import vaultData from "@/config/sonic.json";
 
 export const Vaults = () => {
   return (
@@ -60,7 +55,7 @@ export const Vaults = () => {
             </TableRow>
           </TableBody>
         </Table>
-        <div className="flex items-end lg:items-center justify-end lg:justify-center gap-4 pt-2 lg:pt-0">
+        {/* <div className="flex items-end lg:items-center justify-end lg:justify-center gap-4 pt-2 lg:pt-0">
           <DepositVaultModalCLM
             vault={{
               ...vaultData[0],
@@ -72,16 +67,18 @@ export const Vaults = () => {
               Add
             </Button>
           </DepositVaultModalCLM>
-          <WithdrawVaultModalCLM vault={{
-            ...vaultData[0],
-            kind: vaultData[0].kind as "clm" | "v7",
-          }}>
+          <WithdrawVaultModalCLM
+            vault={{
+              ...vaultData[0],
+              kind: vaultData[0].kind as "clm" | "v7",
+            }}
+          >
             <Button size={"sm"}>
               <X className="w-4 h-4 mr-2" />
               Close
             </Button>
           </WithdrawVaultModalCLM>
-        </div>
+        </div> */}
       </CardContent>
     </Card>
   );

@@ -27,19 +27,19 @@ import {
   strToBn,
   trimmedString,
 } from "@/helpers";
-import { Token } from "@/types";
+import { Token } from "@/constants";
 
 const useBorrow = (token: Token) => {
   const [amount, setAmount] = useState("");
   const { userAccountData } = useUserAccountData();
   const borrowAmountUSD = userAccountData.availableBorrowsBase;
   const { marketData } = useMarketRaw(token);
-  const { userData } = useUserData(token.address);
+  const { userData } = useUserData(token);
   const { marketDefinition } = useSelectedMarket();
   const { invalidateMarketState } = useInvalidate(token);
   const price = marketData?.priceInMarketReferenceCurrency;
   const borrowCap = marketData?.borrowCap || BigInt(0);
-  const variableDebt = userData?.scaledVariableDebt || BigInt(0);
+  const variableDebt = userData?.variableDebt || BigInt(0);
   const availableLiquidity = marketData?.availableLiquidity || BigInt(0);
   let maxBorrow = minBn(
     borrowAmountUSD && price
@@ -52,8 +52,6 @@ const useBorrow = (token: Token) => {
   );
   const { chainIdToUse } = useCorrectChain();
   const { address: userAddress } = useAccount();
-  const isNativeToken =
-    token.address === Addresses[chainIdToUse].TOKENS.NATIVE_TOKEN;
 
   const {
     writeContract,
@@ -101,7 +99,7 @@ const useBorrow = (token: Token) => {
       }
     );
   };
-  if (isNativeToken) {
+  if (token.isNative) {
     borrow = () => {
       if (!isValidAddress) return;
       const amountBn = strToBn(amount, token.decimals);

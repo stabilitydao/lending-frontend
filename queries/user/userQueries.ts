@@ -1,6 +1,7 @@
 import { createQueryKeys } from "@lukemorales/query-key-factory";
 import { Address } from "viem";
 import { getTokenAllowance, getTokenBalance } from ".";
+import { getOrCreateTokenByAddress } from "@/constants";
 
 export const userQueries = createQueryKeys("user", {
   chain: (userAddress: Address, chainId: number) => ({
@@ -18,14 +19,11 @@ export const userQueries = createQueryKeys("user", {
           return allowance;
         },
       }),
-      tokenBalance: (token: Address) => ({
-        queryKey: [token],
+      tokenBalance: (address: Address) => ({
+        queryKey: [address],
         queryFn: async () => {
-          const walletBalance = await getTokenBalance(
-            userAddress,
-            chainId,
-            token
-          );
+          const token = getOrCreateTokenByAddress(address, chainId);
+          const walletBalance = await getTokenBalance(userAddress, token);
           return walletBalance;
         },
       }),

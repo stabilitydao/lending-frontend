@@ -4,3 +4,4 @@ export * from "./tokens";
 export * from "./protocolInfo";
 export * from "./markets";
 export * from "./abis";
+export * from "./vaults";
