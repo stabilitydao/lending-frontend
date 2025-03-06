@@ -20,8 +20,6 @@ import {
   FullEligibleRewards,
   MerklNote,
   StandardTooltip,
-  LoopingButton,
-  LoopingModal,
 } from "@/components";
 import { DoubleAvatar } from "@/components/ui/double-avatar";
 import { Token } from "@/constants";
@@ -330,10 +328,10 @@ export const MarketTable = () => {
           ))}
         </TableBody>
       </Table>
+      <HealthBar />
       {/* {marketID !== "Main Protocol" && (
         <LoopingButton onClick={onClickLoopingButton} />
       )}
-      <HealthBar />
       <MarketModal
         token={selectedToken}
         isVisible={isModalOpen}
