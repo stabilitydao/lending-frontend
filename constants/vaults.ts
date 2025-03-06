@@ -48,6 +48,10 @@ import {
   SWAPX_ICHI_WS_OS_WS_LP,
   SWAPX_ICHI_WS_STS_STS,
   SWAPX_ICHI_WS_STS_STS_LP,
+  SWAPX_ICHI_SCETH_WETH_SCETH,
+  SWAPX_ICHI_SCETH_WETH_SCETH_LP,
+  SWAPX_ICHI_SCETH_WETH_WETH,
+  SWAPX_ICHI_SCETH_WETH_WETH_LP,
   BEETS_WS_STS,
   BEETS_WS_STS_LP,
   BEETS_USDC_SCUSD,
@@ -292,6 +296,22 @@ export const VAULT_SWAPX_ICHI_WS_STS_STS: VaultDefinition = {
   chainId: sonic.id,
 };
 
+export const VAULT_SWAPX_ICHI_SCETH_WETH_SCETH: VaultDefinition = {
+  id: "swapx-ichi-sceth-weth-sceth",
+  receipt: SWAPX_ICHI_SCETH_WETH_SCETH,
+  lp: SWAPX_ICHI_SCETH_WETH_SCETH_LP,
+  tokens: [scETH, wETH],
+  chainId: sonic.id,
+};
+
+export const VAULT_SWAPX_ICHI_SCETH_WETH_WETH: VaultDefinition = {
+  id: "swapx-ichi-sceth-weth-weth",
+  receipt: SWAPX_ICHI_SCETH_WETH_WETH,
+  lp: SWAPX_ICHI_SCETH_WETH_WETH_LP,
+  tokens: [scETH, wETH],
+  chainId: sonic.id,
+};
+
 export const VAULT_BEETS_WS_STS: VaultDefinition = {
   id: "beets-ws-sts",
   receipt: BEETS_WS_STS,
@@ -444,6 +464,8 @@ export const VAULTS: VaultDefinition[] = [
   VAULT_SWAPX_ICHI_USDC_SCUSD_SCUSD,
   VAULT_SWAPX_ICHI_WS_OS_WS,
   VAULT_SWAPX_ICHI_WS_STS_STS,
+  VAULT_SWAPX_ICHI_SCETH_WETH_SCETH,
+  VAULT_SWAPX_ICHI_SCETH_WETH_WETH,
   VAULT_BEETS_WS_STS,
   VAULT_BEETS_USDC_SCUSD,
   VAULT_BEETS_SCUSD_STS,
