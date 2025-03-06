@@ -10,7 +10,7 @@ import {
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { MarketModal } from "./MarketModal";
 import { useMarket, useMarkets, useSearch, useSelectedMarket } from "@/hooks";
-import { bnToNumber, formatSuffix, trimmedNumber } from "@/helpers";
+import { formatSuffix, trimmedNumber } from "@/helpers";
 import { useState } from "react";
 import {
   HealthBar,
@@ -20,9 +20,12 @@ import {
   FullEligibleRewards,
   MerklNote,
   StandardTooltip,
+  LoopingButton,
+  LoopingModal,
 } from "@/components";
 import { DoubleAvatar } from "@/components/ui/double-avatar";
 import { Token } from "@/constants";
+import { MarketInfo } from "@/types";
 
 const MarketLine = ({
   token,
@@ -217,27 +220,23 @@ const MarketLine = ({
       onClick={() => onSelectToken(token)}
     >
       <TableCell>{tokenDisplay}</TableCell>
-
       <TableCell>{token.pair ? null : <FullEligibleRewards />}</TableCell>
-
       <TableCell>{supplyInfo}</TableCell>
-
       <TableCell>{token.pair ? null : supplyAPR}</TableCell>
-
       <TableCell>{token.pair ? null : borrowInfo}</TableCell>
-
       <TableCell>{token.pair ? null : borrowAPR}</TableCell>
     </TableRow>
   );
 };
 export const MarketTable = () => {
-  const { marketDefinition } = useSelectedMarket();
+  const { marketDefinition, marketID } = useSelectedMarket();
   const { markets } = useMarkets();
 
   const [selectedToken, setSelectedToken] = useState<Token>(
     marketDefinition.tokens[0]
   );
   const [isModalOpen, setModalOpen] = useState(false);
+  const [isLoopingModalOpen, setLoopingModalOpen] = useState(false);
   const { filter } = useSearch("markets", (tokens: Token) => tokens.name);
   const [sortBy, setSortBy] = useState<SortBy | null>(null);
 
@@ -246,9 +245,11 @@ export const MarketTable = () => {
     setModalOpen(true);
   };
 
-  const closeModal = () => {
-    setModalOpen(false);
-  };
+  const onClickLoopingButton = () => setLoopingModalOpen(true);
+
+  const closeModal = () => setModalOpen(false);
+
+  const closeLoopingModal = () => setLoopingModalOpen(false);
 
   const sort = (tokens: Token[]) => {
     if (!sortBy || !markets) return tokens;
@@ -280,7 +281,7 @@ export const MarketTable = () => {
           <TableRow>
             <SortableTableHead
               label="Asset"
-              extract={(tm) => tm.asset.name.toLowerCase()}
+              extract={(tm: MarketInfo) => tm.asset.name.toLowerCase()}
               sortBy={sortBy}
               setSortBy={setSortBy}
               defaultOrder="asc"
@@ -290,28 +291,28 @@ export const MarketTable = () => {
             </TableHead>
             <SortableTableHead
               label="Supply TVL"
-              extract={(tm) => tm?.totalSupplied.value}
+              extract={(tm: MarketInfo) => tm?.supply.tvl.value}
               sortBy={sortBy}
               setSortBy={setSortBy}
               defaultOrder="desc"
             />
             <SortableTableHead
               label="Supply APR"
-              extract={(tm) => tm?.supplyAPY}
+              extract={(tm: MarketInfo) => tm?.supply.APR}
               sortBy={sortBy}
               setSortBy={setSortBy}
               defaultOrder="desc"
             />
             <SortableTableHead
               label="Borrow TVL"
-              extract={(tm) => tm?.totalBorrowed.value}
+              extract={(tm: MarketInfo) => tm?.borrow.tvl.value}
               sortBy={sortBy}
               setSortBy={setSortBy}
               defaultOrder="desc"
             />
             <SortableTableHead
               label="Borrow APR"
-              extract={(tm) => tm?.borrowAPY}
+              extract={(tm: MarketInfo) => tm?.borrow.APR}
               sortBy={sortBy}
               setSortBy={setSortBy}
               defaultOrder="desc"
@@ -329,14 +330,20 @@ export const MarketTable = () => {
           ))}
         </TableBody>
       </Table>
+      {/* {marketID !== "Main Protocol" && (
+        <LoopingButton onClick={onClickLoopingButton} />
+      )}
       <HealthBar />
-
       <MarketModal
         token={selectedToken}
         isVisible={isModalOpen}
         onClose={closeModal}
         setSelectedToken={setSelectedToken}
       />
+      <LoopingModal
+        isVisible={isLoopingModalOpen}
+        onClose={closeLoopingModal}
+      /> */}
     </div>
   );
 };
