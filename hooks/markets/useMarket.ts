@@ -121,6 +121,17 @@ const useMarkets = () => {
         "Merkl Rewards": merklBorrowAPR,
       }).filter(([_, value]) => value !== 0)
     );
+    const fakeSupplyCap = bnToNumber(rawMarket.supplyCap, 0) * 0.9999;
+    const fakeSupplyCapLeft = Math.max(
+      fakeSupplyCap - bnToNumber(totalSupplied, decimals),
+      0
+    );
+    const borrowCap = bnToNumber(rawMarket.borrowCap, 0) * 0.999999;
+    const borrowCapLeft = Math.max(
+      borrowCap - bnToNumber(totalBorrowed, decimals),
+      0
+    );
+    const priceNumber = bnToNumber(price, PRICE_DECIMALS);
 
     const marketInfo: MarketInfo = {
       asset: {
@@ -128,16 +139,36 @@ const useMarkets = () => {
         symbol,
         imageSrc: icon,
       },
-      totalSupplied: {
-        amount: bnToNumber(totalSupplied, decimals),
-        value: Number(totalSuppliedValue),
+      supply: {
+        tvl: {
+          amount: bnToNumber(totalSupplied, decimals),
+          value: totalSuppliedValue,
+        },
+        remaining: {
+          amount: fakeSupplyCapLeft,
+          value: fakeSupplyCapLeft * priceNumber,
+        },
+        cap: {
+          amount: fakeSupplyCap,
+          value: fakeSupplyCap * priceNumber,
+        },
+        APR: totalSupplyAPR,
       },
-      supplyAPY: totalSupplyAPR,
-      totalBorrowed: {
-        amount: bnToNumber(totalBorrowed, decimals),
-        value: Number(totalBorrowedValue),
+      borrow: {
+        tvl: {
+          amount: bnToNumber(totalBorrowed, decimals),
+          value: totalBorrowedValue,
+        },
+        remaining: {
+          amount: borrowCapLeft,
+          value: borrowCapLeft * priceNumber,
+        },
+        cap: {
+          amount: borrowCap,
+          value: borrowCap * priceNumber,
+        },
+        APR: totalBorrowAPR,
       },
-      borrowAPY: totalBorrowAPR,
       collateralFactor: Number(collateralFactor),
       isBorrowEnabled: rawMarket.borrowingEnabled,
       breakdown,

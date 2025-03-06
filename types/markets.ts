@@ -7,16 +7,36 @@ export type MarketInfo = {
     symbol: string;
     imageSrc: string;
   };
-  totalSupplied: {
-    amount: number;
-    value: number;
+  supply: {
+    tvl: {
+      amount: number;
+      value: number;
+    };
+    remaining: {
+      amount: number;
+      value: number;
+    };
+    cap: {
+      amount: number;
+      value: number;
+    };
+    APR: number;
   };
-  supplyAPY: number;
-  totalBorrowed: {
-    amount: number;
-    value: number;
+  borrow: {
+    tvl: {
+      amount: number;
+      value: number;
+    };
+    remaining: {
+      amount: number;
+      value: number;
+    };
+    cap: {
+      amount: number;
+      value: number;
+    };
+    APR: number;
   };
-  borrowAPY: number;
   collateralFactor: number;
   isBorrowEnabled: boolean;
   breakdown: {

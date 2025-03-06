@@ -72,13 +72,11 @@ export const VaultBaseActionForm = ({
         <span className="flex items-center gap-4">
           Available:
           <span className="font-semibold">
-            {formatSuffix(
-              bnToNumber(balance, vaultDefinition.receipt.decimals)
-            )}{" "}
+            {bnToStr(balance, vaultDefinition.receipt.decimals)}
           </span>
         </span>
         <div className="absolute right-0 text-sm text-gray-500 transform translate-y-5">
-          ${formatSuffix(bnToNumber(balance, decimals) * price)}{" "}
+          ${formatSuffix(bnToNumber(balance, decimals) * price)}
         </div>
       </div>
       <div className="flex flex-col gap-8 pt-8">
@@ -101,11 +99,15 @@ export const VaultBaseActionForm = ({
             </div>
             <div className="flex flex-col">
               <div className="text-md font-semibold">
-                {formatSuffix(vault.receipt.display)}{" "}
+                {formatSuffix(
+                  vault.receipt.display,
+                  "linkedToMoney",
+                  vault.receipt.usdValue
+                )}{" "}
                 {vaultDefinition.receipt.symbol}
               </div>
               <div className="text-xs font-light text-right">
-                ${formatSuffix(vault.receipt.usdValue)}
+                ${formatSuffix(vault.receipt.usdValue, "money")}
               </div>
             </div>
           </div>
