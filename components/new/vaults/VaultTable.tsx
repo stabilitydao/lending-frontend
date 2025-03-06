@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Image from "next/image";
+import { useState } from "react";
 
 import {
   Table,
@@ -23,7 +22,7 @@ import {
   SortBy,
   VaultModal,
 } from "@/components";
-import { BeefyVaultV7Abi, ClientMap, VAULTS } from "@/constants";
+import { VAULTS } from "@/constants";
 import { formatSuffix } from "@/helpers";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -62,7 +61,7 @@ const VaultLine = ({
           <div className="flex flex-col">
             <p className="text-lg ">{vaultDefinition.receipt.name}</p>
             <p className="text-xs font-light">
-              TVL: ${formatSuffix(vault.tvl)}
+              TVL: ${formatSuffix(vault.tvl, "money")}
             </p>
           </div>
         </div>
@@ -72,17 +71,35 @@ const VaultLine = ({
       </TableCell>
       <TableCell>
         <div className="flex flex-col">
-          <span className="text-sm">{formatSuffix(vault.lp.display)}</span>
+          <span className="text-sm">
+            {formatSuffix(vault.tvl, "linkedToMoney", vault.tvl)}
+          </span>
           <span className="text-xs font-light">
-            ${formatSuffix(vault.lp.usdValue)}
+            ${formatSuffix(vault.tvl, "money")}
           </span>
         </div>
       </TableCell>
       <TableCell>
         <div className="flex flex-col">
-          <span className="text-sm">{formatSuffix(vault.receipt.display)}</span>
+          <span className="text-sm">
+            {formatSuffix(vault.lp.display, "linkedToMoney", vault.lp.usdValue)}
+          </span>
           <span className="text-xs font-light">
-            ${formatSuffix(vault.receipt.usdValue)}
+            ${formatSuffix(vault.lp.usdValue, "money")}
+          </span>
+        </div>
+      </TableCell>
+      <TableCell>
+        <div className="flex flex-col">
+          <span className="text-sm">
+            {formatSuffix(
+              vault.receipt.display,
+              "linkedToMoney",
+              vault.receipt.usdValue
+            )}
+          </span>
+          <span className="text-xs font-light">
+            ${formatSuffix(vault.receipt.usdValue, "money")}
           </span>
         </div>
       </TableCell>
@@ -141,24 +158,31 @@ export const VaultTable = () => {
         <TableHeader className="h-8 border-b border-background">
           <TableRow>
             <SortableTableHead
-              label="VAULTS"
+              label="Assets"
               extract={(v) => v.name.toLowerCase()}
               sortBy={sortBy}
               setSortBy={setSortBy}
               defaultOrder="asc"
             />
             <TableHead className="text-muted">
-              <div className="flex items-center gap-2">ELIGIBLE FOR</div>
+              <div className="flex items-center gap-2">Eligible For</div>
             </TableHead>
             <SortableTableHead
-              label="LP IN WALLET"
+              label="TVL"
+              extract={(v) => v.tvl}
+              sortBy={sortBy}
+              setSortBy={setSortBy}
+              defaultOrder="desc"
+            />
+            <SortableTableHead
+              label="LP In Wallet"
               extract={(v) => parseFloat(v.lp.usdValue)}
               sortBy={sortBy}
               setSortBy={setSortBy}
               defaultOrder="desc"
             />
             <SortableTableHead
-              label="DEPOSITED"
+              label="Deposited"
               extract={(v) => {
                 return parseFloat(v.receipt.usdValue);
               }}
@@ -167,14 +191,14 @@ export const VaultTable = () => {
               defaultOrder="desc"
             />
             <SortableTableHead
-              label="APR"
+              label="APY"
               extract={(v) => v.apy}
               sortBy={sortBy}
               setSortBy={setSortBy}
               defaultOrder="desc"
             />
             <SortableTableHead
-              label="DAILY"
+              label="Daily APR"
               extract={(v) => v.apy}
               sortBy={sortBy}
               setSortBy={setSortBy}

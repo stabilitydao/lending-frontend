@@ -19,6 +19,7 @@ const config = {
     "bg-yellow-500",
     "bg-green-500",
     "bg-black",
+    "mx-[1.5px]",
   ],
   prefix: "",
   theme: {

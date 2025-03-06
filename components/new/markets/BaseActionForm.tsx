@@ -80,7 +80,7 @@ export function BaseActionForm({
         <span className="flex items-center gap-4">
           Available:
           <span className="font-semibold">
-            {formatSuffix(bnToNumber(balance, token.decimals))}{" "}
+            {bnToStr(balance, token.decimals)}{" "}
           </span>
         </span>
         <div className="absolute right-0 text-sm text-gray-500 transform translate-y-5">
@@ -106,28 +106,37 @@ export function BaseActionForm({
           <div className="flex items-center justify-between">
             <div className="flex flex-col">
               <div className="font-semibold">Supplied</div>
-              <div>{market.supplyAPY.toFixed(2)}% APY</div>
+              <div>{market.supply.APR.toFixed(2)}% APR</div>
             </div>
             <div className="flex flex-col ">
               <div className="text-md font-semibold">
-                {formatSuffix(displayData?.balance)} {token.symbol}
+                {formatSuffix(
+                  displayData?.balance,
+                  "linkedToMoney",
+                  displayData?.balanceValueUSD
+                )}{" "}
+                {token.symbol}
               </div>
               <div className="text-xs font-light text-right">
-                ${formatSuffix(displayData?.balanceValueUSD)}
+                ${formatSuffix(displayData?.balanceValueUSD, "money")}
               </div>
             </div>
           </div>
           <div className="flex items-center justify-between">
             <div className="flex flex-col">
               <div className="font-semibold">Borrowed</div>
-              <div>{market.borrowAPY.toFixed(2)}% Borrow APY</div>
+              <div>{market.borrow.APR.toFixed(2)}% Borrow APR</div>
             </div>
             <div className="flex flex-col ">
               <div className="text-md font-semibold">
-                {formatSuffix(displayData?.borrowed)}
+                {formatSuffix(
+                  displayData?.borrowed,
+                  "linkedToMoney",
+                  displayData?.borrowedValueUSD
+                )}
               </div>
               <div className="text-xs font-light text-right">
-                ${formatSuffix(displayData?.borrowedValueUSD)}
+                ${formatSuffix(displayData?.borrowedValueUSD, "money")}
               </div>
             </div>
           </div>
@@ -161,9 +170,13 @@ export function BaseActionForm({
           <div className="flex items-center justify-between">
             <span className="font-semibold">Borrow Limit</span>
             <div className="flex items-center gap-2">
-              <span>${formatSuffix(displayData.borrowLimit.current)}</span>
+              <span>
+                ${formatSuffix(displayData.borrowLimit.current, "money")}
+              </span>
               <ArrowRight className="w-4 h-4" />
-              <span>${formatSuffix(displayData.borrowLimit.future)}</span>
+              <span>
+                ${formatSuffix(displayData.borrowLimit.future, "money")}
+              </span>
             </div>
           </div>
           <div className="flex items-center justify-between">

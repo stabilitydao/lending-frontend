@@ -97,7 +97,25 @@ export function trimmedNumber(number = 0, precision = 0, useE = true) {
   return array.join(".").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-export const formatSuffix = (num: number) => {
+const parseTiny = (num: number) => {
+  if (num === 0) {
+    return "0.00";
+  }
+
+  const expString = num.toExponential(3);
+  let [coeff, exponent] = expString.split("e");
+  let nexponent = parseInt(exponent, 10);
+  coeff = coeff.replace(".", "");
+  const neededZeros = Math.abs(nexponent) - 1;
+  return ["0.0", neededZeros, coeff];
+};
+
+export const formatSuffix = (
+  num: number,
+  mode: "abbreviated" | "money" | "linkedToMoney" = "abbreviated",
+  moneyValue: number = 0
+) => {
+  if (mode === "linkedToMoney" && moneyValue < 0.000001) return "0";
   switch (true) {
     case num >= 1e12:
       return `${(num / 1000000000000).toFixed(2)}T`;
@@ -110,9 +128,22 @@ export const formatSuffix = (num: number) => {
     case num >= 1:
       return `${num.toFixed(2)}`;
     case num > 0.000001:
-      return num.toPrecision(2);
+      return num.toPrecision(4);
     case num > 0:
-      return num.toExponential(2);
+      switch (mode) {
+        case "abbreviated":
+        case "linkedToMoney":
+          let display = parseTiny(num);
+          return (
+            <>
+              {display[0]}
+              <sub className="mx-[1.5px] text-xs">{display[1]}</sub>
+              {display[2]}
+            </>
+          );
+        case "money":
+          return "0";
+      }
     case num === 0:
       return "0";
     default:

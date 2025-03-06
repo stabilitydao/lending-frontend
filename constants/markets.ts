@@ -30,7 +30,6 @@ export const MARKET_DEFINITIONS: {
     NATIVE_TOKEN_GATEWAY: "0xbE0B2230B842be6A37188038a58755534dC9E999",
     chainID: sonic.id,
   },
-  /*
   "Sonic Market": {
     tokens: [
       SWAPX_ICHI_WS_OS_OS,
@@ -61,7 +60,7 @@ export const MARKET_DEFINITIONS: {
     AAVE_POOL: "0xAC00f2Bd7849f7Ce2C8EEDCe7C962c9535b4c606",
     NATIVE_TOKEN_GATEWAY: "0x0",
     chainID: sonic.id,
-  },*/
+  },
 };
 
 export const DEFAULT_MARKET_ID = "Main Protocol";
