@@ -66,7 +66,7 @@ const MarketLine = ({
       </div>
       <StandardTooltip>
         <div className="flex flex-col gap-2">
-          <div className={`text-[20px] text-center mb-[10px] ${supplyColor}`}>
+          <div className={`text-[16px] text-center mb-[10px] ${supplyColor}`}>
             {trimmedNumber(100 - supplyPercentage, 2)}% remaining
           </div>
           <p className="flex justify-between w-full gap-1">
@@ -130,7 +130,7 @@ const MarketLine = ({
       </div>
       <StandardTooltip>
         <div className="flex flex-col gap-2">
-          <div className={`text-[20px] text-center mb-[10px] ${borrowColor}`}>
+          <div className={`text-[16px] text-center mb-[10px] ${borrowColor}`}>
             {trimmedNumber(100 - borrowPercentage, 2)}% remaining
           </div>
           <p className="flex justify-between w-full gap-1">
