@@ -329,15 +329,15 @@ export const MarketTable = () => {
         </TableBody>
       </Table>
       <HealthBar />
-      {/* {marketID !== "Main Protocol" && (
-        <LoopingButton onClick={onClickLoopingButton} />
-      )}
       <MarketModal
         token={selectedToken}
         isVisible={isModalOpen}
         onClose={closeModal}
         setSelectedToken={setSelectedToken}
       />
+      {/* {marketID !== "Main Protocol" && (
+        <LoopingButton onClick={onClickLoopingButton} />
+      )}
       <LoopingModal
         isVisible={isLoopingModalOpen}
         onClose={closeLoopingModal}
