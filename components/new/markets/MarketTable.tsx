@@ -20,6 +20,8 @@ import {
   FullEligibleRewards,
   MerklNote,
   StandardTooltip,
+  LoopingButton,
+  LoopingModal,
 } from "@/components";
 import { DoubleAvatar } from "@/components/ui/double-avatar";
 import { Token } from "@/constants";
@@ -328,6 +330,9 @@ export const MarketTable = () => {
           ))}
         </TableBody>
       </Table>
+      {marketDefinition.LOOPING_CONTRACT && (
+        <LoopingButton onClick={onClickLoopingButton} />
+      )}
       <HealthBar />
       <MarketModal
         token={selectedToken}
@@ -335,13 +340,10 @@ export const MarketTable = () => {
         onClose={closeModal}
         setSelectedToken={setSelectedToken}
       />
-      {/* {marketID !== "Main Protocol" && (
-        <LoopingButton onClick={onClickLoopingButton} />
-      )}
       <LoopingModal
         isVisible={isLoopingModalOpen}
         onClose={closeLoopingModal}
-      /> */}
+      />
     </div>
   );
 };

@@ -1,14 +1,3 @@
-import { Token } from "@/constants";
-import { Address } from "viem";
-
-export type VaultDefinition = {
-  id: string;
-  receipt: Token;
-  lp: Token;
-  tokens: [Token, Token];
-  chainId: number;
-};
-
 export type VaultAggregatedData = {
   name: string;
   lp: {

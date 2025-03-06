@@ -4,11 +4,11 @@ import { erc20Abi } from "viem";
 
 export const getTokenAllowance = async (
   userAddress: Address,
-  chainID: Chain["id"],
+  chainId: Chain["id"],
   token: Address,
   spender: Address
 ) =>
-  await ClientMap[chainID].readContract({
+  await ClientMap[chainId].readContract({
     address: token,
     abi: erc20Abi,
     functionName: "allowance",

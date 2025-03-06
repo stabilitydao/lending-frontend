@@ -1,8 +1,8 @@
 import { useCallback, useMemo } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { VaultDefinition } from "@/types";
 import { queryKeys } from "@/queries";
+import { VaultDefinition } from "@/constants";
 
 interface SingleVaultReceiptPrice {
   vaultReceiptPrice: bigint | undefined;

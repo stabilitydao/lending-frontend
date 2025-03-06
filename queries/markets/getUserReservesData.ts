@@ -7,9 +7,9 @@ import {
 import { Address } from "viem";
 
 export const getUserReservesData = async (marketID: string, user: Address) =>
-  await ClientMap[MARKET_DEFINITIONS[marketID].chainID].readContract({
+  await ClientMap[MARKET_DEFINITIONS[marketID].chainId].readContract({
     address:
-      Addresses[MARKET_DEFINITIONS[marketID].chainID].CONTRACTS
+      Addresses[MARKET_DEFINITIONS[marketID].chainId].CONTRACTS
         .MARKET_DATA_PROVIDER,
     abi: UiPoolDataProviderV3Abi,
     functionName: "getUserReservesData",

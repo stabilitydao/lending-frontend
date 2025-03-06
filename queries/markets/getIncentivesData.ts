@@ -6,9 +6,9 @@ import {
 } from "@/constants";
 
 export const getIncentivesData = async (marketID: string) =>
-  await ClientMap[MARKET_DEFINITIONS[marketID].chainID].readContract({
+  await ClientMap[MARKET_DEFINITIONS[marketID].chainId].readContract({
     address:
-      Addresses[MARKET_DEFINITIONS[marketID].chainID].CONTRACTS
+      Addresses[MARKET_DEFINITIONS[marketID].chainId].CONTRACTS
         .INCENTIVE_DATA_PROVIDER,
     abi: IncentiveDataProviderAbi,
     functionName: "getReservesIncentivesData",

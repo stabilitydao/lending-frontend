@@ -4,3 +4,4 @@ export * from "./useVaultsLPsPrice";
 export * from "./useVault";
 export * from "./useDepositInVault";
 export * from "./useWithdrawFromVault";
+export * from "./useVaultReceiptPrice";

@@ -3,7 +3,7 @@ import { Address } from "viem";
 import { erc20Abi } from "viem";
 
 export const getTokenBalance = async (userAddress: Address, token: Token) => {
-  const client = ClientMap[token.chainID];
+  const client = ClientMap[token.chainId];
   if (token.isNative) {
     return await client.getBalance({ address: userAddress });
   }
