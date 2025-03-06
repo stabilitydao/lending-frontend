@@ -4,6 +4,7 @@ import {
   getVaultReceiptPrices,
   getVaultsBreakdown,
   getVaultsTVL,
+  getWant,
 } from ".";
 import { getVaultById, VAULTS } from "@/constants";
 
@@ -32,6 +33,14 @@ export const vaultQueries = createQueryKeys("vaults", {
       return await getVaultReceiptPrices(
         VAULTS.filter((v) => v.chainId === chainId)
       );
+    },
+  }),
+  want: (vaultId: string) => ({
+    queryKey: [vaultId],
+    queryFn: async () => {
+      const vault = getVaultById(vaultId);
+      if (!vault) return "0x0";
+      return await getWant(vault);
     },
   }),
 });

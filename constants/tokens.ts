@@ -682,6 +682,37 @@ export const SWAPX_ICHI_WS_STS_STS_LP = SWAPX_ICHI_WS_STS_STS.makeLP(
   "0xa68D5DbAe00960De66DdEaD4d53faea39f21983b"
 );
 
+export const SWAPX_ICHI_SCETH_WETH_SCETH = new Token({
+  name: "scETH-wETH (scETH)",
+  symbol: "scETH-wETH",
+  address: "0x96bd19f2E314864Bd312a25A1b1A6D0f8777c8e7",
+  decimals: 18,
+  icon: "/icons/dex/SwapX_Black.svg",
+  pair: [scETH, wETH],
+  chainID: sonic.id,
+  buyLink:
+    "https://swapx.fi/earn?orderBy=totalValueLockedUSD&orderDirection=desc&orderByCore=totalValueLockedUSD&orderDirectionCore=desc&ownerType=pools&filter=conc-liquidity&search=sceth%2Fweth",
+});
+export const SWAPX_ICHI_SCETH_WETH_SCETH_LP =
+  SWAPX_ICHI_SCETH_WETH_SCETH.makeLP(
+    "0x6E8A8037533aA74FfFEb92390E443294d034d769"
+  );
+
+export const SWAPX_ICHI_SCETH_WETH_WETH = new Token({
+  name: "scETH-wETH (wETH)",
+  symbol: "wETH-scETH",
+  address: "0x652cFe2c05fC3db8EFa74C5F68E91D799fd3eFa7",
+  decimals: 18,
+  icon: "/icons/dex/SwapX_Black.svg",
+  pair: [wETH, scETH],
+  chainID: sonic.id,
+  buyLink:
+    "https://swapx.fi/earn?orderBy=totalValueLockedUSD&orderDirection=desc&orderByCore=totalValueLockedUSD&orderDirectionCore=desc&ownerType=pools&filter=conc-liquidity&search=sceth%2Fweth",
+});
+export const SWAPX_ICHI_SCETH_WETH_WETH_LP = SWAPX_ICHI_SCETH_WETH_WETH.makeLP(
+  "0x0f385EEa80cB6909A1dbA5CDc763e97F8589f47D"
+);
+
 export const BEETS_WS_STS = new Token({
   name: "Staked Sonic Symphony",
   symbol: "wS-stS",
