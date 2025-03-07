@@ -6,7 +6,7 @@ import {
   getVaultsTVL,
   getWant,
 } from ".";
-import { getVaultById, VAULTS } from "@/constants";
+import { getVaultById, ALL_DISPLAYED_VAULTS } from "@/constants";
 
 export const vaultQueries = createQueryKeys("vaults", {
   tvl: () => ({
@@ -31,7 +31,7 @@ export const vaultQueries = createQueryKeys("vaults", {
     queryKey: ["vaultReceiptPrices", chainId],
     queryFn: async () => {
       return await getVaultReceiptPrices(
-        VAULTS.filter((v) => v.chainId === chainId)
+        ALL_DISPLAYED_VAULTS.filter((v) => v.chainId === chainId)
       );
     },
   }),

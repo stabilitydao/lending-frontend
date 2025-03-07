@@ -13,7 +13,7 @@ import {
 import { DoubleAvatar } from "@/components/ui/double-avatar";
 
 import { VaultAggregatedData } from "@/types";
-import { useSearch, useVaults, useVault } from "@/hooks";
+import { useSearch, useVaults, useVault, useSelectedVaults } from "@/hooks";
 import {
   ApyBreakdown,
   FullEligibleRewards,
@@ -22,7 +22,7 @@ import {
   SortBy,
   VaultModal,
 } from "@/components";
-import { VaultDefinition, VAULTS } from "@/constants";
+import { VaultDefinition } from "@/constants";
 import { formatSuffix } from "@/helpers";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -117,14 +117,15 @@ const VaultLine = ({
 };
 
 export const VaultTable = () => {
-  const { vaults } = useVaults(VAULTS);
+  const { vaultDefinitions } = useSelectedVaults();
+  const { vaults } = useVaults(vaultDefinitions);
   const { filter } = useSearch(
     "vaults",
     (vault: VaultDefinition) => vault.receipt.name
   );
 
   const [selectedVault, setSelectedVault] = useState<VaultDefinition>(
-    VAULTS[0]
+    vaultDefinitions[0]
   );
   const [isModalOpen, setModalOpen] = useState(false);
 
@@ -205,7 +206,7 @@ export const VaultTable = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {sort(filter(VAULTS)).map((vaultDefinition) => (
+          {sort(filter(vaultDefinitions)).map((vaultDefinition) => (
             <VaultLine
               key={vaultDefinition.id}
               vaultDefinition={vaultDefinition}

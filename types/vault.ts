@@ -1,3 +1,5 @@
+import { VaultDefinition } from "@/constants";
+
 export type VaultAggregatedData = {
   name: string;
   lp: {

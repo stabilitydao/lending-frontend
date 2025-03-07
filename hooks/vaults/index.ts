@@ -1,3 +1,4 @@
+export * from "./useSelectedVaults";
 export * from "./useVaultsTVL";
 export * from "./useVaultsBreakdown";
 export * from "./useVaultsLPsPrice";

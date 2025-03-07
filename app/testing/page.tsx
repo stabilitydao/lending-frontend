@@ -1,5 +1,5 @@
 "use client";
-import { ALL_VAULTS, VAULTS } from "@/constants";
+import { ALL_VAULTS, ALL_DISPLAYED_VAULTS } from "@/constants";
 import { useVaultsBreakdown, useVaultsReceiptPrice } from "@/hooks";
 import { useWant } from "@/hooks/vaults/useWant";
 
@@ -56,7 +56,7 @@ const AllVaultsHaveCorrectLPAddresses = () => {
 };
 
 const AllVaultsAreAssignedAMarket = () => {
-  const vaults = VAULTS;
+  const vaults = ALL_DISPLAYED_VAULTS;
   const incorrects = [];
   for (const vault of ALL_VAULTS) {
     if (vaults.includes(vault)) continue;
@@ -96,7 +96,7 @@ const AllOrthaeVaultsExist = () => {
 };
 
 const AllVaultsFunctionCorrectly = () => {
-  const vaults = VAULTS;
+  const vaults = ALL_DISPLAYED_VAULTS;
   let incorrect = false;
   const { vaultsReceiptPrice, isVaultsReceiptPriceLoading } =
     useVaultsReceiptPrice(ALL_VAULTS);

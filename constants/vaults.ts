@@ -281,6 +281,18 @@ export const VAULT_SWAPX_ICHI_USDC_SCUSD_USDC = new VaultDefinition({
     "https://swapx.fi/earn?orderBy=totalValueLockedUSD&orderDirection=desc&orderByCore=totalValueLockedUSD&orderDirectionCore=desc&ownerType=pools&filter=conc-liquidity&search=usdc.e%2Fscusd",
 });
 
+export const VAULT_SWAPX_ICHI_USDC_SCUSD_SCUSD = new VaultDefinition({
+  id: "swapx-ichi-usdc-scusd-scusd",
+  name: "USDC.e-scUSD (scUSD)",
+  symbol: "USDC.e-scUSD",
+  pair: [scUSD, USDCe],
+  vaultAddress: "0x6De36C1Af417A438a69d4AAa3655022E52bbC606",
+  lpAddress: "0x776C31466F19D4e2c71bCE16c0549a8Bc0E37e17",
+  icon: "/icons/dex/SwapX_Black.svg",
+  buyLink:
+    "https://swapx.fi/earn?orderBy=totalValueLockedUSD&orderDirection=desc&orderByCore=totalValueLockedUSD&orderDirectionCore=desc&ownerType=pools&filter=conc-liquidity&search=usdc.e%2Fscusd",
+});
+
 export const VAULT_SWAPX_ICHI_WS_WETH_WS = new VaultDefinition({
   id: "swapx-ichi-ws-weth-ws",
   name: "wS-wETH (wS)",
@@ -327,18 +339,6 @@ export const VAULT_SWAPX_ICHI_WS_OS_OS = new VaultDefinition({
   icon: "/icons/dex/SwapX_Black.svg",
   buyLink:
     "https://swapx.fi/earn?orderBy=totalValueLockedUSD&orderDirection=desc&orderByCore=totalValueLockedUSD&orderDirectionCore=desc&ownerType=pools&filter=conc-liquidity&search=ws%2Fos",
-});
-
-export const VAULT_SWAPX_ICHI_USDC_SCUSD_SCUSD = new VaultDefinition({
-  id: "swapx-ichi-usdc-scusd-scusd",
-  name: "USDC.e-scUSD (scUSD)",
-  symbol: "USDC.e-scUSD",
-  pair: [scUSD, USDCe],
-  vaultAddress: "0x6De36C1Af417A438a69d4AAa3655022E52bbC606",
-  lpAddress: "0x776C31466F19D4e2c71bCE16c0549a8Bc0E37e17",
-  icon: "/icons/dex/SwapX_Black.svg",
-  buyLink:
-    "https://swapx.fi/earn?orderBy=totalValueLockedUSD&orderDirection=desc&orderByCore=totalValueLockedUSD&orderDirectionCore=desc&ownerType=pools&filter=conc-liquidity&search=usdc.e%2Fscusd",
 });
 
 export const VAULT_SWAPX_ICHI_WS_OS_WS = new VaultDefinition({
@@ -685,29 +685,29 @@ export const VAULT_EQUALIZER_WS_WHALE = new VaultDefinition({
     "https://equalizer.exchange/liquidity/0x8D2b12D0DC9BB13C62d213EFbEa10fD0bfCe3C88/add",
 });
 
-export const VAULTS: VaultDefinition[] = [
+export const SWAPX_VAULTS: VaultDefinition[] = [
   VAULT_SWAPX_WS_TYSG,
   VAULT_SWAPX_WS_GOGLZ,
   VAULT_SWAPX_WS_HEDGY,
   VAULT_SWAPX_WS_SDOG,
   VAULT_SWAPX_WS_ECO,
   VAULT_SWAPX_WS_SHIBA,
-  VAULT_SWAPX_ICHI_USDC_USDT_USDC,
-  VAULT_SWAPX_ICHI_USDC_USDT_USDT,
   VAULT_SWAPX_ICHI_WS_SWAPX_WS,
   VAULT_SWAPX_ICHI_WS_USDC_WS,
   VAULT_SWAPX_ICHI_WS_SACRA_SACRA,
+  VAULT_SWAPX_ICHI_WS_WETH_WS,
+  VAULT_SWAPX_ICHI_WS_SCETH_WS,
+  VAULT_SWAPX_ICHI_USDC_STS_USDC,
   VAULT_SWAPX_ICHI_USDC_SWAPX_USDC,
   VAULT_SWAPX_ICHI_USDC_WETH_USDC,
   VAULT_SWAPX_ICHI_USDC_WETH_WETH,
-  VAULT_SWAPX_ICHI_WS_SCETH_WS,
   VAULT_SWAPX_ICHI_USDC_SCUSD_USDC,
-  VAULT_SWAPX_ICHI_WS_WETH_WS,
-  VAULT_SWAPX_ICHI_WS_STS_WS,
-  VAULT_SWAPX_ICHI_USDC_STS_USDC,
-  VAULT_SWAPX_ICHI_WS_OS_OS,
   VAULT_SWAPX_ICHI_USDC_SCUSD_SCUSD,
+  VAULT_SWAPX_ICHI_USDC_USDT_USDC,
+  VAULT_SWAPX_ICHI_USDC_USDT_USDT,
+  VAULT_SWAPX_ICHI_WS_OS_OS,
   VAULT_SWAPX_ICHI_WS_OS_WS,
+  VAULT_SWAPX_ICHI_WS_STS_WS,
   VAULT_SWAPX_ICHI_WS_STS_STS,
   VAULT_SWAPX_ICHI_SCETH_WETH_SCETH,
   VAULT_SWAPX_ICHI_SCETH_WETH_WETH,
@@ -719,9 +719,15 @@ export const VAULTS: VaultDefinition[] = [
   VAULT_SWAPX_ICHI_WBTC_SCBTC_WBTC,
   VAULT_SWAPX_ICHI_FRXETH_SCETH_FRXETH,
   VAULT_SWAPX_ICHI_SCETH_FRXETH_SCETH,
+];
+
+export const BEETS_VAULTS: VaultDefinition[] = [
   VAULT_BEETS_WS_STS,
   VAULT_BEETS_USDC_SCUSD,
   VAULT_BEETS_SCUSD_STS,
+];
+
+export const EQUALIZER_VAULTS: VaultDefinition[] = [
   VAULT_EQUALIZER_WS_USDC,
   VAULT_EQUALIZER_WS_EQUAL,
   VAULT_EQUALIZER_WS_STS,
@@ -736,3 +742,18 @@ export const VAULTS: VaultDefinition[] = [
   VAULT_EQUALIZER_WS_THC,
   VAULT_EQUALIZER_WS_WHALE,
 ];
+
+export const ALL_DISPLAYED_VAULTS: VaultDefinition[] = [
+  ...SWAPX_VAULTS,
+  ...BEETS_VAULTS,
+  ...EQUALIZER_VAULTS,
+];
+
+export const DEFAULT_VAULTS_ID = "All Vaults";
+
+export const VAULT_GROUPS: Record<string, VaultDefinition[]> = {
+  [DEFAULT_VAULTS_ID]: ALL_DISPLAYED_VAULTS,
+  SwapX: SWAPX_VAULTS,
+  Beets: BEETS_VAULTS,
+  Equalizer: EQUALIZER_VAULTS,
+};
