@@ -12,8 +12,8 @@ import {
 } from "@/components/ui/table";
 import { DoubleAvatar } from "@/components/ui/double-avatar";
 
-import { VaultDefinition } from "@/types";
-import { useSearch, useVaults, useVault } from "@/hooks";
+import { VaultAggregatedData } from "@/types";
+import { useSearch, useVaults, useVault, useSelectedVaults } from "@/hooks";
 import {
   ApyBreakdown,
   FullEligibleRewards,
@@ -22,7 +22,7 @@ import {
   SortBy,
   VaultModal,
 } from "@/components";
-import { VAULTS } from "@/constants";
+import { VaultDefinition } from "@/constants";
 import { formatSuffix } from "@/helpers";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -117,14 +117,15 @@ const VaultLine = ({
 };
 
 export const VaultTable = () => {
-  const { vaults } = useVaults(VAULTS);
+  const { vaultDefinitions } = useSelectedVaults();
+  const { vaults } = useVaults(vaultDefinitions);
   const { filter } = useSearch(
     "vaults",
     (vault: VaultDefinition) => vault.receipt.name
   );
 
   const [selectedVault, setSelectedVault] = useState<VaultDefinition>(
-    VAULTS[0]
+    vaultDefinitions[0]
   );
   const [isModalOpen, setModalOpen] = useState(false);
 
@@ -159,7 +160,7 @@ export const VaultTable = () => {
           <TableRow>
             <SortableTableHead
               label="Assets"
-              extract={(v) => v.name.toLowerCase()}
+              extract={(v: VaultAggregatedData) => v.name.toLowerCase()}
               sortBy={sortBy}
               setSortBy={setSortBy}
               defaultOrder="asc"
@@ -169,37 +170,35 @@ export const VaultTable = () => {
             </TableHead>
             <SortableTableHead
               label="TVL"
-              extract={(v) => v.tvl}
+              extract={(v: VaultAggregatedData) => v.tvl}
               sortBy={sortBy}
               setSortBy={setSortBy}
               defaultOrder="desc"
             />
             <SortableTableHead
               label="LP In Wallet"
-              extract={(v) => parseFloat(v.lp.usdValue)}
+              extract={(v: VaultAggregatedData) => v.lp.usdValue}
               sortBy={sortBy}
               setSortBy={setSortBy}
               defaultOrder="desc"
             />
             <SortableTableHead
               label="Deposited"
-              extract={(v) => {
-                return parseFloat(v.receipt.usdValue);
-              }}
+              extract={(v: VaultAggregatedData) => v.receipt.usdValue}
               sortBy={sortBy}
               setSortBy={setSortBy}
               defaultOrder="desc"
             />
             <SortableTableHead
               label="APY"
-              extract={(v) => v.apy}
+              extract={(v: VaultAggregatedData) => v.apy}
               sortBy={sortBy}
               setSortBy={setSortBy}
               defaultOrder="desc"
             />
             <SortableTableHead
               label="Daily APR"
-              extract={(v) => v.apy}
+              extract={(v: VaultAggregatedData) => v.apy}
               sortBy={sortBy}
               setSortBy={setSortBy}
               defaultOrder="desc"
@@ -207,7 +206,7 @@ export const VaultTable = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {sort(filter(VAULTS)).map((vaultDefinition) => (
+          {sort(filter(vaultDefinitions)).map((vaultDefinition) => (
             <VaultLine
               key={vaultDefinition.id}
               vaultDefinition={vaultDefinition}

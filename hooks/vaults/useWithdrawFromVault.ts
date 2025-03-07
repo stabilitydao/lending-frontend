@@ -13,14 +13,13 @@ import {
   useWaitForTransactionReceipt,
   useWriteContract,
 } from "wagmi";
-import { BeefyVaultV7Abi } from "@/constants";
+import { BeefyVaultV7Abi, VaultDefinition } from "@/constants";
 import {
   extractError,
   isAddressValid,
   strToBn,
   trimmedString,
 } from "@/helpers";
-import { VaultDefinition } from "@/types";
 import { useQueryClient } from "@tanstack/react-query";
 import { queryKeys } from "@/queries";
 

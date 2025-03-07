@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { VaultAggregatedData, VaultDefinition } from "@/types";
+import { VaultAggregatedData } from "@/types";
 import Link from "next/link";
 import { DoubleAvatar } from "@/components/ui/double-avatar";
 import { useDepositInVault, useVault, useWithdrawFromVault } from "@/hooks";
@@ -21,6 +21,7 @@ import { VaultBaseActionForm } from "./VaultBaseActionForm";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { Deposit } from "@/components/icons/deposit";
 import { Withdraw } from "@/components/icons/withdraw";
+import { VaultDefinition } from "@/constants";
 
 const DepositVaultForm = ({
   vaultDefinition,

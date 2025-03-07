@@ -70,5 +70,6 @@ export type MarketDefinition = {
   POOL_ADDRESS_PROVIDER: Address;
   AAVE_POOL: Address;
   NATIVE_TOKEN_GATEWAY: Address;
-  chainID: Chain["id"];
+  LOOPING_CONTRACT?: Address;
+  chainId: Chain["id"];
 };

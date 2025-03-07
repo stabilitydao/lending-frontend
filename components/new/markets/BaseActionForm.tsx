@@ -80,14 +80,14 @@ export function BaseActionForm({
         <span className="flex items-center gap-4">
           Available:
           <span className="font-semibold">
-            {bnToStr(balance, token.decimals)}{" "}
+            {bnToStr(balance, token.decimals)}
           </span>
         </span>
         <div className="absolute right-0 text-sm text-gray-500 transform translate-y-5">
           $
           {formatSuffix(
             bnToNumber(balance, token.decimals) * displayData.tokenPriceUSD
-          )}{" "}
+          )}
         </div>
       </div>
 

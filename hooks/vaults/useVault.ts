@@ -4,13 +4,14 @@ import {
   useVaultsBreakdown,
   useVaultsLPsPrice,
   useVaultsTVL,
+  useVaultsReceiptPrice,
 } from "@/hooks";
-import { VaultAggregatedData, VaultDefinition } from "@/types";
+import { VaultAggregatedData } from "@/types";
 import { Address } from "viem";
-import { useVaultsReceiptPrice } from "./useVaultReceiptPrice";
 import { bnToNumber } from "@/helpers";
 import { useQueryClient } from "@tanstack/react-query";
 import { queryKeys } from "@/queries";
+import { VaultDefinition } from "@/constants";
 
 const useVaults = (vaultDefinitions: VaultDefinition[]) => {
   const queryClient = useQueryClient();

@@ -9,7 +9,7 @@ const useTokenBalance = (token: Token) => {
   const client = useQueryClient();
   const { data: balanceBn, isLoading } = useQuery({
     ...queryKeys.user
-      .chain(userAddress!, token.chainID)
+      .chain(userAddress!, token.chainId)
       ._ctx.tokenBalance(token.address),
     staleTime: Infinity,
     refetchInterval: 15000,
@@ -17,7 +17,7 @@ const useTokenBalance = (token: Token) => {
   const invalidateTokenBalanceQuery = useCallback(() => {
     client.invalidateQueries(
       queryKeys.user
-        .chain(userAddress!, token.chainID)
+        .chain(userAddress!, token.chainId)
         ._ctx.tokenBalance(token.address)
     );
   }, [client, token.address, userAddress, balanceBn]);

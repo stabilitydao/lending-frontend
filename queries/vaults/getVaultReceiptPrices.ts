@@ -1,5 +1,4 @@
-import { VaultDefinition } from "@/types";
-import { BeefyVaultV7Abi, ClientMap } from "@/constants";
+import { BeefyVaultV7Abi, ClientMap, VaultDefinition } from "@/constants";
 
 export async function getVaultReceiptPrices(
   vaults: VaultDefinition[]

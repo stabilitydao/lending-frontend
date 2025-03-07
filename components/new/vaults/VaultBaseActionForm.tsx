@@ -1,13 +1,13 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { Button, ChainButton } from "@/components/ui/button";
+import { ChainButton } from "@/components/ui/button";
 import { PercentageBar } from "@/components/ui/percentage-bar";
 import { CheckCheck } from "lucide-react";
 
-import { VaultDefinition, VaultAggregatedData } from "@/types";
+import { VaultAggregatedData } from "@/types";
 import { bnToNumber, bnToStr, formatSuffix } from "@/helpers";
 import { MaxInput } from "@/components";
 import Image from "next/image";
+import { VaultDefinition } from "@/constants";
 
 interface VaultBaseActionFormProps {
   vaultDefinition: VaultDefinition;
