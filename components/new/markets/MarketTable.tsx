@@ -330,7 +330,7 @@ export const MarketTable = () => {
           ))}
         </TableBody>
       </Table>
-      {marketDefinition.LOOPING_CONTRACT && (
+      {marketDefinition.LOOPING && (
         <LoopingButton onClick={onClickLoopingButton} />
       )}
       <HealthBar />
@@ -340,10 +340,12 @@ export const MarketTable = () => {
         onClose={closeModal}
         setSelectedToken={setSelectedToken}
       />
-      <LoopingModal
-        isVisible={isLoopingModalOpen}
-        onClose={closeLoopingModal}
-      />
+      {marketDefinition.LOOPING && (
+        <LoopingModal
+          isVisible={isLoopingModalOpen}
+          onClose={closeLoopingModal}
+        />
+      )}
     </div>
   );
 };

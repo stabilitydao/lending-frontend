@@ -17,8 +17,8 @@ const useIncentivesDataRaw = () => {
   const invalidateIncentivesDataRawQuery = useCallback(
     async (marketID: string) => {
       queryClient.invalidateQueries({
-        queryKey: queryKeys.markets.market(marketID)._ctx.incentivesData()
-          .queryKey,
+        queryKey: queryKeys.markets.market(marketID)._ctx.incentivesData(),
+        refetchType: "active",
       });
     },
     [queryClient, marketID]

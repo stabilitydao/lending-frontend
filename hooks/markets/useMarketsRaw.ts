@@ -17,6 +17,7 @@ const useMarketsRaw = () => {
       queryClient.invalidateQueries({
         queryKey: queryKeys.markets.market(marketID)._ctx.marketsData()
           .queryKey,
+        refetchType: "active",
       });
     },
     [queryClient]

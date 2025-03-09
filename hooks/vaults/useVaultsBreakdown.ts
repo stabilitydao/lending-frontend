@@ -14,6 +14,7 @@ const useVaultsBreakdown = () => {
   const invalidateVaultsBreakdownDataQuery = useCallback(async () => {
     queryClient.invalidateQueries({
       queryKey: queryKeys.vaults.breakdown().queryKey,
+      refetchType: "active",
     });
   }, [queryClient]);
   return {

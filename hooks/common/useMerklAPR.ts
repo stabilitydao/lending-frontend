@@ -16,6 +16,7 @@ const useMerklAPRs = () => {
   const invalidateMerklAPRsQuery = useCallback(() => {
     queryClient.invalidateQueries({
       queryKey: queryKeys.common.merklAPRs().queryKey,
+      refetchType: "active",
     });
   }, [queryClient]);
 

@@ -24,6 +24,7 @@ const useUserIncentivesDataRaw = () => {
         queryKey: queryKeys.markets
           .market(marketID)
           ._ctx.userIncentivesData(address!).queryKey,
+        refetchType: "active",
       });
     },
     [queryClient, marketID, address]

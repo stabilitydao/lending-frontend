@@ -22,6 +22,7 @@ const useUserAccountData = () => {
         queryKey: queryKeys.markets
           .market(marketID)
           ._ctx.userAccountData(address!).queryKey,
+        refetchType: "active",
       });
     },
     [queryClient, address, marketID]

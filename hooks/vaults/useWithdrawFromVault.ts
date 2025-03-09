@@ -84,16 +84,18 @@ const useWithdrawFromVault = (vaultDefinition: VaultDefinition) => {
       setTimeout(() => {
         reset();
         invalidateVaultData();
-        queryClient.invalidateQueries(
-          queryKeys.user
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.user
             .chain(userAddress!, chainId)
-            ._ctx.tokenBalance(lpAddress)
-        );
-        queryClient.invalidateQueries(
-          queryKeys.user
+            ._ctx.tokenBalance(lpAddress).queryKey,
+          refetchType: "active",
+        });
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.user
             .chain(userAddress!, chainId)
-            ._ctx.tokenBalance(receitAddress)
-        );
+            ._ctx.tokenBalance(receitAddress).queryKey,
+          refetchType: "active",
+        });
         setAmount("");
       }, 500);
     }

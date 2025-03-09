@@ -4,3 +4,4 @@ export * from "./NativeTokenGateway";
 export * from "./VariableDebtToken";
 export * from "./IncentiveDataProvider";
 export * from "./BeefyVaultV7";
+export * from "./AutoLeverager";

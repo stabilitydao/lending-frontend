@@ -13,6 +13,7 @@ const useVaultsLPsPrice = () => {
   const invalidateVaultsLPsPriceQuery = useCallback(async () => {
     queryClient.invalidateQueries({
       queryKey: queryKeys.vaults.lpsPrice().queryKey,
+      refetchType: "active",
     });
   }, [queryClient]);
   return {

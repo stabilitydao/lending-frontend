@@ -22,6 +22,7 @@ const useUserDataRaw = () => {
         queryKey: queryKeys.markets
           .market(marketID)
           ._ctx.userReservesData(address!).queryKey,
+        refetchType: "active",
       });
     },
     [queryClient, address, marketID]

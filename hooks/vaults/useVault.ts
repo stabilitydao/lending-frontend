@@ -130,6 +130,7 @@ const useVaults = (vaultDefinitions: VaultDefinition[]) => {
         queryClient.invalidateQueries({
           queryKey: queryKeys.vaults.vaultReceiptPrices(vaultDefinition.chainId)
             .queryKey,
+          refetchType: "active",
         }); // only invalidate this vault's receipt price
       },
     };

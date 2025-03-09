@@ -5,7 +5,7 @@ import { CheckCheck } from "lucide-react";
 
 import { VaultAggregatedData } from "@/types";
 import { bnToNumber, bnToStr, formatSuffix } from "@/helpers";
-import { MaxInput } from "@/components";
+import { MaxInput, MaxInputWithSlider } from "@/components";
 import Image from "next/image";
 import { VaultDefinition } from "@/constants";
 
@@ -45,23 +45,6 @@ export const VaultBaseActionForm = ({
   actionIcon: ActionIcon,
 }: VaultBaseActionFormProps) => {
   const decimals = vaultDefinition.receipt.decimals;
-  const numericAmount = parseFloat(amount) || 0;
-  const numericBalance = bnToNumber(balance, decimals);
-
-  let sliderValue = (numericAmount / numericBalance) * 100;
-  if (isNaN(sliderValue)) sliderValue = 0;
-  if (sliderValue < 0) sliderValue = 0;
-  if (sliderValue > 100) sliderValue = 100;
-
-  const handleSliderChange = (newPercentage: number) => {
-    if (newPercentage == 100) {
-      onChangeAmount(bnToStr(balance, decimals));
-      return;
-    }
-    const fraction = newPercentage / 100;
-    const newAmount = fraction * numericBalance;
-    onChangeAmount(newAmount.toFixed(decimals));
-  };
 
   const finalActionLabel = actionLabel ?? title;
 
@@ -79,16 +62,13 @@ export const VaultBaseActionForm = ({
           ${formatSuffix(bnToNumber(balance, decimals) * price)}
         </div>
       </div>
-      <div className="flex flex-col gap-8 pt-8">
-        <MaxInput
-          amount={amount}
-          max={bnToStr(balance, decimals)}
-          balance={bnToStr(balance, decimals)}
-          onChange={onChangeAmount}
-        />
 
-        <PercentageBar percentage={sliderValue} onChange={handleSliderChange} />
-      </div>
+      <MaxInputWithSlider
+        amount={amount}
+        max={bnToStr(balance, decimals)}
+        onChange={onChangeAmount}
+        precision={decimals}
+      />
 
       <div>
         <div className="flex flex-col gap-2">

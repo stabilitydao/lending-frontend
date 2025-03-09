@@ -6,6 +6,7 @@ import {
   getUserAccountData,
   getUserReservesData,
   getUserIncentivesData,
+  getVDTAllowance,
 } from ".";
 
 export const marketQueries = createQueryKeys("markets", {
@@ -40,6 +41,12 @@ export const marketQueries = createQueryKeys("markets", {
         queryKey: ["userIncentivesData", user],
         queryFn: async () => {
           return await getUserIncentivesData(marketID, user);
+        },
+      }),
+      vdtAllowance: (vdtAddress: Address, toUser: Address) => ({
+        queryKey: ["vdtAllowance", vdtAddress, toUser],
+        queryFn: async () => {
+          return await getVDTAllowance(vdtAddress, marketID, toUser);
         },
       }),
     },
