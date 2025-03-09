@@ -4,7 +4,6 @@ import {
   useApproveToken,
   useCorrectChain,
   useInvalidate,
-  useSelectedMarket,
   useRepayToast,
   useTokenBalance,
   useUserData,
@@ -15,7 +14,11 @@ import {
   useWaitForTransactionReceipt,
   useWriteContract,
 } from "wagmi";
-import { AavePoolAbi, NativeTokenGatewayAbi } from "@/constants";
+import {
+  AavePoolAbi,
+  MARKET_DEFINITIONS,
+  NativeTokenGatewayAbi,
+} from "@/constants";
 import {
   bnToNumber,
   extractError,
@@ -27,12 +30,12 @@ import {
 } from "@/helpers";
 import { Token } from "@/constants";
 
-const useRepay = (token: Token) => {
+const useRepay = (marketID: string, token: Token) => {
   const [amount, setAmount] = useState("");
   const { balance } = useTokenBalance(token);
-  const { userData } = useUserData(token);
+  const { userData } = useUserData(marketID, token);
   const maxDebt = userData?.variableDebt;
-  const { marketDefinition } = useSelectedMarket();
+  const marketDefinition = MARKET_DEFINITIONS[marketID];
 
   const { chainIdToUse } = useCorrectChain();
   const { address: userAddress } = useAccount();
@@ -46,7 +49,7 @@ const useRepay = (token: Token) => {
     isApprovePending,
     setApproveAmount,
   } = useApproveToken(marketDefinition.AAVE_POOL, token.address);
-  const { invalidateMarketState } = useInvalidate(token);
+  const { invalidateMarketState } = useInvalidate(marketID, token);
 
   const {
     writeContract,
@@ -161,7 +164,7 @@ const useRepay = (token: Token) => {
     }
   }, [isConfirmed, updateAllowance, reset, hash, invalidateMarketState]);
 
-  const displayData = useUserDisplayData(token, "repay", amount);
+  const displayData = useUserDisplayData(marketID, token, "repay", amount);
 
   return {
     amount,

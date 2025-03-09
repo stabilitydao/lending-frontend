@@ -36,7 +36,8 @@ const MarketLine = ({
   onSelectToken: (token: Token) => void;
   withVault?: boolean;
 }) => {
-  const { market, isMarketLoading } = useMarket(token);
+  const { marketID } = useSelectedMarket();
+  const { market, isMarketLoading } = useMarket(marketID, token);
   if (isMarketLoading || !market) return null;
   const supplyPercentage = Math.min(
     (market.supply.tvl.amount / market.supply.cap.amount) * 100,
@@ -230,7 +231,7 @@ const MarketLine = ({
 };
 export const MarketTable = () => {
   const { marketDefinition, marketID } = useSelectedMarket();
-  const { markets } = useMarkets();
+  const { markets } = useMarkets(marketID);
 
   const [selectedToken, setSelectedToken] = useState<Token>(
     marketDefinition.tokens[0]

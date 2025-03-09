@@ -1,10 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { useSelectedMarket } from "@/hooks";
 import { queryKeys } from "@/queries";
 import { Address } from "viem";
 
-const useMarketPrices = () => {
-  const { marketID } = useSelectedMarket();
+const useMarketPrices = (marketID: string) => {
   const { data: marketsData, isLoading: isPricesLoading } = useQuery({
     ...queryKeys.markets.market(marketID)._ctx.marketsData(),
     staleTime: Infinity,

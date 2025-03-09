@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import {
   useCorrectChain,
   useInvalidate,
-  useSelectedMarket,
   useMarketRaw,
   useUserAccountData,
   useUserData,
@@ -16,7 +15,7 @@ import {
 } from "wagmi";
 import {
   AavePoolAbi,
-  Addresses,
+  MARKET_DEFINITIONS,
   NativeTokenGatewayAbi,
   VariableDebtTokenAbi,
 } from "@/constants";
@@ -29,14 +28,14 @@ import {
 } from "@/helpers";
 import { Token } from "@/constants";
 
-const useWithdraw = (token: Token) => {
+const useWithdraw = (marketID: string, token: Token) => {
   const [amount, setAmount] = useState("");
-  const { userData } = useUserData(token);
-  const { userAccountData } = useUserAccountData();
+  const { userData } = useUserData(marketID, token);
+  const { userAccountData } = useUserAccountData(marketID);
+  const marketDefinition = MARKET_DEFINITIONS[marketID];
   const borrowAmountUSD = userAccountData.availableBorrowsBase || BigInt(0);
-  const { marketData } = useMarketRaw(token);
-  const { marketDefinition } = useSelectedMarket();
-  const { invalidateMarketState } = useInvalidate(token);
+  const { marketData } = useMarketRaw(marketID, token);
+  const { invalidateMarketState } = useInvalidate(marketID, token);
 
   const price = marketData?.priceInMarketReferenceCurrency || BigInt(1);
   const scale = marketData?.baseLTVasCollateral || BigInt(10000);
@@ -151,7 +150,7 @@ const useWithdraw = (token: Token) => {
     }
   }, [isConfirmed, reset, hash, invalidateMarketState]);
 
-  const displayData = useUserDisplayData(token, "withdraw", amount);
+  const displayData = useUserDisplayData(marketID, token, "withdraw", amount);
 
   return {
     amount,

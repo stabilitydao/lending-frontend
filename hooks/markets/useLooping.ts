@@ -7,11 +7,10 @@ import {
   useLoopToast,
   useMarketPrices,
   useMarketsRaw,
-  useSelectedMarket,
   useTokenBalances,
   useVDTAllowance,
 } from "@/hooks";
-import { AutoLeveragerAbi, Token } from "@/constants";
+import { AutoLeveragerAbi, MARKET_DEFINITIONS, Token } from "@/constants";
 import { Address } from "viem";
 import { bnToNumber, bnToStr, extractError, numToBn, strToBn } from "@/helpers";
 import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
@@ -111,9 +110,9 @@ const isValidAddresses = (
   depositAddress == tokenNeededAddress ||
   borrowAddress == tokenNeededAddress;
 
-export const useLooping = () => {
-  const { marketDefinition } = useSelectedMarket();
-  const { marketsData } = useMarketsRaw();
+export const useLooping = (marketID: string) => {
+  const marketDefinition = MARKET_DEFINITIONS[marketID];
+  const { marketsData } = useMarketsRaw(marketID);
 
   const [selectedVault, setSelectedVault] = useState<Token>(
     marketDefinition.LOOPING!.VAULTS[0]
@@ -144,13 +143,13 @@ export const useLooping = () => {
   const depositTokens = marketDefinition.LOOPING!.IO;
   const possibleBorrowTokens = marketDefinition.LOOPING!.IO;
 
-  const { invalidateMarketState } = useInvalidate(depositToken);
+  const { invalidateMarketState } = useInvalidate(marketID, depositToken);
 
   const { isBalancesLoading, balancesObj: depositBalances } = useTokenBalances(
     depositTokens.map((token) => token.address)
   );
 
-  const { isPricesLoading, prices } = useMarketPrices();
+  const { isPricesLoading, prices } = useMarketPrices(marketID);
 
   const depositInfo = useMemo(() => {
     const depositInfo: Record<
@@ -168,52 +167,78 @@ export const useLooping = () => {
   }, [depositTokens, depositBalances, prices]);
 
   const borrowInfo = useMemo(() => {
-    const borrowInfo: {
-      info: Record<
-        Address,
-        { token: Token; maxBorrow: bigint; price: bigint; available: boolean }
-      >;
-      maxBorrowUSDValue: number;
-      maxLeverage: number;
-    } = {
-      info: {},
-      maxBorrowUSDValue: 0,
-      maxLeverage: 0,
-    };
+    const result: Record<
+      Address,
+      {
+        token: Token;
+        maxLeverage: number;
+        available: boolean;
+      }
+    > = {};
+
     const market = (marketsData || []).find(
       (m) =>
         m.underlyingAsset.toLowerCase() === selectedVault.address.toLowerCase()
     );
+
     if (!market) {
-      return borrowInfo;
+      return result;
     }
+
     const ltv = market.baseLTVasCollateral;
-    borrowInfo.maxLeverage = (10000 / (10000 - bnToNumber(ltv, 0))) * 0.95;
-    const depositTokenValue = prices[depositTokenAddress];
-    borrowInfo.maxBorrowUSDValue =
+    const maxLeverageCap = 10000 / (10000 - bnToNumber(ltv, 0));
+    const depositTokenValue = prices[depositTokenAddress] || BigInt(0);
+    const depositAmountValueUSD =
       bnToNumber(depositAmountBnMinusFee, depositToken.decimals) *
-      bnToNumber(depositTokenValue, 8) *
-      borrowInfo.maxLeverage;
+      bnToNumber(depositTokenValue, 8);
 
     for (const token of possibleBorrowTokens) {
-      const price = prices[token.address.toLowerCase() as Address] || BigInt(0);
-      const maxBorrow =
-        (numToBn(
-          bnToNumber(depositAmountBnMinusFee, depositToken.decimals) *
-            borrowInfo.maxLeverage,
-          borrowToken.decimals
-        ) *
-          depositTokenValue) /
-        prices[token.address.toLowerCase() as Address];
-      const available = isValidAddresses(
-        depositTokenAddress,
-        token.address,
-        tokenNeededForLPAddress
+      const tokenMarket = (marketsData || []).find(
+        (m) => m.underlyingAsset.toLowerCase() === token.address.toLowerCase()
       );
-      borrowInfo.info[token.address] = { token, maxBorrow, price, available };
+
+      const price = prices[token.address.toLowerCase() as Address] || BigInt(0);
+
+      if (price === BigInt(0) || !tokenMarket) {
+        result[token.address] = {
+          token,
+          maxLeverage: 0,
+          available: false,
+        };
+        continue;
+      }
+      const maxAvailable = tokenMarket.availableLiquidity;
+
+      const maxBorrowAmountUSD =
+        bnToNumber(maxAvailable, token.decimals) * bnToNumber(price, 8);
+      let tokenLeverage = maxBorrowAmountUSD / depositAmountValueUSD;
+      tokenLeverage = Math.min(tokenLeverage, maxLeverageCap);
+      tokenLeverage *= 0.95;
+
+      const available =
+        isValidAddresses(
+          depositTokenAddress,
+          token.address,
+          tokenNeededForLPAddress
+        ) && tokenLeverage > 0.05;
+      result[token.address] = {
+        token,
+        maxLeverage: Math.floor(tokenLeverage * 100) / 100,
+        available,
+      };
     }
-    return borrowInfo;
-  }, [possibleBorrowTokens, borrowAmountBn, prices]);
+
+    return result;
+  }, [
+    marketsData,
+    selectedVault,
+    possibleBorrowTokens,
+    depositAmountBnMinusFee,
+    depositToken.decimals,
+    depositTokenAddress,
+    prices,
+    tokenNeededForLPAddress,
+  ]);
 
   useEffect(() => {
     if (
@@ -259,6 +284,7 @@ export const useLooping = () => {
   } as Token;
 
   const { vdtAllowance, invalidateVDTAllowanceQuery } = useVDTAllowance(
+    marketID,
     pseudoVariableDebtToken
   );
 
@@ -267,7 +293,7 @@ export const useLooping = () => {
     isApproveVDTPending,
     isApproveVDTConfirming,
     setApproveVDTAmount,
-  } = useApproveVDT(pseudoVariableDebtToken);
+  } = useApproveVDT(marketID, pseudoVariableDebtToken);
 
   const hasEnoughVDTAllowance =
     !!vdtAllowance && vdtAllowance > 0 && vdtAllowance >= requiredVDTAllowance;

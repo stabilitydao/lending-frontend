@@ -6,7 +6,6 @@ import {
   useMarketRaw,
   useUserDisplayData,
   useInvalidate,
-  useSelectedMarket,
   useUserData,
 } from "@/hooks";
 import {
@@ -16,7 +15,7 @@ import {
 } from "wagmi";
 import {
   AavePoolAbi,
-  Addresses,
+  MARKET_DEFINITIONS,
   NativeTokenGatewayAbi,
   VariableDebtTokenAbi,
 } from "@/constants";
@@ -29,14 +28,14 @@ import {
 } from "@/helpers";
 import { Token } from "@/constants";
 
-const useBorrow = (token: Token) => {
+const useBorrow = (marketID: string, token: Token) => {
   const [amount, setAmount] = useState("");
-  const { userAccountData } = useUserAccountData();
+  const { userAccountData } = useUserAccountData(marketID);
   const borrowAmountUSD = userAccountData.availableBorrowsBase;
-  const { marketData } = useMarketRaw(token);
-  const { userData } = useUserData(token);
-  const { marketDefinition } = useSelectedMarket();
-  const { invalidateMarketState } = useInvalidate(token);
+  const { marketData } = useMarketRaw(marketID, token);
+  const { userData } = useUserData(marketID, token);
+  const marketDefinition = MARKET_DEFINITIONS[marketID];
+  const { invalidateMarketState } = useInvalidate(marketID, token);
   const price = marketData?.priceInMarketReferenceCurrency;
   const borrowCap = marketData?.borrowCap || BigInt(0);
   const variableDebt = userData?.variableDebt || BigInt(0);
@@ -159,7 +158,7 @@ const useBorrow = (token: Token) => {
     }
   }, [isConfirmed, reset, hash, invalidateMarketState]);
 
-  const displayData = useUserDisplayData(token, "borrow", amount);
+  const displayData = useUserDisplayData(marketID, token, "borrow", amount);
 
   return {
     amount,

@@ -1,15 +1,13 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useSelectedMarket } from "@/hooks";
 import { queryKeys } from "@/queries";
 import { useAccount } from "wagmi";
 import { isAddressValid } from "@/helpers";
 import { useCallback } from "react";
 import { Token } from "@/constants";
 
-const useVDTAllowance = (token: Token) => {
+const useVDTAllowance = (marketID: string, token: Token) => {
   const queryClient = useQueryClient();
   const { address } = useAccount();
-  const { marketID } = useSelectedMarket();
   const { data: vdtAllowance, isLoading: isVDTAllowanceLoading } = useQuery({
     ...queryKeys.markets
       .market(marketID)

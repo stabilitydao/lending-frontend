@@ -69,17 +69,21 @@ const StepDeposit = ({
           );
         })}
       </div>
-      <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between text-primary">
-          <span>Input Amount</span>
-          <span className="flex items-center gap-4">
-            Available:
-            <span className="font-semibold">
-              {bnToStr(info.balance, info.token.decimals)}
-            </span>
-          </span>
-          <div className="absolute right-0 text-sm text-gray-500 transform translate-y-5">
-            ${formatSuffix(info.valueUSD, "money")}
+          <div className="flex flex-col gap-0">
+            <span>Input Amount</span>
+          </div>
+          <div className="flex flex-col gap-[0px]">
+            <div className="flex flex-row items-center gap-4">
+              Available:
+              <div className="font-semibold">
+                {bnToStr(info.balance, info.token.decimals)}
+              </div>
+            </div>
+            <div className="text-sm text-gray-500 text-right">
+              ${formatSuffix(info.valueUSD, "money")}
+            </div>
           </div>
         </div>
         <MaxInputWithSlider
@@ -102,23 +106,20 @@ const StepBorrow = ({
 }: {
   borrowToken: Token;
   setBorrowToken: (t: Token) => void;
-  borrowInfo: {
-    info: Record<
-      Address,
-      { token: Token; maxBorrow: bigint; price: bigint; available: boolean }
-    >;
-    maxBorrowUSDValue: number;
-    maxLeverage: number;
-  };
+  borrowInfo: Record<
+    Address,
+    { token: Token; maxLeverage: number; available: boolean }
+  >;
+
   borrowAmount: string;
   setBorrowAmount: (val: string) => void;
 }) => {
-  const info = borrowInfo.info[borrowToken.address];
+  const info = borrowInfo[borrowToken.address];
   return (
     <div className="flex flex-col gap-4">
       <h3 className="text-lg font-semibold">Borrow Token</h3>
       <div className="flex flex-wrap gap-2">
-        {Object.values(borrowInfo.info).map(({ token, available }) => {
+        {Object.values(borrowInfo).map(({ token, maxLeverage, available }) => {
           return (
             <button
               key={token.address}
@@ -137,35 +138,28 @@ const StepBorrow = ({
               disabled={!available}
             >
               <div className="font-bold">{token.symbol}</div>
+              <div className="text-xs text-gray-500">x{maxLeverage}</div>
             </button>
           );
         })}
       </div>
-      <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between text-primary">
           <div className="flex flex-col gap-0">
-            <span>Borrow Amount</span>
-            <span className="text-xs text-gray-500">
-              Up to x{formatSuffix(borrowInfo.maxLeverage)} leverage!
-            </span>
+            <span>Leverage</span>
           </div>
           <div className="flex flex-col gap-[0px]">
             <div className="flex flex-row items-center gap-4">
               Available:
-              <div className="font-semibold">
-                {bnToStr(info.maxBorrow, info.token.decimals)}
-              </div>
-            </div>
-            <div className="text-sm text-gray-500 text-right">
-              ${formatSuffix(borrowInfo.maxBorrowUSDValue, "money")}
+              <div className="font-semibold">{info.maxLeverage}</div>
             </div>
           </div>
         </div>
         <MaxInputWithSlider
           amount={borrowAmount}
           onChange={setBorrowAmount}
-          max={bnToStr(info.maxBorrow, info.token.decimals)}
-          precision={info.token.decimals}
+          max={info.maxLeverage.toString()}
+          precision={2}
         />
       </div>
     </div>
@@ -212,7 +206,7 @@ export const LoopingModal = ({
   isVisible: boolean;
   onClose: () => void;
 }) => {
-  const { marketDefinition } = useSelectedMarket();
+  const { marketDefinition, marketID } = useSelectedMarket();
 
   if (!marketDefinition.LOOPING) {
     return null;
@@ -248,7 +242,7 @@ export const LoopingModal = ({
     isPending,
     isConfirming,
     isOdosQuoteLoading,
-  } = useLooping();
+  } = useLooping(marketID);
 
   return (
     <Dialog

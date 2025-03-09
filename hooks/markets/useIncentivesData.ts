@@ -63,12 +63,12 @@ const processIncentivesData = (
   return incentives;
 };
 
-const useIncentivesData = () => {
+const useIncentivesData = (marketID: string) => {
   const {
     incentivesData,
     isIncentivesDataLoading,
     invalidateIncentivesDataRawQuery,
-  } = useIncentivesDataRaw();
+  } = useIncentivesDataRaw(marketID);
 
   return {
     invalidateIncentivesDataQuery: invalidateIncentivesDataRawQuery,
@@ -88,13 +88,13 @@ const useIncentivesData = () => {
   };
 };
 
-const useIncentiveData = (tokenAddress: Address) => {
+const useIncentiveData = (marketID: string, tokenAddress: Address) => {
   const {
     supplyIncentives,
     borrowIncentives,
     invalidateIncentivesDataQuery,
     isIncentivesDataLoading,
-  } = useIncentivesData();
+  } = useIncentivesData(marketID);
 
   return {
     supplyIncentive: supplyIncentives?.[tokenAddress],

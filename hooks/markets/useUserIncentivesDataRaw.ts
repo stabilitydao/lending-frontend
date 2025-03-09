@@ -1,13 +1,11 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useSelectedMarket } from "@/hooks";
 import { queryKeys } from "@/queries";
 import { useCallback } from "react";
 import { useAccount } from "wagmi";
 import { isAddressValid } from "@/helpers";
 
-const useUserIncentivesDataRaw = () => {
+const useUserIncentivesDataRaw = (marketID: string) => {
   const queryClient = useQueryClient();
-  const { marketID } = useSelectedMarket();
   const { address } = useAccount();
 
   const { data: userIncentivesData, isLoading: isUserIncentivesDataLoading } =

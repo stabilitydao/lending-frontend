@@ -5,7 +5,6 @@ import {
   useCorrectChain,
   useInvalidate,
   useMarket,
-  useSelectedMarket,
   useSupplyToast,
   useTokenBalance,
   useUserDisplayData,
@@ -15,7 +14,11 @@ import {
   useWaitForTransactionReceipt,
   useWriteContract,
 } from "wagmi";
-import { AavePoolAbi, NativeTokenGatewayAbi } from "@/constants";
+import {
+  AavePoolAbi,
+  MARKET_DEFINITIONS,
+  NativeTokenGatewayAbi,
+} from "@/constants";
 import {
   extractError,
   isAddressValid,
@@ -25,16 +28,16 @@ import {
 } from "@/helpers";
 import { Token } from "@/constants";
 
-const useSupply = (token: Token) => {
+const useSupply = (marketID: string, token: Token) => {
   const [amount, setAmount] = useState("");
   const { balance } = useTokenBalance(token);
   const { chainIdToUse } = useCorrectChain();
   const { address: userAddress } = useAccount();
-  const { marketBnData } = useMarket(token);
-  const { marketDefinition } = useSelectedMarket();
+  const { marketBnData } = useMarket(marketID, token);
+  const marketDefinition = MARKET_DEFINITIONS[marketID];
 
   const { allowance } = useAllowance(marketDefinition.AAVE_POOL, token.address);
-  const { invalidateMarketState } = useInvalidate(token);
+  const { invalidateMarketState } = useInvalidate(marketID, token);
 
   const {
     approve,
@@ -149,7 +152,7 @@ const useSupply = (token: Token) => {
     invalidateMarketState,
   ]);
 
-  const displayData = useUserDisplayData(token, "supply", amount);
+  const displayData = useUserDisplayData(marketID, token, "supply", amount);
   return {
     amount,
     setAmount,

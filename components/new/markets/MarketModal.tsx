@@ -24,6 +24,7 @@ import {
   useMarket,
   useRepay,
   useSearch,
+  useSelectedMarket,
   useSupply,
   useWithdraw,
 } from "@/hooks";
@@ -43,9 +44,10 @@ export interface MarketModalProps {
 interface FormProps {
   token: Token;
   market: MarketInfo;
+  marketID: string;
 }
 
-const SupplyForm = ({ token, market }: FormProps) => {
+const SupplyForm = ({ token, market, marketID }: FormProps) => {
   const {
     amount,
     setAmount,
@@ -59,7 +61,7 @@ const SupplyForm = ({ token, market }: FormProps) => {
     isConfirming,
     isApproveConfirming,
     displayData,
-  } = useSupply(token);
+  } = useSupply(marketID, token);
 
   return (
     <BaseActionForm
@@ -80,7 +82,7 @@ const SupplyForm = ({ token, market }: FormProps) => {
   );
 };
 
-const WithdrawForm = ({ token, market }: FormProps) => {
+const WithdrawForm = ({ token, market, marketID }: FormProps) => {
   const {
     amount,
     setAmount,
@@ -89,7 +91,7 @@ const WithdrawForm = ({ token, market }: FormProps) => {
     isPending,
     isConfirming,
     displayData,
-  } = useWithdraw(token);
+  } = useWithdraw(marketID, token);
 
   return (
     <BaseActionForm
@@ -110,7 +112,7 @@ const WithdrawForm = ({ token, market }: FormProps) => {
   );
 };
 
-const BorrowForm = ({ token, market }: FormProps) => {
+const BorrowForm = ({ token, market, marketID }: FormProps) => {
   const {
     amount,
     setAmount,
@@ -119,7 +121,7 @@ const BorrowForm = ({ token, market }: FormProps) => {
     isPending,
     isConfirming,
     displayData,
-  } = useBorrow(token);
+  } = useBorrow(marketID, token);
 
   return (
     <BaseActionForm
@@ -140,7 +142,7 @@ const BorrowForm = ({ token, market }: FormProps) => {
   );
 };
 
-const RepayForm = ({ token, market }: FormProps) => {
+const RepayForm = ({ token, market, marketID }: FormProps) => {
   const {
     amount,
     setAmount,
@@ -154,7 +156,7 @@ const RepayForm = ({ token, market }: FormProps) => {
     isConfirming,
     isApproveConfirming,
     displayData,
-  } = useRepay(token);
+  } = useRepay(marketID, token);
 
   return (
     <BaseActionForm
@@ -244,6 +246,7 @@ export const MarketModal = ({
   isVisible,
   onClose,
 }: MarketModalProps) => {
+  const { marketID } = useSelectedMarket();
   const [isBorrow, setIsBorrow] = useState(defaultIsBorrow);
   const [activeTab, setActiveTab] = useState(
     defaultIsBorrow ? "borrow" : "supply"
@@ -274,7 +277,7 @@ export const MarketModal = ({
     }
   }, [isVisible, defaultIsBorrow]);
 
-  const { market, isMarketLoading } = useMarket(token);
+  const { market, isMarketLoading } = useMarket(marketID, token);
   const { setSearchQuery } = useSearch("vaults");
 
   if (isMarketLoading || !market) return null;
@@ -418,10 +421,22 @@ export const MarketModal = ({
               />
             </DialogTitle>
             <div className="text-sm flex flex-col gap-8 pt-10 text-primary">
-              {isSupply && <SupplyForm token={token} market={market} />}
-              {isWithdraw && <WithdrawForm token={token} market={market} />}
-              {isBorrowTab && <BorrowForm token={token} market={market} />}
-              {isRepay && <RepayForm token={token} market={market} />}
+              {isSupply && (
+                <SupplyForm token={token} market={market} marketID={marketID} />
+              )}
+              {isWithdraw && (
+                <WithdrawForm
+                  token={token}
+                  market={market}
+                  marketID={marketID}
+                />
+              )}
+              {isBorrowTab && (
+                <BorrowForm token={token} market={market} marketID={marketID} />
+              )}
+              {isRepay && (
+                <RepayForm token={token} market={market} marketID={marketID} />
+              )}
             </div>
           </DialogHeader>
         </div>

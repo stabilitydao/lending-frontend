@@ -10,15 +10,14 @@ import {
   useWrapContractAction,
   useApproveToast,
   useVDTAllowance,
-  useSelectedMarket,
 } from "@/hooks";
-import { Token, VariableDebtTokenAbi } from "@/constants";
+import { MARKET_DEFINITIONS, Token, VariableDebtTokenAbi } from "@/constants";
 import { extractError, MAXUINT256, trimmedBn, isAddressValid } from "@/helpers";
-const useApproveVDT = (token: Token) => {
+const useApproveVDT = (marketID: string, token: Token) => {
   const { chainIdToUse: chainId } = useCorrectChain();
-  const { marketDefinition } = useSelectedMarket();
+  const marketDefinition = MARKET_DEFINITIONS[marketID];
   const { address: approverAddress } = useAccount();
-  const { invalidateVDTAllowanceQuery } = useVDTAllowance(token);
+  const { invalidateVDTAllowanceQuery } = useVDTAllowance(marketID, token);
 
   const isValidAddress = isAddressValid(approverAddress);
 

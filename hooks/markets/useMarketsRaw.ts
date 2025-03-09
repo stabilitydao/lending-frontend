@@ -1,11 +1,9 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useSelectedMarket } from "@/hooks";
 import { queryKeys } from "@/queries";
 import { useCallback } from "react";
 
-const useMarketsRaw = () => {
+const useMarketsRaw = (marketID: string) => {
   const queryClient = useQueryClient();
-  const { marketID } = useSelectedMarket();
   const { data: marketsData, isLoading: isMarketsDataLoading } = useQuery({
     ...queryKeys.markets.market(marketID)._ctx.marketsData(),
     staleTime: Infinity,

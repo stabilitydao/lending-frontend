@@ -4,16 +4,17 @@ import { bnToNumber, strToBn } from "@/helpers";
 import { Token } from "@/constants";
 
 const useUserDisplayData = (
+  marketID: string,
   token: Token,
   actionType: "supply" | "withdraw" | "borrow" | "repay",
   amount: string
 ) => {
-  const { userData } = useUserData(token);
-  const { userAccountData } = useUserAccountData();
+  const { userData } = useUserData(marketID, token);
+  const { userAccountData } = useUserAccountData(marketID);
   const borrowAmountUSD = userAccountData.availableBorrowsBase || BigInt(0);
   const totalDebtUSD = userAccountData.totalDebtBase || BigInt(0);
   const healthFactor = userAccountData.healthFactor || BigInt(0);
-  const { marketData } = useMarketRaw(token);
+  const { marketData } = useMarketRaw(marketID, token);
   const price = marketData?.priceInMarketReferenceCurrency || BigInt(1);
   const abalance = userData?.variableATokenBalance || BigInt(0);
 

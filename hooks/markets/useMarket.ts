@@ -8,9 +8,9 @@ const RAY = 1e27;
 const BASIS_POINTS_DIVISOR = BigInt(10000);
 const PRICE_DECIMALS = 8;
 
-const useMarkets = () => {
+const useMarkets = (marketID: string) => {
   const { isMarketsDataLoading, marketsData, invalidateMarketsRawQuery } =
-    useMarketsRaw();
+    useMarketsRaw(marketID);
   const { merklAPRs, isMerklAPRsLoading, invalidateMerklAPRsQuery } =
     useMerklAPRs();
   const {
@@ -18,7 +18,7 @@ const useMarkets = () => {
     borrowIncentives,
     isIncentivesDataLoading,
     invalidateIncentivesDataQuery,
-  } = useIncentivesData();
+  } = useIncentivesData(marketID);
 
   const markets: Record<
     Address,
@@ -197,11 +197,11 @@ const useMarkets = () => {
   };
 };
 
-const useMarket = (token: Token) => {
+const useMarket = (marketID: string, token: Token) => {
   if (token.isNative) {
     token = token.wrapperToken!;
   }
-  const { isMarketsDataLoading, markets } = useMarkets();
+  const { isMarketsDataLoading, markets } = useMarkets(marketID);
   return {
     isMarketsDataLoading,
     ...markets?.[token.address],

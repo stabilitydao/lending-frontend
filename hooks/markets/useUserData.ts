@@ -1,10 +1,10 @@
 import { useUserDataRaw } from "@/hooks";
 import { Token } from "@/constants";
 
-const useUserData = (token: Token) => {
+const useUserData = (marketID: string, token: Token) => {
   token = token.isNative ? token.wrapperToken! : token;
   const { isUserDataLoading, userData, invalidateUserDataRawQuery } =
-    useUserDataRaw();
+    useUserDataRaw(marketID);
   return {
     isUserDataLoading,
     userData: userData?.find(
