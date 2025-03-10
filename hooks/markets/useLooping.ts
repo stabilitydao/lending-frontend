@@ -190,7 +190,7 @@ export const useLooping = (marketID: string, selectedVault: Token) => {
     if (!market) return result;
 
     const ltv = market.baseLTVasCollateral;
-    const maxLeverageCap = 10000 / (10000 - bnToNumber(ltv, 0));
+    const maxLeverageCap = 10000 / (10000 - bnToNumber(ltv, 0)) - 1;
     const depositTokenValue = prices[depositTokenAddress] || BigInt(0);
     const depositAmountValueUSD =
       bnToNumber(depositAmountBnMinusFee, depositToken.decimals) *
