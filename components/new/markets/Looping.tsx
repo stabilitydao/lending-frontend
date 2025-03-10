@@ -224,6 +224,7 @@ const StepDeposit = ({
   setDepositAmount: (val: string) => void;
 }) => {
   const info = depositInfo[depositToken.address];
+  if (!info) return null;
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-row items-center justify-between text-primary">
@@ -283,6 +284,7 @@ const StepBorrow = ({
   setBorrowAmount: (val: string) => void;
 }) => {
   const info = borrowInfo[borrowToken.address];
+  if (!info) return null;
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-row items-center justify-between text-primary">
@@ -516,6 +518,11 @@ export const LoopingModal = ({
   };
 
   const handlePrev = () => setStep(0);
+
+  useEffect(() => {
+    setDepositToken(marketDefinition.LOOPING!.IO[0]!);
+    setBorrowToken(marketDefinition.LOOPING!.IO[1]!);
+  }, [marketDefinition]);
 
   return (
     <Dialog
