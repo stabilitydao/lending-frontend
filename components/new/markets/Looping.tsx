@@ -7,14 +7,51 @@ import { DialogTitle } from "@radix-ui/react-dialog";
 import { useLooping, useSelectedMarket } from "@/hooks";
 import { Token } from "@/constants";
 import { Address } from "viem";
-import { bnToNumber, bnToStr, formatSuffix, strToBn } from "@/helpers";
-import { LeverageSlider, MaxInputWithSlider } from "@/components";
+import { bnToStr, formatSuffix } from "@/helpers";
+import {
+  LeverageSlider,
+  MaxInputWithSlider,
+  WrapIntoTooltip,
+} from "@/components";
 import { CheckCheck } from "lucide-react";
 import { Deposit } from "@/components/icons/deposit";
 import { DoubleAvatar } from "@/components/ui/double-avatar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export const ReviewSummary = ({
+const RefreshButton = ({
+  isOdosQuoteLoading,
+  queryOdosQuote,
+}: {
+  isOdosQuoteLoading: boolean;
+  queryOdosQuote: () => void;
+}) => {
+  const [rotation, setRotation] = useState(0);
+
+  useEffect(() => {
+    let interval: any;
+    if (isOdosQuoteLoading) {
+      interval = setInterval(() => {
+        setRotation((prev) => prev + 10);
+      }, 50);
+    } else {
+      clearInterval(interval);
+      setRotation((prev) => prev - (prev % 360));
+    }
+    return () => clearInterval(interval);
+  }, [isOdosQuoteLoading]);
+
+  return (
+    <div
+      onClick={queryOdosQuote}
+      className="transition-transform duration-500 ease-out cursor-pointer" // Adjust duration/ease as desired.
+      style={{ transform: `rotate(${rotation}deg)` }}
+    >
+      (refresh odos quote)
+    </div>
+  );
+};
+
+const ReviewSummary = ({
   depositToken,
   depositUSDValue,
   borrowToken,
@@ -23,6 +60,11 @@ export const ReviewSummary = ({
   vaultTokenUSDMinValue,
   vaultTokenUSDMaxValue,
   feeUSDValue,
+  slippage,
+  setSlippage,
+  queryOdosQuote,
+  isOdosQuoteLoading,
+  needsOdosQuote,
 }: {
   depositToken: Token;
   depositUSDValue: number;
@@ -32,26 +74,30 @@ export const ReviewSummary = ({
   vaultTokenUSDMinValue: number;
   vaultTokenUSDMaxValue: number;
   feeUSDValue: number;
+  slippage: string;
+  setSlippage: (val: string) => void;
+  queryOdosQuote: () => void;
+  isOdosQuoteLoading: boolean;
+  needsOdosQuote: boolean;
 }) => {
-  console.log(
-    depositToken,
-    depositUSDValue,
-    borrowToken,
-    borrowUSDValue,
-    vaultToken,
-    vaultTokenUSDMinValue,
-    vaultTokenUSDMaxValue,
-    feeUSDValue
-  );
   return (
     <div className="p-6 rounded-lg space-y-4">
-      <h4 className="text-xl font-semibold text-primary">Review Summary</h4>
+      <div className="flex flex-row items-center justify-between">
+        <h4 className="text-xl font-semibold text-primary">Review Summary</h4>
+        {needsOdosQuote && (
+          <RefreshButton
+            isOdosQuoteLoading={isOdosQuoteLoading}
+            queryOdosQuote={queryOdosQuote}
+          />
+        )}
+      </div>
+
       <div className="grid grid-cols-2 gap-6">
         <div className="flex flex-col">
           <div className="text-sm text-gray-600">You pay:</div>
           <div className="flex flex-row items-center gap-1">
             <div className="text-lg font-bold text-primary">
-              ${depositUSDValue.toFixed(2)}
+              ${formatSuffix(depositUSDValue, "money")}
             </div>
             <Image
               src={depositToken.icon}
@@ -61,11 +107,11 @@ export const ReviewSummary = ({
             />
           </div>
         </div>
-        <div className="flex flex-col">
+        <div className="flex flex-col justify-self-end">
           <div className="text-sm text-gray-600">You borrow:</div>
           <div className="flex flex-row items-center gap-1">
             <div className="text-lg font-bold text-primary">
-              ${borrowUSDValue.toFixed(2)}
+              ${formatSuffix(borrowUSDValue, "money")}
             </div>
             <Image
               src={borrowToken.icon}
@@ -81,10 +127,11 @@ export const ReviewSummary = ({
             <div className="text-lg font-bold text-primary">
               {vaultTokenUSDMinValue.toFixed(2) !=
               vaultTokenUSDMaxValue.toFixed(2)
-                ? `$${vaultTokenUSDMinValue.toFixed(
-                    2
-                  )} - $${vaultTokenUSDMaxValue.toFixed(2)}`
-                : `$${vaultTokenUSDMinValue.toFixed(2)}`}
+                ? `$${formatSuffix(
+                    vaultTokenUSDMinValue,
+                    "money"
+                  )} - $${formatSuffix(vaultTokenUSDMaxValue, "money")}`
+                : `$${formatSuffix(vaultTokenUSDMinValue, "money")}`}
             </div>
             <DoubleAvatar
               firstSrc={vaultToken.pair![0].icon}
@@ -95,11 +142,11 @@ export const ReviewSummary = ({
             />
           </div>
         </div>
-        <div className="flex flex-col">
+        <div className="flex flex-col justify-self-end">
           <div className="text-sm text-gray-600">Protocol Fee</div>
           <div className="flex flex-row items-center gap-1">
             <div className="text-lg font-bold text-primary">
-              ${feeUSDValue.toFixed(2)}
+              ${formatSuffix(feeUSDValue, "money")}
             </div>
             <Image
               src={depositToken.icon}
@@ -110,6 +157,20 @@ export const ReviewSummary = ({
           </div>
         </div>
       </div>
+      {needsOdosQuote && (
+        <div className="flex flex-row items-center justify-between">
+          <div className="text-sm text-gray-600">Slippage Tolerance:</div>
+          <div className="flex flex-row items-center gap-2">
+            <input
+              type="number"
+              value={slippage}
+              onChange={(e) => setSlippage(e.target.value)}
+              className="w-20 p-2 text-right bg-transparent border-b border-primary text-primary"
+            />
+            <span className="text-primary">%</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -299,6 +360,8 @@ const ExecuteButton = ({
   isPending,
   isConfirming,
   isOdosQuoteLoading,
+  isSlippageEqualToDebouncedSlippage,
+  updateSlippage,
 }: {
   hasEnoughAllowanceOne: boolean;
   approveOne: () => void;
@@ -312,46 +375,66 @@ const ExecuteButton = ({
   isPending: boolean;
   isConfirming: boolean;
   isOdosQuoteLoading: boolean;
+  isSlippageEqualToDebouncedSlippage: boolean;
+  updateSlippage: () => void;
 }) => (
   <>
-    {!hasEnoughAllowanceOne && (
+    {!isSlippageEqualToDebouncedSlippage && (
+      <ChainButton
+        className="w-full flex items-center justify-center gap-2"
+        onClick={updateSlippage}
+        disabled={isOdosQuoteLoading}
+      >
+        <CheckCheck className="w-5 h-5" />
+        {isOdosQuoteLoading ? "Refetching Odos Quote..." : "Refetch ODOS quote"}
+      </ChainButton>
+    )}
+    {!hasEnoughAllowanceOne && isSlippageEqualToDebouncedSlippage && (
       <ChainButton
         className="w-full flex items-center justify-center gap-2"
         onClick={approveOne}
-        disabled={isApprovePending}
+        disabled={isApprovePending || isOdosQuoteLoading}
       >
         <CheckCheck className="w-5 h-5" />
-        {isApprovePending || isApproveConfirming
+        {isOdosQuoteLoading
+          ? "Fetching Odos Quote..."
+          : isApprovePending || isApproveConfirming
           ? "Approving..."
           : "Approve 1/2"}
       </ChainButton>
     )}
-    {!hasEnoughVDTAllowance && hasEnoughAllowanceOne && (
-      <ChainButton
-        className="w-full flex items-center justify-center gap-2"
-        onClick={approveVDT}
-        disabled={isApproveVDTPending}
-      >
-        <CheckCheck className="w-5 h-5" />
-        {isApproveVDTPending || isApproveVDTConfirming
-          ? "Approving..."
-          : "Approve 2/2"}
-      </ChainButton>
-    )}
-    {hasEnoughAllowanceOne && hasEnoughVDTAllowance && (
-      <ChainButton
-        className="w-full flex items-center justify-center gap-2"
-        onClick={confirm}
-        disabled={isPending}
-      >
-        <Deposit className="w-5 h-5" />
-        {isOdosQuoteLoading
-          ? "Fetching Odos Quote..."
-          : isConfirming || isPending
-          ? "Leveraging..."
-          : "Leverage"}
-      </ChainButton>
-    )}
+    {!hasEnoughVDTAllowance &&
+      hasEnoughAllowanceOne &&
+      isSlippageEqualToDebouncedSlippage && (
+        <ChainButton
+          className="w-full flex items-center justify-center gap-2"
+          onClick={approveVDT}
+          disabled={isApproveVDTPending || isOdosQuoteLoading}
+        >
+          <CheckCheck className="w-5 h-5" />
+          {isOdosQuoteLoading
+            ? "Fetching Odos Quote..."
+            : isApproveVDTPending || isApproveVDTConfirming
+            ? "Approving..."
+            : "Approve 2/2"}
+        </ChainButton>
+      )}
+    {hasEnoughAllowanceOne &&
+      hasEnoughVDTAllowance &&
+      isSlippageEqualToDebouncedSlippage && (
+        <ChainButton
+          className="w-full flex items-center justify-center gap-2"
+          onClick={confirm}
+          disabled={isPending || isOdosQuoteLoading}
+        >
+          <Deposit className="w-5 h-5" />
+          {isOdosQuoteLoading
+            ? "Fetching Odos Quote..."
+            : isConfirming || isPending
+            ? "Leveraging..."
+            : "Leverage"}
+        </ChainButton>
+      )}
   </>
 );
 
@@ -386,9 +469,14 @@ export const LoopingModal = ({
     leverage,
     setLeverage,
 
-    nextStep,
+    queryOdosQuote,
     isOdosQuoteError,
     reviewData,
+    slippage,
+    setSlippage,
+    debouncedSlippage,
+    setDebouncedSlippage,
+    needsOdosQuote,
 
     hasEnoughAllowanceOne,
     approveOne,
@@ -410,7 +498,7 @@ export const LoopingModal = ({
 
   const handleNext = async () => {
     if (Number(depositAmount) === 0 || Number(leverage) === 0) return;
-    await nextStep();
+    await queryOdosQuote();
     setTimeout(() => {
       if (!isOdosQuoteError) setStep(1);
     }, 200);
@@ -499,24 +587,35 @@ export const LoopingModal = ({
                   />
                   <div className="flex flex-row w-full">
                     <div className="w-full" />
-                    <ChainButton
-                      className="w-full flex gap-2"
-                      onClick={handleNext}
-                      disabled={
-                        isOdosQuoteLoading ||
-                        Number(leverage) === 0 ||
-                        Number(depositAmount) === 0
+                    <WrapIntoTooltip
+                      content={
+                        <div className="w-[145px]">
+                          Both your supply and leverage must be {">"}0.
+                        </div>
+                      }
+                      enable={
+                        Number(leverage) === 0 || Number(depositAmount) === 0
                       }
                     >
-                      {isOdosQuoteLoading
-                        ? "Fetching Odos Quote..."
-                        : vault.pair![0].address.toLowerCase() ===
-                            depositToken.address.toLowerCase() &&
-                          vault.pair![0].address.toLowerCase() ===
-                            borrowToken.address.toLowerCase()
-                        ? "Next"
-                        : "Get Odos Quote"}
-                    </ChainButton>
+                      <ChainButton
+                        className="w-full flex gap-2"
+                        onClick={handleNext}
+                        disabled={
+                          isOdosQuoteLoading ||
+                          Number(leverage) === 0 ||
+                          Number(depositAmount) === 0
+                        }
+                      >
+                        {isOdosQuoteLoading
+                          ? "Fetching Odos Quote..."
+                          : vault.pair![0].address.toLowerCase() ===
+                              depositToken.address.toLowerCase() &&
+                            vault.pair![0].address.toLowerCase() ===
+                              borrowToken.address.toLowerCase()
+                          ? "Next"
+                          : "Get Odos Quote"}
+                      </ChainButton>
+                    </WrapIntoTooltip>
                   </div>
                 </>
               )}
@@ -528,6 +627,11 @@ export const LoopingModal = ({
                     depositToken={depositToken}
                     borrowToken={borrowToken}
                     vaultToken={selectedVault}
+                    slippage={debouncedSlippage}
+                    setSlippage={setDebouncedSlippage}
+                    queryOdosQuote={queryOdosQuote}
+                    isOdosQuoteLoading={isOdosQuoteLoading}
+                    needsOdosQuote={needsOdosQuote}
                   />
 
                   <div className="flex flex-row w-full gap-2">
@@ -551,6 +655,13 @@ export const LoopingModal = ({
                       isPending={isPending}
                       isConfirming={isConfirming}
                       isOdosQuoteLoading={isOdosQuoteLoading}
+                      isSlippageEqualToDebouncedSlippage={
+                        Number(slippage) === Number(debouncedSlippage)
+                      }
+                      updateSlippage={() => {
+                        setSlippage(debouncedSlippage);
+                        queryOdosQuote();
+                      }}
                     />
                   </div>
                 </>

@@ -7,3 +7,4 @@ export * from "./SortableTableHead";
 export * from "./FullEligibleRewards";
 export * from "./MerklNote";
 export * from "./MaxInput";
+export * from "./WrapIntoTooltip";

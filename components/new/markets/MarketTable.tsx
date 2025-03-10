@@ -38,7 +38,7 @@ const MarketLine = ({
   withVault?: boolean;
   onClickLoopingButton: () => void;
 }) => {
-  const { marketID } = useSelectedMarket();
+  const { marketID, marketDefinition } = useSelectedMarket();
   const { market, isMarketLoading } = useMarket(marketID, token);
   if (isMarketLoading || !market) return null;
   const supplyPercentage = Math.min(
@@ -236,7 +236,9 @@ const MarketLine = ({
             onClickLoopingButton();
           }}
         >
-          {token.pair && <LoopingButton onClick={onClickLoopingButton!} />}
+          {token.pair && marketDefinition.LOOPING?.VAULTS.includes(token) && (
+            <LoopingButton onClick={onClickLoopingButton!} />
+          )}
         </TableCell>
       )}
     </TableRow>

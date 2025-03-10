@@ -10,7 +10,7 @@ import React, {
 const generateMajorTicks = (maxLeverage: number) => {
   if (maxLeverage <= 0) return [];
 
-  const ticks: number[] = [];
+  const ticks: number[] = [0];
 
   if (maxLeverage < 1) {
     let current = 0.25;
@@ -18,44 +18,28 @@ const generateMajorTicks = (maxLeverage: number) => {
       ticks.push(parseFloat(current.toFixed(2)));
       current += 0.25;
     }
-    if (
-      !ticks.length ||
-      Math.abs(ticks[ticks.length - 1] - maxLeverage) > 0.05
-    ) {
-      ticks.push(parseFloat(maxLeverage.toFixed(2)));
-    }
+    ticks.push(parseFloat(maxLeverage.toFixed(2)));
   } else {
     const floorMax = Math.floor(maxLeverage);
     for (let i = 1; i <= floorMax; i++) {
       ticks.push(i);
     }
-    if (maxLeverage - floorMax > 0.05) {
-      ticks.push(parseFloat(maxLeverage.toFixed(2)));
-    }
+    ticks.push(parseFloat(maxLeverage.toFixed(2)));
   }
 
-  const filtered: number[] = [0];
-  for (let i = 0; i < ticks.length; i++) {
-    if (i === 0) {
-      filtered.push(ticks[i]);
-    } else {
-      const diff = Math.abs(ticks[i] - filtered[filtered.length - 1]);
-      if (diff >= 0.05) {
-        filtered.push(ticks[i]);
-      }
-    }
-  }
   if (
-    filtered.length >= 2 &&
-    maxLeverage > 1 &&
-    filtered[filtered.length - 1] - 0.5 < filtered[filtered.length - 2]
+    ticks.length >= 2 &&
+    ((maxLeverage > 1 &&
+      ticks[ticks.length - 1] - 0.5 < ticks[ticks.length - 2]) ||
+      (maxLeverage > 0.1 &&
+        ticks[ticks.length - 1] - 0.1 < ticks[ticks.length - 2]))
   ) {
-    const last = filtered.pop()!;
-    filtered.pop();
-    filtered.push(last);
+    const last = ticks.pop()!;
+    ticks.pop();
+    ticks.push(last);
   }
 
-  return filtered;
+  return ticks;
 };
 
 export const LeverageSlider = ({

@@ -132,6 +132,11 @@ export const useLooping = (marketID: string, selectedVault: Token) => {
     marketDefinition.LOOPING!.IO[0]
   );
   const [leverage, setLeverage] = useState<string>("0.00");
+  const [computedBorrowAmountBn, setComputedBorrowAmountBn] = useState<bigint>(
+    BigInt(0)
+  );
+  const [slippage, setSlippage] = useState<string>("1.00");
+  const [debouncedSlippage, setDebouncedSlippage] = useState<string>("1.00");
 
   const tokenNeededForLP = selectedVault.pair![0];
 
@@ -260,7 +265,6 @@ export const useLooping = (marketID: string, selectedVault: Token) => {
     }
   }, [depositAmount, setApproveAmount]);
 
-  const requiredVDTAllowance = strToBn(leverage, borrowToken.decimals);
   const pseudoVariableDebtToken = {
     name: borrowToken.name,
     address: (marketsData || []).find(
@@ -279,13 +283,15 @@ export const useLooping = (marketID: string, selectedVault: Token) => {
     setApproveVDTAmount,
   } = useApproveVDT(marketID, pseudoVariableDebtToken);
   const hasEnoughVDTAllowance =
-    !!vdtAllowance && vdtAllowance > 0 && vdtAllowance >= requiredVDTAllowance;
+    !!vdtAllowance &&
+    vdtAllowance > 0 &&
+    vdtAllowance >= computedBorrowAmountBn;
 
   useEffect(() => {
-    if (requiredVDTAllowance) {
-      setApproveVDTAmount(requiredVDTAllowance);
+    if (computedBorrowAmountBn) {
+      setApproveVDTAmount(computedBorrowAmountBn);
     }
-  }, [requiredVDTAllowance, setApproveVDTAmount]);
+  }, [computedBorrowAmountBn, setApproveVDTAmount]);
 
   const {
     writeContract,
@@ -315,14 +321,32 @@ export const useLooping = (marketID: string, selectedVault: Token) => {
   const { odosQuoteError } = useOdosQuoteToast();
   const slippageInPercent = 0.1;
 
-  const [computedBorrowAmountBn, setComputedBorrowAmountBn] = useState<bigint>(
-    BigInt(0)
-  );
-
-  const nextStep = async () => {
+  const queryOdosQuote = async () => {
     let odosQuoteJson: any = null;
     let assembledData = "0x" as `0x${string}`;
     setIsOdosQuoteError(false);
+
+    const depositPrice = bnToNumber(depositInfo[depositToken.address].price, 8);
+    const borrowPrice = bnToNumber(prices[borrowTokenAddress] || BigInt(0), 8);
+    const depositUSDValue =
+      bnToNumber(depositAmountBn, depositToken.decimals) * depositPrice;
+    const leverageValue = parseFloat(leverage) || 0;
+    const computedBorrowUSDValue = depositUSDValue * leverageValue;
+    const computedBorrowAmountToken = computedBorrowUSDValue / borrowPrice;
+    const computedBorrowBn = numToBn(
+      computedBorrowAmountToken,
+      borrowToken.decimals
+    );
+    setComputedBorrowAmountBn(computedBorrowBn);
+
+    const feeUSDValue =
+      bnToNumber(depositAmountBn / BigInt(1000), depositToken.decimals) *
+      depositPrice;
+    console.log(
+      depositTokenAddress,
+      borrowTokenAddress,
+      tokenNeededForLPAddress
+    );
 
     if (
       depositTokenAddress !== borrowTokenAddress ||
@@ -339,12 +363,7 @@ export const useLooping = (marketID: string, selectedVault: Token) => {
           odosDepositAmountBn += depositAmountBnMinusFee;
         }
         if (borrowTokenAddress !== tokenNeededForLPAddress) {
-          odosDepositAmountBn += numToBn(
-            (bnToNumber(depositAmountBn, depositToken.decimals) *
-              parseFloat(leverage)) /
-              (bnToNumber(prices[borrowTokenAddress] || BigInt(0), 8) || 1),
-            borrowToken.decimals
-          );
+          odosDepositAmountBn += computedBorrowBn;
         }
         const result = await getOdosQuote(
           odosInputAddress,
@@ -364,23 +383,6 @@ export const useLooping = (marketID: string, selectedVault: Token) => {
       }
     }
     setOdosQuote(assembledData);
-
-    const depositPrice = bnToNumber(depositInfo[depositToken.address].price, 8);
-    const borrowPrice = bnToNumber(prices[borrowTokenAddress] || BigInt(0), 8);
-    const depositUSDValue =
-      bnToNumber(depositAmountBn, depositToken.decimals) * depositPrice;
-    const leverageValue = parseFloat(leverage) || 0;
-    const computedBorrowUSDValue = depositUSDValue * leverageValue;
-    const computedBorrowAmountToken = computedBorrowUSDValue / borrowPrice;
-    const computedBorrowBn = numToBn(
-      computedBorrowAmountToken,
-      borrowToken.decimals
-    );
-    setComputedBorrowAmountBn(computedBorrowBn);
-
-    const feeUSDValue =
-      bnToNumber(depositAmountBn / BigInt(1000), depositToken.decimals) *
-      depositPrice;
 
     let vaultTokenUSDMaxValue = 0;
     let vaultTokenUSDMinValue = 0;
@@ -487,7 +489,7 @@ export const useLooping = (marketID: string, selectedVault: Token) => {
     borrowInfo,
     leverage,
     setLeverage,
-    nextStep,
+    queryOdosQuote,
     isOdosQuoteError,
     reviewData,
     hasEnoughAllowanceOne,
@@ -503,5 +505,12 @@ export const useLooping = (marketID: string, selectedVault: Token) => {
     isConfirming,
     isConfirmed,
     isOdosQuoteLoading,
+    slippage,
+    setSlippage,
+    debouncedSlippage,
+    setDebouncedSlippage,
+    needsOdosQuote:
+      depositTokenAddress !== borrowTokenAddress ||
+      depositTokenAddress !== tokenNeededForLPAddress,
   };
 };
