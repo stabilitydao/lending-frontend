@@ -24,6 +24,11 @@ const useVDTAllowance = (marketID: string, token: Token) => {
         ._ctx.vdtAllowance(token.address, address!).queryKey,
       refetchType: "active",
     });
+    queryClient.refetchQueries({
+      queryKey: queryKeys.markets
+        .market(marketID)
+        ._ctx.vdtAllowance(token.address, address!).queryKey,
+    });
   }, [queryClient, address, marketID]);
 
   return {
