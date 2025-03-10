@@ -169,11 +169,54 @@ const MarketLine = ({
     </div>
   );
 
-  const supplyAPR = (
+  const maxLeverage = (1 / (1 - market.collateralFactor) - 1) * 0.95 + 1;
+
+  const baseAPR =
+    market.supply.APR > 0.01 ? trimmedNumber(market.supply.APR, 2) : "<0.01";
+  const leveragedAPR =
+    market.supply.APR > 0.01
+      ? trimmedNumber(market.supply.APR * maxLeverage, 2)
+      : "<0.01";
+  const formattedMaxLeverage = trimmedNumber(maxLeverage, 2);
+  const hasMerkl = market.breakdown.supply["Merkl Rewards"] > 0;
+
+  const supplyAPR = token.pair ? (
+    <div className="flex flex-col gap-1">
+      <div className="flex flex-row gap-1 items-center text-gray-500">
+        <span>{baseAPR}% (x1)</span>
+        <ApyBreakdown
+          breakdown={market.breakdown.supply}
+          note={hasMerkl && <MerklNote />}
+        />
+      </div>
+      <div className="flex flex-row gap-0 items-center">
+        <span className="text-green-500">{leveragedAPR}%</span>
+        <span className="px-1">(x{formattedMaxLeverage})</span>
+        <ApyBreakdown
+          breakdown={market.breakdown.supply}
+          note={
+            <div>
+              {hasMerkl && <MerklNote />}
+              {
+                <div className="text-sm w-[320px]">
+                  Using the leverage button lets you loop your deposits, getting
+                  you up to {formattedMaxLeverage}x the APR that you would have
+                  gotten with a single deposit.
+                </div>
+              }
+            </div>
+          }
+        />
+      </div>
+    </div>
+  ) : (
+    // Single line for non-paired tokens in green
     <div className="flex flex-row gap-1 items-center text-green-500">
-      {market.supply.APR > 0.01 ? trimmedNumber(market.supply.APR, 2) : "<0.01"}
-      %
-      <ApyBreakdown breakdown={market.breakdown.supply} note={<MerklNote />} />
+      <span>{baseAPR}%</span>
+      <ApyBreakdown
+        breakdown={market.breakdown.supply}
+        note={hasMerkl && <MerklNote />}
+      />
     </div>
   );
 
@@ -225,7 +268,7 @@ const MarketLine = ({
       <TableCell>{tokenDisplay}</TableCell>
       <TableCell>{token.pair ? null : <FullEligibleRewards />}</TableCell>
       <TableCell>{supplyInfo}</TableCell>
-      <TableCell>{token.pair ? null : supplyAPR}</TableCell>
+      <TableCell>{supplyAPR}</TableCell>
       <TableCell>{token.pair ? null : borrowInfo}</TableCell>
       <TableCell>{token.pair ? null : borrowAPR}</TableCell>
       {withVault && (
@@ -356,7 +399,7 @@ export const MarketTable = () => {
             />
             {isWithVaults && (
               <TableHead className="text-muted">
-                <div className="flex items-center gap-2">Looping</div>
+                <div className="flex items-center gap-2">Leverage</div>
               </TableHead>
             )}
           </TableRow>

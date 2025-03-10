@@ -32,6 +32,9 @@ export let ALL_VAULTS: VaultDefinition[] = [];
 export const getVaultById = (id: string) =>
   ALL_VAULTS.find((vault) => vault.id === id);
 
+export const getVaultByAddress = (address: Address) =>
+  ALL_VAULTS.find((vault) => vault.receipt.address === address);
+
 export class VaultDefinition {
   id: string;
   receipt: Token;

@@ -351,6 +351,7 @@ export const MarketModal = ({
                         Go to{" "}
                         <Link
                           href={token.buyLink}
+                          target="_blank"
                           className="text-blue-500 underline"
                         >
                           this link

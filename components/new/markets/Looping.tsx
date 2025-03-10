@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { Button, ChainButton } from "@/components/ui/button";
 import Image from "next/image";
 import { DialogTitle } from "@radix-ui/react-dialog";
-import { useLooping, useSelectedMarket } from "@/hooks";
+import { useLooping, useMarket, useSelectedMarket } from "@/hooks";
 import { Token } from "@/constants";
 import { Address } from "viem";
 import { bnToStr, formatSuffix } from "@/helpers";
@@ -273,6 +273,7 @@ const StepBorrow = ({
   borrowInfo,
   borrowAmount,
   setBorrowAmount,
+  boostedAPR,
 }: {
   borrowToken: Token;
   setBorrowToken: (t: Token) => void;
@@ -282,6 +283,7 @@ const StepBorrow = ({
   >;
   borrowAmount: string;
   setBorrowAmount: (val: string) => void;
+  boostedAPR: number;
 }) => {
   const info = borrowInfo[borrowToken.address];
   if (!info) return null;
@@ -321,6 +323,7 @@ const StepBorrow = ({
           maxLeverage={info.maxLeverage}
           value={borrowAmount}
           onChange={setBorrowAmount}
+          boostedAPR={boostedAPR}
         />
       </div>
     </div>
@@ -507,6 +510,8 @@ export const LoopingModal = ({
     isOdosQuoteLoading,
   } = useLooping(marketID, vault);
 
+  const { market } = useMarket(marketID, vault);
+
   const [step, setStep] = useState(0);
 
   const handleNext = async () => {
@@ -602,6 +607,7 @@ export const LoopingModal = ({
                     borrowInfo={borrowInfo}
                     borrowAmount={leverage}
                     setBorrowAmount={setLeverage}
+                    boostedAPR={(market?.supply.APR || 0) * Number(leverage)}
                   />
                   <div className="flex flex-row w-full">
                     <div className="w-full" />

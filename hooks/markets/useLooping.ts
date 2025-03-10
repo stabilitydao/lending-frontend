@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useMemo, useState } from "react";
 import {
   useAllowance,
@@ -15,6 +16,7 @@ import { AutoLeveragerAbi, MARKET_DEFINITIONS, Token } from "@/constants";
 import { Address } from "viem";
 import { bnToNumber, bnToStr, extractError, numToBn, strToBn } from "@/helpers";
 import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
+import { ethers } from "ethers";
 
 export const getOdosQuote = async (
   inputToken: string,
@@ -132,7 +134,7 @@ export const useLooping = (marketID: string, selectedVault: Token) => {
   const [borrowToken, setBorrowToken] = useState<Token>(
     marketDefinition.LOOPING!.IO[0]
   );
-  const [leverage, setLeverage] = useState<string>("0.00");
+  const [leverage, setLeverage] = useState<string>("1.00");
   const [computedBorrowAmountBn, setComputedBorrowAmountBn] = useState<bigint>(
     BigInt(0)
   );
@@ -190,7 +192,7 @@ export const useLooping = (marketID: string, selectedVault: Token) => {
     if (!market) return result;
 
     const ltv = market.baseLTVasCollateral;
-    const maxLeverageCap = 10000 / (10000 - bnToNumber(ltv, 0)) - 1;
+    const maxLeverageCap = 10000 / (10000 - bnToNumber(ltv, 0));
     const depositTokenValue = prices[depositTokenAddress] || BigInt(0);
     const depositAmountValueUSD =
       bnToNumber(depositAmountBnMinusFee, depositToken.decimals) *
@@ -208,9 +210,9 @@ export const useLooping = (marketID: string, selectedVault: Token) => {
       const maxAvailable = tokenMarket.availableLiquidity;
       const maxBorrowAmountUSD =
         bnToNumber(maxAvailable, token.decimals) * bnToNumber(price, 8);
-      let tokenLeverage = maxBorrowAmountUSD / depositAmountValueUSD;
+      let tokenLeverage = 1 + maxBorrowAmountUSD / depositAmountValueUSD;
       tokenLeverage = Math.min(tokenLeverage, maxLeverageCap);
-      tokenLeverage *= 0.95;
+      tokenLeverage = (tokenLeverage - 1) * 0.95 + 1;
       const available =
         isValidAddresses(
           depositTokenAddress,
@@ -334,7 +336,7 @@ export const useLooping = (marketID: string, selectedVault: Token) => {
     const borrowPrice = bnToNumber(prices[borrowTokenAddress] || BigInt(0), 8);
     const depositUSDValue =
       bnToNumber(depositAmountBn, depositToken.decimals) * depositPrice;
-    const leverageValue = parseFloat(leverage) || 0;
+    const leverageValue = parseFloat(leverage) - 1 || 0;
     const computedBorrowUSDValue = depositUSDValue * leverageValue;
     const computedBorrowAmountToken = computedBorrowUSDValue / borrowPrice;
     const computedBorrowBn = numToBn(

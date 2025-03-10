@@ -40,8 +40,8 @@ export type MarketInfo = {
   collateralFactor: number;
   isBorrowEnabled: boolean;
   breakdown: {
-    supply?: Record<string, number>;
-    borrow?: Record<string, number>;
+    supply: Record<string, number>;
+    borrow: Record<string, number>;
   };
 };
 

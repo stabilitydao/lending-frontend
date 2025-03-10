@@ -1,4 +1,5 @@
 "use client";
+import { formatSuffix } from "@/helpers";
 import React, {
   useEffect,
   useRef,
@@ -8,35 +9,43 @@ import React, {
 } from "react";
 
 const generateMajorTicks = (maxLeverage: number) => {
-  if (maxLeverage <= 0) return [];
+  const minVal = 1;
+  const ticks: number[] = [];
+  if (maxLeverage < minVal) return [minVal];
 
-  const ticks: number[] = [0];
+  const range = maxLeverage - minVal;
+  const rawStep = range / 4;
 
-  if (maxLeverage < 1) {
-    let current = 0.25;
-    while (current < maxLeverage) {
-      ticks.push(parseFloat(current.toFixed(2)));
-      current += 0.25;
+  const allowedSteps = [0.015625, 0.03125, 0.0625, 0.125, 0.25, 0.5, 1];
+  let step = allowedSteps[allowedSteps.length - 1];
+  for (const s of allowedSteps) {
+    if (s >= rawStep) {
+      step = s;
+      break;
     }
-    ticks.push(parseFloat(maxLeverage.toFixed(2)));
-  } else {
-    const floorMax = Math.floor(maxLeverage);
-    for (let i = 1; i <= floorMax; i++) {
-      ticks.push(i);
-    }
-    ticks.push(parseFloat(maxLeverage.toFixed(2)));
   }
 
-  if (
-    ticks.length >= 2 &&
-    ((maxLeverage > 1 &&
-      ticks[ticks.length - 1] - 0.5 < ticks[ticks.length - 2]) ||
-      (maxLeverage > 0.1 &&
-        ticks[ticks.length - 1] - 0.1 < ticks[ticks.length - 2]))
-  ) {
-    const last = ticks.pop()!;
-    ticks.pop();
-    ticks.push(last);
+  let current = minVal;
+  while (current < maxLeverage) {
+    const rounded = parseFloat(current.toFixed(2));
+    if (ticks.length === 0 || ticks[ticks.length - 1] !== rounded) {
+      ticks.push(rounded);
+    }
+    current += step;
+  }
+
+  const maxRounded = parseFloat(maxLeverage.toFixed(2));
+  if (ticks[ticks.length - 1] !== maxRounded) {
+    ticks.push(maxRounded);
+  }
+
+  if (ticks.length >= 2) {
+    const last = ticks[ticks.length - 1];
+    const secondLast = ticks[ticks.length - 2];
+    const threshold = Math.max(0.01, step / 2);
+    if (last - secondLast <= threshold) {
+      ticks.splice(ticks.length - 2, 1);
+    }
   }
 
   return ticks;
@@ -46,27 +55,29 @@ export const LeverageSlider = ({
   maxLeverage,
   value,
   onChange,
+  boostedAPR,
 }: {
   maxLeverage: number;
   value: string;
   onChange: (val: string) => void;
+  boostedAPR: number;
 }) => {
   const barRef = useRef<HTMLDivElement>(null);
 
-  const currentVal = parseFloat(value) || 0;
+  const currentVal = parseFloat(value) || 1;
 
   useEffect(() => {
     if (currentVal > maxLeverage) {
       onChange(maxLeverage.toFixed(2));
     }
-  }, [maxLeverage]);
+  }, [maxLeverage, currentVal, onChange]);
 
   const majorTicks = useMemo(
     () => generateMajorTicks(maxLeverage),
     [maxLeverage]
   );
 
-  const fraction = maxLeverage > 0 ? currentVal / maxLeverage : 0;
+  const fraction = (currentVal - 1) / (maxLeverage - 1);
   const clampedFraction = Math.max(0, Math.min(fraction, 1)) * 100;
 
   const handleBarClick = useCallback(
@@ -75,7 +86,7 @@ export const LeverageSlider = ({
       const rect = barRef.current.getBoundingClientRect();
       const x = Math.max(0, Math.min(clientX - rect.left, rect.width));
       const frac = x / rect.width;
-      const newValue = (frac * maxLeverage).toFixed(2);
+      const newValue = (1 + frac * (maxLeverage - 1)).toFixed(2);
       onChange(newValue);
     },
     [maxLeverage, onChange]
@@ -98,7 +109,7 @@ export const LeverageSlider = ({
   const handlePillChange = (e: ChangeEvent<HTMLInputElement>) => {
     const raw = e.target.value;
     let num = parseFloat(raw);
-    if (isNaN(num) || num < 0) num = 0;
+    if (isNaN(num) || num < 1) num = 1;
     if (num > maxLeverage) num = maxLeverage;
     let str = num.toString();
     if (str.includes(".")) {
@@ -112,29 +123,36 @@ export const LeverageSlider = ({
 
   return (
     <div className="w-full flex flex-col gap-2">
-      <div className="flex items-center gap-2">
-        <div className="text-sm text-primary">Leverage: </div>
-        <input
-          style={{
-            appearance: "none",
-            MozAppearance: "textfield",
-            WebkitAppearance: "none",
-          }}
-          className="appearance-none pl-5 pr-2 py-1 text-sm text-center rounded-full border border-primary bg-primary
-                       w-20 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary text-accent font-inter tabular-nums"
-          type="number"
-          step="0.01"
-          value={value}
-          onChange={handlePillChange}
-        />
-        <div className="text-sm text-accent transform translate-x-[-25px]">
-          x
+      <div className="flex items-center justify-between">
+        {/* Left side: Leverage input */}
+        <div className="flex items-center gap-2">
+          <div className="text-sm text-primary">Leverage:</div>
+          <input
+            style={{
+              appearance: "none",
+              MozAppearance: "textfield",
+              WebkitAppearance: "none",
+            }}
+            className="appearance-none pl-5 pr-2 py-1 text-sm text-center rounded-full border border-primary bg-primary
+                 w-20 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary text-accent font-inter tabular-nums"
+            type="number"
+            step="0.01"
+            value={value}
+            onChange={handlePillChange}
+          />
+          <div className="text-sm text-accent transform translate-x-[-25px]">
+            x
+          </div>
+        </div>
+        {/* Right side: Leveraged APR */}
+        <div className="text-sm">
+          Leveraged APR: {formatSuffix(boostedAPR)}%
         </div>
       </div>
       <div>
         <div
           ref={barRef}
-          className="relative h-6 w-full cursor-pointer flex items-center justify-center" // taller clickable area
+          className="relative h-6 w-full cursor-pointer flex items-center justify-center"
           onMouseDown={handleMouseDown}
         >
           <div className="relative h-1 w-full bg-primary rounded-full">
@@ -155,9 +173,8 @@ export const LeverageSlider = ({
 
         <div className="relative w-full h-8">
           {majorTicks.map((tick) => {
-            const tickFraction = (tick / maxLeverage) * 100;
+            const tickFraction = ((tick - 1) / (maxLeverage - 1)) * 100;
             const leftPercent = Math.min(tickFraction, 100);
-
             return (
               <div
                 key={tick}
@@ -173,7 +190,6 @@ export const LeverageSlider = ({
                   <span className="text-xs text-primary font-semibold whitespace-nowrap mt-1">
                     {tick}x
                   </span>
-
                   <button
                     className="absolute inset-0"
                     style={{ background: "transparent" }}
