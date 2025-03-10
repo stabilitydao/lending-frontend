@@ -123,6 +123,7 @@ type ReviewDataType = {
 export const useLooping = (marketID: string, selectedVault: Token) => {
   const marketDefinition = MARKET_DEFINITIONS[marketID];
   const { marketsData } = useMarketsRaw(marketID);
+  const feeInPerTenK = 30;
 
   const [depositToken, setDepositToken] = useState<Token>(
     marketDefinition.LOOPING!.IO[0]
@@ -142,7 +143,7 @@ export const useLooping = (marketID: string, selectedVault: Token) => {
 
   const depositAmountBn = strToBn(depositAmount, depositToken.decimals);
   const depositAmountBnMinusFee =
-    depositAmountBn - depositAmountBn / BigInt(1000);
+    depositAmountBn - (depositAmountBn * BigInt(feeInPerTenK)) / BigInt(10000);
 
   const depositTokenAddress = depositToken.address.toLowerCase() as Address;
   const borrowTokenAddress = borrowToken.address.toLowerCase() as Address;
@@ -319,9 +320,12 @@ export const useLooping = (marketID: string, selectedVault: Token) => {
     {} as ReviewDataType
   );
   const { odosQuoteError } = useOdosQuoteToast();
-  const slippageInPercent = 0.1;
+  let slippageInPercent = parseFloat(slippage);
 
-  const queryOdosQuote = async () => {
+  const queryOdosQuote = async (__slippage?: string) => {
+    if (__slippage) {
+      slippageInPercent = parseFloat(__slippage);
+    }
     let odosQuoteJson: any = null;
     let assembledData = "0x" as `0x${string}`;
     setIsOdosQuoteError(false);
@@ -340,13 +344,10 @@ export const useLooping = (marketID: string, selectedVault: Token) => {
     setComputedBorrowAmountBn(computedBorrowBn);
 
     const feeUSDValue =
-      bnToNumber(depositAmountBn / BigInt(1000), depositToken.decimals) *
-      depositPrice;
-    console.log(
-      depositTokenAddress,
-      borrowTokenAddress,
-      tokenNeededForLPAddress
-    );
+      bnToNumber(
+        (depositAmountBn * BigInt(feeInPerTenK)) / BigInt(10000),
+        depositToken.decimals
+      ) * depositPrice;
 
     if (
       depositTokenAddress !== borrowTokenAddress ||

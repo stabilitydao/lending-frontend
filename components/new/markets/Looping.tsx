@@ -16,7 +16,7 @@ import {
 import { CheckCheck } from "lucide-react";
 import { Deposit } from "@/components/icons/deposit";
 import { DoubleAvatar } from "@/components/ui/double-avatar";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 
 const RefreshButton = ({
   isOdosQuoteLoading,
@@ -42,11 +42,11 @@ const RefreshButton = ({
 
   return (
     <div
-      onClick={queryOdosQuote}
+      onClick={() => queryOdosQuote()}
       className="transition-transform duration-500 ease-out cursor-pointer" // Adjust duration/ease as desired.
       style={{ transform: `rotate(${rotation}deg)` }}
     >
-      (refresh odos quote)
+      <Image src="/icons/refresh.svg" alt="Refresh" width={20} height={20} />
     </div>
   );
 };
@@ -80,6 +80,17 @@ const ReviewSummary = ({
   isOdosQuoteLoading: boolean;
   needsOdosQuote: boolean;
 }) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = parseFloat(e.target.value);
+    if (value == 0) {
+      setSlippage(e.target.value);
+    } else if (isNaN(value)) {
+      setSlippage("");
+    } else {
+      setSlippage(value < 0.01 ? "0.01" : e.target.value);
+    }
+  };
+
   return (
     <div className="p-6 rounded-lg space-y-4">
       <div className="flex flex-row items-center justify-between">
@@ -164,7 +175,7 @@ const ReviewSummary = ({
             <input
               type="number"
               value={slippage}
-              onChange={(e) => setSlippage(e.target.value)}
+              onChange={(e) => handleChange(e)}
               className="w-20 p-2 text-right bg-transparent border-b border-primary text-primary"
             />
             <span className="text-primary">%</span>
@@ -660,7 +671,7 @@ export const LoopingModal = ({
                       }
                       updateSlippage={() => {
                         setSlippage(debouncedSlippage);
-                        queryOdosQuote();
+                        queryOdosQuote(debouncedSlippage);
                       }}
                     />
                   </div>
