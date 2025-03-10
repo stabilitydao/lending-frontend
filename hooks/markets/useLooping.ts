@@ -7,6 +7,7 @@ import {
   useLoopToast,
   useMarketPrices,
   useMarketsRaw,
+  useOdosQuoteToast,
   useTokenBalances,
   useVDTAllowance,
 } from "@/hooks";
@@ -20,7 +21,8 @@ export const getOdosQuote = async (
   outputToken: string,
   inputAmount: string,
   swapperAddress: string,
-  chainId: number
+  chainId: number,
+  slippage: number
 ): Promise<{
   outputAmount: string;
   outputValue: string;
@@ -38,7 +40,7 @@ export const getOdosQuote = async (
     chainId,
     inputTokens: [{ tokenAddress: inputToken, amount: inputAmount }],
     outputTokens: [{ tokenAddress: outputToken, proportion: 1 }],
-    slippageLimitPercent: 1,
+    slippageLimitPercent: slippage,
     userAddr: swapperAddress,
     referralCode: 0,
     disableRFQs: true,
@@ -110,13 +112,18 @@ const isValidAddresses = (
   depositAddress == tokenNeededAddress ||
   borrowAddress == tokenNeededAddress;
 
-export const useLooping = (marketID: string) => {
+type ReviewDataType = {
+  depositUSDValue: number;
+  borrowUSDValue: number;
+  vaultTokenUSDMinValue: number;
+  vaultTokenUSDMaxValue: number;
+  feeUSDValue: number;
+};
+
+export const useLooping = (marketID: string, selectedVault: Token) => {
   const marketDefinition = MARKET_DEFINITIONS[marketID];
   const { marketsData } = useMarketsRaw(marketID);
 
-  const [selectedVault, setSelectedVault] = useState<Token>(
-    marketDefinition.LOOPING!.VAULTS[0]
-  );
   const [depositToken, setDepositToken] = useState<Token>(
     marketDefinition.LOOPING!.IO[0]
   );
@@ -124,14 +131,13 @@ export const useLooping = (marketID: string) => {
   const [borrowToken, setBorrowToken] = useState<Token>(
     marketDefinition.LOOPING!.IO[0]
   );
-  const [borrowAmount, setBorrowAmount] = useState<string>("");
+  const [leverage, setLeverage] = useState<string>("0.00");
 
   const tokenNeededForLP = selectedVault.pair![0];
 
   const depositAmountBn = strToBn(depositAmount, depositToken.decimals);
   const depositAmountBnMinusFee =
     depositAmountBn - depositAmountBn / BigInt(1000);
-  const borrowAmountBn = strToBn(borrowAmount, borrowToken.decimals);
 
   const depositTokenAddress = depositToken.address.toLowerCase() as Address;
   const borrowTokenAddress = borrowToken.address.toLowerCase() as Address;
@@ -148,11 +154,10 @@ export const useLooping = (marketID: string) => {
   const { isBalancesLoading, balancesObj: depositBalances } = useTokenBalances(
     depositTokens.map((token) => token.address)
   );
-
   const { isPricesLoading, prices } = useMarketPrices(marketID);
 
   const depositInfo = useMemo(() => {
-    const depositInfo: Record<
+    const info: Record<
       Address,
       { token: Token; balance: bigint; valueUSD: number; price: bigint }
     > = {};
@@ -161,29 +166,22 @@ export const useLooping = (marketID: string) => {
         depositBalances[token.address.toLowerCase() as Address] || BigInt(0);
       const price = prices[token.address.toLowerCase() as Address] || BigInt(0);
       const valueUSD = bnToNumber(balance * price, token.decimals + 8);
-      depositInfo[token.address] = { token, balance, valueUSD, price };
+      info[token.address] = { token, balance, valueUSD, price };
     }
-    return depositInfo;
+    return info;
   }, [depositTokens, depositBalances, prices]);
 
   const borrowInfo = useMemo(() => {
     const result: Record<
       Address,
-      {
-        token: Token;
-        maxLeverage: number;
-        available: boolean;
-      }
+      { token: Token; maxLeverage: number; available: boolean }
     > = {};
 
     const market = (marketsData || []).find(
       (m) =>
         m.underlyingAsset.toLowerCase() === selectedVault.address.toLowerCase()
     );
-
-    if (!market) {
-      return result;
-    }
+    if (!market) return result;
 
     const ltv = market.baseLTVasCollateral;
     const maxLeverageCap = 10000 / (10000 - bnToNumber(ltv, 0));
@@ -196,25 +194,17 @@ export const useLooping = (marketID: string) => {
       const tokenMarket = (marketsData || []).find(
         (m) => m.underlyingAsset.toLowerCase() === token.address.toLowerCase()
       );
-
       const price = prices[token.address.toLowerCase() as Address] || BigInt(0);
-
       if (price === BigInt(0) || !tokenMarket) {
-        result[token.address] = {
-          token,
-          maxLeverage: 0,
-          available: false,
-        };
+        result[token.address] = { token, maxLeverage: 0, available: false };
         continue;
       }
       const maxAvailable = tokenMarket.availableLiquidity;
-
       const maxBorrowAmountUSD =
         bnToNumber(maxAvailable, token.decimals) * bnToNumber(price, 8);
       let tokenLeverage = maxBorrowAmountUSD / depositAmountValueUSD;
       tokenLeverage = Math.min(tokenLeverage, maxLeverageCap);
       tokenLeverage *= 0.95;
-
       const available =
         isValidAddresses(
           depositTokenAddress,
@@ -227,7 +217,6 @@ export const useLooping = (marketID: string) => {
         available,
       };
     }
-
     return result;
   }, [
     marketsData,
@@ -256,14 +245,12 @@ export const useLooping = (marketID: string) => {
     loopingContract,
     depositTokenAddress
   );
-
   const {
     approve: approveOne,
     isApproveConfirming,
     isApprovePending,
     setApproveAmount,
   } = useApproveToken(loopingContract, depositTokenAddress);
-
   const hasEnoughAllowanceOne =
     !!allowance && allowance > 0 && allowance >= depositAmountBn;
 
@@ -273,8 +260,7 @@ export const useLooping = (marketID: string) => {
     }
   }, [depositAmount, setApproveAmount]);
 
-  const requiredVDTAllowance = strToBn(borrowAmount, borrowToken.decimals);
-
+  const requiredVDTAllowance = strToBn(leverage, borrowToken.decimals);
   const pseudoVariableDebtToken = {
     name: borrowToken.name,
     address: (marketsData || []).find(
@@ -282,19 +268,16 @@ export const useLooping = (marketID: string) => {
     )?.variableDebtTokenAddress,
     decimals: borrowToken.decimals,
   } as Token;
-
   const { vdtAllowance, invalidateVDTAllowanceQuery } = useVDTAllowance(
     marketID,
     pseudoVariableDebtToken
   );
-
   const {
     approveVDT,
     isApproveVDTPending,
     isApproveVDTConfirming,
     setApproveVDTAmount,
   } = useApproveVDT(marketID, pseudoVariableDebtToken);
-
   const hasEnoughVDTAllowance =
     !!vdtAllowance && vdtAllowance > 0 && vdtAllowance >= requiredVDTAllowance;
 
@@ -312,47 +295,137 @@ export const useLooping = (marketID: string) => {
     error,
     isError,
   } = useWriteContract();
-
   const { isLoading: isConfirming, isSuccess: isConfirmed } =
-    useWaitForTransactionReceipt({
-      hash,
-    });
+    useWaitForTransactionReceipt({ hash });
 
   const [isOdosQuoteLoading, setIsOdosQuoteLoading] = useState(false);
+  const [odosQuote, setOdosQuote] = useState<`0x${string}`>("0x");
+  const [isOdosQuoteError, setIsOdosQuoteError] = useState<boolean>(false);
 
-  const confirm = async () => {
-    let odosQuote = "0x" as `0x${string}`;
+  type ReviewDataType = {
+    depositUSDValue: number;
+    borrowUSDValue: number;
+    vaultTokenUSDMinValue: number;
+    vaultTokenUSDMaxValue: number;
+    feeUSDValue: number;
+  };
+  const [reviewData, setReviewData] = useState<ReviewDataType>(
+    {} as ReviewDataType
+  );
+  const { odosQuoteError } = useOdosQuoteToast();
+  const slippageInPercent = 0.1;
+
+  const [computedBorrowAmountBn, setComputedBorrowAmountBn] = useState<bigint>(
+    BigInt(0)
+  );
+
+  const nextStep = async () => {
+    let odosQuoteJson: any = null;
+    let assembledData = "0x" as `0x${string}`;
+    setIsOdosQuoteError(false);
+
     if (
-      depositTokenAddress != borrowTokenAddress ||
-      depositTokenAddress != tokenNeededForLPAddress
+      depositTokenAddress !== borrowTokenAddress ||
+      depositTokenAddress !== tokenNeededForLPAddress
     ) {
       try {
         setIsOdosQuoteLoading(true);
         const odosInputAddress =
-          depositTokenAddress == tokenNeededForLPAddress
+          depositTokenAddress === tokenNeededForLPAddress
             ? borrowTokenAddress
             : depositTokenAddress;
         let odosDepositAmountBn = BigInt(0);
-        if (depositTokenAddress != tokenNeededForLPAddress) {
+        if (depositTokenAddress !== tokenNeededForLPAddress) {
           odosDepositAmountBn += depositAmountBnMinusFee;
         }
-        if (borrowTokenAddress != tokenNeededForLPAddress) {
-          odosDepositAmountBn += borrowAmountBn;
+        if (borrowTokenAddress !== tokenNeededForLPAddress) {
+          odosDepositAmountBn += numToBn(
+            (bnToNumber(depositAmountBn, depositToken.decimals) *
+              parseFloat(leverage)) /
+              (bnToNumber(prices[borrowTokenAddress] || BigInt(0), 8) || 1),
+            borrowToken.decimals
+          );
         }
-
-        const { assembledTxData, quote } = await getOdosQuote(
+        const result = await getOdosQuote(
           odosInputAddress,
           tokenNeededForLPAddress,
           bnToStr(odosDepositAmountBn, 0),
           loopingContract,
-          marketDefinition.chainId
+          marketDefinition.chainId,
+          slippageInPercent
         );
-        setIsOdosQuoteLoading(false);
-        odosQuote = assembledTxData;
+        odosQuoteJson = result.quote;
+        assembledData = result.assembledTxData;
       } catch (error) {
-        console.error("ODOS quote failed:", error);
+        setIsOdosQuoteError(true);
+        odosQuoteError("", (error as Error).message);
+      } finally {
+        setIsOdosQuoteLoading(false);
       }
     }
+    setOdosQuote(assembledData);
+
+    const depositPrice = bnToNumber(depositInfo[depositToken.address].price, 8);
+    const borrowPrice = bnToNumber(prices[borrowTokenAddress] || BigInt(0), 8);
+    const depositUSDValue =
+      bnToNumber(depositAmountBn, depositToken.decimals) * depositPrice;
+    const leverageValue = parseFloat(leverage) || 0;
+    const computedBorrowUSDValue = depositUSDValue * leverageValue;
+    const computedBorrowAmountToken = computedBorrowUSDValue / borrowPrice;
+    const computedBorrowBn = numToBn(
+      computedBorrowAmountToken,
+      borrowToken.decimals
+    );
+    setComputedBorrowAmountBn(computedBorrowBn);
+
+    const feeUSDValue =
+      bnToNumber(depositAmountBn / BigInt(1000), depositToken.decimals) *
+      depositPrice;
+
+    let vaultTokenUSDMaxValue = 0;
+    let vaultTokenUSDMinValue = 0;
+    if (
+      depositTokenAddress === borrowTokenAddress &&
+      borrowTokenAddress === tokenNeededForLPAddress
+    ) {
+      vaultTokenUSDMaxValue = depositUSDValue + computedBorrowUSDValue;
+      vaultTokenUSDMinValue = vaultTokenUSDMaxValue;
+    } else if (
+      depositTokenAddress === borrowTokenAddress &&
+      depositTokenAddress !== tokenNeededForLPAddress
+    ) {
+      vaultTokenUSDMaxValue = Number(odosQuoteJson.outValues[0]);
+      vaultTokenUSDMinValue =
+        vaultTokenUSDMaxValue * (1 - slippageInPercent / 100);
+    } else if (
+      depositTokenAddress !== borrowTokenAddress &&
+      borrowTokenAddress === tokenNeededForLPAddress
+    ) {
+      vaultTokenUSDMaxValue =
+        Number(odosQuoteJson.outValues[0]) + computedBorrowUSDValue;
+      vaultTokenUSDMinValue =
+        Number(odosQuoteJson.outValues[0]) * (1 - slippageInPercent / 100) +
+        computedBorrowUSDValue;
+    } else if (
+      depositTokenAddress !== borrowTokenAddress &&
+      depositTokenAddress === tokenNeededForLPAddress
+    ) {
+      vaultTokenUSDMaxValue =
+        Number(odosQuoteJson.outValues[0]) + depositUSDValue;
+      vaultTokenUSDMinValue =
+        Number(odosQuoteJson.outValues[0]) * (1 - slippageInPercent / 100) +
+        depositUSDValue;
+    }
+    setReviewData({
+      depositUSDValue,
+      borrowUSDValue: computedBorrowUSDValue,
+      vaultTokenUSDMinValue,
+      vaultTokenUSDMaxValue,
+      feeUSDValue,
+    });
+  };
+
+  const confirm = async () => {
     writeContract(
       {
         abi: AutoLeveragerAbi,
@@ -363,7 +436,7 @@ export const useLooping = (marketID: string) => {
             depositAsset: depositTokenAddress,
             borrowAsset: borrowTokenAddress,
             initialAmount: depositAmountBn,
-            borrowAmount: borrowAmountBn,
+            borrowAmount: computedBorrowAmountBn,
             vicunaVault: selectedVault.address,
             swapParams: odosQuote,
           },
@@ -394,7 +467,7 @@ export const useLooping = (marketID: string) => {
       setTimeout(() => {
         reset();
         setDepositAmount("");
-        setBorrowAmount("");
+        setLeverage("0.00");
         invalidateMarketState();
         invalidateAllowanceQuery();
         invalidateVDTAllowanceQuery();
@@ -404,30 +477,27 @@ export const useLooping = (marketID: string) => {
 
   return {
     selectedVault,
-    setSelectedVault,
-
     depositToken,
     setDepositToken,
     depositInfo,
     depositAmount,
     setDepositAmount,
-
     borrowToken,
     setBorrowToken,
     borrowInfo,
-    borrowAmount,
-    setBorrowAmount,
-
+    leverage,
+    setLeverage,
+    nextStep,
+    isOdosQuoteError,
+    reviewData,
     hasEnoughAllowanceOne,
     approveOne,
     isApproveConfirming,
     isApprovePending,
-
     hasEnoughVDTAllowance,
     approveVDT,
     isApproveVDTPending,
     isApproveVDTConfirming,
-
     confirm,
     isPending,
     isConfirming,

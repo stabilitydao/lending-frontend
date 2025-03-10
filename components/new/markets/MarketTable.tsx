@@ -31,10 +31,12 @@ const MarketLine = ({
   token,
   onSelectToken,
   withVault = false,
+  onClickLoopingButton,
 }: {
   token: Token;
   onSelectToken: (token: Token) => void;
   withVault?: boolean;
+  onClickLoopingButton: () => void;
 }) => {
   const { marketID } = useSelectedMarket();
   const { market, isMarketLoading } = useMarket(marketID, token);
@@ -226,6 +228,17 @@ const MarketLine = ({
       <TableCell>{token.pair ? null : supplyAPR}</TableCell>
       <TableCell>{token.pair ? null : borrowInfo}</TableCell>
       <TableCell>{token.pair ? null : borrowAPR}</TableCell>
+      {withVault && (
+        <TableCell
+          className="flex justify-left "
+          onClick={(e) => {
+            e.stopPropagation();
+            onClickLoopingButton();
+          }}
+        >
+          {token.pair && <LoopingButton onClick={onClickLoopingButton!} />}
+        </TableCell>
+      )}
     </TableRow>
   );
 };
@@ -234,6 +247,9 @@ export const MarketTable = () => {
   const { markets } = useMarkets(marketID);
 
   const [selectedToken, setSelectedToken] = useState<Token>(
+    marketDefinition.tokens[0]
+  );
+  const [selectedLoopingVault, setSelectedLoopingVault] = useState<Token>(
     marketDefinition.tokens[0]
   );
   const [isModalOpen, setModalOpen] = useState(false);
@@ -318,6 +334,11 @@ export const MarketTable = () => {
               setSortBy={setSortBy}
               defaultOrder="desc"
             />
+            {isWithVaults && (
+              <TableHead className="text-muted">
+                <div className="flex items-center gap-2">Looping</div>
+              </TableHead>
+            )}
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -327,13 +348,14 @@ export const MarketTable = () => {
               token={token}
               onSelectToken={onSelectToken}
               withVault={isWithVaults}
+              onClickLoopingButton={() => {
+                setSelectedLoopingVault(token);
+                onClickLoopingButton();
+              }}
             />
           ))}
         </TableBody>
       </Table>
-      {marketDefinition.LOOPING && (
-        <LoopingButton onClick={onClickLoopingButton} />
-      )}
       <HealthBar />
       <MarketModal
         token={selectedToken}
@@ -345,6 +367,7 @@ export const MarketTable = () => {
         <LoopingModal
           isVisible={isLoopingModalOpen}
           onClose={closeLoopingModal}
+          vault={selectedLoopingVault}
         />
       )}
     </div>

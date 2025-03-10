@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
+import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
 import "react-toastify/dist/ReactToastify.css";
 import { Navbar } from "@/components/layout/navbar";
@@ -10,6 +10,11 @@ import { LocalIcon, MarketProvider } from "@/components";
 import { ProvidersWrapper } from "./providers";
 
 const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+});
+
+const inter = Inter({
   subsets: ["latin"],
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
@@ -27,7 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${poppins.className} flex flex-col min-h-screen bg-background`}
+        className={`${poppins.className} ${inter.className} flex flex-col min-h-screen bg-background`}
       >
         <ToastContainer
           position="top-right"

@@ -83,7 +83,7 @@ const ChainButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     const Comp = asChild ? Slot : "button";
     return (
-      <>
+      <div className={props.disabled ? "cursor-not-allowed w-full" : "w-full"}>
         <Comp
           className={cn(buttonVariants({ variant, size, className }))}
           ref={ref}
@@ -93,7 +93,7 @@ const ChainButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
           {buttonText}
         </Comp>
         <ConnectWalletDialog isOpen={isOpen} setIsOpen={setIsOpen} />
-      </>
+      </div>
     );
   }
 );

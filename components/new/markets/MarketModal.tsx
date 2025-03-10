@@ -32,6 +32,7 @@ import { minBn } from "@/helpers";
 import { BaseActionForm } from "@/components";
 import Link from "next/link";
 import { Token } from "@/constants";
+import { DoubleAvatar } from "@/components/ui/double-avatar";
 
 export interface MarketModalProps {
   token: Token;
@@ -287,6 +288,8 @@ export const MarketModal = ({
   const isBorrowTab = isBorrow && activeTab === "borrow";
   const isRepay = isBorrow && activeTab === "repay";
 
+  const isVault = !!token.pair;
+
   return (
     <Dialog
       open={isVisible}
@@ -304,7 +307,11 @@ export const MarketModal = ({
         className="bg-card text-primary overflow-y-auto pt-12 select-none"
       >
         <div tabIndex={0} aria-hidden="true" />
-        {market.isBorrowEnabled && (
+        {isVault ? (
+          <div className="absolute left-5 top-5">
+            <Image src={token.icon} alt="Vault Icon" width={30} height={30} />
+          </div>
+        ) : (
           <Button
             variant="default"
             className="w-[120px] z-[999] absolute left-4 top-4 items-center justify-center gap-2"
@@ -392,8 +399,17 @@ export const MarketModal = ({
         </div>
 
         <div className="relative w-full flex items-center justify-center mt-6">
-          <div className="flex items-center gap-4">
-            <Image src={token.icon} alt="logo" width={25} height={25} />
+          <div className={`flex items-center ${isVault ? "gap-8" : "gap-4"}`}>
+            {isVault ? (
+              <DoubleAvatar
+                firstSrc={token.pair![0].icon}
+                secondSrc={token.pair![1].icon}
+                firstAlt={token.pair![0].symbol}
+                secondAlt={token.pair![1].symbol}
+              />
+            ) : (
+              <Image src={token.icon} alt="logo" width={35} height={35} />
+            )}
             <div className="flex flex-col items-start gap-2">
               <span className="text-sm font-semibold">{token.name}</span>
               <span className="text-xs font-light">{token.symbol}</span>
