@@ -11,7 +11,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { MarketModal } from "./MarketModal";
 import { useMarket, useMarkets, useSearch, useSelectedMarket } from "@/hooks";
 import { formatSuffix, trimmedNumber } from "@/helpers";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   HealthBar,
   ApyBreakdown,
@@ -250,8 +250,26 @@ export const MarketTable = () => {
     marketDefinition.tokens[0]
   );
   const [selectedLoopingVault, setSelectedLoopingVault] = useState<Token>(
-    marketDefinition.tokens[0]
+    marketDefinition.LOOPING
+      ? marketDefinition.LOOPING.VAULTS[0]
+      : marketDefinition.tokens[1]
   );
+  const [canUseModal, setCanUseModal] = useState(false);
+
+  useEffect(() => {
+    setSelectedToken(marketDefinition.tokens[0]);
+    setSelectedLoopingVault(
+      marketDefinition.LOOPING
+        ? marketDefinition.LOOPING.VAULTS[0]
+        : marketDefinition.tokens[1]
+    );
+    if (marketDefinition.LOOPING) {
+      setCanUseModal(true);
+    } else {
+      setCanUseModal(false);
+    }
+  }, [marketDefinition]);
+
   const [isModalOpen, setModalOpen] = useState(false);
   const [isLoopingModalOpen, setLoopingModalOpen] = useState(false);
   const { filter } = useSearch("markets", (tokens: Token) => tokens.name);
@@ -363,7 +381,7 @@ export const MarketTable = () => {
         onClose={closeModal}
         setSelectedToken={setSelectedToken}
       />
-      {marketDefinition.LOOPING && (
+      {canUseModal && (
         <LoopingModal
           isVisible={isLoopingModalOpen}
           onClose={closeLoopingModal}
