@@ -1,5 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import { Address, erc20Abi } from "viem";
 import {
   useAccount,
@@ -7,7 +6,6 @@ import {
   useWriteContract,
 } from "wagmi";
 
-import { queryKeys } from "@/queries";
 import {
   useCorrectChain,
   useWrapContractAction,

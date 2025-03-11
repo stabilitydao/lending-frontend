@@ -97,6 +97,7 @@ const useWithdraw = (marketID: string, token: Token) => {
       }
     );
   };
+
   if (token.isNative) {
     withdraw = () => {
       if (!isValidAddress) return;

@@ -67,41 +67,47 @@ const MarketLine = ({
           ${formatSuffix(market.supply.tvl.value, "money")}
         </p>
       </div>
-      <div className="flex flex-row items-end justify-center">
-        <p className="text-md">({trimmedNumber(supplyPercentage, 2)}% full)</p>
-      </div>
-      <StandardTooltip>
-        <div className="flex flex-col gap-2">
-          <div className={`text-[16px] text-center mb-[10px] ${supplyColor}`}>
-            {trimmedNumber(100 - supplyPercentage, 2)}% remaining
-          </div>
-          <p className="flex justify-between w-full gap-1">
-            <div>Cap:</div>
-            <div className="pl-[50px]">
-              {formatSuffix(market.supply.cap.amount, "abbreviated")}{" "}
-              {token.symbol} ($
-              {formatSuffix(market.supply.cap.value, "money")})
-            </div>
+      {!token.pair && (
+        <div className="flex flex-row items-end justify-center">
+          <p className="text-md">
+            ({trimmedNumber(supplyPercentage, 2)}% full)
           </p>
-
-          <div className="flex justify-between w-full gap-1">
-            <div>Utilization:</div>
-            <div className="pl-[50px]">
-              {formatSuffix(market.supply.tvl.amount, "abbreviated")}{" "}
-              {token.symbol} ($
-              {formatSuffix(market.supply.tvl.value, "money")})
-            </div>
-          </div>
-          <div className="flex justify-between w-full gap-1">
-            <div>Remaining:</div>
-            <div className="pl-[50px]">
-              {formatSuffix(market.supply.remaining.amount, "abbreviated")}{" "}
-              {token.symbol} ($
-              {formatSuffix(market.supply.remaining.value, "money")})
-            </div>
-          </div>
         </div>
-      </StandardTooltip>
+      )}
+      {!token.pair && (
+        <StandardTooltip>
+          <div className="flex flex-col gap-2">
+            <div className={`text-[16px] text-center mb-[10px] ${supplyColor}`}>
+              {trimmedNumber(100 - supplyPercentage, 2)}% remaining
+            </div>
+            <p className="flex justify-between w-full gap-1">
+              <div>Cap:</div>
+              <div className="pl-[50px]">
+                {formatSuffix(market.supply.cap.amount, "abbreviated")}{" "}
+                {token.symbol} ($
+                {formatSuffix(market.supply.cap.value, "money")})
+              </div>
+            </p>
+
+            <div className="flex justify-between w-full gap-1">
+              <div>Utilization:</div>
+              <div className="pl-[50px]">
+                {formatSuffix(market.supply.tvl.amount, "abbreviated")}{" "}
+                {token.symbol} ($
+                {formatSuffix(market.supply.tvl.value, "money")})
+              </div>
+            </div>
+            <div className="flex justify-between w-full gap-1">
+              <div>Remaining:</div>
+              <div className="pl-[50px]">
+                {formatSuffix(market.supply.remaining.amount, "abbreviated")}{" "}
+                {token.symbol} ($
+                {formatSuffix(market.supply.remaining.value, "money")})
+              </div>
+            </div>
+          </div>
+        </StandardTooltip>
+      )}
     </div>
   );
   const borrowPercentage = Math.min(

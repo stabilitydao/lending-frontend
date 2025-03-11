@@ -16,7 +16,6 @@ import { AutoLeveragerAbi, MARKET_DEFINITIONS, Token } from "@/constants";
 import { Address } from "viem";
 import { bnToNumber, bnToStr, extractError, numToBn, strToBn } from "@/helpers";
 import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
-import { ethers } from "ethers";
 
 export const getOdosQuote = async (
   inputToken: string,
