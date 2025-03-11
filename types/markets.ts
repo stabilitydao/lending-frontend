@@ -85,7 +85,7 @@ export class HealthBarDefinition {
     bg?: string[],
     text?: string[]
   ) {
-    if (names.length + 1 !== colorThresholds.length) {
+    if (names.length !== colorThresholds.length) {
       throw new Error("Invalid Color Definition In Healthbars");
     }
     this.min = 1;
@@ -125,9 +125,11 @@ export class HealthBarDefinition {
       name: names[lastIndex],
       bg: (bg && bg[lastIndex]) || `bg-${names[lastIndex]}-500`,
       text: (text && text[lastIndex]) || `text-${names[lastIndex]}-500`,
-      min: colorThresholds[colorThresholds.length - 1],
+      min: colorThresholds[lastIndex - 1],
       max: Infinity,
     });
+
+    console.log(this.points);
   }
 
   getHealthData(health: number): HealthBarPoint {

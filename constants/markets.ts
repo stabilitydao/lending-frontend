@@ -22,7 +22,7 @@ import {
 } from "@/constants";
 
 const subMarketHealthBar = new HealthBarDefinition(
-  [1.03, 1.07, 1.11, 1.12, 2],
+  [1.03, 1.07, 1.12, 2],
   ["red", "orange", "yellow", "green"]
 );
 
@@ -36,7 +36,7 @@ export const MARKET_DEFINITIONS: {
     NATIVE_TOKEN_GATEWAY: "0xbE0B2230B842be6A37188038a58755534dC9E999",
     chainId: sonic.id,
     healthBar: new HealthBarDefinition(
-      [1, 1.1, 1.2, 1.4, 5],
+      [1.1, 1.2, 1.4, 5],
       ["red", "orange", "yellow", "green"]
     ),
   },

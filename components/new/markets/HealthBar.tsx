@@ -99,13 +99,9 @@ export const HealthBar = () => {
       />
       {/* <RangeTest
         healthBarDefinition={marketDefinition.healthBar}
-        range={[0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5]}
-      /> */}
-      {/* <RangeTest
-        healthBarDefinition={marketDefinition.healthBar}
         range={[
           0, 1, 1.01, 1.02, 1.03, 1.04, 1.05, 1.06, 1.07, 1.08, 1.09, 1.1, 1.11,
-          1.12, 1.17, 1.22, 1.27, 1.32, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2,
+          1.12, 1.17, 1.22, 1.27, 1.32, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2, 4, 5,
         ]}
       /> */}
     </div>
