@@ -31,7 +31,7 @@ import {
 import { minBn } from "@/helpers";
 import { BaseActionForm } from "@/components";
 import Link from "next/link";
-import { Token } from "@/constants";
+import { MARKET_DEFINITIONS, Token } from "@/constants";
 import { DoubleAvatar } from "@/components/ui/double-avatar";
 
 export interface MarketModalProps {
@@ -79,6 +79,7 @@ const SupplyForm = ({ token, market, marketID }: FormProps) => {
       isApproving={isApprovePending || isApproveConfirming}
       actionIcon={Deposit}
       displayData={displayData}
+      healthBarDefinition={MARKET_DEFINITIONS[marketID].healthBar}
     />
   );
 };
@@ -109,6 +110,7 @@ const WithdrawForm = ({ token, market, marketID }: FormProps) => {
       actionIcon={Withdraw}
       onApprove={() => 0}
       displayData={displayData}
+      healthBarDefinition={MARKET_DEFINITIONS[marketID].healthBar}
     />
   );
 };
@@ -139,6 +141,7 @@ const BorrowForm = ({ token, market, marketID }: FormProps) => {
       actionIcon={Withdraw}
       onApprove={() => 0}
       displayData={displayData}
+      healthBarDefinition={MARKET_DEFINITIONS[marketID].healthBar}
     />
   );
 };
@@ -174,6 +177,7 @@ const RepayForm = ({ token, market, marketID }: FormProps) => {
       isApproving={false}
       actionIcon={Deposit}
       displayData={displayData}
+      healthBarDefinition={MARKET_DEFINITIONS[marketID].healthBar}
     />
   );
 };

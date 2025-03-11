@@ -1,4 +1,4 @@
-import { MarketDefinition } from "@/types";
+import { HealthBarDefinition, MarketDefinition } from "@/types";
 import { sonic } from "viem/chains";
 import {
   S,
@@ -21,6 +21,11 @@ import {
   wS,
 } from "@/constants";
 
+const subMarketHealthBar = new HealthBarDefinition(
+  [1.03, 1.07, 1.11, 1.12, 2],
+  ["red", "orange", "yellow", "green"]
+);
+
 export const MARKET_DEFINITIONS: {
   [key: string]: MarketDefinition;
 } = {
@@ -30,6 +35,10 @@ export const MARKET_DEFINITIONS: {
     AAVE_POOL: "0xaa1C02a83362BcE106dFf6eB65282fE8B97A1665",
     NATIVE_TOKEN_GATEWAY: "0xbE0B2230B842be6A37188038a58755534dC9E999",
     chainId: sonic.id,
+    healthBar: new HealthBarDefinition(
+      [1, 1.1, 1.2, 1.4, 5],
+      ["red", "orange", "yellow", "green"]
+    ),
   },
   "Sonic Market": {
     tokens: [
@@ -53,6 +62,7 @@ export const MARKET_DEFINITIONS: {
       IO: [wS, stS],
     },
     chainId: sonic.id,
+    healthBar: subMarketHealthBar,
   },
   "Stable Market": {
     tokens: [
@@ -79,54 +89,8 @@ export const MARKET_DEFINITIONS: {
       IO: [scUSD, USDCe, USDT],
     },
     chainId: sonic.id,
+    healthBar: subMarketHealthBar,
   },
 };
 
 export const DEFAULT_MARKET_ID = "Main Protocol";
-
-export const HEALTHBAR_COLORS = [
-  {
-    name: "Liquidation",
-    bg: "bg-black",
-    text: "text-black",
-    min: -Infinity,
-    max: 1,
-  },
-  {
-    name: "red",
-    bg: "bg-red-500",
-    text: "text-red-500",
-    min: 1,
-    max: 1.1,
-  },
-  {
-    name: "orange",
-    bg: "bg-orange-500",
-    text: "text-orange-500",
-    min: 1.1,
-    max: 1.2,
-  },
-  {
-    name: "yellow",
-    bg: "bg-yellow-500",
-    text: "text-yellow-500",
-    min: 1.2,
-    max: 1.4,
-  },
-  {
-    name: "green",
-    bg: "bg-green-500",
-    text: "text-green-500",
-    min: 1.4,
-    max: Infinity,
-  },
-];
-
-export const healthData = (health: number) =>
-  HEALTHBAR_COLORS.find(({ min, max }) => health > min && health <= max) || {
-    name: "",
-    bg: "",
-    text: "",
-    min: 0,
-    max: 0,
-  };

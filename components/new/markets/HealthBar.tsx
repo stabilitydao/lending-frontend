@@ -1,83 +1,89 @@
 "use client";
 import { Badge } from "lucide-react";
-import { HEALTHBAR_COLORS, healthData } from "@/constants";
 import { useSelectedMarket, useUserAccountData } from "@/hooks";
 import { bnToNumber } from "@/helpers";
 import { StandardTooltip } from "@/components";
+import { HealthBarDefinition } from "@/types";
 
-const RangeTest = () => (
+const RangeTest = ({
+  healthBarDefinition,
+  range,
+}: {
+  healthBarDefinition: HealthBarDefinition;
+  range: number[];
+}) => (
   <div>
-    <HealthBarProgress value={0.9} />
-    <HealthBarProgress value={1} />
-    <HealthBarProgress value={1.05} />
-    <HealthBarProgress value={1.1} />
-    <HealthBarProgress value={1.2} />
-    <HealthBarProgress value={1.4} />
-    <HealthBarProgress value={1.5} />
-    <HealthBarProgress value={2} />
-    <HealthBarProgress value={2.5} />
-    <HealthBarProgress value={3} />
-    <HealthBarProgress value={3.5} />
-    <HealthBarProgress value={4} />
-    <HealthBarProgress value={4.5} />
-    <HealthBarProgress value={50} />
+    {range.map((value) => (
+      <HealthBarProgress
+        key={value}
+        healthBarDefinition={healthBarDefinition}
+        value={value}
+      />
+    ))}
   </div>
 );
 
-interface HealthBarProgressProps {
+const HealthBarProgress = ({
+  healthBarDefinition,
+  value,
+}: {
+  healthBarDefinition: HealthBarDefinition;
   value: number;
-  percentageIndicator?: boolean;
-}
-
-const scale = (
-  min: number,
-  half: number,
-  max: number
-): ((x: number) => number) => {
-  if (min >= half || half >= max) {
-    throw new Error("Ensure min < half < max for correct interpolation.");
-  }
-
-  return (x: number): number => {
-    if (x <= min) {
-      return 0;
-    }
-    if (x >= max) {
-      return 100;
-    }
-    if (x <= half) {
-      return (50 * (x - min)) / (half - min);
-    }
-    return 50 + (50 * (x - half)) / (max - half);
-  };
-};
-
-export const HealthBarProgress = ({ value }: HealthBarProgressProps) => {
-  const displayValue = value > 5 ? "5+" : value.toFixed(2);
-  const progressValue = scale(1, 1.4, 5)(value);
-  const data = healthData(value);
+}) => {
+  const bg = healthBarDefinition.bg(value);
+  const display = healthBarDefinition.display(value);
+  const progress = healthBarDefinition.progress(value);
 
   return (
     <div className="relative pt-5">
       <div
-        className={`relative h-2 w-full overflow-hidden rounded-full shadow-lg ${data.bg}`}
+        className={`relative h-2 w-full overflow-hidden rounded-full shadow-lg ${bg}`}
       />
       <div
         className="absolute top-3"
-        style={{ left: `${progressValue}%`, transform: "translateX(-50%)" }}
+        style={{ left: `${progress}%`, transform: "translateX(-50%)" }}
       >
         <div
-          className={`text-white text-xs px-2 py-1 rounded-full shadow-lg ${data.bg}`}
+          className={`text-white text-xs px-2 py-1 rounded-full shadow-lg ${bg}`}
         >
-          {displayValue}
+          {display}
         </div>
       </div>
     </div>
   );
 };
 
+const HealthBarTooltip = ({
+  healthBarDefinition,
+}: {
+  healthBarDefinition: HealthBarDefinition;
+}) => (
+  <StandardTooltip>
+    <div className="flex flex-col gap-2 w-full">
+      {healthBarDefinition.points.map((color) => (
+        <div
+          key={color.name}
+          className="flex items-center gap-4 justify-between"
+        >
+          <p className="flex-grow text-xs text-right text-foreground/70">
+            {color.name}:{` `}
+            {color.min === Infinity
+              ? `${color.max}-`
+              : color.max === Infinity
+              ? `>${color.min}`
+              : color.min === -Infinity
+              ? `<${color.max}`
+              : `${color.min} - ${color.max}`}
+          </p>
+          <Badge className={`${color.bg} text-white w-12`}></Badge>
+        </div>
+      ))}
+    </div>
+  </StandardTooltip>
+);
+
 export const HealthBar = () => {
-  const { marketID } = useSelectedMarket();
+  const { marketID, marketDefinition } = useSelectedMarket();
   const { userAccountData } = useUserAccountData(marketID);
   const healthFactor = bnToNumber(userAccountData?.healthFactor, 18);
 
@@ -85,31 +91,23 @@ export const HealthBar = () => {
     <div className="flex flex-col">
       <div className="flex items-center gap-4">
         <div className="text-primary text-lg font-semibold">Health Bar</div>
-        <StandardTooltip>
-          <div className="flex flex-col gap-2 w-full">
-            {HEALTHBAR_COLORS.map((color) => (
-              <div
-                key={color.name}
-                className="flex items-center gap-4 justify-between"
-              >
-                <p className="flex-grow text-xs text-right text-foreground/70">
-                  {color.name}:{` `}
-                  {color.min === Infinity
-                    ? `${color.max}-`
-                    : color.max === Infinity
-                    ? `>${color.min}`
-                    : color.min === -Infinity
-                    ? `<${color.max}`
-                    : `${color.min} - ${color.max}`}
-                </p>
-                <Badge className={`${color.bg} text-white w-12`}></Badge>
-              </div>
-            ))}
-          </div>
-        </StandardTooltip>
+        <HealthBarTooltip healthBarDefinition={marketDefinition.healthBar} />
       </div>
-      <HealthBarProgress value={healthFactor} />
-      {/* <RangeTest /> */}
+      <HealthBarProgress
+        healthBarDefinition={marketDefinition.healthBar}
+        value={healthFactor}
+      />
+      {/* <RangeTest
+        healthBarDefinition={marketDefinition.healthBar}
+        range={[0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5]}
+      /> */}
+      {/* <RangeTest
+        healthBarDefinition={marketDefinition.healthBar}
+        range={[
+          0, 1, 1.01, 1.02, 1.03, 1.04, 1.05, 1.06, 1.07, 1.08, 1.09, 1.1, 1.11,
+          1.12, 1.17, 1.22, 1.27, 1.32, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2,
+        ]}
+      /> */}
     </div>
   );
 };
