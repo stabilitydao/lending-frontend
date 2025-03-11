@@ -123,6 +123,9 @@ const MarketLine = ({
       ? "text-orange-500"
       : "text-green-500";
 
+  const borrowToSupplyPercentage =
+    (market.borrow.tvl.amount / market.supply.tvl.amount) * 100;
+
   const borrowInfo = (
     <div className="flex flex-row gap-1 items-center">
       <div className={"w-[60px]"}>
@@ -138,7 +141,14 @@ const MarketLine = ({
         </p>
       </div>
       <div className="flex flex-row items-end justify-center">
-        <p className="text-md">({trimmedNumber(borrowPercentage, 2)}% full)</p>
+        <p className="text-md">
+          (
+          {trimmedNumber(
+            Math.max(borrowPercentage, borrowToSupplyPercentage),
+            2
+          )}
+          % full)
+        </p>
       </div>
       <StandardTooltip>
         <div className="flex flex-col gap-2">

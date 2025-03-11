@@ -508,6 +508,7 @@ export const LoopingModal = ({
     isPending,
     isConfirming,
     isOdosQuoteLoading,
+    isConfirmed,
   } = useLooping(marketID, vault);
 
   const { market } = useMarket(marketID, vault);
@@ -528,6 +529,13 @@ export const LoopingModal = ({
     setDepositToken(marketDefinition.LOOPING!.IO[0]!);
     setBorrowToken(marketDefinition.LOOPING!.IO[1]!);
   }, [marketDefinition]);
+
+  useEffect(() => {
+    if (isConfirmed) {
+      setStep(0);
+      onClose();
+    }
+  }, [isConfirmed]);
 
   return (
     <Dialog
