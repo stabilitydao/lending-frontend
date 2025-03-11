@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useState } from "react";
 import {
   useAccount,
@@ -13,6 +14,8 @@ import {
 } from "@/hooks";
 import { MARKET_DEFINITIONS, Token, VariableDebtTokenAbi } from "@/constants";
 import { extractError, MAXUINT256, trimmedBn, isAddressValid } from "@/helpers";
+import { useQueryClient } from "@tanstack/react-query";
+import { queryKeys } from "@/queries";
 const useApproveVDT = (marketID: string, token: Token) => {
   const { chainIdToUse: chainId } = useCorrectChain();
   const marketDefinition = MARKET_DEFINITIONS[marketID];
@@ -56,6 +59,8 @@ const useApproveVDT = (marketID: string, token: Token) => {
   };
   const approveVDT = useWrapContractAction(write);
 
+  const queryClient = useQueryClient();
+
   const {
     isLoading: isApproveVDTConfirming,
     isSuccess,
@@ -68,7 +73,12 @@ const useApproveVDT = (marketID: string, token: Token) => {
   useEffect(() => {
     if (isSuccess || isError) {
       if (isSuccess) {
-        invalidateVDTAllowanceQuery();
+        queryClient.setQueryData(
+          queryKeys.markets
+            .market(marketID)
+            ._ctx.vdtAllowance(token.address, approverAddress!).queryKey,
+          approveVDTAmount
+        );
         successApproveToast(hash!);
       }
       if (isError) {
