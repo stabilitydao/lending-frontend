@@ -24,6 +24,7 @@ import {
   useMarket,
   useRepay,
   useSearch,
+  useSelectedMarket,
   useSupply,
   useWithdraw,
 } from "@/hooks";
@@ -31,6 +32,7 @@ import { minBn } from "@/helpers";
 import { BaseActionForm } from "@/components";
 import Link from "next/link";
 import { Token } from "@/constants";
+import { DoubleAvatar } from "@/components/ui/double-avatar";
 
 export interface MarketModalProps {
   token: Token;
@@ -43,9 +45,10 @@ export interface MarketModalProps {
 interface FormProps {
   token: Token;
   market: MarketInfo;
+  marketID: string;
 }
 
-const SupplyForm = ({ token, market }: FormProps) => {
+const SupplyForm = ({ token, market, marketID }: FormProps) => {
   const {
     amount,
     setAmount,
@@ -59,7 +62,7 @@ const SupplyForm = ({ token, market }: FormProps) => {
     isConfirming,
     isApproveConfirming,
     displayData,
-  } = useSupply(token);
+  } = useSupply(marketID, token);
 
   return (
     <BaseActionForm
@@ -80,7 +83,7 @@ const SupplyForm = ({ token, market }: FormProps) => {
   );
 };
 
-const WithdrawForm = ({ token, market }: FormProps) => {
+const WithdrawForm = ({ token, market, marketID }: FormProps) => {
   const {
     amount,
     setAmount,
@@ -89,7 +92,7 @@ const WithdrawForm = ({ token, market }: FormProps) => {
     isPending,
     isConfirming,
     displayData,
-  } = useWithdraw(token);
+  } = useWithdraw(marketID, token);
 
   return (
     <BaseActionForm
@@ -110,7 +113,7 @@ const WithdrawForm = ({ token, market }: FormProps) => {
   );
 };
 
-const BorrowForm = ({ token, market }: FormProps) => {
+const BorrowForm = ({ token, market, marketID }: FormProps) => {
   const {
     amount,
     setAmount,
@@ -119,7 +122,7 @@ const BorrowForm = ({ token, market }: FormProps) => {
     isPending,
     isConfirming,
     displayData,
-  } = useBorrow(token);
+  } = useBorrow(marketID, token);
 
   return (
     <BaseActionForm
@@ -140,7 +143,7 @@ const BorrowForm = ({ token, market }: FormProps) => {
   );
 };
 
-const RepayForm = ({ token, market }: FormProps) => {
+const RepayForm = ({ token, market, marketID }: FormProps) => {
   const {
     amount,
     setAmount,
@@ -154,7 +157,7 @@ const RepayForm = ({ token, market }: FormProps) => {
     isConfirming,
     isApproveConfirming,
     displayData,
-  } = useRepay(token);
+  } = useRepay(marketID, token);
 
   return (
     <BaseActionForm
@@ -244,6 +247,7 @@ export const MarketModal = ({
   isVisible,
   onClose,
 }: MarketModalProps) => {
+  const { marketID } = useSelectedMarket();
   const [isBorrow, setIsBorrow] = useState(defaultIsBorrow);
   const [activeTab, setActiveTab] = useState(
     defaultIsBorrow ? "borrow" : "supply"
@@ -274,7 +278,7 @@ export const MarketModal = ({
     }
   }, [isVisible, defaultIsBorrow]);
 
-  const { market, isMarketLoading } = useMarket(token);
+  const { market, isMarketLoading } = useMarket(marketID, token);
   const { setSearchQuery } = useSearch("vaults");
 
   if (isMarketLoading || !market) return null;
@@ -283,6 +287,8 @@ export const MarketModal = ({
   const isWithdraw = !isBorrow && activeTab === "withdraw";
   const isBorrowTab = isBorrow && activeTab === "borrow";
   const isRepay = isBorrow && activeTab === "repay";
+
+  const isVault = !!token.pair;
 
   return (
     <Dialog
@@ -301,7 +307,11 @@ export const MarketModal = ({
         className="bg-card text-primary overflow-y-auto pt-12 select-none"
       >
         <div tabIndex={0} aria-hidden="true" />
-        {market.isBorrowEnabled && (
+        {isVault ? (
+          <div className="absolute left-5 top-5">
+            <Image src={token.icon} alt="Vault Icon" width={30} height={30} />
+          </div>
+        ) : (
           <Button
             variant="default"
             className="w-[120px] z-[999] absolute left-4 top-4 items-center justify-center gap-2"
@@ -341,6 +351,7 @@ export const MarketModal = ({
                         Go to{" "}
                         <Link
                           href={token.buyLink}
+                          target="_blank"
                           className="text-blue-500 underline"
                         >
                           this link
@@ -389,8 +400,17 @@ export const MarketModal = ({
         </div>
 
         <div className="relative w-full flex items-center justify-center mt-6">
-          <div className="flex items-center gap-4">
-            <Image src={token.icon} alt="logo" width={25} height={25} />
+          <div className={`flex items-center ${isVault ? "gap-8" : "gap-4"}`}>
+            {isVault ? (
+              <DoubleAvatar
+                firstSrc={token.pair![0].icon}
+                secondSrc={token.pair![1].icon}
+                firstAlt={token.pair![0].symbol}
+                secondAlt={token.pair![1].symbol}
+              />
+            ) : (
+              <Image src={token.icon} alt="logo" width={35} height={35} />
+            )}
             <div className="flex flex-col items-start gap-2">
               <span className="text-sm font-semibold">{token.name}</span>
               <span className="text-xs font-light">{token.symbol}</span>
@@ -418,10 +438,22 @@ export const MarketModal = ({
               />
             </DialogTitle>
             <div className="text-sm flex flex-col gap-8 pt-10 text-primary">
-              {isSupply && <SupplyForm token={token} market={market} />}
-              {isWithdraw && <WithdrawForm token={token} market={market} />}
-              {isBorrowTab && <BorrowForm token={token} market={market} />}
-              {isRepay && <RepayForm token={token} market={market} />}
+              {isSupply && (
+                <SupplyForm token={token} market={market} marketID={marketID} />
+              )}
+              {isWithdraw && (
+                <WithdrawForm
+                  token={token}
+                  market={market}
+                  marketID={marketID}
+                />
+              )}
+              {isBorrowTab && (
+                <BorrowForm token={token} market={market} marketID={marketID} />
+              )}
+              {isRepay && (
+                <RepayForm token={token} market={market} marketID={marketID} />
+              )}
             </div>
           </DialogHeader>
         </div>

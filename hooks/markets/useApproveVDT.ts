@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Address, erc20Abi } from "viem";
 import {
   useAccount,
   useWaitForTransactionReceipt,
@@ -10,40 +9,39 @@ import {
   useCorrectChain,
   useWrapContractAction,
   useApproveToast,
-  useAllowance,
+  useVDTAllowance,
 } from "@/hooks";
-import { getTokenByAddress } from "@/constants";
+import { MARKET_DEFINITIONS, Token, VariableDebtTokenAbi } from "@/constants";
 import { extractError, MAXUINT256, trimmedBn, isAddressValid } from "@/helpers";
-const useApproveToken = (spenderAddress: Address, tokenAddress: Address) => {
+const useApproveVDT = (marketID: string, token: Token) => {
   const { chainIdToUse: chainId } = useCorrectChain();
+  const marketDefinition = MARKET_DEFINITIONS[marketID];
   const { address: approverAddress } = useAccount();
-  const { invalidateAllowanceQuery } = useAllowance(
-    spenderAddress,
-    tokenAddress
-  );
+  const { invalidateVDTAllowanceQuery } = useVDTAllowance(marketID, token);
 
-  const isValidAddress =
-    isAddressValid(approverAddress) &&
-    isAddressValid(spenderAddress) &&
-    isAddressValid(tokenAddress);
+  const isValidAddress = isAddressValid(approverAddress);
 
-  const [approveAmount, setApproveAmount] = useState<bigint>(MAXUINT256);
+  const [approveVDTAmount, setApproveVDTAmount] = useState<bigint>(MAXUINT256);
 
-  const { data: hash, isPending, writeContract, reset } = useWriteContract();
-  const token = getTokenByAddress(tokenAddress);
+  const {
+    data: hash,
+    isPending: isApproveVDTPending,
+    writeContract,
+    reset,
+  } = useWriteContract();
   const { pendingApproveToast, successApproveToast, errorApproveToast } =
     useApproveToast({
       token: token!,
-      amount: trimmedBn(approveAmount, token?.decimals || 0, 2),
+      amount: trimmedBn(approveVDTAmount, token?.decimals || 0, 2),
     });
   const write = () => {
     if (!isValidAddress) return;
     writeContract(
       {
-        address: tokenAddress as `0x${string}`,
-        abi: erc20Abi,
-        functionName: "approve",
-        args: [spenderAddress, approveAmount],
+        address: token.address,
+        abi: VariableDebtTokenAbi,
+        functionName: "approveDelegation",
+        args: [marketDefinition.LOOPING?.CONTRACT!, approveVDTAmount],
         chainId,
       },
       {
@@ -56,10 +54,10 @@ const useApproveToken = (spenderAddress: Address, tokenAddress: Address) => {
       }
     );
   };
-  const approve = useWrapContractAction(write);
+  const approveVDT = useWrapContractAction(write);
 
   const {
-    isLoading: isApproveConfirming,
+    isLoading: isApproveVDTConfirming,
     isSuccess,
     isError,
     error,
@@ -70,7 +68,7 @@ const useApproveToken = (spenderAddress: Address, tokenAddress: Address) => {
   useEffect(() => {
     if (isSuccess || isError) {
       if (isSuccess) {
-        invalidateAllowanceQuery();
+        invalidateVDTAllowanceQuery();
         successApproveToast(hash!);
       }
       if (isError) {
@@ -78,16 +76,16 @@ const useApproveToken = (spenderAddress: Address, tokenAddress: Address) => {
       }
       reset();
     }
-  }, [isSuccess, isError, reset, invalidateAllowanceQuery]);
+  }, [isSuccess, isError, reset, invalidateVDTAllowanceQuery]);
 
   return {
-    invalidateAllowanceQuery,
-    approve,
-    approveAmount,
-    setApproveAmount,
-    isApprovePending: isPending,
-    isApproveConfirming,
+    invalidateVDTAllowanceQuery,
+    approveVDT,
+    approveVDTAmount,
+    setApproveVDTAmount,
+    isApproveVDTPending,
+    isApproveVDTConfirming,
   };
 };
 
-export { useApproveToken };
+export { useApproveVDT };

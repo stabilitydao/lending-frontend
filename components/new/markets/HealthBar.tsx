@@ -1,14 +1,7 @@
 "use client";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { Question } from "@/components/icons/question";
 import { Badge } from "lucide-react";
 import { HEALTHBAR_COLORS, healthData } from "@/constants";
-import { useUserAccountData } from "@/hooks";
+import { useSelectedMarket, useUserAccountData } from "@/hooks";
 import { bnToNumber } from "@/helpers";
 import { StandardTooltip } from "@/components";
 
@@ -84,7 +77,8 @@ export const HealthBarProgress = ({ value }: HealthBarProgressProps) => {
 };
 
 export const HealthBar = () => {
-  const { userAccountData } = useUserAccountData();
+  const { marketID } = useSelectedMarket();
+  const { userAccountData } = useUserAccountData(marketID);
   const healthFactor = bnToNumber(userAccountData?.healthFactor, 18);
 
   return (

@@ -3,13 +3,13 @@ import { bnToNumber } from "@/helpers";
 import { useUserIncentivesDataRaw } from "@/hooks";
 import { Address } from "viem";
 
-const useUserIncentivesData = (token: Token) => {
+const useUserIncentivesData = (marketID: string, token: Token) => {
   token = token.isNative ? token.wrapperToken! : token;
   const {
     isUserIncentivesDataLoading,
     userIncentivesData,
     invalidateUserIncentivesDataRawQuery,
-  } = useUserIncentivesDataRaw();
+  } = useUserIncentivesDataRaw(marketID);
 
   if (isUserIncentivesDataLoading) {
     return {

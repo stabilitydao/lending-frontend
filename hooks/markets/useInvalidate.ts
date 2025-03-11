@@ -1,5 +1,4 @@
 import {
-  useSelectedMarket,
   useMarketsRaw,
   useTokenBalance,
   useUserAccountData,
@@ -9,13 +8,12 @@ import {
 import { Token } from "@/constants";
 import { useCallback } from "react";
 
-const useInvalidate = (token: Token) => {
-  const { invalidateMarketsRawQuery } = useMarketsRaw();
-  const { invalidateUserDataRawQuery } = useUserDataRaw();
-  const { invalidateUserAccountDataQuery } = useUserAccountData();
+const useInvalidate = (marketID: string, token: Token) => {
+  const { invalidateMarketsRawQuery } = useMarketsRaw(marketID);
+  const { invalidateUserDataRawQuery } = useUserDataRaw(marketID);
+  const { invalidateUserAccountDataQuery } = useUserAccountData(marketID);
   const { invalidateTokenBalanceQuery } = useTokenBalance(token);
-  const { invalidateIncentivesDataQuery } = useIncentivesData();
-  const { marketID } = useSelectedMarket();
+  const { invalidateIncentivesDataQuery } = useIncentivesData(marketID);
 
   const invalidateMarketState = useCallback(() => {
     invalidateMarketsRawQuery(marketID);

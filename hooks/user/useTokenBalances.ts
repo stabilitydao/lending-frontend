@@ -23,8 +23,8 @@ const useTokenBalances = (tokenAddresses: Address[]) => {
     })),
   });
   const isLoading = queryResults.some((result) => result.isLoading);
-  const balancesArray: { token: string; amount: bigint }[] = [];
-  const balancesObj: { [token: string]: bigint } = {};
+  const balancesArray: { token: Address; amount: bigint }[] = [];
+  const balancesObj: { [token: Address]: bigint } = {};
   if (!isLoading) {
     queryResults.forEach((result, index) => {
       const tokenAddress = validTokenAddresses[index];

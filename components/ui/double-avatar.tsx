@@ -12,13 +12,15 @@ export const DoubleAvatar = ({
   secondSrc: string;
   firstAlt: string;
   secondAlt: string;
-  size?: "small" | "default" | "large"; // Define possible size options
+  size?: "small" | "medium" | "default" | "large"; // Define possible size options
 }) => {
   // Define size classes
   const sizeClasses = {
     small: "ml-2 mr-1 h-4 w-4 p-0.5 -right-2",
     default: "h-10 w-10",
     large: "h-12 w-12",
+    // h6, w6. some correction needed to make everything else fit
+    medium: "h-6 w-6 p-1 -right-2",
   };
 
   return (

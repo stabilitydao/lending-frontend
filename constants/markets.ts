@@ -18,6 +18,7 @@ import {
   VAULT_SWAPX_ICHI_USDC_USDT_USDC,
   VAULT_SWAPX_ICHI_USDC_USDT_USDT,
   VAULT_BEETS_USDC_SCUSD,
+  wS,
 } from "@/constants";
 
 export const MARKET_DEFINITIONS: {
@@ -30,38 +31,55 @@ export const MARKET_DEFINITIONS: {
     NATIVE_TOKEN_GATEWAY: "0xbE0B2230B842be6A37188038a58755534dC9E999",
     chainId: sonic.id,
   },
-  // "Sonic Market": {
-  //   tokens: [
-  //     VAULT_SWAPX_ICHI_WS_OS_OS.receipt,
-  //     VAULT_SWAPX_ICHI_WS_OS_WS.receipt,
-  //     VAULT_SWAPX_ICHI_WS_STS_STS.receipt,
-  //     VAULT_SWAPX_ICHI_WS_STS_WS.receipt,
-  //     S,
-  //     wOS,
-  //     stS,
-  //   ],
-  //   POOL_ADDRESS_PROVIDER: "0x8047c361318704340d8736D187Fc80a0277687d5",
-  //   AAVE_POOL: "0xF2C096338B9bEbBbEc6c4e5d0Fd58ee5Af2E4a45",
-  //   NATIVE_TOKEN_GATEWAY: "0x9318B8D3C7C3Ec17AE3197268EacA80881C69Cd7",
-  //   chainId: sonic.id,
-  // },
-  // "Stable Market": {
-  //   tokens: [
-  //     VAULT_SWAPX_ICHI_USDC_SCUSD_SCUSD.receipt,
-  //     VAULT_SWAPX_ICHI_USDC_SCUSD_USDC.receipt,
-  //     VAULT_SWAPX_ICHI_USDC_USDT_USDC.receipt,
-  //     VAULT_SWAPX_ICHI_USDC_USDT_USDT.receipt,
-  //     VAULT_BEETS_USDC_SCUSD.receipt,
-  //     scUSD,
-  //     USDCe,
-  //     USDT,
-  //   ],
-  //   POOL_ADDRESS_PROVIDER: "0xEe2d2A17216830Add21cC3616552266d7233989e",
-  //   AAVE_POOL: "0xAC00f2Bd7849f7Ce2C8EEDCe7C962c9535b4c606",
-  //   NATIVE_TOKEN_GATEWAY: "0x0",
-  //   LOOPING_CONTRACT: "0x4F96eCDd0d94f1dA972B5bc942002f29dFd2EF65",
-  //   chainId: sonic.id,
-  // },
+  "Sonic Market": {
+    tokens: [
+      // VAULT_SWAPX_ICHI_WS_OS_OS.receipt,
+      // VAULT_SWAPX_ICHI_WS_OS_WS.receipt,
+      VAULT_SWAPX_ICHI_WS_STS_STS.receipt,
+      VAULT_SWAPX_ICHI_WS_STS_WS.receipt,
+      S,
+      // wOS,
+      stS,
+    ],
+    POOL_ADDRESS_PROVIDER: "0x64592138883327Ab8009E458231a4b731f2FD8F5",
+    AAVE_POOL: "0x3C7FEA4d4c3EbBf19E73b6C99CE4B8884B87Bfa6",
+    NATIVE_TOKEN_GATEWAY: "0x70a0D1635b810F6ca284D4982C32C839587a538F",
+    LOOPING: {
+      CONTRACT: "0x1f8da55b2FcEaD1022F3dc31a595A006238c978D",
+      VAULTS: [
+        VAULT_SWAPX_ICHI_WS_STS_STS.receipt,
+        VAULT_SWAPX_ICHI_WS_STS_WS.receipt,
+      ],
+      IO: [wS, stS],
+    },
+    chainId: sonic.id,
+  },
+  "Stable Market": {
+    tokens: [
+      VAULT_SWAPX_ICHI_USDC_SCUSD_SCUSD.receipt,
+      VAULT_SWAPX_ICHI_USDC_SCUSD_USDC.receipt,
+      VAULT_SWAPX_ICHI_USDC_USDT_USDC.receipt,
+      VAULT_SWAPX_ICHI_USDC_USDT_USDT.receipt,
+      // VAULT_BEETS_USDC_SCUSD.receipt,
+      scUSD,
+      USDCe,
+      USDT,
+    ],
+    POOL_ADDRESS_PROVIDER: "0xd01A2DE5e1Dd7a0826D8B3367A82FE12b4A640b8",
+    AAVE_POOL: "0x220fc1bEcC9bbE1a9dD81795F0505cC36E1B2563",
+    NATIVE_TOKEN_GATEWAY: "0x0",
+    LOOPING: {
+      CONTRACT: "0xa3C5cfEaeE99D59195c0B34Aa37F3d231AAA2D85",
+      VAULTS: [
+        VAULT_SWAPX_ICHI_USDC_SCUSD_SCUSD.receipt,
+        VAULT_SWAPX_ICHI_USDC_SCUSD_USDC.receipt,
+        VAULT_SWAPX_ICHI_USDC_USDT_USDC.receipt,
+        VAULT_SWAPX_ICHI_USDC_USDT_USDT.receipt,
+      ],
+      IO: [scUSD, USDCe, USDT],
+    },
+    chainId: sonic.id,
+  },
 };
 
 export const DEFAULT_MARKET_ID = "Main Protocol";

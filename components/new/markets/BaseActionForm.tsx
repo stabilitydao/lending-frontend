@@ -1,18 +1,15 @@
 "use client";
-import React, { useEffect, useRef } from "react";
 import { ChainButton } from "@/components/ui/button";
-import { PercentageBar } from "@/components/ui/percentage-bar";
 import { ArrowRight, CheckCheck } from "lucide-react";
 import { MarketInfo, UserDisplayData } from "@/types";
 import { bnToNumber, bnToStr, formatSuffix, trimmedNumber } from "@/helpers";
 import Image from "next/image";
 import { healthData, Token } from "@/constants";
-import { MaxInput } from "@/components";
+import { MaxInputWithSlider } from "@/components";
 
 const HealthDisplay = ({ healthFactor }: { healthFactor: number }) => (
   <span className={healthData(healthFactor).text}>
     {healthFactor > 5 ? ">5" : trimmedNumber(healthFactor, 2)}
-    {/* {trimmedNumber(healthFactor, 2)} */}
   </span>
 );
 
@@ -51,24 +48,6 @@ export function BaseActionForm({
   actionLabel = title,
   displayData,
 }: BaseActionFormProps) {
-  const numericAmount = parseFloat(amount) || 0;
-  const numericBalance = bnToNumber(balance, token.decimals);
-
-  let sliderValue = (numericAmount / numericBalance) * 100;
-  if (isNaN(sliderValue)) sliderValue = 0;
-  if (sliderValue < 0) sliderValue = 0;
-  if (sliderValue > 100) sliderValue = 100;
-
-  const handleSliderChange = (newPercentage: number) => {
-    if (newPercentage == 100) {
-      onChangeAmount(bnToStr(balance, token.decimals));
-      return;
-    }
-    const fraction = newPercentage / 100;
-    const newAmount = fraction * numericBalance;
-    onChangeAmount(newAmount.toFixed(token.decimals));
-  };
-
   const hasBorrowLimitCurrent =
     displayData.totalDebt.current + displayData.borrowLimit.current > 0;
   const hasBorrowLimitFuture =
@@ -91,16 +70,12 @@ export function BaseActionForm({
         </div>
       </div>
 
-      <div className="flex flex-col gap-8 pt-8">
-        <MaxInput
-          amount={amount}
-          max={bnToStr(balance, token.decimals)}
-          balance={bnToStr(balance, token.decimals)}
-          onChange={onChangeAmount}
-        />
-
-        <PercentageBar percentage={sliderValue} onChange={handleSliderChange} />
-      </div>
+      <MaxInputWithSlider
+        amount={amount}
+        max={bnToStr(balance, token.decimals)}
+        onChange={onChangeAmount}
+        precision={token.decimals}
+      />
       <div>
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between">

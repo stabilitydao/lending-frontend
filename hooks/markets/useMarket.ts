@@ -1,6 +1,16 @@
 import { Address } from "viem";
-import { useIncentivesData, useMarketsRaw, useMerklAPRs } from "@/hooks";
-import { getTokenByAddress, Token } from "@/constants";
+import {
+  useIncentivesData,
+  useMarketsRaw,
+  useMerklAPRs,
+  useVaultsBreakdown,
+} from "@/hooks";
+import {
+  getTokenByAddress,
+  getVaultByAddress,
+  MARKET_DEFINITIONS,
+  Token,
+} from "@/constants";
 import { MarketInfo } from "@/types";
 import { bnToNumber } from "@/helpers";
 
@@ -8,17 +18,18 @@ const RAY = 1e27;
 const BASIS_POINTS_DIVISOR = BigInt(10000);
 const PRICE_DECIMALS = 8;
 
-const useMarkets = () => {
+const useMarkets = (marketID: string) => {
   const { isMarketsDataLoading, marketsData, invalidateMarketsRawQuery } =
-    useMarketsRaw();
+    useMarketsRaw(marketID);
   const { merklAPRs, isMerklAPRsLoading, invalidateMerklAPRsQuery } =
     useMerklAPRs();
+  const { vaultsBreakdown } = useVaultsBreakdown();
   const {
     supplyIncentives,
     borrowIncentives,
     isIncentivesDataLoading,
     invalidateIncentivesDataQuery,
-  } = useIncentivesData();
+  } = useIncentivesData(marketID);
 
   const markets: Record<
     Address,
@@ -43,7 +54,13 @@ const useMarkets = () => {
     invalidateMerklAPRsQuery();
   };
 
-  if (!marketsData || !merklAPRs || !supplyIncentives || !borrowIncentives)
+  if (
+    !marketsData ||
+    !merklAPRs ||
+    !supplyIncentives ||
+    !borrowIncentives ||
+    !vaultsBreakdown
+  )
     return {
       isMarketsDataLoading:
         isMarketsDataLoading || isMerklAPRsLoading || isIncentivesDataLoading,
@@ -56,6 +73,9 @@ const useMarkets = () => {
       console.error("Token not found", rawMarket.underlyingAsset);
       continue;
     }
+    const vaultBreakdown = token.pair
+      ? vaultsBreakdown[getVaultByAddress(token.address)!.id]
+      : undefined;
 
     const symbol = token?.symbol ?? rawMarket.symbol;
     const name = rawMarket.name;
@@ -68,11 +88,11 @@ const useMarkets = () => {
     const totalBorrowed = stableDebt + variableDebt;
     const totalSupplied = rawMarket.atokenTotalSupply;
 
-    const supplyAPY = (Number(rawMarket.liquidityRate) * 100) / RAY;
-    let borrowAPY = -(Number(rawMarket.variableBorrowRate) * 100) / RAY;
+    const supplyAPR = (Number(rawMarket.liquidityRate) * 100) / RAY;
+    let borrowAPR = -(Number(rawMarket.variableBorrowRate) * 100) / RAY;
 
     const collateralFactor =
-      rawMarket.baseLTVasCollateral / BASIS_POINTS_DIVISOR;
+      Number(rawMarket.baseLTVasCollateral) / Number(BASIS_POINTS_DIVISOR);
 
     const price = rawMarket.priceInMarketReferenceCurrency;
     const totalSuppliedValue = bnToNumber(
@@ -101,22 +121,33 @@ const useMarkets = () => {
       merklAPRs[rawMarket.variableDebtTokenAddress.toLowerCase() as Address]
         ?.borrow || 0;
 
-    const totalSupplyAPR = supplyAPY + incentiveSupplyAPR + merklSupplyAPR;
-    const totalBorrowAPR = borrowAPY + incentiveBorrowAPR + merklBorrowAPR;
+    let vaultAPR = 0;
+    if (vaultBreakdown) {
+      const cpy = vaultBreakdown.compoundingsPerYear;
+      vaultAPR = cpy * (Math.pow(1 + vaultBreakdown.apy, 1 / cpy) - 1) * 100;
+    }
 
-    const breakdown: MarketInfo["breakdown"] = {};
+    const totalSupplyAPR =
+      supplyAPR + incentiveSupplyAPR + merklSupplyAPR + vaultAPR;
+    const totalBorrowAPR = borrowAPR + incentiveBorrowAPR + merklBorrowAPR;
+
+    const breakdown: MarketInfo["breakdown"] = {
+      supply: {},
+      borrow: {},
+    };
 
     breakdown.supply = Object.fromEntries(
       Object.entries({
-        "Supply APR": supplyAPY,
+        "Supply APR": supplyAPR,
         "Incentives APR": incentiveSupplyAPR,
         "Merkl Rewards": merklSupplyAPR,
+        "Vault APR": vaultAPR,
       }).filter(([_, value]) => value !== 0)
     );
 
     breakdown.borrow = Object.fromEntries(
       Object.entries({
-        "Borrow Rate": borrowAPY,
+        "Borrow Rate": borrowAPR,
         "Incentives APR": incentiveBorrowAPR,
         "Merkl Rewards": merklBorrowAPR,
       }).filter(([_, value]) => value !== 0)
@@ -169,7 +200,7 @@ const useMarkets = () => {
         },
         APR: totalBorrowAPR,
       },
-      collateralFactor: Number(collateralFactor),
+      collateralFactor,
       isBorrowEnabled: rawMarket.borrowingEnabled,
       breakdown,
     };
@@ -197,11 +228,11 @@ const useMarkets = () => {
   };
 };
 
-const useMarket = (token: Token) => {
+const useMarket = (marketID: string, token: Token) => {
   if (token.isNative) {
     token = token.wrapperToken!;
   }
-  const { isMarketsDataLoading, markets } = useMarkets();
+  const { isMarketsDataLoading, markets } = useMarkets(marketID);
   return {
     isMarketsDataLoading,
     ...markets?.[token.address],

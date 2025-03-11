@@ -30,6 +30,7 @@ const useAllowance = (spenderAddress: Address, tokenAddress: Address) => {
       queryKey: queryKeys.user
         .chain(approverAddress!, chainId)
         ._ctx.tokenAllowance(tokenAddress, spenderAddress).queryKey,
+      refetchType: "active",
     });
   }, [approverAddress, chainId, queryClient, spenderAddress, tokenAddress]);
 

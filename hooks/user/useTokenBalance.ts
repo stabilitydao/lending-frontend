@@ -15,11 +15,12 @@ const useTokenBalance = (token: Token) => {
     refetchInterval: 15000,
   });
   const invalidateTokenBalanceQuery = useCallback(() => {
-    client.invalidateQueries(
-      queryKeys.user
+    client.invalidateQueries({
+      queryKey: queryKeys.user
         .chain(userAddress!, token.chainId)
-        ._ctx.tokenBalance(token.address)
-    );
+        ._ctx.tokenBalance(token.address).queryKey,
+      refetchType: "active",
+    });
   }, [client, token.address, userAddress, balanceBn]);
   return {
     isBalanceLoading: isLoading,

@@ -40,8 +40,8 @@ export type MarketInfo = {
   collateralFactor: number;
   isBorrowEnabled: boolean;
   breakdown: {
-    supply?: Record<string, number>;
-    borrow?: Record<string, number>;
+    supply: Record<string, number>;
+    borrow: Record<string, number>;
   };
 };
 
@@ -70,6 +70,10 @@ export type MarketDefinition = {
   POOL_ADDRESS_PROVIDER: Address;
   AAVE_POOL: Address;
   NATIVE_TOKEN_GATEWAY: Address;
-  LOOPING_CONTRACT?: Address;
+  LOOPING?: {
+    CONTRACT: Address;
+    VAULTS: Token[];
+    IO: Token[];
+  };
   chainId: Chain["id"];
 };

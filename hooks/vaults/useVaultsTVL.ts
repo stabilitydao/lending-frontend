@@ -13,6 +13,7 @@ const useVaultsTVL = () => {
   const invalidateVaultsTVLQuery = useCallback(async () => {
     queryClient.invalidateQueries({
       queryKey: queryKeys.vaults.tvl().queryKey,
+      refetchType: "active",
     });
   }, [queryClient]);
   return {

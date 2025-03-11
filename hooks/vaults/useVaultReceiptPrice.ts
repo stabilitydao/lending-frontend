@@ -40,6 +40,7 @@ const useVaultsReceiptPrice = (
         invalidateVaultReceiptPriceQuery: () => {
           queryClient.invalidateQueries({
             queryKey: queryKeys.vaults.vaultReceiptPrices(chainId).queryKey,
+            refetchType: "active",
           });
         },
       };
@@ -52,6 +53,7 @@ const useVaultsReceiptPrice = (
   const invalidateVaultsReceiptPriceQuery = useCallback(() => {
     queryClient.invalidateQueries({
       queryKey: queryKeys.vaults.vaultReceiptPrices(chainId).queryKey,
+      refetchType: "active",
     });
   }, [queryClient, chainId]);
 

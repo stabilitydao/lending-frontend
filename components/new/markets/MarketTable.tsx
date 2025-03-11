@@ -11,7 +11,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { MarketModal } from "./MarketModal";
 import { useMarket, useMarkets, useSearch, useSelectedMarket } from "@/hooks";
 import { formatSuffix, trimmedNumber } from "@/helpers";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   HealthBar,
   ApyBreakdown,
@@ -31,12 +31,15 @@ const MarketLine = ({
   token,
   onSelectToken,
   withVault = false,
+  onClickLoopingButton,
 }: {
   token: Token;
   onSelectToken: (token: Token) => void;
   withVault?: boolean;
+  onClickLoopingButton: () => void;
 }) => {
-  const { market, isMarketLoading } = useMarket(token);
+  const { marketID, marketDefinition } = useSelectedMarket();
+  const { market, isMarketLoading } = useMarket(marketID, token);
   if (isMarketLoading || !market) return null;
   const supplyPercentage = Math.min(
     (market.supply.tvl.amount / market.supply.cap.amount) * 100,
@@ -64,41 +67,47 @@ const MarketLine = ({
           ${formatSuffix(market.supply.tvl.value, "money")}
         </p>
       </div>
-      <div className="flex flex-row items-end justify-center">
-        <p className="text-md">({trimmedNumber(supplyPercentage, 2)}% full)</p>
-      </div>
-      <StandardTooltip>
-        <div className="flex flex-col gap-2">
-          <div className={`text-[16px] text-center mb-[10px] ${supplyColor}`}>
-            {trimmedNumber(100 - supplyPercentage, 2)}% remaining
-          </div>
-          <p className="flex justify-between w-full gap-1">
-            <div>Cap:</div>
-            <div className="pl-[50px]">
-              {formatSuffix(market.supply.cap.amount, "abbreviated")}{" "}
-              {token.symbol} ($
-              {formatSuffix(market.supply.cap.value, "money")})
-            </div>
+      {!token.pair && (
+        <div className="flex flex-row items-end justify-center">
+          <p className="text-md">
+            ({trimmedNumber(supplyPercentage, 2)}% full)
           </p>
-
-          <div className="flex justify-between w-full gap-1">
-            <div>Utilization:</div>
-            <div className="pl-[50px]">
-              {formatSuffix(market.supply.tvl.amount, "abbreviated")}{" "}
-              {token.symbol} ($
-              {formatSuffix(market.supply.tvl.value, "money")})
-            </div>
-          </div>
-          <div className="flex justify-between w-full gap-1">
-            <div>Remaining:</div>
-            <div className="pl-[50px]">
-              {formatSuffix(market.supply.remaining.amount, "abbreviated")}{" "}
-              {token.symbol} ($
-              {formatSuffix(market.supply.remaining.value, "money")})
-            </div>
-          </div>
         </div>
-      </StandardTooltip>
+      )}
+      {!token.pair && (
+        <StandardTooltip>
+          <div className="flex flex-col gap-2">
+            <div className={`text-[16px] text-center mb-[10px] ${supplyColor}`}>
+              {trimmedNumber(100 - supplyPercentage, 2)}% remaining
+            </div>
+            <p className="flex justify-between w-full gap-1">
+              <div>Cap:</div>
+              <div className="pl-[50px]">
+                {formatSuffix(market.supply.cap.amount, "abbreviated")}{" "}
+                {token.symbol} ($
+                {formatSuffix(market.supply.cap.value, "money")})
+              </div>
+            </p>
+
+            <div className="flex justify-between w-full gap-1">
+              <div>Utilization:</div>
+              <div className="pl-[50px]">
+                {formatSuffix(market.supply.tvl.amount, "abbreviated")}{" "}
+                {token.symbol} ($
+                {formatSuffix(market.supply.tvl.value, "money")})
+              </div>
+            </div>
+            <div className="flex justify-between w-full gap-1">
+              <div>Remaining:</div>
+              <div className="pl-[50px]">
+                {formatSuffix(market.supply.remaining.amount, "abbreviated")}{" "}
+                {token.symbol} ($
+                {formatSuffix(market.supply.remaining.value, "money")})
+              </div>
+            </div>
+          </div>
+        </StandardTooltip>
+      )}
     </div>
   );
   const borrowPercentage = Math.min(
@@ -166,11 +175,54 @@ const MarketLine = ({
     </div>
   );
 
-  const supplyAPR = (
+  const maxLeverage = (1 / (1 - market.collateralFactor) - 1) * 0.95 + 1;
+
+  const baseAPR =
+    market.supply.APR > 0.01 ? trimmedNumber(market.supply.APR, 2) : "<0.01";
+  const leveragedAPR =
+    market.supply.APR > 0.01
+      ? trimmedNumber(market.supply.APR * maxLeverage, 2)
+      : "<0.01";
+  const formattedMaxLeverage = trimmedNumber(maxLeverage, 2);
+  const hasMerkl = market.breakdown.supply["Merkl Rewards"] > 0;
+
+  const supplyAPR = token.pair ? (
+    <div className="flex flex-col gap-1">
+      <div className="flex flex-row gap-1 items-center text-gray-500">
+        <span>{baseAPR}% (x1)</span>
+        <ApyBreakdown
+          breakdown={market.breakdown.supply}
+          note={hasMerkl && <MerklNote />}
+        />
+      </div>
+      <div className="flex flex-row gap-0 items-center">
+        <span className="text-green-500">{leveragedAPR}%</span>
+        <span className="px-1">(x{formattedMaxLeverage})</span>
+        <ApyBreakdown
+          breakdown={market.breakdown.supply}
+          note={
+            <div>
+              {hasMerkl && <MerklNote />}
+              {
+                <div className="text-sm w-[320px]">
+                  Using the leverage button lets you loop your deposits, getting
+                  you up to {formattedMaxLeverage}x the APR that you would have
+                  gotten with a single deposit.
+                </div>
+              }
+            </div>
+          }
+        />
+      </div>
+    </div>
+  ) : (
+    // Single line for non-paired tokens in green
     <div className="flex flex-row gap-1 items-center text-green-500">
-      {market.supply.APR > 0.01 ? trimmedNumber(market.supply.APR, 2) : "<0.01"}
-      %
-      <ApyBreakdown breakdown={market.breakdown.supply} note={<MerklNote />} />
+      <span>{baseAPR}%</span>
+      <ApyBreakdown
+        breakdown={market.breakdown.supply}
+        note={hasMerkl && <MerklNote />}
+      />
     </div>
   );
 
@@ -222,19 +274,53 @@ const MarketLine = ({
       <TableCell>{tokenDisplay}</TableCell>
       <TableCell>{token.pair ? null : <FullEligibleRewards />}</TableCell>
       <TableCell>{supplyInfo}</TableCell>
-      <TableCell>{token.pair ? null : supplyAPR}</TableCell>
+      <TableCell>{supplyAPR}</TableCell>
       <TableCell>{token.pair ? null : borrowInfo}</TableCell>
       <TableCell>{token.pair ? null : borrowAPR}</TableCell>
+      {withVault && (
+        <TableCell
+          className="flex justify-left "
+          onClick={(e) => {
+            e.stopPropagation();
+            onClickLoopingButton();
+          }}
+        >
+          {token.pair && marketDefinition.LOOPING?.VAULTS.includes(token) && (
+            <LoopingButton onClick={onClickLoopingButton!} />
+          )}
+        </TableCell>
+      )}
     </TableRow>
   );
 };
 export const MarketTable = () => {
   const { marketDefinition, marketID } = useSelectedMarket();
-  const { markets } = useMarkets();
+  const { markets } = useMarkets(marketID);
 
   const [selectedToken, setSelectedToken] = useState<Token>(
     marketDefinition.tokens[0]
   );
+  const [selectedLoopingVault, setSelectedLoopingVault] = useState<Token>(
+    marketDefinition.LOOPING
+      ? marketDefinition.LOOPING.VAULTS[0]
+      : marketDefinition.tokens[1]
+  );
+  const [canUseModal, setCanUseModal] = useState(false);
+
+  useEffect(() => {
+    setSelectedToken(marketDefinition.tokens[0]);
+    setSelectedLoopingVault(
+      marketDefinition.LOOPING
+        ? marketDefinition.LOOPING.VAULTS[0]
+        : marketDefinition.tokens[1]
+    );
+    if (marketDefinition.LOOPING) {
+      setCanUseModal(true);
+    } else {
+      setCanUseModal(false);
+    }
+  }, [marketDefinition]);
+
   const [isModalOpen, setModalOpen] = useState(false);
   const [isLoopingModalOpen, setLoopingModalOpen] = useState(false);
   const { filter } = useSearch("markets", (tokens: Token) => tokens.name);
@@ -317,6 +403,11 @@ export const MarketTable = () => {
               setSortBy={setSortBy}
               defaultOrder="desc"
             />
+            {isWithVaults && (
+              <TableHead className="text-muted">
+                <div className="flex items-center gap-2">Leverage</div>
+              </TableHead>
+            )}
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -326,13 +417,14 @@ export const MarketTable = () => {
               token={token}
               onSelectToken={onSelectToken}
               withVault={isWithVaults}
+              onClickLoopingButton={() => {
+                setSelectedLoopingVault(token);
+                onClickLoopingButton();
+              }}
             />
           ))}
         </TableBody>
       </Table>
-      {marketDefinition.LOOPING_CONTRACT && (
-        <LoopingButton onClick={onClickLoopingButton} />
-      )}
       <HealthBar />
       <MarketModal
         token={selectedToken}
@@ -340,10 +432,13 @@ export const MarketTable = () => {
         onClose={closeModal}
         setSelectedToken={setSelectedToken}
       />
-      <LoopingModal
-        isVisible={isLoopingModalOpen}
-        onClose={closeLoopingModal}
-      />
+      {canUseModal && (
+        <LoopingModal
+          isVisible={isLoopingModalOpen}
+          onClose={closeLoopingModal}
+          vault={selectedLoopingVault}
+        />
+      )}
     </div>
   );
 };

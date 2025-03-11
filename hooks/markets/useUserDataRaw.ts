@@ -1,14 +1,12 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useSelectedMarket } from "@/hooks";
 import { queryKeys } from "@/queries";
 import { useAccount } from "wagmi";
 import { isAddressValid } from "@/helpers";
 import { useCallback } from "react";
 
-const useUserDataRaw = () => {
+const useUserDataRaw = (marketID: string) => {
   const queryClient = useQueryClient();
   const { address } = useAccount();
-  const { marketID } = useSelectedMarket();
   const { data: userData, isLoading: isUserDataLoading } = useQuery({
     ...queryKeys.markets.market(marketID)._ctx.userReservesData(address!),
     enabled: isAddressValid(address),
@@ -22,6 +20,7 @@ const useUserDataRaw = () => {
         queryKey: queryKeys.markets
           .market(marketID)
           ._ctx.userReservesData(address!).queryKey,
+        refetchType: "active",
       });
     },
     [queryClient, address, marketID]
