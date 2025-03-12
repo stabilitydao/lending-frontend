@@ -1,15 +1,21 @@
 "use client";
 import { ChainButton } from "@/components/ui/button";
 import { ArrowRight, CheckCheck } from "lucide-react";
-import { MarketInfo, UserDisplayData } from "@/types";
+import { HealthBarDefinition, MarketInfo, UserDisplayData } from "@/types";
 import { bnToNumber, bnToStr, formatSuffix, trimmedNumber } from "@/helpers";
 import Image from "next/image";
-import { healthData, Token } from "@/constants";
+import { Token } from "@/constants";
 import { MaxInputWithSlider } from "@/components";
 
-const HealthDisplay = ({ healthFactor }: { healthFactor: number }) => (
-  <span className={healthData(healthFactor).text}>
-    {healthFactor > 5 ? ">5" : trimmedNumber(healthFactor, 2)}
+const HealthDisplay = ({
+  healthBarDefinition,
+  healthFactor,
+}: {
+  healthBarDefinition: HealthBarDefinition;
+  healthFactor: number;
+}) => (
+  <span className={healthBarDefinition.text(healthFactor)}>
+    {healthBarDefinition.display(healthFactor)}
   </span>
 );
 
@@ -29,6 +35,7 @@ interface BaseActionFormProps {
   actionLabel?: string;
   actionIcon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   displayData: UserDisplayData;
+  healthBarDefinition: HealthBarDefinition;
 }
 
 export function BaseActionForm({
@@ -47,6 +54,7 @@ export function BaseActionForm({
   approveLabel = "Approve",
   actionLabel = title,
   displayData,
+  healthBarDefinition,
 }: BaseActionFormProps) {
   const hasBorrowLimitCurrent =
     displayData.totalDebt.current + displayData.borrowLimit.current > 0;
@@ -185,9 +193,15 @@ export function BaseActionForm({
           <div className="flex items-center justify-between">
             <span className="font-semibold">Health Factor</span>
             <div className="flex items-center gap-2">
-              <HealthDisplay healthFactor={displayData.healthFactor.current} />
+              <HealthDisplay
+                healthFactor={displayData.healthFactor.current}
+                healthBarDefinition={healthBarDefinition}
+              />
               <ArrowRight className="w-4 h-4" />
-              <HealthDisplay healthFactor={displayData.healthFactor.future} />
+              <HealthDisplay
+                healthFactor={displayData.healthFactor.future}
+                healthBarDefinition={healthBarDefinition}
+              />
             </div>
           </div>
         </div>
