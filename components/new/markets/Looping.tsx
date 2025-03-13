@@ -615,7 +615,12 @@ export const LoopingModal = ({
                     borrowInfo={borrowInfo}
                     borrowAmount={leverage}
                     setBorrowAmount={setLeverage}
-                    boostedAPR={(market?.supply.APR || 0) * Number(leverage)}
+                    boostedAPR={
+                      (market?.supply.APR || 0) * Number(leverage) +
+                      (borrowInfo[borrowToken.address.toLowerCase() as Address]
+                        ?.borrowAPR || 0) *
+                        (Number(leverage) - 1)
+                    }
                   />
                   <div className="flex flex-row w-full">
                     <div className="w-full" />

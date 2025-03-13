@@ -146,6 +146,8 @@ export const formatSuffix = (
       }
     case num === 0:
       return "0";
+    case num < 0:
+      return `${num.toFixed(2)}`;
     default:
       return null;
   }

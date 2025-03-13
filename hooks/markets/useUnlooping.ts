@@ -315,20 +315,17 @@ const useUnlooping = (marketID: string, borrowToken: Token) => {
     const collateralPrice = prices[collateralTokenAddress] || BigInt(0);
     const borrowPrice = prices[borrowTokenAddress];
 
-    const collateralAmountBn =
+    const collateralAmountBn = minBn(
       (strToBn(repayAmount, 0) *
         borrowPrice *
         BigInt(10 ** collateralToken.decimals) *
         BigInt(1e4)) /
-      collateralPrice /
-      collateralMarketData!.baseLTVasCollateral;
-
-    setComputedCollateralAmountBn(
-      minBn(
-        collateralAmountBn,
-        collateralTokenUserData?.aTokenBalance || BigInt(0)
-      )
+        collateralPrice /
+        collateralMarketData!.baseLTVasCollateral,
+      collateralTokenUserData?.aTokenBalance || BigInt(0)
     );
+
+    setComputedCollateralAmountBn(collateralAmountBn);
 
     const { tokens, amounts } = (
       await ClientMap[146].readContract({
@@ -422,20 +419,20 @@ const useUnlooping = (marketID: string, borrowToken: Token) => {
   };
 
   const confirm = async () => {
-    console.log({
-      address: unloopingContract,
-      args: [
-        {
-          vicunaVault: collateralTokenAddress,
-          withdrawAssetAToken: collateralATokenAddress,
-          withdrawAmount: computedCollateralAmountBn,
-          borrowAsset: borrowTokenAddress,
-          repayAmount: repayAmountBn,
-          swapParams: odosQuote,
-        },
-      ],
-      chainId: marketDefinition.chainId,
-    });
+    // console.log({
+    //   address: unloopingContract,
+    //   args: [
+    //     {
+    //       vicunaVault: collateralTokenAddress,
+    //       withdrawAssetAToken: collateralATokenAddress,
+    //       withdrawAmount: computedCollateralAmountBn,
+    //       borrowAsset: borrowTokenAddress,
+    //       repayAmount: repayAmountBn,
+    //       swapParams: odosQuote,
+    //     },
+    //   ],
+    //   chainId: marketDefinition.chainId,
+    // });
     writeContract(
       {
         abi: AutoDeleveragerAbi,
