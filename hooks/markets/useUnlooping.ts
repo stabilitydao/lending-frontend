@@ -394,10 +394,13 @@ const useUnlooping = (marketID: string, borrowToken: Token) => {
       repayAmountBn * borrowPrice,
       borrowToken.decimals + 8
     );
-    let nonSwappedValue = bnToNumber(
-      receivedFromLPBreak * prices[otherAddress.toLowerCase() as Address],
-      borrowToken.decimals + 8
-    );
+
+    let nonSwappedValue = receivedFromLPBreak
+      ? bnToNumber(
+          receivedFromLPBreak * prices[otherAddress.toLowerCase() as Address],
+          borrowToken.decimals + 8
+        )
+      : 0;
     let collateralBackUSDMinValue =
       nonSwappedValue +
       Number(odosQuoteJson.outValues[0]) * (1 - slippageInPercent / 100) -

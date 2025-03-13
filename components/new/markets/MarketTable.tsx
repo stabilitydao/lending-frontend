@@ -68,14 +68,16 @@ const MarketLine = ({
   const supplyInfo = (
     <div className="flex flex-row gap-1 items-center">
       <div className={withVault ? "w-[70px]" : "w-[60px]"}>
-        <p className="text-md">
-          {formatSuffix(
-            market.supply.tvl.amount,
-            "linkedToMoney",
-            market.supply.tvl.value
-          )}
-        </p>
-        <p className="text-xs font-light">
+        {!token.pair && (
+          <p className="text-md">
+            {formatSuffix(
+              market.supply.tvl.amount,
+              "linkedToMoney",
+              market.supply.tvl.value
+            )}
+          </p>
+        )}
+        <p className={token.pair ? "text-md" : "text-xs font-light"}>
           ${formatSuffix(market.supply.tvl.value, "money")}
         </p>
       </div>
@@ -293,7 +295,7 @@ const MarketLine = ({
       onClick={() => onSelectToken(token)}
     >
       <TableCell>{tokenDisplay}</TableCell>
-      <TableCell>{token.pair ? null : <FullEligibleRewards />}</TableCell>
+      <TableCell>{<FullEligibleRewards />}</TableCell>
       <TableCell>{supplyInfo}</TableCell>
       <TableCell>{supplyAPR}</TableCell>
       <TableCell>{token.pair ? null : borrowInfo}</TableCell>
