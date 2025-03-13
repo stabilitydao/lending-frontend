@@ -15,6 +15,6 @@ export const getVDTAllowance = async (
         address: vdtAddress,
         abi: VariableDebtTokenAbi,
         functionName: "borrowAllowance",
-        args: [toUser, MARKET_DEFINITIONS[marketID].LOOPING?.CONTRACT],
+        args: [toUser, MARKET_DEFINITIONS[marketID].LOOPING?.LOOPING_CONTRACT],
       })
     : BigInt(0);
