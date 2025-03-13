@@ -4,6 +4,7 @@ import {
   useAllowance,
   useApproveToken,
   useApproveVDT,
+  useIncentivesData,
   useInvalidate,
   useLoopToast,
   useMarketPrices,
@@ -17,7 +18,7 @@ import { Address } from "viem";
 import { bnToNumber, bnToStr, extractError, numToBn, strToBn } from "@/helpers";
 import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 
-export const getOdosQuote = async (
+const getOdosQuote = async (
   inputToken: string,
   outputToken: string,
   inputAmount: string,
@@ -121,7 +122,7 @@ type ReviewDataType = {
   feeUSDValue: number;
 };
 
-export const useLooping = (marketID: string, selectedVault: Token) => {
+const useLooping = (marketID: string, selectedVault: Token) => {
   const marketDefinition = MARKET_DEFINITIONS[marketID];
   const { marketsData } = useMarketsRaw(marketID);
   const feeInPerTenK = 30;
@@ -151,7 +152,7 @@ export const useLooping = (marketID: string, selectedVault: Token) => {
   const tokenNeededForLPAddress =
     tokenNeededForLP.address.toLowerCase() as Address;
 
-  const loopingContract = marketDefinition.LOOPING!.CONTRACT;
+  const loopingContract = marketDefinition.LOOPING!.LOOPING_CONTRACT;
   const availableVaults = marketDefinition.LOOPING!.VAULTS;
   const depositTokens = marketDefinition.LOOPING!.IO;
   const possibleBorrowTokens = marketDefinition.LOOPING!.IO;
@@ -162,6 +163,8 @@ export const useLooping = (marketID: string, selectedVault: Token) => {
     depositTokens.map((token) => token.address)
   );
   const { isPricesLoading, prices } = useMarketPrices(marketID);
+
+  const { supplyIncentives, borrowIncentives } = useIncentivesData(marketID);
 
   const depositInfo = useMemo(() => {
     const info: Record<
@@ -181,7 +184,12 @@ export const useLooping = (marketID: string, selectedVault: Token) => {
   const borrowInfo = useMemo(() => {
     const result: Record<
       Address,
-      { token: Token; maxLeverage: number; available: boolean }
+      {
+        token: Token;
+        maxLeverage: number;
+        available: boolean;
+        borrowAPR: number;
+      }
     > = {};
 
     const market = (marketsData || []).find(
@@ -203,7 +211,12 @@ export const useLooping = (marketID: string, selectedVault: Token) => {
       );
       const price = prices[token.address.toLowerCase() as Address] || BigInt(0);
       if (price === BigInt(0) || !tokenMarket) {
-        result[token.address] = { token, maxLeverage: 0, available: false };
+        result[token.address] = {
+          token,
+          maxLeverage: 0,
+          available: false,
+          borrowAPR: 0,
+        };
         continue;
       }
       const maxAvailable = tokenMarket.availableLiquidity;
@@ -222,6 +235,7 @@ export const useLooping = (marketID: string, selectedVault: Token) => {
         token,
         maxLeverage: Math.floor(tokenLeverage * 100) / 100,
         available,
+        borrowAPR: -(Number(tokenMarket?.variableBorrowRate) * 100) / 1e27,
       };
     }
     return result;
@@ -516,3 +530,5 @@ export const useLooping = (marketID: string, selectedVault: Token) => {
       depositTokenAddress !== tokenNeededForLPAddress,
   };
 };
+
+export { useLooping };

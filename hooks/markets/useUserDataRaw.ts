@@ -14,17 +14,14 @@ const useUserDataRaw = (marketID: string) => {
     refetchInterval: 30000,
     refetchOnWindowFocus: "always",
   });
-  const invalidateUserDataRawQuery = useCallback(
-    async (marketID: string) => {
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.markets
-          .market(marketID)
-          ._ctx.userReservesData(address!).queryKey,
-        refetchType: "active",
-      });
-    },
-    [queryClient, address, marketID]
-  );
+  const invalidateUserDataRawQuery = useCallback(async () => {
+    queryClient.invalidateQueries({
+      queryKey: queryKeys.markets
+        .market(marketID)
+        ._ctx.userReservesData(address!).queryKey,
+      refetchType: "active",
+    });
+  }, [queryClient, address, marketID]);
 
   return {
     isUserDataLoading,

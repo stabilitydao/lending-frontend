@@ -145,7 +145,11 @@ export const LeverageSlider = ({
           </div>
         </div>
         {/* Right side: Leveraged APR */}
-        <div className="text-sm">
+        <div
+          className={`text-sm ${
+            boostedAPR > 0 ? "text-green-500" : "text-red-500"
+          }`}
+        >
           Leveraged APR: {formatSuffix(boostedAPR)}%
         </div>
       </div>

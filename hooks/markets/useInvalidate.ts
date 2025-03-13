@@ -17,7 +17,7 @@ const useInvalidate = (marketID: string, token: Token) => {
 
   const invalidateMarketState = useCallback(() => {
     invalidateMarketsRawQuery(marketID);
-    invalidateUserDataRawQuery(marketID);
+    invalidateUserDataRawQuery();
     invalidateUserAccountDataQuery(marketID);
     invalidateIncentivesDataQuery(marketID);
     invalidateTokenBalanceQuery();

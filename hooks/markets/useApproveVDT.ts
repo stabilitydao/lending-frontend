@@ -44,7 +44,7 @@ const useApproveVDT = (marketID: string, token: Token) => {
         address: token.address,
         abi: VariableDebtTokenAbi,
         functionName: "approveDelegation",
-        args: [marketDefinition.LOOPING?.CONTRACT!, approveVDTAmount],
+        args: [marketDefinition.LOOPING?.LOOPING_CONTRACT!, approveVDTAmount],
         chainId,
       },
       {
