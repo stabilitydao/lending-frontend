@@ -12,6 +12,7 @@ import {
   useOdosQuoteToast,
   useTokenBalance,
   useTokenBalances,
+  useUnloopToast,
   useUserData,
   useUserDataRaw,
   useVDTAllowance,
@@ -450,20 +451,21 @@ const useUnlooping = (marketID: string, borrowToken: Token) => {
         chainId: marketDefinition.chainId,
       },
       {
-        onSuccess: (data) => pendingLoopToast(data),
+        onSuccess: (data) => pendingUnloopToast(data),
       }
     );
   };
 
-  const { pendingLoopToast, successLoopToast, errorLoopToast } = useLoopToast({
-    amount: repayAmount,
-    token: borrowToken,
-  });
+  const { pendingUnloopToast, successUnloopToast, errorUnloopToast } =
+    useUnloopToast({
+      amount: repayAmount,
+      token: borrowToken,
+    });
 
   useEffect(() => {
     if (isError) {
       console.log(error);
-      errorLoopToast(hash!, extractError(error?.message));
+      errorUnloopToast(hash!, extractError(error?.message));
     }
   }, [isError, error]);
 
@@ -471,7 +473,7 @@ const useUnlooping = (marketID: string, borrowToken: Token) => {
 
   useEffect(() => {
     if (isConfirmed) {
-      successLoopToast(hash!);
+      successUnloopToast(hash!);
       setTimeout(() => {
         reset();
         setRepayAmount("");
