@@ -156,6 +156,7 @@ const ReviewSummary = ({
           </div>
         </div>
       </div>
+
       {needsOdosQuote && (
         <div className="flex flex-row items-center justify-between">
           <div className="text-sm text-gray-600">Slippage Tolerance:</div>
@@ -170,6 +171,11 @@ const ReviewSummary = ({
           </div>
         </div>
       )}
+      <div className="text-xs text-gray-600">
+        Note: this transaction depends on ODOS to execute, meaning it might fail
+        if the price of the token changes significantly during the transaction.
+        If this happens, try with a higher slippage, and/or reload the quote.
+      </div>
     </div>
   );
 };

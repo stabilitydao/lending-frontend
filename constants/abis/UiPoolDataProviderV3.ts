@@ -429,7 +429,7 @@ export const UiPoolDataProviderV3Abi = [
           },
           {
             internalType: "uint256",
-            name: "variableATokenBalance",
+            name: "aTokenBalance",
             type: "uint256",
           },
         ],

@@ -173,6 +173,10 @@ const useUnlooping = (marketID: string, borrowToken: Token) => {
 
   const { userData, invalidateUserDataRawQuery } = useUserDataRaw(marketID);
   const { userData: borrowTokenUserData } = useUserData(marketID, borrowToken);
+  const { userData: collateralTokenUserData } = useUserData(
+    marketID,
+    collateralToken
+  );
 
   const collateralInfo = useMemo(() => {
     const result: Record<
@@ -208,7 +212,7 @@ const useUnlooping = (marketID: string, borrowToken: Token) => {
       }
 
       const collateralPrice = prices[collateralAddress] || BigInt(0);
-      const collateralBalance = userDataForCollateral.variableATokenBalance;
+      const collateralBalance = userDataForCollateral.aTokenBalance;
       const collateralLTV = collateralMarket.baseLTVasCollateral;
 
       const maxRepayFromCollateral =
@@ -266,7 +270,9 @@ const useUnlooping = (marketID: string, borrowToken: Token) => {
 
   useEffect(() => {
     if (computedCollateralAmountBn) {
-      setApproveAmount(computedCollateralAmountBn);
+      setApproveAmount(
+        (computedCollateralAmountBn * BigInt(110)) / BigInt(100)
+      );
     }
   }, [computedCollateralAmountBn, setApproveAmount]);
 
@@ -316,7 +322,12 @@ const useUnlooping = (marketID: string, borrowToken: Token) => {
       collateralPrice /
       collateralMarketData!.baseLTVasCollateral;
 
-    setComputedCollateralAmountBn(collateralAmountBn);
+    setComputedCollateralAmountBn(
+      minBn(
+        collateralAmountBn,
+        collateralTokenUserData?.aTokenBalance || BigInt(0)
+      )
+    );
 
     const { tokens, amounts } = (
       await ClientMap[146].readContract({
@@ -339,6 +350,7 @@ const useUnlooping = (marketID: string, borrowToken: Token) => {
       amount: bigint;
     }[] = [];
     let receivedFromLPBreak = BigInt(0);
+    let otherAddress = "0x0" as Address;
     for (let i = 0; i < tokens.length; i++) {
       if (tokens[i].toLowerCase() != borrowTokenAddress) {
         odosInputTokenData.push({
@@ -347,6 +359,7 @@ const useUnlooping = (marketID: string, borrowToken: Token) => {
         });
       } else {
         receivedFromLPBreak += amounts[i];
+        otherAddress = tokens[i];
       }
     }
 
@@ -380,14 +393,19 @@ const useUnlooping = (marketID: string, borrowToken: Token) => {
       repayAmountBn * borrowPrice,
       borrowToken.decimals + 8
     );
+    let nonSwappedValue = bnToNumber(
+      receivedFromLPBreak * prices[otherAddress.toLowerCase() as Address],
+      borrowToken.decimals + 8
+    );
     let collateralBackUSDMinValue =
-      bnToNumber(receivedFromLPBreak, borrowToken.decimals) +
+      nonSwappedValue +
       Number(odosQuoteJson.outValues[0]) * (1 - slippageInPercent / 100) -
       repaidUSDValue;
+    if (collateralBackUSDMinValue < 0) {
+      collateralBackUSDMinValue = 0;
+    }
     const collateralBackUSDMaxValue =
-      bnToNumber(receivedFromLPBreak, borrowToken.decimals) +
-      Number(odosQuoteJson.outValues[0]) -
-      repaidUSDValue;
+      nonSwappedValue + Number(odosQuoteJson.outValues[0]) - repaidUSDValue;
     setReviewData({
       repaidUSDValue,
       collateralUsedUSDValue: bnToNumber(
@@ -400,6 +418,20 @@ const useUnlooping = (marketID: string, borrowToken: Token) => {
   };
 
   const confirm = async () => {
+    console.log({
+      address: unloopingContract,
+      args: [
+        {
+          vicunaVault: collateralTokenAddress,
+          withdrawAssetAToken: collateralATokenAddress,
+          withdrawAmount: computedCollateralAmountBn,
+          borrowAsset: borrowTokenAddress,
+          repayAmount: repayAmountBn,
+          swapParams: odosQuote,
+        },
+      ],
+      chainId: marketDefinition.chainId,
+    });
     writeContract(
       {
         abi: AutoDeleveragerAbi,
