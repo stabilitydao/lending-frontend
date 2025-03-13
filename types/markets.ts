@@ -128,8 +128,6 @@ export class HealthBarDefinition {
       min: colorThresholds[lastIndex - 1],
       max: Infinity,
     });
-
-    console.log(this.points);
   }
 
   getHealthData(health: number): HealthBarPoint {
@@ -171,13 +169,15 @@ export class HealthBarDefinition {
 }
 
 export type MarketDefinition = {
+  id: number;
   tokens: Token[];
   healthBar: HealthBarDefinition;
   POOL_ADDRESS_PROVIDER: Address;
   AAVE_POOL: Address;
   NATIVE_TOKEN_GATEWAY: Address;
   LOOPING?: {
-    CONTRACT: Address;
+    LOOPING_CONTRACT: Address;
+    UNLOOPING_CONTRACT: Address;
     VAULTS: Token[];
     IO: Token[];
   };

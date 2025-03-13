@@ -12,9 +12,13 @@ import {
   useApproveToast,
   useAllowance,
 } from "@/hooks";
-import { getTokenByAddress } from "@/constants";
+import { getTokenByAddress, Token } from "@/constants";
 import { extractError, MAXUINT256, trimmedBn, isAddressValid } from "@/helpers";
-const useApproveToken = (spenderAddress: Address, tokenAddress: Address) => {
+const useApproveToken = (
+  spenderAddress: Address,
+  tokenAddress: Address,
+  displayToken?: Token
+) => {
   const { chainIdToUse: chainId } = useCorrectChain();
   const { address: approverAddress } = useAccount();
   const { invalidateAllowanceQuery } = useAllowance(
@@ -33,8 +37,12 @@ const useApproveToken = (spenderAddress: Address, tokenAddress: Address) => {
   const token = getTokenByAddress(tokenAddress);
   const { pendingApproveToast, successApproveToast, errorApproveToast } =
     useApproveToast({
-      token: token!,
-      amount: trimmedBn(approveAmount, token?.decimals || 0, 2),
+      token: displayToken ? displayToken : token!,
+      amount: trimmedBn(
+        approveAmount,
+        displayToken ? displayToken.decimals : token?.decimals || 0,
+        2
+      ),
     });
   const write = () => {
     if (!isValidAddress) return;

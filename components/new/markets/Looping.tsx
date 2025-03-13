@@ -186,12 +186,12 @@ const ReviewSummary = ({
   );
 };
 
-export const LoopingButton = ({ onClick }: { onClick: () => void }) => {
+export const LoopingButton = ({ onClick }: { onClick: (e: any) => void }) => {
   return (
     <div className="flex justify-center">
       <Button
         onClick={(e) => {
-          onClick();
+          onClick(e);
         }}
         variant="default"
         className="bg-primary w-[100px] flex flex-row items-center justify-center"
@@ -532,8 +532,8 @@ export const LoopingModal = ({
 
   useEffect(() => {
     if (isConfirmed) {
-      setStep(0);
       onClose();
+      setTimeout(() => setStep(0), 100);
     }
   }, [isConfirmed]);
 
@@ -622,11 +622,11 @@ export const LoopingModal = ({
                     <WrapIntoTooltip
                       content={
                         <div className="w-[145px]">
-                          Both your supply and leverage must be {">"}0.
+                          Needs supply {">0"} and leverage {">"}1.
                         </div>
                       }
                       enable={
-                        Number(leverage) === 0 || Number(depositAmount) === 0
+                        Number(leverage) <= 1 || Number(depositAmount) === 0
                       }
                     >
                       <ChainButton
@@ -634,7 +634,7 @@ export const LoopingModal = ({
                         onClick={handleNext}
                         disabled={
                           isOdosQuoteLoading ||
-                          Number(leverage) === 0 ||
+                          Number(leverage) <= 1 ||
                           Number(depositAmount) === 0
                         }
                       >

@@ -17,7 +17,7 @@ import { Address } from "viem";
 import { bnToNumber, bnToStr, extractError, numToBn, strToBn } from "@/helpers";
 import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 
-export const getOdosQuote = async (
+const getOdosQuote = async (
   inputToken: string,
   outputToken: string,
   inputAmount: string,
@@ -121,7 +121,7 @@ type ReviewDataType = {
   feeUSDValue: number;
 };
 
-export const useLooping = (marketID: string, selectedVault: Token) => {
+const useLooping = (marketID: string, selectedVault: Token) => {
   const marketDefinition = MARKET_DEFINITIONS[marketID];
   const { marketsData } = useMarketsRaw(marketID);
   const feeInPerTenK = 30;
@@ -151,7 +151,7 @@ export const useLooping = (marketID: string, selectedVault: Token) => {
   const tokenNeededForLPAddress =
     tokenNeededForLP.address.toLowerCase() as Address;
 
-  const loopingContract = marketDefinition.LOOPING!.CONTRACT;
+  const loopingContract = marketDefinition.LOOPING!.LOOPING_CONTRACT;
   const availableVaults = marketDefinition.LOOPING!.VAULTS;
   const depositTokens = marketDefinition.LOOPING!.IO;
   const possibleBorrowTokens = marketDefinition.LOOPING!.IO;
@@ -516,3 +516,5 @@ export const useLooping = (marketID: string, selectedVault: Token) => {
       depositTokenAddress !== tokenNeededForLPAddress,
   };
 };
+
+export { useLooping };

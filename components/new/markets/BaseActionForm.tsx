@@ -38,7 +38,7 @@ interface BaseActionFormProps {
   healthBarDefinition: HealthBarDefinition;
 }
 
-export function BaseActionForm({
+export const BaseActionForm = ({
   token,
   market,
   title,
@@ -55,7 +55,7 @@ export function BaseActionForm({
   actionLabel = title,
   displayData,
   healthBarDefinition,
-}: BaseActionFormProps) {
+}: BaseActionFormProps) => {
   const hasBorrowLimitCurrent =
     displayData.totalDebt.current + displayData.borrowLimit.current > 0;
   const hasBorrowLimitFuture =
@@ -230,4 +230,4 @@ export function BaseActionForm({
       </div>
     </>
   );
-}
+};

@@ -30,6 +30,7 @@ export const MARKET_DEFINITIONS: {
   [key: string]: MarketDefinition;
 } = {
   "Main Protocol": {
+    id: 0,
     tokens: [S, USDCe, scUSD, wETH, /*scETH,*/ USDT, wOS, stS],
     POOL_ADDRESS_PROVIDER: "0x24835e3Da1B402f8037e3ce6dE4a701677fa1b54",
     AAVE_POOL: "0xaa1C02a83362BcE106dFf6eB65282fE8B97A1665",
@@ -41,6 +42,7 @@ export const MARKET_DEFINITIONS: {
     ),
   },
   "Sonic Market": {
+    id: 1,
     tokens: [
       // VAULT_SWAPX_ICHI_WS_OS_OS.receipt,
       // VAULT_SWAPX_ICHI_WS_OS_WS.receipt,
@@ -54,7 +56,8 @@ export const MARKET_DEFINITIONS: {
     AAVE_POOL: "0x3C7FEA4d4c3EbBf19E73b6C99CE4B8884B87Bfa6",
     NATIVE_TOKEN_GATEWAY: "0x70a0D1635b810F6ca284D4982C32C839587a538F",
     LOOPING: {
-      CONTRACT: "0x144f2A9316509fe23FE2D184CCAc5330ab8bcB15",
+      LOOPING_CONTRACT: "0x144f2A9316509fe23FE2D184CCAc5330ab8bcB15",
+      UNLOOPING_CONTRACT: "0xbf11B5437E37C0ae9E0615b5FDDbd027055B9040",
       VAULTS: [
         VAULT_SWAPX_ICHI_WS_STS_STS.receipt,
         VAULT_SWAPX_ICHI_WS_STS_WS.receipt,
@@ -65,6 +68,7 @@ export const MARKET_DEFINITIONS: {
     healthBar: subMarketHealthBar,
   },
   "Stable Market": {
+    id: 2,
     tokens: [
       VAULT_SWAPX_ICHI_USDC_SCUSD_SCUSD.receipt,
       VAULT_SWAPX_ICHI_USDC_SCUSD_USDC.receipt,
@@ -79,7 +83,8 @@ export const MARKET_DEFINITIONS: {
     AAVE_POOL: "0x220fc1bEcC9bbE1a9dD81795F0505cC36E1B2563",
     NATIVE_TOKEN_GATEWAY: "0x0",
     LOOPING: {
-      CONTRACT: "0xa9a42940c45685FC52f6e9b0DC3Ec9e6F7A86E6A",
+      LOOPING_CONTRACT: "0xa9a42940c45685FC52f6e9b0DC3Ec9e6F7A86E6A",
+      UNLOOPING_CONTRACT: "0x878a41b3015c18772C9ce1dbf5f4Bc720f71788c",
       VAULTS: [
         VAULT_SWAPX_ICHI_USDC_SCUSD_SCUSD.receipt,
         VAULT_SWAPX_ICHI_USDC_SCUSD_USDC.receipt,
