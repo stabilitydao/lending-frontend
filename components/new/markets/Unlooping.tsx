@@ -187,12 +187,6 @@ const ReviewSummary = ({
         if the price of the token changes significantly during the transaction.
         If this happens, try with a higher slippage, and/or reload the quote.
       </div>
-      {priceImpactError && (
-        <div className="text-xs text-red-500">
-          High price impact for this transaction, this might result in a failed
-          transaction. Perhaps try repaying a lower amount?
-        </div>
-      )}
     </div>
   );
 };
