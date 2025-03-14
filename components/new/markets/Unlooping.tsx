@@ -59,6 +59,7 @@ const ReviewSummary = ({
   queryOdosQuote,
   isOdosQuoteLoading,
   needsOdosQuote,
+  priceImpactError,
 }: {
   borrowToken: Token;
   repaidUSDValue: number;
@@ -71,6 +72,7 @@ const ReviewSummary = ({
   queryOdosQuote: () => void;
   isOdosQuoteLoading: boolean;
   needsOdosQuote: boolean;
+  priceImpactError: boolean;
 }) => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = parseFloat(e.target.value);
@@ -140,12 +142,21 @@ const ReviewSummary = ({
                     )} - $${formatSuffix(collateralBackUSDMaxValue, "money")}`
                   : `$${formatSuffix(collateralBackUSDMinValue, "money")}`}
               </div>
-              <Image
-                src={borrowToken.icon}
-                alt={borrowToken.symbol}
-                width={20}
-                height={20}
-              />
+              <div className="flex flex-row items-center gap-1">
+                <Image
+                  src={collateralToken.pair![0].icon}
+                  alt={collateralToken.pair![0].symbol}
+                  width={20}
+                  height={20}
+                />
+                &
+                <Image
+                  src={collateralToken.pair![1].icon}
+                  alt={collateralToken.pair![1].symbol}
+                  width={20}
+                  height={20}
+                />
+              </div>
             </div>
           </div>
           <div className="flex flex-col justify-self-end w-[85px]">
@@ -176,6 +187,12 @@ const ReviewSummary = ({
         if the price of the token changes significantly during the transaction.
         If this happens, try with a higher slippage, and/or reload the quote.
       </div>
+      {priceImpactError && (
+        <div className="text-xs text-red-500">
+          High price impact for this transaction, this might result in a failed
+          transaction. Perhaps try repaying a lower amount?
+        </div>
+      )}
     </div>
   );
 };

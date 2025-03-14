@@ -22,6 +22,7 @@ import {
   AutoDeleveragerAbi,
   AutoLeveragerAbi,
   ClientMap,
+  getTokenByAddress,
   MARKET_DEFINITIONS,
   Token,
   UiHelperAbi,
@@ -297,6 +298,7 @@ const useUnlooping = (marketID: string, borrowToken: Token) => {
     collateralUsedUSDValue: number;
     collateralBackUSDMinValue: number;
     collateralBackUSDMaxValue: number;
+    priceImpactError: boolean;
   };
   const [reviewData, setReviewData] = useState<ReviewDataType>(
     {} as ReviewDataType
@@ -347,16 +349,24 @@ const useUnlooping = (marketID: string, borrowToken: Token) => {
       tokenAddress: string;
       amount: bigint;
     }[] = [];
-    let receivedFromLPBreak = BigInt(0);
+    let unswappedUSDValue = 0;
     let otherAddress = "0x0" as Address;
     for (let i = 0; i < tokens.length; i++) {
       if (tokens[i].toLowerCase() != borrowTokenAddress) {
         odosInputTokenData.push({
           tokenAddress: tokens[i],
-          amount: amounts[i] - BigInt(10),
+          amount: (amounts[i] * BigInt(95)) / BigInt(100),
         });
+        unswappedUSDValue +=
+          bnToNumber(
+            amounts[i] * prices[tokens[i].toLowerCase() as Address],
+            getTokenByAddress(tokens[i])!.decimals + 8
+          ) * 0.05;
       } else {
-        receivedFromLPBreak += amounts[i];
+        unswappedUSDValue += bnToNumber(
+          amounts[i] * borrowPrice,
+          borrowToken.decimals + 8
+        );
         otherAddress = tokens[i];
       }
     }
@@ -392,21 +402,15 @@ const useUnlooping = (marketID: string, borrowToken: Token) => {
       borrowToken.decimals + 8
     );
 
-    let nonSwappedValue = receivedFromLPBreak
-      ? bnToNumber(
-          receivedFromLPBreak * prices[otherAddress.toLowerCase() as Address],
-          borrowToken.decimals + 8
-        )
-      : 0;
     let collateralBackUSDMinValue =
-      nonSwappedValue +
+      unswappedUSDValue +
       Number(odosQuoteJson.outValues[0]) * (1 - slippageInPercent / 100) -
       repaidUSDValue;
     if (collateralBackUSDMinValue < 0) {
       collateralBackUSDMinValue = 0;
     }
     const collateralBackUSDMaxValue =
-      nonSwappedValue + Number(odosQuoteJson.outValues[0]) - repaidUSDValue;
+      unswappedUSDValue + Number(odosQuoteJson.outValues[0]) - repaidUSDValue;
     setReviewData({
       repaidUSDValue,
       collateralUsedUSDValue: bnToNumber(
@@ -415,6 +419,7 @@ const useUnlooping = (marketID: string, borrowToken: Token) => {
       ),
       collateralBackUSDMinValue,
       collateralBackUSDMaxValue,
+      priceImpactError: Math.abs(odosQuoteJson.priceImpact) > 0.00001,
     });
   };
 
