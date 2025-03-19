@@ -302,7 +302,7 @@ const MarketLine = ({
       <TableCell>{token.pair ? null : borrowAPR}</TableCell>
       {withVault && (
         <TableCell>
-          {token.pair &&
+          {/* {token.pair &&
             marketDefinition.LOOPING?.VAULTS.includes(maybeToken) && (
               <div className="flex justify-left">
                 <LoopingButton
@@ -324,7 +324,7 @@ const MarketLine = ({
                   }}
                 />
               </div>
-            )}
+            )} */}
         </TableCell>
       )}
     </TableRow>
