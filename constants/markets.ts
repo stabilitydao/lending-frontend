@@ -44,12 +44,12 @@ export const MARKET_DEFINITIONS: {
   "Sonic Market": {
     id: 1,
     tokens: [
-      // VAULT_SWAPX_ICHI_WS_OS_OS.receipt,
-      // VAULT_SWAPX_ICHI_WS_OS_WS.receipt,
+      VAULT_SWAPX_ICHI_WS_OS_OS.receipt,
+      VAULT_SWAPX_ICHI_WS_OS_WS.receipt,
       VAULT_SWAPX_ICHI_WS_STS_STS.receipt,
       VAULT_SWAPX_ICHI_WS_STS_WS.receipt,
       S,
-      // wOS,
+      wOS,
       stS,
     ],
     POOL_ADDRESS_PROVIDER: "0x64592138883327Ab8009E458231a4b731f2FD8F5",
