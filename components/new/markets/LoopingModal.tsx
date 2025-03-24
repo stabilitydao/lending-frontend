@@ -4,8 +4,13 @@ import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { Button, ChainButton } from "@/components/ui/button";
 import Image from "next/image";
 import { DialogTitle } from "@radix-ui/react-dialog";
-import { useLooping, useMarket, useSelectedMarket } from "@/hooks";
-import { Token } from "@/constants";
+import {
+  useLooping,
+  useMarket,
+  useQueryParams,
+  useSelectedMarket,
+} from "@/hooks";
+import { getTokenByAddress, MARKET_DEFINITIONS, Token } from "@/constants";
 import { Address } from "viem";
 import { bnToStr, formatSuffix } from "@/helpers";
 import {
@@ -17,6 +22,8 @@ import { CheckCheck } from "lucide-react";
 import { Deposit } from "@/components/icons/deposit";
 import { DoubleAvatar } from "@/components/ui/double-avatar";
 import { ChangeEvent, useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import { QueryValue } from "@/types";
 
 const RefreshButton = ({
   isOdosQuoteLoading,
@@ -454,57 +461,95 @@ const ExecuteButton = ({
   </>
 );
 
-export const LoopingModal = ({
-  isVisible,
-  onClose,
-  vault,
-}: {
-  isVisible: boolean;
-  onClose: () => void;
-  vault: Token;
-}) => {
-  const { marketDefinition } = useSelectedMarket();
+export const LoopingModal = () => {
+  const { params, updateParams } = useQueryParams();
+  const { modal, vault, supplyToken, borrowToken } = params;
+  const pathname = usePathname();
 
-  if (!marketDefinition.LOOPING) {
+  const { marketID } = useSelectedMarket();
+  const fullReplace = pathname !== "/markets";
+
+  if (modal !== "leverage") return null;
+
+  const vaultToken = getTokenByAddress(vault);
+  const supplyTokenObj = getTokenByAddress(supplyToken);
+  const borrowTokenObj = getTokenByAddress(borrowToken);
+
+  const marketDefinition = MARKET_DEFINITIONS[marketID];
+
+  if (!marketDefinition?.LOOPING) return null;
+
+  const isValidVault = !!vaultToken?.pair;
+  const depositTokens = marketDefinition.LOOPING.IO;
+
+  if (!isValidVault) return null;
+
+  const fallbackSupply = depositTokens[0];
+  const fallbackBorrow = depositTokens[0];
+
+  const validSupply =
+    depositTokens.find((t) => t.address === supplyToken) || fallbackSupply;
+  const validBorrow =
+    depositTokens.find((t) => t.address === borrowToken) || fallbackBorrow;
+
+  if (
+    !supplyTokenObj ||
+    !borrowTokenObj ||
+    validSupply.address !== supplyTokenObj.address ||
+    validBorrow.address !== borrowTokenObj.address
+  ) {
+    console.log(supplyTokenObj, borrowTokenObj, validSupply, validBorrow);
+    updateParams({
+      vault: vaultToken.address,
+      supplyToken: validSupply.address,
+      borrowToken: validBorrow.address,
+      ...(fullReplace ? { market: marketID } : {}),
+    });
     return null;
   }
 
+  if (
+    supplyTokenObj.address != borrowTokenObj.address &&
+    borrowTokenObj.address != vaultToken.pair![0].address &&
+    supplyTokenObj.address != vaultToken.pair![0].address
+  ) {
+    updateParams({
+      borrowToken: vaultToken.pair![0].address,
+    });
+  }
+
   return (
-    <LoopingModalWithHook
-      isVisible={isVisible}
-      onClose={onClose}
-      vault={vault}
+    <InnerLoopingModal
+      marketID={marketID}
+      vault={vaultToken}
+      supplyToken={validSupply}
+      borrowToken={validBorrow}
+      updateParams={updateParams}
+      fullReplace={fullReplace}
     />
   );
 };
 
-const LoopingModalWithHook = ({
-  isVisible,
-  onClose,
+const InnerLoopingModal = ({
+  marketID,
   vault,
+  supplyToken,
+  borrowToken,
+  updateParams,
+  fullReplace,
 }: {
-  isVisible: boolean;
-  onClose: () => void;
+  marketID: string;
   vault: Token;
+  supplyToken: Token;
+  borrowToken: Token;
+  updateParams: (params: Record<string, QueryValue>) => void;
+  fullReplace?: boolean;
 }) => {
-  const { marketDefinition, marketID } = useSelectedMarket();
-
-  if (!marketDefinition.LOOPING) {
-    return null;
-  }
-
   const {
-    selectedVault,
-    // setSelectedVault,
-
-    depositToken,
-    setDepositToken,
     depositInfo,
     depositAmount,
     setDepositAmount,
 
-    borrowToken,
-    setBorrowToken,
     borrowInfo,
     leverage,
     setLeverage,
@@ -533,7 +578,7 @@ const LoopingModalWithHook = ({
     isConfirming,
     isOdosQuoteLoading,
     isConfirmed,
-  } = useLooping(marketID, vault);
+  } = useLooping(marketID, vault, supplyToken, borrowToken);
 
   const { market } = useMarket(marketID, vault);
 
@@ -549,24 +594,28 @@ const LoopingModalWithHook = ({
 
   const handlePrev = () => setStep(0);
 
-  useEffect(() => {
-    setDepositToken(marketDefinition.LOOPING!.IO[0]!);
-    setBorrowToken(marketDefinition.LOOPING!.IO[1]!);
-  }, [marketDefinition]);
+  const handleClose = () =>
+    updateParams({
+      modal: null,
+      vault: null,
+      supplyToken: null,
+      borrowToken: null,
+      ...(fullReplace ? { market: null } : {}),
+    });
 
   useEffect(() => {
     if (isConfirmed) {
-      onClose();
+      handleClose();
       setTimeout(() => setStep(0), 100);
     }
   }, [isConfirmed]);
 
   return (
     <Dialog
-      open={isVisible}
+      open
       onOpenChange={(open: boolean) => {
         if (!open) {
-          onClose();
+          handleClose();
           setTimeout(() => setStep(0), 100);
         }
       }}
@@ -596,16 +645,14 @@ const LoopingModalWithHook = ({
         <div className="relative w-full flex items-center justify-center mt-6">
           <div className="flex items-center gap-8">
             <DoubleAvatar
-              firstSrc={selectedVault.pair![0].icon}
-              secondSrc={selectedVault.pair![1].icon}
-              firstAlt={selectedVault.pair![0].symbol}
-              secondAlt={selectedVault.pair![1].symbol}
+              firstSrc={vault.pair![0].icon}
+              secondSrc={vault.pair![1].icon}
+              firstAlt={vault.pair![0].symbol}
+              secondAlt={vault.pair![1].symbol}
             />
             <div className="flex flex-col items-start gap-2">
-              <span className="text-sm font-semibold">
-                {selectedVault.name}
-              </span>
-              <span className="text-xs font-light">{selectedVault.symbol}</span>
+              <span className="text-sm font-semibold">{vault.name}</span>
+              <span className="text-xs font-light">{vault.symbol}</span>
             </div>
           </div>
         </div>
@@ -626,8 +673,10 @@ const LoopingModalWithHook = ({
               {step === 0 && (
                 <>
                   <StepDeposit
-                    depositToken={depositToken}
-                    setDepositToken={setDepositToken}
+                    depositToken={supplyToken}
+                    setDepositToken={(t: Token) =>
+                      updateParams({ supplyToken: t.address })
+                    }
                     depositInfo={depositInfo}
                     depositAmount={depositAmount}
                     setDepositAmount={setDepositAmount}
@@ -635,7 +684,9 @@ const LoopingModalWithHook = ({
 
                   <StepBorrow
                     borrowToken={borrowToken}
-                    setBorrowToken={setBorrowToken}
+                    setBorrowToken={(t: Token) =>
+                      updateParams({ borrowToken: t.address })
+                    }
                     borrowInfo={borrowInfo}
                     borrowAmount={leverage}
                     setBorrowAmount={setLeverage}
@@ -670,7 +721,7 @@ const LoopingModalWithHook = ({
                         {isOdosQuoteLoading
                           ? "Fetching Odos Quote..."
                           : vault.pair![0].address.toLowerCase() ===
-                              depositToken.address.toLowerCase() &&
+                              supplyToken.address.toLowerCase() &&
                             vault.pair![0].address.toLowerCase() ===
                               borrowToken.address.toLowerCase()
                           ? "Next"
@@ -685,9 +736,9 @@ const LoopingModalWithHook = ({
                 <>
                   <ReviewSummary
                     {...reviewData}
-                    depositToken={depositToken}
+                    depositToken={supplyToken}
                     borrowToken={borrowToken}
-                    vaultToken={selectedVault}
+                    vaultToken={vault}
                     slippage={debouncedSlippage}
                     setSlippage={setDebouncedSlippage}
                     queryOdosQuote={queryOdosQuote}

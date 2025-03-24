@@ -26,7 +26,6 @@ import {
   MerklNote,
   SortableTableHead,
   SortBy,
-  VaultModal,
 } from "@/components";
 import { VaultDefinition } from "@/constants";
 import { formatSuffix } from "@/helpers";
@@ -134,7 +133,7 @@ export const VaultTable = () => {
   const onSelectVault = (vault: VaultDefinition) =>
     updateParams({
       modal: "vault",
-      vault: vault.receipt.address,
+      vault: vault.lp.address,
     });
 
   const [sortBy, setSortBy] = useState<SortBy | null>(null);

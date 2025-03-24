@@ -25,7 +25,11 @@ import { VaultBaseActionForm } from "./VaultBaseActionForm";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { Deposit } from "@/components/icons/deposit";
 import { Withdraw } from "@/components/icons/withdraw";
-import { getVaultByAddress, VaultDefinition } from "@/constants";
+import {
+  getVaultByAddress,
+  getVaultByLPAddress,
+  VaultDefinition,
+} from "@/constants";
 import { Address } from "viem";
 
 const DepositVaultForm = ({
@@ -135,7 +139,7 @@ export const VaultModal = () => {
 
   if (modal !== "vault" || !vault) return null;
 
-  const vaultDefinition = getVaultByAddress(vault as Address);
+  const vaultDefinition = getVaultByLPAddress(vault as Address);
   if (!vaultDefinition) return null;
 
   return (

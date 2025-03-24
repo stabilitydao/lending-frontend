@@ -7,7 +7,7 @@ import {
   useUserData,
 } from "@/hooks";
 import { bnToNumber, strToBn } from "@/helpers";
-import { S, Token } from "@/constants";
+import { MARKET_DEFINITIONS, S, Token } from "@/constants";
 
 const useUserDisplayData = (
   marketID: string,
@@ -146,7 +146,12 @@ const useUserBalancesUSD = (marketID: string) => {
   const { userData } = useUserDataRaw(marketID);
   const { marketsData } = useMarketsRaw(marketID);
   const { balancesObj } = useTokenBalances(
-    userData?.map((ud) => ud.underlyingAsset.toLowerCase() as Address) || []
+    MARKET_DEFINITIONS[marketID].tokens.map(
+      (t) =>
+        (t.wrapperToken
+          ? t.wrapperToken.address.toLowerCase()
+          : t.address.toLowerCase()) as Address
+    ) || []
   );
   const { balance } = useTokenBalance(S);
 

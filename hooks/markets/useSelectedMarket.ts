@@ -6,10 +6,6 @@ const useSelectedMarket = () => {
   const { params, updateParams } = useQueryParams();
   const marketID = params.market || DEFAULT_MARKET_ID;
 
-  useEffect(() => {
-    "changed???";
-  }, [updateParams]);
-
   return {
     marketID,
     marketDefinition: MARKET_DEFINITIONS[marketID],

@@ -49,12 +49,12 @@ export const MARKET_DEFINITIONS: {
     description:
       "A market exclusively made of Sonic-based assets. Its high correlation makes liquidation much less of a risk.",
     tokens: [
-      // VAULT_SWAPX_ICHI_WS_OS_OS.receipt,
-      // VAULT_SWAPX_ICHI_WS_OS_WS.receipt,
+      VAULT_SWAPX_ICHI_WS_OS_OS.receipt,
+      VAULT_SWAPX_ICHI_WS_OS_WS.receipt,
       VAULT_SWAPX_ICHI_WS_STS_STS.receipt,
       VAULT_SWAPX_ICHI_WS_STS_WS.receipt,
       S,
-      // wOS,
+      wOS,
       stS,
     ],
     POOL_ADDRESS_PROVIDER: "0x64592138883327Ab8009E458231a4b731f2FD8F5",
@@ -66,8 +66,10 @@ export const MARKET_DEFINITIONS: {
       VAULTS: [
         VAULT_SWAPX_ICHI_WS_STS_STS.receipt,
         VAULT_SWAPX_ICHI_WS_STS_WS.receipt,
+        VAULT_SWAPX_ICHI_WS_OS_OS.receipt,
+        VAULT_SWAPX_ICHI_WS_OS_WS.receipt,
       ],
-      IO: [wS, stS],
+      IO: [wS, stS, wOS],
     },
     chainId: sonic.id,
     healthBar: subMarketHealthBar,

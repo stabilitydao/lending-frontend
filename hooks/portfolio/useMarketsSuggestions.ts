@@ -1,5 +1,11 @@
-import { MARKET_DEFINITIONS, Token } from "@/constants";
-import { useMarkets, useUserBalancesUSD } from "@/hooks";
+import {
+  ALL_DISPLAYED_VAULTS,
+  getVaultByAddress,
+  getVaultByLPAddress,
+  MARKET_DEFINITIONS,
+  Token,
+} from "@/constants";
+import { useMarkets, useUserBalancesUSD, useVaults } from "@/hooks";
 import { SuggestionsWrapper } from "@/types";
 import { Address } from "viem";
 
@@ -11,7 +17,7 @@ const tryPushingToSuggestions = (
   apr: number
 ) => {
   const address = token.address.toLowerCase() as Address;
-  if (balanceUSD < 0.01) {
+  if (balanceUSD < 1) {
     return;
   }
   if (!suggestions[address]) {
@@ -39,13 +45,27 @@ const useMarketsSuggestions = (): Record<string, SuggestionsWrapper> => {
 
   for (const [key, marketDefinition] of Object.entries(MARKET_DEFINITIONS)) {
     const { markets } = useMarkets(key);
+    const { vaults } = useVaults(ALL_DISPLAYED_VAULTS);
     const { unusedBalancesUSD } = useUserBalancesUSD(key);
-    if (!markets || !unusedBalancesUSD) {
+    if (!markets || !unusedBalancesUSD || !vaults) {
       continue;
     }
     for (const v of Object.values(markets)) {
       const token = v.market.asset;
       const address = token.address.toLowerCase() as Address;
+      let apr = v.market.supply.APR;
+
+      if (getVaultByAddress(address)) {
+        const vault = Object.values(vaults).find(
+          (v) => v.vault.definition.receipt.address.toLowerCase() === address
+        );
+        if (vault) {
+          apr -= vault.vault.apy;
+          if (v.market.supply.APR < vault.vault.apy) {
+            continue;
+          }
+        }
+      }
 
       if (token.wrappedToken) {
         tryPushingToSuggestions(
@@ -53,7 +73,7 @@ const useMarketsSuggestions = (): Record<string, SuggestionsWrapper> => {
           token.wrappedToken,
           unusedBalancesUSD[token.wrappedToken.address.toLowerCase()] || 0,
           key,
-          v.market.supply.APR
+          apr
         );
       }
 
@@ -62,7 +82,7 @@ const useMarketsSuggestions = (): Record<string, SuggestionsWrapper> => {
         token,
         unusedBalancesUSD[address] || 0,
         key,
-        v.market.supply.APR
+        apr
       );
     }
   }

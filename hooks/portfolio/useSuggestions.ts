@@ -1,11 +1,20 @@
-import { useMarketsSuggestions, useVaultSuggestions } from "@/hooks";
+import {
+  useLoopingSuggestions,
+  useMarketsSuggestions,
+  useVaultSuggestions,
+} from "@/hooks";
 import { SuggestionsWrapper } from "@/types";
 
 const useSuggestions = (): SuggestionsWrapper[] => {
   const vaultSuggestionsWrappers = useVaultSuggestions();
   const marketSuggestionsWrappers = useMarketsSuggestions();
+  const loopingSuggestionsWrappers = useLoopingSuggestions();
 
-  const wrappersArray = [vaultSuggestionsWrappers, marketSuggestionsWrappers];
+  const wrappersArray = [
+    vaultSuggestionsWrappers,
+    marketSuggestionsWrappers,
+    loopingSuggestionsWrappers,
+  ];
   const mergedWrappers: Record<string, SuggestionsWrapper> = {};
 
   wrappersArray.forEach((wrapperRecord) => {

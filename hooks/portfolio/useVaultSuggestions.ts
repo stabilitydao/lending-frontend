@@ -9,9 +9,9 @@ const useVaultSuggestions = (): Record<string, SuggestionsWrapper> => {
 
   for (const [key, v] of Object.entries(vaults)) {
     const vault = v.vault;
-    const token = vault.definition.receipt;
+    const token = vault.definition.lp;
     const address = token.address.toLowerCase();
-    if (vault.lp.usdValue < 0.01) {
+    if (vault.lp.usdValue < 1) {
       continue;
     }
     if (!lpDepositSuggestions[address]) {
