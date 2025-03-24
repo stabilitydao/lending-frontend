@@ -33,7 +33,6 @@ const config = createConfig(
     transports: {
       [sonic.id]: http("https://rpc.soniclabs.com"),
     },
-    connectors: [injected()],
     // Required API Keys
     walletConnectProjectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
 
