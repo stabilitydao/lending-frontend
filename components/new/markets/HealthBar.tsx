@@ -4,6 +4,7 @@ import { useSelectedMarket, useUserAccountData } from "@/hooks";
 import { bnToNumber } from "@/helpers";
 import { StandardTooltip } from "@/components";
 import { HealthBarDefinition } from "@/types";
+import { MARKET_DEFINITIONS } from "@/constants";
 
 const RangeTest = ({
   healthBarDefinition,
@@ -82,9 +83,14 @@ const HealthBarTooltip = ({
   </StandardTooltip>
 );
 
-export const HealthBar = () => {
-  const { marketID, marketDefinition } = useSelectedMarket();
-  const { userAccountData } = useUserAccountData(marketID);
+export const HealthBar = ({
+  marketIDOverride,
+}: {
+  marketIDOverride?: string;
+}) => {
+  const { marketID } = useSelectedMarket();
+  const { userAccountData } = useUserAccountData(marketIDOverride || marketID);
+  const marketDefinition = MARKET_DEFINITIONS[marketIDOverride || marketID];
   const healthFactor = bnToNumber(userAccountData?.healthFactor, 18);
 
   return (

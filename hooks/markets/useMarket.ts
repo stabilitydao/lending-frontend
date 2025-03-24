@@ -5,12 +5,7 @@ import {
   useMerklAPRs,
   useVaultsBreakdown,
 } from "@/hooks";
-import {
-  getTokenByAddress,
-  getVaultByAddress,
-  MARKET_DEFINITIONS,
-  Token,
-} from "@/constants";
+import { getTokenByAddress, getVaultByAddress, Token } from "@/constants";
 import { MarketInfo } from "@/types";
 import { bnToNumber } from "@/helpers";
 
@@ -35,7 +30,7 @@ const useMarkets = (marketID: string) => {
     Address,
     {
       isMarketLoading: boolean;
-      market: MarketInfo | undefined;
+      market: MarketInfo;
       marketBnData:
         | {
             totalSupplied: bigint;
@@ -165,11 +160,7 @@ const useMarkets = (marketID: string) => {
     const priceNumber = bnToNumber(price, PRICE_DECIMALS);
 
     const marketInfo: MarketInfo = {
-      asset: {
-        name,
-        symbol,
-        imageSrc: icon,
-      },
+      asset: token,
       supply: {
         tvl: {
           amount: bnToNumber(totalSupplied, decimals),

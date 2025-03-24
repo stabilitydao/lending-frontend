@@ -369,8 +369,12 @@ export const scBTC = new Token({
   chainId: sonic.id,
 });
 
-export const getTokenByAddress = (address: string): Token | undefined => {
-  return ALL_TOKENS.find((token) => token.address === address.toLowerCase());
+export const getTokenByAddress = (
+  address: string | undefined
+): Token | undefined => {
+  return address
+    ? ALL_TOKENS.find((token) => token.address === address.toLowerCase())
+    : undefined;
 };
 
 export const getOrCreateTokenByAddress = (

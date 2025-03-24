@@ -1,7 +1,13 @@
 import { UserDisplayData } from "@/types";
-import { useMarketRaw, useUserAccountData, useUserData } from "@/hooks";
+import {
+  useMarketRaw,
+  useTokenBalance,
+  useTokenBalances,
+  useUserAccountData,
+  useUserData,
+} from "@/hooks";
 import { bnToNumber, strToBn } from "@/helpers";
-import { Token } from "@/constants";
+import { S, Token } from "@/constants";
 
 const useUserDisplayData = (
   marketID: string,
@@ -133,4 +139,78 @@ const useUserDisplayData = (
   } as UserDisplayData;
 };
 
-export { useUserDisplayData };
+import { useUserDataRaw, useMarketsRaw } from "@/hooks";
+import { Address } from "viem";
+
+const useUserBalancesUSD = (marketID: string) => {
+  const { userData } = useUserDataRaw(marketID);
+  const { marketsData } = useMarketsRaw(marketID);
+  const { balancesObj } = useTokenBalances(
+    userData?.map((ud) => ud.underlyingAsset.toLowerCase() as Address) || []
+  );
+  const { balance } = useTokenBalance(S);
+
+  const result: Record<
+    string,
+    {
+      balanceValueUSD: number;
+      borrowedValueUSD: number;
+    }
+  > = {};
+
+  if (!userData || !marketsData) {
+    return {
+      marketBalancesUSD: result,
+      unusedBalancesUSD: {},
+    };
+  }
+
+  const unusedBalancesUSD: Record<string, number> = {};
+
+  for (const ud of userData) {
+    const lowerAddr = ud.underlyingAsset.toLowerCase() as Address;
+    const market = marketsData.find(
+      (m) => m.underlyingAsset.toLowerCase() === lowerAddr
+    );
+    if (!market) continue;
+    const decimals = bnToNumber(market.decimals, 0);
+
+    unusedBalancesUSD[lowerAddr] = bnToNumber(
+      (balancesObj[lowerAddr] || BigInt(0)) *
+        market.priceInMarketReferenceCurrency,
+      decimals + 8
+    );
+
+    if (lowerAddr === S.wrapperToken?.address.toLowerCase()) {
+      unusedBalancesUSD[S.address.toLowerCase()] = bnToNumber(
+        (balance || BigInt(0)) * market.priceInMarketReferenceCurrency,
+        decimals + 8
+      );
+    }
+
+    const depositBN = ud.aTokenBalance || BigInt(0);
+    const borrowBN = ud.variableDebt || BigInt(0);
+    if (!depositBN && !borrowBN) {
+      continue;
+    }
+    const price = market.priceInMarketReferenceCurrency || BigInt(1);
+
+    const balanceValueUSD = bnToNumber(depositBN * price, decimals + 8);
+    const borrowedValueUSD = bnToNumber(borrowBN * price, decimals + 8);
+    if (balanceValueUSD < 0.01 && borrowedValueUSD < 0.01) {
+      continue;
+    }
+
+    result[lowerAddr] = {
+      balanceValueUSD,
+      borrowedValueUSD,
+    };
+  }
+
+  return {
+    marketBalancesUSD: result,
+    unusedBalancesUSD,
+  };
+};
+
+export { useUserDisplayData, useUserBalancesUSD };

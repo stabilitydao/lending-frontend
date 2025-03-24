@@ -4,9 +4,8 @@ import "./globals.css";
 import "react-toastify/dist/ReactToastify.css";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
-import { Toaster } from "@/components/ui/toaster";
 import { ToastContainer } from "react-toastify";
-import { LocalIcon, MarketProvider } from "@/components";
+import { LocalIcon, MarketModal, VaultModal } from "@/components";
 import { ProvidersWrapper } from "./providers";
 
 const poppins = Poppins({
@@ -64,7 +63,8 @@ export default function RootLayout({
         <ProvidersWrapper>
           <Navbar />
           <main className="flex-grow">{children}</main>
-          <Toaster />
+          <MarketModal />
+          <VaultModal />
           <Footer />
         </ProvidersWrapper>
       </body>

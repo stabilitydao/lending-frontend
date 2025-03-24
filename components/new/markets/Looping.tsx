@@ -463,6 +463,30 @@ export const LoopingModal = ({
   onClose: () => void;
   vault: Token;
 }) => {
+  const { marketDefinition } = useSelectedMarket();
+
+  if (!marketDefinition.LOOPING) {
+    return null;
+  }
+
+  return (
+    <LoopingModalWithHook
+      isVisible={isVisible}
+      onClose={onClose}
+      vault={vault}
+    />
+  );
+};
+
+const LoopingModalWithHook = ({
+  isVisible,
+  onClose,
+  vault,
+}: {
+  isVisible: boolean;
+  onClose: () => void;
+  vault: Token;
+}) => {
   const { marketDefinition, marketID } = useSelectedMarket();
 
   if (!marketDefinition.LOOPING) {

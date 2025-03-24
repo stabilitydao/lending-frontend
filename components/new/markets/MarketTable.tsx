@@ -12,6 +12,7 @@ import { MarketModal } from "./MarketModal";
 import {
   useMarket,
   useMarkets,
+  useQueryParams,
   useSearch,
   useSelectedMarket,
   useUserData,
@@ -48,10 +49,9 @@ const MarketLine = ({
   onClickLoopingButton: () => void;
   onClickUnloopingButton: () => void;
 }) => {
-  const { marketID, marketDefinition } = useSelectedMarket();
+  const { marketID } = useSelectedMarket();
   const { market, isMarketLoading } = useMarket(marketID, token);
-  const maybeToken = token.isNative ? token.wrapperToken! : token;
-  const { userData } = useUserData(marketID, maybeToken);
+  // const maybeToken = token.isNative ? token.wrapperToken! : token;
   if (isMarketLoading || !market) return null;
   const supplyPercentage = Math.min(
     (market.supply.tvl.amount / market.supply.cap.amount) * 100,
@@ -330,13 +330,12 @@ const MarketLine = ({
     </TableRow>
   );
 };
+
 export const MarketTable = () => {
+  const { updateParams } = useQueryParams();
   const { marketDefinition, marketID } = useSelectedMarket();
   const { markets } = useMarkets(marketID);
 
-  const [selectedToken, setSelectedToken] = useState<Token>(
-    marketDefinition.tokens[0]
-  );
   const [selectedLoopingVault, setSelectedLoopingVault] = useState<Token>(
     marketDefinition.LOOPING
       ? marketDefinition.LOOPING.VAULTS[0]
@@ -350,7 +349,6 @@ export const MarketTable = () => {
   const [canUseModal, setCanUseModal] = useState(false);
 
   useEffect(() => {
-    setSelectedToken(marketDefinition.tokens[0]);
     setSelectedLoopingVault(
       marketDefinition.LOOPING
         ? marketDefinition.LOOPING.VAULTS[0]
@@ -363,21 +361,16 @@ export const MarketTable = () => {
     }
   }, [marketDefinition]);
 
-  const [isModalOpen, setModalOpen] = useState(false);
   const [isLoopingModalOpen, setLoopingModalOpen] = useState(false);
   const [isUnloopingModalOpen, setUnloopingModalOpen] = useState(false);
   const { filter } = useSearch("markets", (tokens: Token) => tokens.name);
   const [sortBy, setSortBy] = useState<SortBy | null>(null);
 
-  const onSelectToken = (token: Token) => {
-    setSelectedToken(token);
-    setModalOpen(true);
-  };
+  const onSelectToken = (token: Token) =>
+    updateParams({ modal: "market", token: token.address });
 
   const onClickLoopingButton = () => setLoopingModalOpen(true);
   const onClickUnloopingButton = () => setUnloopingModalOpen(true);
-
-  const closeModal = () => setModalOpen(false);
 
   const closeLoopingModal = () => setLoopingModalOpen(false);
   const closeUnloopingModal = () => setUnloopingModalOpen(false);
@@ -475,12 +468,6 @@ export const MarketTable = () => {
         </TableBody>
       </Table>
       <HealthBar />
-      <MarketModal
-        token={selectedToken}
-        isVisible={isModalOpen}
-        onClose={closeModal}
-        setSelectedToken={setSelectedToken}
-      />
       {canUseModal && (
         <LoopingModal
           isVisible={isLoopingModalOpen}

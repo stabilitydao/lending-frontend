@@ -34,12 +34,7 @@ export const BorrowLendModal = ({
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="bg-card text-primary overflow-y-auto pt-12">
         <div className="flex flex-row items-center justify-center gap-4">
-          <Image
-            src={borrow.asset.imageSrc!}
-            alt="logo"
-            width={25}
-            height={25}
-          />
+          <Image src={borrow.asset.icon} alt="logo" width={25} height={25} />
           <div className="flex flex-col items-start gap-2">
             <span className="text-sm font-semibold">{borrow.asset.name}</span>
             <span className="text-xs font-light text-left">

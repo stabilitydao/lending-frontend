@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { usePathname } from "next/navigation";
 
 import {
   Dialog,
@@ -18,10 +19,11 @@ import Image from "next/image";
 import { Deposit } from "@/components/icons/deposit";
 import { Withdraw } from "@/components/icons/withdraw";
 import { ExternalLinkIcon, RefreshCw } from "lucide-react";
-import { MarketInfo } from "@/types";
+import { MarketInfo, QueryValue } from "@/types";
 import {
   useBorrow,
   useMarket,
+  useQueryParams,
   useRepay,
   useSearch,
   useSelectedMarket,
@@ -31,7 +33,7 @@ import {
 import { minBn } from "@/helpers";
 import { BaseActionForm } from "@/components";
 import Link from "next/link";
-import { MARKET_DEFINITIONS, Token } from "@/constants";
+import { getTokenByAddress, MARKET_DEFINITIONS, Token } from "@/constants";
 import { DoubleAvatar } from "@/components/ui/double-avatar";
 
 export interface MarketModalProps {
@@ -191,116 +193,91 @@ const StyledTrigger = ({ value }: { value: string }) => (
   </TabsTrigger>
 );
 
-const BorrowTabSelector = ({
-  activeTab,
-  setActiveTab,
-}: {
-  activeTab: string;
-  setActiveTab: (tab: string) => void;
-}) => (
-  <Tabs
-    className="w-full h-12 bg-card"
-    value={activeTab}
-    onValueChange={setActiveTab}
-  >
-    <TabsList className="grid w-full grid-cols-2 p-0 gap-0">
-      <StyledTrigger value="borrow" />
-      <StyledTrigger value="repay" />
-    </TabsList>
-  </Tabs>
-);
-
-const SupplyTabSelector = ({
-  activeTab,
-  setActiveTab,
-}: {
-  activeTab: string;
-  setActiveTab: (tab: string) => void;
-}) => (
-  <Tabs
-    className="w-full h-12 bg-card"
-    value={activeTab}
-    onValueChange={setActiveTab}
-  >
-    <TabsList className="grid w-full grid-cols-2 p-0 gap-0">
-      <StyledTrigger value="supply" />
-      <StyledTrigger value="withdraw" />
-    </TabsList>
-  </Tabs>
-);
-
 const ActiveTabSelector = ({
-  isBorrow,
-  activeTab,
-  setActiveTab,
+  options,
+  mode,
+  setMode,
 }: {
-  isBorrow: boolean;
-  activeTab: string;
-  setActiveTab: (tab: string) => void;
-}) =>
-  isBorrow ? (
-    <BorrowTabSelector activeTab={activeTab} setActiveTab={setActiveTab} />
-  ) : (
-    <SupplyTabSelector activeTab={activeTab} setActiveTab={setActiveTab} />
+  options: string[];
+  mode: string;
+  setMode: (mode: QueryValue) => void;
+}) => {
+  return (
+    <Tabs className="w-full h-12 bg-card" value={mode} onValueChange={setMode}>
+      <TabsList
+        className="grid w-full p-0 gap-0"
+        style={{
+          gridTemplateColumns: `repeat(${options.length}, minmax(0, 1fr))`,
+        }}
+      >
+        {options.map((option) => (
+          <StyledTrigger key={option} value={option} />
+        ))}
+      </TabsList>
+    </Tabs>
   );
+};
 
-export const MarketModal = ({
-  token,
-  setSelectedToken,
-  defaultIsBorrow = false,
-  isVisible,
-  onClose,
-}: MarketModalProps) => {
-  const { marketID } = useSelectedMarket();
-  const [isBorrow, setIsBorrow] = useState(defaultIsBorrow);
-  const [activeTab, setActiveTab] = useState(
-    defaultIsBorrow ? "borrow" : "supply"
+export const MarketModal = () => {
+  const { params, updateParams } = useQueryParams();
+  const { modal, token, mode } = params;
+  const pathname = usePathname();
+
+  if (modal !== "market" || !token) return null;
+
+  const selectedToken = getTokenByAddress(token);
+  if (!selectedToken) return null;
+  return (
+    <InnerMarketModal
+      token={selectedToken}
+      mode={mode || "supply"}
+      updateParams={updateParams}
+      fullReplace={pathname != "/markets"}
+    />
   );
+};
+
+export const InnerMarketModal = ({
+  token,
+  mode,
+  updateParams,
+  fullReplace,
+}: {
+  token: Token;
+  mode: string;
+  updateParams: (params: Record<string, QueryValue>) => void;
+  fullReplace?: boolean;
+}) => {
+  const { marketID } = useSelectedMarket();
+
   const [isOpen, setIsOpen] = useState(false);
 
-  const toggleMode = useCallback(() => {
-    setIsBorrow((prev) => !prev);
-    setActiveTab((prev) => {
-      if (prev === "supply") return "borrow";
-      if (prev === "borrow") return "supply";
-      if (prev === "withdraw") return "repay";
-      if (prev === "repay") return "withdraw";
-      return prev;
+  const handleClose = () =>
+    updateParams({
+      modal: null,
+      token: null,
+      mode: null,
+      ...(fullReplace ? { market: null } : {}),
     });
-  }, []);
 
   const toggleWrappedNativeToken = useCallback(() => {
-    if (token.wrapperToken?.wrappedToken?.isNative)
-      setSelectedToken(token.wrapperToken);
-    if (token.wrappedToken?.isNative) setSelectedToken(token.wrappedToken);
-  }, [token]);
-
-  useEffect(() => {
-    if (isVisible) {
-      setIsBorrow(defaultIsBorrow);
-      setActiveTab(defaultIsBorrow ? "borrow" : "supply");
+    if (token.wrapperToken?.wrappedToken?.isNative) {
+      updateParams({ token: token.wrapperToken.address });
+    } else if (token.wrappedToken?.isNative) {
+      updateParams({ token: token.wrappedToken.address });
     }
-  }, [isVisible, defaultIsBorrow]);
+  }, [token]);
 
   const { market, isMarketLoading } = useMarket(marketID, token);
   const { setSearchQuery } = useSearch("vaults");
 
   if (isMarketLoading || !market) return null;
 
-  const isSupply = !isBorrow && activeTab === "supply";
-  const isWithdraw = !isBorrow && activeTab === "withdraw";
-  const isBorrowTab = isBorrow && activeTab === "borrow";
-  const isRepay = isBorrow && activeTab === "repay";
-
   const isVault = !!token.pair;
+  const shouldDisplaySwitch = token.isNative || token.wrappedToken?.isNative;
 
   return (
-    <Dialog
-      open={isVisible}
-      onOpenChange={(open: boolean) => {
-        if (!open && onClose) onClose();
-      }}
-    >
+    <Dialog onOpenChange={(open: boolean) => !open && handleClose()} open>
       <VisuallyHidden>
         <DialogDescription>
           Perform supply, borrow, and repay actions
@@ -311,23 +288,24 @@ export const MarketModal = ({
         className="bg-card text-primary overflow-y-auto pt-12 select-none"
       >
         <div tabIndex={0} aria-hidden="true" />
-        {isVault ? (
+        {isVault && (
           <div className="absolute left-5 top-5">
             <Image src={token.icon} alt="Vault Icon" width={30} height={30} />
           </div>
-        ) : (
-          <Button
-            variant="default"
-            className="w-[120px] z-[999] absolute left-4 top-4 items-center justify-center gap-2"
-            onClick={toggleMode}
-          >
-            <RefreshCw className="w-5 h-5" />
-            {isBorrow ? "Supply" : "Borrow"}
-          </Button>
         )}
-        {(token.isNative || token.wrappedToken?.isNative) && (
+        {!isVault && !shouldDisplaySwitch && (
+          <div className="absolute left-5 top-5">
+            <Image
+              src="/logo.svg"
+              alt="Vicuna Finance"
+              width={30}
+              height={30}
+            />
+          </div>
+        )}
+        {shouldDisplaySwitch && (
           <Button
-            className="w-[160px] z-[999] absolute left-[150px] top-4 items-center justify-center gap-2"
+            className="w-[160px] z-[999] absolute left-6 top-4 items-center justify-center gap-2"
             onClick={toggleWrappedNativeToken}
           >
             <RefreshCw className="w-5 h-5" />
@@ -436,26 +414,26 @@ export const MarketModal = ({
           <DialogHeader>
             <DialogTitle className="flex">
               <ActiveTabSelector
-                isBorrow={isBorrow}
-                activeTab={activeTab}
-                setActiveTab={setActiveTab}
+                options={["supply", "withdraw", "borrow", "repay"]}
+                mode={mode}
+                setMode={(mode) => updateParams({ mode })}
               />
             </DialogTitle>
             <div className="text-sm flex flex-col gap-8 pt-10 text-primary">
-              {isSupply && (
+              {mode == "supply" && (
                 <SupplyForm token={token} market={market} marketID={marketID} />
               )}
-              {isWithdraw && (
+              {mode == "withdraw" && (
                 <WithdrawForm
                   token={token}
                   market={market}
                   marketID={marketID}
                 />
               )}
-              {isBorrowTab && (
+              {mode == "borrow" && (
                 <BorrowForm token={token} market={market} marketID={marketID} />
               )}
-              {isRepay && (
+              {mode == "repay" && (
                 <RepayForm token={token} market={market} marketID={marketID} />
               )}
             </div>

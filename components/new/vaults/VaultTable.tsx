@@ -13,7 +13,13 @@ import {
 import { DoubleAvatar } from "@/components/ui/double-avatar";
 
 import { VaultAggregatedData } from "@/types";
-import { useSearch, useVaults, useVault, useSelectedVaults } from "@/hooks";
+import {
+  useSearch,
+  useVaults,
+  useVault,
+  useSelectedVaults,
+  useQueryParams,
+} from "@/hooks";
 import {
   ApyBreakdown,
   FullEligibleRewards,
@@ -117,6 +123,7 @@ const VaultLine = ({
 };
 
 export const VaultTable = () => {
+  const { updateParams } = useQueryParams();
   const { vaultDefinitions } = useSelectedVaults();
   const { vaults } = useVaults(vaultDefinitions);
   const { filter } = useSearch(
@@ -124,19 +131,11 @@ export const VaultTable = () => {
     (vault: VaultDefinition) => vault.receipt.name
   );
 
-  const [selectedVault, setSelectedVault] = useState<VaultDefinition>(
-    vaultDefinitions[0]
-  );
-  const [isModalOpen, setModalOpen] = useState(false);
-
-  const onSelectVault = (vault: VaultDefinition) => {
-    setSelectedVault(vault);
-    setModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalOpen(false);
-  };
+  const onSelectVault = (vault: VaultDefinition) =>
+    updateParams({
+      modal: "vault",
+      vault: vault.receipt.address,
+    });
 
   const [sortBy, setSortBy] = useState<SortBy | null>(null);
 
@@ -215,11 +214,6 @@ export const VaultTable = () => {
           ))}
         </TableBody>
       </Table>
-      <VaultModal
-        vaultDefinition={selectedVault}
-        isVisible={isModalOpen}
-        onClose={closeModal}
-      />
     </div>
   );
 };

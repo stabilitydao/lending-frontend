@@ -1,6 +1,5 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { ExternalLinkIcon } from "lucide-react";
 import Image from "next/image";
@@ -13,15 +12,21 @@ import {
 } from "@/components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { VaultAggregatedData } from "@/types";
+import { QueryValue, VaultAggregatedData } from "@/types";
 import Link from "next/link";
 import { DoubleAvatar } from "@/components/ui/double-avatar";
-import { useDepositInVault, useVault, useWithdrawFromVault } from "@/hooks";
+import {
+  useDepositInVault,
+  useQueryParams,
+  useVault,
+  useWithdrawFromVault,
+} from "@/hooks";
 import { VaultBaseActionForm } from "./VaultBaseActionForm";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { Deposit } from "@/components/icons/deposit";
 import { Withdraw } from "@/components/icons/withdraw";
-import { VaultDefinition } from "@/constants";
+import { getVaultByAddress, VaultDefinition } from "@/constants";
+import { Address } from "viem";
 
 const DepositVaultForm = ({
   vaultDefinition,
@@ -87,12 +92,6 @@ const WithdrawVaultForm = ({
   );
 };
 
-export interface VaultModalProps {
-  vaultDefinition: VaultDefinition;
-  isVisible: boolean;
-  onClose: () => void;
-}
-
 const StyledTrigger = ({ value }: { value: string }) => (
   <TabsTrigger
     value={value}
@@ -105,27 +104,70 @@ const StyledTrigger = ({ value }: { value: string }) => (
   </TabsTrigger>
 );
 
-export const VaultModal = ({
-  vaultDefinition,
-  isVisible,
-  onClose,
-}: VaultModalProps) => {
-  const [activeTab, setActiveTab] = useState("deposit");
-  const { vault } = useVault(vaultDefinition);
+const ActiveTabSelector = ({
+  options,
+  mode,
+  setMode,
+}: {
+  options: string[];
+  mode: string;
+  setMode: (mode: string) => void;
+}) => {
+  return (
+    <Tabs className="w-full h-12 bg-card" value={mode} onValueChange={setMode}>
+      <TabsList
+        className="grid w-full p-0 gap-0"
+        style={{
+          gridTemplateColumns: `repeat(${options.length}, minmax(0, 1fr))`,
+        }}
+      >
+        {options.map((option) => (
+          <StyledTrigger key={option} value={option} />
+        ))}
+      </TabsList>
+    </Tabs>
+  );
+};
 
-  useEffect(() => {
-    if (isVisible) {
-      setActiveTab("deposit");
-    }
-  }, [isVisible]);
+export const VaultModal = () => {
+  const { params, updateParams } = useQueryParams();
+  const { modal, vault, mode } = params;
+
+  if (modal !== "vault" || !vault) return null;
+
+  const vaultDefinition = getVaultByAddress(vault as Address);
+  if (!vaultDefinition) return null;
 
   return (
-    <Dialog
-      open={isVisible}
-      onOpenChange={(open: boolean) => {
-        if (!open) onClose();
-      }}
-    >
+    <InnerVaultModal
+      vaultDefinition={vaultDefinition}
+      mode={mode || "deposit"}
+      updateParams={updateParams}
+    />
+  );
+};
+
+const InnerVaultModal = ({
+  vaultDefinition,
+  mode,
+  updateParams,
+}: {
+  vaultDefinition: VaultDefinition;
+  mode: string;
+  updateParams: (params: Record<string, QueryValue>) => void;
+}) => {
+  const { vault: loadedVault } = useVault(vaultDefinition);
+
+  const handleClose = () => {
+    updateParams({
+      modal: null,
+      vault: null,
+      mode: null,
+    });
+  };
+
+  return (
+    <Dialog onOpenChange={(open: boolean) => !open && handleClose()} open>
       <VisuallyHidden>
         <DialogDescription>
           Perform deposit or withdraw on a vault
@@ -137,6 +179,8 @@ export const VaultModal = ({
         className="bg-card text-primary overflow-y-auto pt-12 select-none"
       >
         <div tabIndex={0} aria-hidden="true" />
+
+        {/* Vault Icon */}
         <div className="absolute left-5 top-5">
           <Image
             src={vaultDefinition.receipt.icon}
@@ -145,16 +189,20 @@ export const VaultModal = ({
             height={30}
           />
         </div>
+
+        {/* Add Liquidity Link */}
         <div className="absolute right-[4px] top-[16px]">
           <Link
             href={vaultDefinition.receipt.buyLink}
             target="_blank"
-            className="right-0 mr-4 flex items-center gap-2 flex flex-row"
+            className="right-0 mr-4 flex items-center gap-2"
           >
             Add Liquidity
             <ExternalLinkIcon className="w-4 h-4 text-primary" />
           </Link>
         </div>
+
+        {/* Vault Info */}
         <div className="relative w-full flex items-center justify-center mt-6">
           <div className="flex items-center gap-8">
             <DoubleAvatar
@@ -175,6 +223,7 @@ export const VaultModal = ({
           </div>
         </div>
 
+        {/* Background Logo */}
         <div className="absolute inset-0 flex items-center justify-center z-0 pointer-events-none">
           <Image
             src="/logo.svg"
@@ -185,31 +234,28 @@ export const VaultModal = ({
           />
         </div>
 
+        {/* Active Tab Selector + Forms */}
         <div className="relative z-10">
           <DialogHeader>
             <DialogTitle className="flex">
-              <Tabs
-                className="w-full h-12 bg-card"
-                value={activeTab}
-                onValueChange={setActiveTab}
-              >
-                <TabsList className="grid w-full grid-cols-2 p-0 gap-0">
-                  <StyledTrigger value="deposit" />
-                  <StyledTrigger value="withdraw" />
-                </TabsList>
-              </Tabs>
+              <ActiveTabSelector
+                options={["deposit", "withdraw"]}
+                mode={mode}
+                setMode={(mode) => updateParams({ mode })}
+              />
             </DialogTitle>
+
             <div className="text-sm flex flex-col gap-8 pt-10 text-primary">
-              {activeTab === "deposit" && (
+              {mode === "deposit" && (
                 <DepositVaultForm
                   vaultDefinition={vaultDefinition}
-                  vault={vault}
+                  vault={loadedVault}
                 />
               )}
-              {activeTab === "withdraw" && (
+              {mode === "withdraw" && (
                 <WithdrawVaultForm
                   vaultDefinition={vaultDefinition}
-                  vault={vault}
+                  vault={loadedVault}
                 />
               )}
             </div>
