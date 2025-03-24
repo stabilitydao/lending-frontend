@@ -181,3 +181,11 @@ export type MarketDefinition = {
   };
   chainId: Chain["id"];
 };
+
+export type MarketOverrides = {
+  [key: Address]: {
+    reason: string;
+    totalDistributedUSD: number;
+    durationInDays: number;
+  }[];
+};

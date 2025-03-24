@@ -21,3 +21,4 @@ export * from "./useUserIncentivesData";
 export * from "./useMarketsTVL";
 export * from "./useLooping";
 export * from "./useUnlooping";
+export * from "./useAprOverride";

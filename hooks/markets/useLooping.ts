@@ -152,7 +152,6 @@ const useLooping = (
     tokenNeededForLP.address.toLowerCase() as Address;
 
   const loopingContract = marketDefinition.LOOPING!.LOOPING_CONTRACT;
-  const availableVaults = marketDefinition.LOOPING!.VAULTS;
   const depositTokens = marketDefinition.LOOPING!.IO;
   const possibleBorrowTokens = marketDefinition.LOOPING!.IO;
 

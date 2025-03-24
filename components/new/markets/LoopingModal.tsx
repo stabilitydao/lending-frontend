@@ -461,7 +461,9 @@ const ExecuteButton = ({
   </>
 );
 
-export const LoopingModal = () => {
+export const LoopingModal = () => <></>;
+
+export const LoopingModalTemp = () => {
   const { params, updateParams } = useQueryParams();
   const { modal, vault, supplyToken, borrowToken } = params;
   const pathname = usePathname();

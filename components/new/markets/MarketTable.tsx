@@ -8,7 +8,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { MarketModal } from "./MarketModal";
 import {
   useMarket,
   useMarkets,
@@ -18,7 +17,7 @@ import {
   useUserData,
 } from "@/hooks";
 import { formatSuffix, trimmedNumber } from "@/helpers";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   HealthBar,
   ApyBreakdown,
@@ -28,9 +27,6 @@ import {
   MerklNote,
   StandardTooltip,
   LoopingButton,
-  LoopingModal,
-  UnloopingButton,
-  UnloopingModal,
 } from "@/components";
 import { DoubleAvatar } from "@/components/ui/double-avatar";
 import { Token } from "@/constants";
@@ -300,7 +296,7 @@ const MarketLine = ({
       <TableCell>{supplyAPR}</TableCell>
       <TableCell>{token.pair ? null : borrowInfo}</TableCell>
       <TableCell>{token.pair ? null : borrowAPR}</TableCell>
-      {withVault && (
+      {/* {withVault && (
         <TableCell>
           {token.pair && (
             <LoopingButton
@@ -311,7 +307,7 @@ const MarketLine = ({
             />
           )}
         </TableCell>
-      )}
+      )} */}
     </TableRow>
   );
 };

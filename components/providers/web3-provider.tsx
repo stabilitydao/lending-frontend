@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { WagmiProvider, createConfig, http } from "wagmi";
+import { WagmiProvider, createConfig, http, injected } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConnectKitProvider, getDefaultConfig } from "connectkit";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -33,7 +33,7 @@ const config = createConfig(
     transports: {
       [sonic.id]: http("https://rpc.soniclabs.com"),
     },
-
+    connectors: [injected()],
     // Required API Keys
     walletConnectProjectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
 
