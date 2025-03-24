@@ -29,8 +29,10 @@ const subMarketHealthBar = new HealthBarDefinition(
 export const MARKET_DEFINITIONS: {
   [key: string]: MarketDefinition;
 } = {
-  "Main Protocol": {
+  main: {
     id: 0,
+    name: "Main Protocol",
+    description: "A simple market to lend and borrow assets.",
     tokens: [S, USDCe, scUSD, wETH, /*scETH,*/ USDT, wOS, stS],
     POOL_ADDRESS_PROVIDER: "0x24835e3Da1B402f8037e3ce6dE4a701677fa1b54",
     AAVE_POOL: "0xaa1C02a83362BcE106dFf6eB65282fE8B97A1665",
@@ -41,8 +43,11 @@ export const MARKET_DEFINITIONS: {
       ["red", "orange", "yellow", "green"]
     ),
   },
-  "Sonic Market": {
+  sonic: {
     id: 1,
+    name: "Sonic Market",
+    description:
+      "A market exclusively made of Sonic-based assets. Its high correlation makes liquidation much less of a risk.",
     tokens: [
       VAULT_SWAPX_ICHI_WS_OS_OS.receipt,
       VAULT_SWAPX_ICHI_WS_OS_WS.receipt,
@@ -61,14 +66,19 @@ export const MARKET_DEFINITIONS: {
       VAULTS: [
         VAULT_SWAPX_ICHI_WS_STS_STS.receipt,
         VAULT_SWAPX_ICHI_WS_STS_WS.receipt,
+        VAULT_SWAPX_ICHI_WS_OS_OS.receipt,
+        VAULT_SWAPX_ICHI_WS_OS_WS.receipt,
       ],
-      IO: [wS, stS],
+      IO: [wS, stS, wOS],
     },
     chainId: sonic.id,
     healthBar: subMarketHealthBar,
   },
-  "Stable Market": {
+  stables: {
     id: 2,
+    name: "Stable Market",
+    description:
+      "A market exclusively made of stablecoins. Its low volatility makes liquidation much less of a risk.",
     tokens: [
       VAULT_SWAPX_ICHI_USDC_SCUSD_SCUSD.receipt,
       VAULT_SWAPX_ICHI_USDC_SCUSD_USDC.receipt,
@@ -98,4 +108,4 @@ export const MARKET_DEFINITIONS: {
   },
 };
 
-export const DEFAULT_MARKET_ID = "Main Protocol";
+export const DEFAULT_MARKET_ID = "main";

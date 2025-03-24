@@ -1,4 +1,8 @@
-import { MarketProvider, SearchProvider, VaultsProvider } from "@/components";
+import {
+  QueryParamsProvider,
+  SearchProvider,
+  VaultsProvider,
+} from "@/components";
 import { DisclaimerProvider } from "@/components/providers/disclaimer-provider";
 import { Web3Provider } from "@/components/providers/web3-provider";
 
@@ -10,11 +14,11 @@ export const ProvidersWrapper = ({
   return (
     <Web3Provider>
       <DisclaimerProvider>
-        <MarketProvider>
-          <VaultsProvider>
+        <VaultsProvider>
+          <QueryParamsProvider>
             <SearchProvider>{children}</SearchProvider>
-          </VaultsProvider>
-        </MarketProvider>
+          </QueryParamsProvider>
+        </VaultsProvider>
       </DisclaimerProvider>
     </Web3Provider>
   );

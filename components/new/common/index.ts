@@ -8,3 +8,4 @@ export * from "./FullEligibleRewards";
 export * from "./MerklNote";
 export * from "./MaxInput";
 export * from "./WrapIntoTooltip";
+export * from "./TokenIcon";

@@ -122,18 +122,17 @@ type ReviewDataType = {
   feeUSDValue: number;
 };
 
-const useLooping = (marketID: string, selectedVault: Token) => {
+const useLooping = (
+  marketID: string,
+  selectedVault: Token,
+  depositToken: Token,
+  borrowToken: Token
+) => {
   const marketDefinition = MARKET_DEFINITIONS[marketID];
   const { marketsData } = useMarketsRaw(marketID);
   const feeInPerTenK = 30;
 
-  const [depositToken, setDepositToken] = useState<Token>(
-    marketDefinition.LOOPING!.IO[0]
-  );
   const [depositAmount, setDepositAmount] = useState<string>("");
-  const [borrowToken, setBorrowToken] = useState<Token>(
-    marketDefinition.LOOPING!.IO[0]
-  );
   const [leverage, setLeverage] = useState<string>("1.00");
   const [computedBorrowAmountBn, setComputedBorrowAmountBn] = useState<bigint>(
     BigInt(0)
@@ -153,7 +152,6 @@ const useLooping = (marketID: string, selectedVault: Token) => {
     tokenNeededForLP.address.toLowerCase() as Address;
 
   const loopingContract = marketDefinition.LOOPING!.LOOPING_CONTRACT;
-  const availableVaults = marketDefinition.LOOPING!.VAULTS;
   const depositTokens = marketDefinition.LOOPING!.IO;
   const possibleBorrowTokens = marketDefinition.LOOPING!.IO;
 
@@ -230,7 +228,7 @@ const useLooping = (marketID: string, selectedVault: Token) => {
           depositTokenAddress,
           token.address,
           tokenNeededForLPAddress
-        ) && tokenLeverage > 0.05;
+        ) && tokenLeverage > 1.05;
       result[token.address] = {
         token,
         maxLeverage: Math.floor(tokenLeverage * 100) / 100,
@@ -249,18 +247,6 @@ const useLooping = (marketID: string, selectedVault: Token) => {
     prices,
     tokenNeededForLPAddress,
   ]);
-
-  useEffect(() => {
-    if (
-      !isValidAddresses(
-        depositTokenAddress,
-        borrowTokenAddress,
-        tokenNeededForLPAddress
-      )
-    ) {
-      setBorrowToken(depositToken);
-    }
-  }, [tokenNeededForLPAddress, depositTokenAddress, borrowTokenAddress]);
 
   const { allowance, invalidateAllowanceQuery } = useAllowance(
     loopingContract,
@@ -495,13 +481,9 @@ const useLooping = (marketID: string, selectedVault: Token) => {
 
   return {
     selectedVault,
-    depositToken,
-    setDepositToken,
     depositInfo,
     depositAmount,
     setDepositAmount,
-    borrowToken,
-    setBorrowToken,
     borrowInfo,
     leverage,
     setLeverage,

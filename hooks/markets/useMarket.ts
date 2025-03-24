@@ -1,16 +1,12 @@
 import { Address } from "viem";
 import {
+  useAprOverride,
   useIncentivesData,
   useMarketsRaw,
   useMerklAPRs,
   useVaultsBreakdown,
 } from "@/hooks";
-import {
-  getTokenByAddress,
-  getVaultByAddress,
-  MARKET_DEFINITIONS,
-  Token,
-} from "@/constants";
+import { getTokenByAddress, getVaultByAddress, Token } from "@/constants";
 import { MarketInfo } from "@/types";
 import { bnToNumber } from "@/helpers";
 
@@ -21,6 +17,7 @@ const PRICE_DECIMALS = 8;
 const useMarkets = (marketID: string) => {
   const { isMarketsDataLoading, marketsData, invalidateMarketsRawQuery } =
     useMarketsRaw(marketID);
+  const overrides = useAprOverride();
   const { merklAPRs, isMerklAPRsLoading, invalidateMerklAPRsQuery } =
     useMerklAPRs();
   const { vaultsBreakdown } = useVaultsBreakdown();
@@ -35,7 +32,7 @@ const useMarkets = (marketID: string) => {
     Address,
     {
       isMarketLoading: boolean;
-      market: MarketInfo | undefined;
+      market: MarketInfo;
       marketBnData:
         | {
             totalSupplied: bigint;
@@ -127,9 +124,19 @@ const useMarkets = (marketID: string) => {
       vaultAPR = cpy * (Math.pow(1 + vaultBreakdown.apy, 1 / cpy) - 1) * 100;
     }
 
-    const totalSupplyAPR =
-      supplyAPR + incentiveSupplyAPR + merklSupplyAPR + vaultAPR;
-    const totalBorrowAPR = borrowAPR + incentiveBorrowAPR + merklBorrowAPR;
+    const aprOverrides =
+      overrides[rawMarket.aTokenAddress.toLowerCase() as Address];
+
+    const calculatedAprOverrides = (aprOverrides ?? []).reduce(
+      (acc, override) => ({
+        ...acc,
+        [override.reason]:
+          (36500 * override.totalDistributedUSD) /
+          totalSuppliedValue /
+          override.durationInDays,
+      }),
+      {}
+    );
 
     const breakdown: MarketInfo["breakdown"] = {
       supply: {},
@@ -142,6 +149,7 @@ const useMarkets = (marketID: string) => {
         "Incentives APR": incentiveSupplyAPR,
         "Merkl Rewards": merklSupplyAPR,
         "Vault APR": vaultAPR,
+        ...calculatedAprOverrides,
       }).filter(([_, value]) => value !== 0)
     );
 
@@ -152,6 +160,17 @@ const useMarkets = (marketID: string) => {
         "Merkl Rewards": merklBorrowAPR,
       }).filter(([_, value]) => value !== 0)
     );
+
+    const totalSupplyAPR = Object.values(breakdown.supply).reduce(
+      (acc, val) => acc + val,
+      0
+    );
+
+    const totalBorrowAPR = Object.values(breakdown.borrow).reduce(
+      (acc, val) => acc + val,
+      0
+    );
+
     const fakeSupplyCap = bnToNumber(rawMarket.supplyCap, 0) * 0.9999;
     const fakeSupplyCapLeft = Math.max(
       fakeSupplyCap - bnToNumber(totalSupplied, decimals),
@@ -165,11 +184,7 @@ const useMarkets = (marketID: string) => {
     const priceNumber = bnToNumber(price, PRICE_DECIMALS);
 
     const marketInfo: MarketInfo = {
-      asset: {
-        name,
-        symbol,
-        imageSrc: icon,
-      },
+      asset: token,
       supply: {
         tvl: {
           amount: bnToNumber(totalSupplied, decimals),

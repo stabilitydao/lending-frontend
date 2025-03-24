@@ -8,16 +8,16 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { MarketModal } from "./MarketModal";
 import {
   useMarket,
   useMarkets,
+  useQueryParams,
   useSearch,
   useSelectedMarket,
   useUserData,
 } from "@/hooks";
 import { formatSuffix, trimmedNumber } from "@/helpers";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   HealthBar,
   ApyBreakdown,
@@ -27,9 +27,6 @@ import {
   MerklNote,
   StandardTooltip,
   LoopingButton,
-  LoopingModal,
-  UnloopingButton,
-  UnloopingModal,
 } from "@/components";
 import { DoubleAvatar } from "@/components/ui/double-avatar";
 import { Token } from "@/constants";
@@ -45,13 +42,12 @@ const MarketLine = ({
   token: Token;
   onSelectToken: (token: Token) => void;
   withVault?: boolean;
-  onClickLoopingButton: () => void;
+  onClickLoopingButton: (token: Token) => void;
   onClickUnloopingButton: () => void;
 }) => {
-  const { marketID, marketDefinition } = useSelectedMarket();
+  const { marketID } = useSelectedMarket();
   const { market, isMarketLoading } = useMarket(marketID, token);
-  const maybeToken = token.isNative ? token.wrapperToken! : token;
-  const { userData } = useUserData(marketID, maybeToken);
+  // const maybeToken = token.isNative ? token.wrapperToken! : token;
   if (isMarketLoading || !market) return null;
   const supplyPercentage = Math.min(
     (market.supply.tvl.amount / market.supply.cap.amount) * 100,
@@ -300,87 +296,44 @@ const MarketLine = ({
       <TableCell>{supplyAPR}</TableCell>
       <TableCell>{token.pair ? null : borrowInfo}</TableCell>
       <TableCell>{token.pair ? null : borrowAPR}</TableCell>
-      {withVault && (
+      {/* {withVault && (
         <TableCell>
-          {/* {token.pair &&
-            marketDefinition.LOOPING?.VAULTS.includes(maybeToken) && (
-              <div className="flex justify-left">
-                <LoopingButton
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onClickLoopingButton!();
-                  }}
-                />
-              </div>
-            )}
-          {!token.pair &&
-            marketDefinition.LOOPING?.IO.includes(maybeToken) &&
-            userData?.variableDebt && (
-              <div className="flex justify-left">
-                <UnloopingButton
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onClickUnloopingButton!();
-                  }}
-                />
-              </div>
-            )} */}
+          {token.pair && (
+            <LoopingButton
+              onClick={(e) => {
+                e.stopPropagation();
+                onClickLoopingButton(token);
+              }}
+            />
+          )}
         </TableCell>
-      )}
+      )} */}
     </TableRow>
   );
 };
+
 export const MarketTable = () => {
+  const { updateParams } = useQueryParams();
   const { marketDefinition, marketID } = useSelectedMarket();
   const { markets } = useMarkets(marketID);
 
-  const [selectedToken, setSelectedToken] = useState<Token>(
-    marketDefinition.tokens[0]
-  );
-  const [selectedLoopingVault, setSelectedLoopingVault] = useState<Token>(
-    marketDefinition.LOOPING
-      ? marketDefinition.LOOPING.VAULTS[0]
-      : marketDefinition.tokens[1]
-  );
   const [selectedUnloopingToken, setSelectedUnloopingToken] = useState<Token>(
     marketDefinition.LOOPING
       ? marketDefinition.LOOPING.VAULTS[0]
       : marketDefinition.tokens[1]
   );
-  const [canUseModal, setCanUseModal] = useState(false);
 
-  useEffect(() => {
-    setSelectedToken(marketDefinition.tokens[0]);
-    setSelectedLoopingVault(
-      marketDefinition.LOOPING
-        ? marketDefinition.LOOPING.VAULTS[0]
-        : marketDefinition.tokens[1]
-    );
-    if (marketDefinition.LOOPING) {
-      setCanUseModal(true);
-    } else {
-      setCanUseModal(false);
-    }
-  }, [marketDefinition]);
-
-  const [isModalOpen, setModalOpen] = useState(false);
-  const [isLoopingModalOpen, setLoopingModalOpen] = useState(false);
   const [isUnloopingModalOpen, setUnloopingModalOpen] = useState(false);
   const { filter } = useSearch("markets", (tokens: Token) => tokens.name);
   const [sortBy, setSortBy] = useState<SortBy | null>(null);
 
-  const onSelectToken = (token: Token) => {
-    setSelectedToken(token);
-    setModalOpen(true);
+  const onSelectToken = (token: Token) =>
+    updateParams({ modal: "market", token: token.address });
+  const onClickLoopingButton = (token: Token) => {
+    updateParams({ modal: "leverage", vault: token.address });
   };
 
-  const onClickLoopingButton = () => setLoopingModalOpen(true);
   const onClickUnloopingButton = () => setUnloopingModalOpen(true);
-
-  const closeModal = () => setModalOpen(false);
-
-  const closeLoopingModal = () => setLoopingModalOpen(false);
-  const closeUnloopingModal = () => setUnloopingModalOpen(false);
 
   const sort = (tokens: Token[]) => {
     if (!sortBy || !markets) return tokens;
@@ -462,10 +415,7 @@ export const MarketTable = () => {
               token={token}
               onSelectToken={onSelectToken}
               withVault={isWithVaults}
-              onClickLoopingButton={() => {
-                setSelectedLoopingVault(token);
-                onClickLoopingButton();
-              }}
+              onClickLoopingButton={onClickLoopingButton}
               onClickUnloopingButton={() => {
                 setSelectedUnloopingToken(token);
                 onClickUnloopingButton();
@@ -475,26 +425,6 @@ export const MarketTable = () => {
         </TableBody>
       </Table>
       <HealthBar />
-      <MarketModal
-        token={selectedToken}
-        isVisible={isModalOpen}
-        onClose={closeModal}
-        setSelectedToken={setSelectedToken}
-      />
-      {canUseModal && (
-        <LoopingModal
-          isVisible={isLoopingModalOpen}
-          onClose={closeLoopingModal}
-          vault={selectedLoopingVault}
-        />
-      )}
-      {canUseModal && (
-        <UnloopingModal
-          isVisible={isUnloopingModalOpen}
-          onClose={closeUnloopingModal}
-          token={selectedUnloopingToken}
-        />
-      )}
     </div>
   );
 };

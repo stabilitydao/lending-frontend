@@ -2,11 +2,7 @@ import { Address, Chain } from "viem";
 import { Token } from "@/constants";
 
 export type MarketInfo = {
-  asset: {
-    name: string;
-    symbol: string;
-    imageSrc: string;
-  };
+  asset: Token;
   supply: {
     tvl: {
       amount: number;
@@ -170,6 +166,8 @@ export class HealthBarDefinition {
 
 export type MarketDefinition = {
   id: number;
+  name: string;
+  description: string;
   tokens: Token[];
   healthBar: HealthBarDefinition;
   POOL_ADDRESS_PROVIDER: Address;
@@ -182,4 +180,12 @@ export type MarketDefinition = {
     IO: Token[];
   };
   chainId: Chain["id"];
+};
+
+export type MarketOverrides = {
+  [key: Address]: {
+    reason: string;
+    totalDistributedUSD: number;
+    durationInDays: number;
+  }[];
 };

@@ -424,6 +424,30 @@ export const UnloopingModal = ({
   onClose: () => void;
   token: Token;
 }) => {
+  const { marketDefinition } = useSelectedMarket();
+
+  if (!marketDefinition.LOOPING) {
+    return null;
+  }
+
+  return (
+    <UnloopingModalWithHook
+      isVisible={isVisible}
+      onClose={onClose}
+      token={token}
+    />
+  );
+};
+
+const UnloopingModalWithHook = ({
+  isVisible,
+  onClose,
+  token,
+}: {
+  isVisible: boolean;
+  onClose: () => void;
+  token: Token;
+}) => {
   token = token.isNative ? token.wrapperToken! : token;
   const { marketDefinition, marketID } = useSelectedMarket();
 

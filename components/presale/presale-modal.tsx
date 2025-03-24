@@ -6,15 +6,7 @@ import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "../ui/separator";
-import {
-  useChainId,
-  useAccount,
-  useWriteContract,
-  useChains,
-  usePublicClient,
-  useSwitchChain,
-} from "wagmi";
-import { createConfig } from "@wagmi/core";
+import { useChainId, useAccount, useSwitchChain } from "wagmi";
 import {
   parseUnits,
   formatUnits,

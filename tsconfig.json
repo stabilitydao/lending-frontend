@@ -31,7 +31,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "components/ui"
+    "components/ui",
+    "hooks/common/useQueryParams.ts"
   ],
   "exclude": ["node_modules"]
 }

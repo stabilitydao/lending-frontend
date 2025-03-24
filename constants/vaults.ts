@@ -33,7 +33,14 @@ export const getVaultById = (id: string) =>
   ALL_VAULTS.find((vault) => vault.id === id);
 
 export const getVaultByAddress = (address: Address) =>
-  ALL_VAULTS.find((vault) => vault.receipt.address === address);
+  ALL_VAULTS.find(
+    (vault) => vault.receipt.address.toLowerCase() === address.toLowerCase()
+  );
+
+export const getVaultByLPAddress = (address: Address) =>
+  ALL_VAULTS.find(
+    (vault) => vault.lp.address.toLowerCase() === address.toLowerCase()
+  );
 
 export class VaultDefinition {
   id: string;

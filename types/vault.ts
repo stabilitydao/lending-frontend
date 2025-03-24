@@ -1,6 +1,7 @@
 import { VaultDefinition } from "@/constants";
 
 export type VaultAggregatedData = {
+  definition: VaultDefinition;
   name: string;
   lp: {
     balance: bigint;

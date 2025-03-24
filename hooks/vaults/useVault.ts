@@ -98,6 +98,7 @@ const useVaults = (vaultDefinitions: VaultDefinition[]) => {
 
     vaults[vId] = {
       vault: {
+        definition: vaultDefinition,
         name: vaultDefinition.receipt.name,
         lp: {
           balance: userLpBalance,
@@ -144,7 +145,7 @@ const useVaults = (vaultDefinitions: VaultDefinition[]) => {
   };
 
   return {
-    vaults: vaults,
+    vaults,
     isLoading,
     invalidateAllVaultData,
   };
