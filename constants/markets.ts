@@ -36,7 +36,7 @@ export const MARKET_DEFINITIONS: {
     id: 0,
     name: "Main Protocol",
     description: "A simple market to lend and borrow assets.",
-    tokens: [S, USDCe, scUSD, wETH, scETH, USDT, wOS, stS],
+    tokens: [S, USDCe, scUSD, wETH, USDT, wOS, stS],
     POOL_ADDRESS_PROVIDER: "0x24835e3Da1B402f8037e3ce6dE4a701677fa1b54",
     AAVE_POOL: "0xaa1C02a83362BcE106dFf6eB65282fE8B97A1665",
     NATIVE_TOKEN_GATEWAY: "0xbE0B2230B842be6A37188038a58755534dC9E999",
