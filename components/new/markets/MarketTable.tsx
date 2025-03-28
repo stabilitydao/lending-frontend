@@ -31,6 +31,7 @@ import {
 import { DoubleAvatar } from "@/components/ui/double-avatar";
 import { DEFAULT_MARKET_ID, Token } from "@/constants";
 import { MarketInfo } from "@/types";
+import Link from "next/link";
 
 const MarketLine = ({
   token,
@@ -363,8 +364,17 @@ export const MarketTable = () => {
   return (
     <div className="p-4 gap-6 flex flex-col">
       {marketID != DEFAULT_MARKET_ID && (
-        <div className="flex items-center gap-4 justify-between text-red-500">
-          Due to an exploit, the submarkets are currently paused.
+        <div className="text-red-500">
+          Due to an exploit, the submarkets are currently paused. Check the{" "}
+          <Link
+            href="https://discord.com/invite/vicuna"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline"
+          >
+            discord
+          </Link>{" "}
+          for more information.
         </div>
       )}
       <Table>
