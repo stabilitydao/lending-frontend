@@ -29,7 +29,7 @@ import {
   LoopingButton,
 } from "@/components";
 import { DoubleAvatar } from "@/components/ui/double-avatar";
-import { Token } from "@/constants";
+import { DEFAULT_MARKET_ID, Token } from "@/constants";
 import { MarketInfo } from "@/types";
 
 const MarketLine = ({
@@ -293,9 +293,11 @@ const MarketLine = ({
       <TableCell>{tokenDisplay}</TableCell>
       <TableCell>{<FullEligibleRewards />}</TableCell>
       <TableCell>{supplyInfo}</TableCell>
-      <TableCell>{supplyAPR}</TableCell>
+      <TableCell>{marketID != DEFAULT_MARKET_ID ? "0%" : supplyAPR}</TableCell>
       <TableCell>{token.pair ? null : borrowInfo}</TableCell>
-      <TableCell>{token.pair ? null : borrowAPR}</TableCell>
+      <TableCell>
+        {token.pair ? null : marketID != DEFAULT_MARKET_ID ? "0%" : supplyAPR}
+      </TableCell>
       {/* {withVault && (
         <TableCell>
           {token.pair && (
@@ -360,6 +362,11 @@ export const MarketTable = () => {
 
   return (
     <div className="p-4 gap-6 flex flex-col">
+      {marketID != DEFAULT_MARKET_ID && (
+        <div className="flex items-center gap-4 justify-between text-red-500">
+          Due to an exploit, the submarkets are currently paused.
+        </div>
+      )}
       <Table>
         <TableHeader className="h-8 border-b border-background">
           <TableRow>

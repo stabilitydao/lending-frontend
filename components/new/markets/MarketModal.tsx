@@ -33,7 +33,12 @@ import {
 import { minBn } from "@/helpers";
 import { BaseActionForm } from "@/components";
 import Link from "next/link";
-import { getTokenByAddress, MARKET_DEFINITIONS, Token } from "@/constants";
+import {
+  DEFAULT_MARKET_ID,
+  getTokenByAddress,
+  MARKET_DEFINITIONS,
+  Token,
+} from "@/constants";
 import { DoubleAvatar } from "@/components/ui/double-avatar";
 
 export interface MarketModalProps {
@@ -220,10 +225,11 @@ const ActiveTabSelector = ({
 
 export const MarketModal = () => {
   const { params, updateParams } = useQueryParams();
-  const { modal, token, mode } = params;
+  const { modal, token, mode, market } = params;
   const pathname = usePathname();
 
   if (modal !== "market" || !token) return null;
+  if (market != DEFAULT_MARKET_ID) return null;
 
   const selectedToken = getTokenByAddress(token);
   if (!selectedToken) return null;
