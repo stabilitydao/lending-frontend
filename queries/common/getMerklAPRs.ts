@@ -2,6 +2,7 @@ import axios from "axios";
 import { Address } from "viem";
 
 export const getMerklAPRs = async () => {
+  return {};
   try {
     const response = await axios.get(
       "https://api.merkl.xyz/v4/opportunities?name=Vicuna&items=1000"

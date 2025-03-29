@@ -229,7 +229,7 @@ export const MarketModal = () => {
   const pathname = usePathname();
 
   if (modal !== "market" || !token) return null;
-  if (market != DEFAULT_MARKET_ID && market != undefined) return null;
+  if (market == "stables" || market == "sonic") return null;
 
   const selectedToken = getTokenByAddress(token);
   if (!selectedToken) return null;
