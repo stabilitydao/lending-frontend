@@ -297,7 +297,7 @@ const MarketLine = ({
       <TableCell>{marketID != DEFAULT_MARKET_ID ? "0%" : supplyAPR}</TableCell>
       <TableCell>{token.pair ? null : borrowInfo}</TableCell>
       <TableCell>
-        {token.pair ? null : marketID != DEFAULT_MARKET_ID ? "0%" : supplyAPR}
+        {token.pair ? null : marketID != DEFAULT_MARKET_ID ? "0%" : borrowAPR}
       </TableCell>
       {/* {withVault && (
         <TableCell>

@@ -56,7 +56,7 @@ const useSuggestions = (): SuggestionsWrapper[] => {
     return bScore - aScore;
   });
 
-  return mergedArray;
+  return [];
 };
 
 export { useSuggestions };
