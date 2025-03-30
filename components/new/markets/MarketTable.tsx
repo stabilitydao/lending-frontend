@@ -292,7 +292,7 @@ const MarketLine = ({
       onClick={() => onSelectToken(token)}
     >
       <TableCell>{tokenDisplay}</TableCell>
-      <TableCell>{<FullEligibleRewards />}</TableCell>
+      {/* <TableCell>{<FullEligibleRewards />}</TableCell> */}
       <TableCell>{supplyInfo}</TableCell>
       <TableCell>{marketID != DEFAULT_MARKET_ID ? "0%" : supplyAPR}</TableCell>
       <TableCell>{token.pair ? null : borrowInfo}</TableCell>
@@ -387,9 +387,9 @@ export const MarketTable = () => {
               setSortBy={setSortBy}
               defaultOrder="asc"
             />
-            <TableHead className="text-muted">
+            {/* <TableHead className="text-muted">
               <div className="flex items-center gap-2">Eligible For</div>
-            </TableHead>
+            </TableHead> */}
             <SortableTableHead
               label="Supply TVL"
               extract={(tm: MarketInfo) => tm?.supply.tvl.value}

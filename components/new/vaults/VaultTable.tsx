@@ -71,9 +71,9 @@ const VaultLine = ({
           </div>
         </div>
       </TableCell>
-      <TableCell>
+      {/* <TableCell>
         <FullEligibleRewards />
-      </TableCell>
+      </TableCell> */}
       <TableCell>
         <div className="flex flex-col">
           <span className="text-sm">
@@ -163,9 +163,9 @@ export const VaultTable = () => {
               setSortBy={setSortBy}
               defaultOrder="asc"
             />
-            <TableHead className="text-muted">
+            {/* <TableHead className="text-muted">
               <div className="flex items-center gap-2">Eligible For</div>
-            </TableHead>
+            </TableHead> */}
             <SortableTableHead
               label="TVL"
               extract={(v: VaultAggregatedData) => v.tvl}
