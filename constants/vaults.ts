@@ -64,9 +64,9 @@ export class VaultDefinition {
     decimals?: number;
   }) {
     this.id = id;
-    if (pair[0].chainId !== pair[1].chainId) {
-      throw new Error("Tokens must be on the same chain");
-    }
+    // if (pair[0].chainId !== pair[1].chainId) {
+    //   throw new Error("Tokens must be on the same chain");
+    // }
     this.chainId = pair[0].chainId;
     this.receipt = new Token({
       name,
@@ -688,6 +688,73 @@ export const VAULT_EQUALIZER_WS_WHALE = new VaultDefinition({
     "https://equalizer.exchange/liquidity/0x8D2b12D0DC9BB13C62d213EFbEa10fD0bfCe3C88/add",
 });
 
+//----------------------
+// AAVEV Vaults
+//----------------------
+
+export const VAULT_AAVE_STS = new VaultDefinition({
+  id: "aavev3-sts",
+  name: "stS",
+  symbol: "stS",
+  pair: [stS],
+  vaultAddress: "0x937C919E62A43E7C4517cFd43F9Ac3208E1d5FaE",
+  lpAddress: "0xE5DA20F15420aD15DE0fa650600aFc998bbE3955",
+  icon: "/icons/dex/aave.png",
+  buyLink:
+    "https://app.odos.xyz/swap?chainId=146&inputCurrency=0xE5DA20F15420aD15DE0fa650600aFc998bbE3955",
+});
+
+export const VAULT_AAVE_WS = new VaultDefinition({
+  id: "aavev3-ws",
+  name: "wS",
+  symbol: "wS",
+  pair: [wS],
+  vaultAddress: "0x533E15C5304E00E2748D776DaDab1dD25DeA1A3c",
+  lpAddress: "0x039e2fB66102314Ce7b64Ce5Ce3E5183bc94aD38",
+  icon: "/icons/dex/aave.png",
+  buyLink:
+    "https://app.odos.xyz/swap?chainId=146&inputCurrency=0x039e2fB66102314Ce7b64Ce5Ce3E5183bc94aD38",
+});
+
+export const VAULT_AAVE_SCUSD = new VaultDefinition({
+  id: "aavev3-scusd",
+  name: "scUSD",
+  symbol: "scUSD",
+  pair: [scUSD],
+  vaultAddress: "0x718C479C7133d85D5cc7E75d9757D98B407E23d1",
+  lpAddress: "0xd3DCe716f3eF535C5Ff8d041c1A41C3bd89b97aE",
+  icon: "/icons/dex/aave.png",
+  buyLink:
+    "https://app.odos.xyz/swap?chainId=146&inputCurrency=0xd3DCe716f3eF535C5Ff8d041c1A41C3bd89b97aE",
+  decimals: 6,
+});
+
+export const VAULT_AAVE_USDT = new VaultDefinition({
+  id: "aavev3-usdt",
+  name: "USDT",
+  symbol: "USDT",
+  pair: [USDT],
+  vaultAddress: "0x5a57649A470Fc49dFEb5B2FCc374099eE8c083Cf",
+  lpAddress: "0x6047828dc181963ba44974801FF68e538dA5eaF9",
+  icon: "/icons/dex/aave.png",
+  buyLink:
+    "https://app.odos.xyz/swap?chainId=146&inputCurrency=0x6047828dc181963ba44974801FF68e538dA5eaF9",
+  decimals: 6,
+});
+
+export const VAULT_AAVE_USDC = new VaultDefinition({
+  id: "aavev3-usdc",
+  name: "USDC.e",
+  symbol: "USDC.e",
+  pair: [USDCe],
+  vaultAddress: "0xe36fB00045BA6F5FA7AB63afE784fCB55189c27c",
+  lpAddress: "0x29219dd400f2Bf60E5a23d13Be72B486D4038894",
+  icon: "/icons/dex/aave.png",
+  buyLink:
+    "https://app.odos.xyz/swap?chainId=146&inputCurrency=0x29219dd400f2Bf60E5a23d13Be72B486D4038894",
+  decimals: 6,
+});
+
 export const SWAPX_VAULTS: VaultDefinition[] = [
   VAULT_SWAPX_WS_TYSG,
   VAULT_SWAPX_WS_GOGLZ,
@@ -746,10 +813,20 @@ export const EQUALIZER_VAULTS: VaultDefinition[] = [
   VAULT_EQUALIZER_WS_WHALE,
 ];
 
+export const AAVE_VAULTS: VaultDefinition[] = [
+  VAULT_AAVE_STS,
+  VAULT_AAVE_WS,
+  VAULT_AAVE_SCUSD,
+  VAULT_AAVE_USDT,
+  VAULT_AAVE_USDC,
+];
+
+
 export const ALL_DISPLAYED_VAULTS: VaultDefinition[] = [
   ...SWAPX_VAULTS,
   ...BEETS_VAULTS,
   ...EQUALIZER_VAULTS,
+  ...AAVE_VAULTS,
 ];
 
 export const DEFAULT_VAULTS_ID = "All Vaults";
@@ -759,4 +836,5 @@ export const VAULT_GROUPS: Record<string, VaultDefinition[]> = {
   SwapX: SWAPX_VAULTS,
   Beets: BEETS_VAULTS,
   Equalizer: EQUALIZER_VAULTS,
+  AAVE: AAVE_VAULTS,
 };

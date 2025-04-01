@@ -35,6 +35,37 @@ const VaultLine = ({
 }) => {
   const { vault } = useVault(vaultDefinition);
 
+  const tokenDisplay = (
+    <div className="flex flex-row gap-2 items-center">
+
+      <Avatar className="bg-transparent p-1.5">
+        <AvatarImage
+          src={vaultDefinition.receipt.icon}
+          className="object-contain"
+        />
+        <AvatarFallback>{vaultDefinition.receipt.symbol}</AvatarFallback>
+      </Avatar>
+
+      {vaultDefinition.receipt.pair && vaultDefinition.receipt.pair?.length > 1 ? (
+        <DoubleAvatar
+          firstSrc={vaultDefinition.tokens[0].icon}
+          secondSrc={vaultDefinition.tokens[1].icon}
+          firstAlt={vaultDefinition.tokens[0].symbol}
+          secondAlt={vaultDefinition.tokens[1].symbol}
+        />
+      ) : (
+        <Avatar className="p-1.5 bg-background">
+          <AvatarImage
+            src={vaultDefinition.tokens[0].icon}
+            className="object-contain"
+          />
+          <AvatarFallback>{vaultDefinition.tokens[0].symbol}</AvatarFallback>
+        </Avatar>
+      )}
+
+    </div>
+  );
+
   return (
     <TableRow
       className="text-primary border-t-background cursor-pointer hover:bg-background/50"
@@ -42,21 +73,7 @@ const VaultLine = ({
     >
       <TableCell>
         <div className="flex items-center gap-10">
-          <div className="flex flex-row gap-2 items-center">
-            <Avatar className="bg-transparent p-1.5">
-              <AvatarImage
-                src={vaultDefinition.receipt.icon}
-                className="object-contain"
-              />
-              <AvatarFallback>{vaultDefinition.receipt.symbol}</AvatarFallback>
-            </Avatar>
-            <DoubleAvatar
-              firstSrc={vaultDefinition.tokens[0].icon}
-              secondSrc={vaultDefinition.tokens[1].icon}
-              firstAlt={vaultDefinition.tokens[0].symbol}
-              secondAlt={vaultDefinition.tokens[1].symbol}
-            />
-          </div>
+          {tokenDisplay}
 
           <div className="flex flex-col">
             <p className="text-lg ">{vaultDefinition.receipt.name}</p>

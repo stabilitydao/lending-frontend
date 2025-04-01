@@ -7,6 +7,7 @@ import {
   getWant,
 } from ".";
 import { getVaultById, ALL_DISPLAYED_VAULTS } from "@/constants";
+import { fetchTokenPrices } from "./getTokenPrice";
 
 export const vaultQueries = createQueryKeys("vaults", {
   tvl: () => ({
@@ -41,6 +42,13 @@ export const vaultQueries = createQueryKeys("vaults", {
       const vault = getVaultById(vaultId);
       if (!vault) return "0x0";
       return await getWant(vault);
+    },
+  }),
+  tokenPrices: () => ({
+    queryKey: ["tokenPrices"],
+    queryFn: async () => {
+      return await fetchTokenPrices(ALL_DISPLAYED_VAULTS.filter((item) => item.receipt.pair?.length === 1)
+        .map((item) => item.lp.address));
     },
   }),
 });

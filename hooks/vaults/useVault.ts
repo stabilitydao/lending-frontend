@@ -12,6 +12,7 @@ import { bnToNumber } from "@/helpers";
 import { useQueryClient } from "@tanstack/react-query";
 import { queryKeys } from "@/queries";
 import { VaultDefinition } from "@/constants";
+import { useTokenPrices } from "./useTokenPrices";
 
 const useVaults = (vaultDefinitions: VaultDefinition[]) => {
   const queryClient = useQueryClient();
@@ -27,6 +28,9 @@ const useVaults = (vaultDefinitions: VaultDefinition[]) => {
     isLoading: isVaultsTVLLoading,
     invalidateVaultsTVLQuery,
   } = useVaultsTVL();
+
+  const { tokenPrices, isTokenPricesLoading, invalidateTokenPricesQuery } =
+    useTokenPrices();
 
   const {
     vaultsReceiptPrice,
@@ -49,6 +53,7 @@ const useVaults = (vaultDefinitions: VaultDefinition[]) => {
     isLpsPriceLoading ||
     isVaultsBreakdownLoading ||
     isVaultsTVLLoading ||
+    isTokenPricesLoading ||
     isVaultsReceiptPriceLoading ||
     isBalancesLoading;
 
@@ -65,7 +70,12 @@ const useVaults = (vaultDefinitions: VaultDefinition[]) => {
     const vId = vaultDefinition.id;
 
     const userLpBalance = balancesObj[vaultDefinition.lp.address] ?? BigInt(0);
-    const lpPrice = lpsPrice?.[vId] ?? 0;
+    console.log(vaultDefinition.lp.address, vaultDefinition.id)
+    console.log("tokenPrices:", tokenPrices?.tokenPrices);
+    const lpPrice =
+      lpsPrice?.[vId] ??
+      tokenPrices?.tokenPrices[vaultDefinition.lp.address.toLowerCase()] ??
+      0;
     const userReceiptBalance =
       balancesObj[vaultDefinition.receipt.address] ?? BigInt(0);
     const receiptPrice =
@@ -126,6 +136,7 @@ const useVaults = (vaultDefinitions: VaultDefinition[]) => {
       invalidateVaultData: () => {
         invalidateVaultsLPsPriceQuery();
         invalidateVaultsBreakdownDataQuery();
+        invalidateTokenPricesQuery();
         invalidateVaultsTVLQuery();
         queryClient.invalidateQueries({
           queryKey: queryKeys.vaults.vaultReceiptPrices(vaultDefinition.chainId)

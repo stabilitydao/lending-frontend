@@ -22,6 +22,7 @@ import { DialogTitle } from "@radix-ui/react-dialog";
 import { Deposit } from "@/components/icons/deposit";
 import { Withdraw } from "@/components/icons/withdraw";
 import { VaultDefinition } from "@/constants";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const DepositVaultForm = ({
   vaultDefinition,
@@ -119,6 +120,51 @@ export const VaultModal = ({
     }
   }, [isVisible]);
 
+  const tokenDisplay = (
+    <div className="relative w-full flex items-center justify-center mt-6">
+
+
+      {vaultDefinition.receipt.pair && vaultDefinition.receipt.pair?.length > 1 ? (
+        <div className="flex items-center gap-8">
+          <DoubleAvatar
+            firstSrc={vaultDefinition.tokens[0].icon}
+            secondSrc={vaultDefinition.tokens[1].icon}
+            firstAlt={vaultDefinition.tokens[0].symbol}
+            secondAlt={vaultDefinition.tokens[1].symbol}
+          />
+          <div className="flex flex-col">
+            <span className="text-sm font-semibold">
+              {vaultDefinition.receipt.name}
+            </span>
+            <span className="text-xs font-light">
+              {vaultDefinition.tokens[0].name} -{" "}
+              {vaultDefinition.tokens[1].name}
+            </span>
+          </div>
+        </div>
+      ) : (
+        <div className="flex items-center gap-8">
+          <Avatar className="p-1.5 bg-background">
+            <AvatarImage
+              src={vaultDefinition.tokens[0].icon}
+              className="object-contain"
+            />
+            <AvatarFallback>{vaultDefinition.tokens[0].symbol}</AvatarFallback>
+          </Avatar>
+          <div className="flex flex-col">
+            <span className="text-sm font-semibold">
+              {vaultDefinition.receipt.name}
+            </span>
+            <span className="text-xs font-light">
+              {vaultDefinition.tokens[0].name}
+            </span>
+          </div>
+        </div>
+      )}
+
+    </div>
+  );
+
   return (
     <Dialog
       open={isVisible}
@@ -155,25 +201,16 @@ export const VaultModal = ({
             <ExternalLinkIcon className="w-4 h-4 text-primary" />
           </Link>
         </div>
-        <div className="relative w-full flex items-center justify-center mt-6">
-          <div className="flex items-center gap-8">
-            <DoubleAvatar
-              firstSrc={vaultDefinition.tokens[0].icon}
-              secondSrc={vaultDefinition.tokens[1].icon}
-              firstAlt={vaultDefinition.tokens[0].symbol}
-              secondAlt={vaultDefinition.tokens[1].symbol}
-            />
-            <div className="flex flex-col">
-              <span className="text-sm font-semibold">
-                {vaultDefinition.receipt.name}
-              </span>
-              <span className="text-xs font-light">
-                {vaultDefinition.tokens[0].name} -{" "}
-                {vaultDefinition.tokens[1].name}
-              </span>
-            </div>
-          </div>
-        </div>
+
+
+
+        {tokenDisplay}
+
+
+
+
+
+
 
         <div className="absolute inset-0 flex items-center justify-center z-0 pointer-events-none">
           <Image

@@ -12,9 +12,9 @@ export const oldThousandsFormat = (value: number | bigint, digits?: number) => {
     "en-US",
     digits !== undefined
       ? {
-          maximumFractionDigits: digits,
-          minimumFractionDigits: digits,
-        }
+        maximumFractionDigits: digits,
+        minimumFractionDigits: digits,
+      }
       : {}
   ).format(value);
 };
