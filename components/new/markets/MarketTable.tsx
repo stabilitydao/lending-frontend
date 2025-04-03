@@ -51,7 +51,7 @@ const MarketLine = ({
   // const maybeToken = token.isNative ? token.wrapperToken! : token;
   if (isMarketLoading || !market) return null;
   const supplyPercentage = Math.min(
-    (market.supply.tvl.amount / market.supply.cap.amount) * 100,
+    (market.supply.tvl.amount / (market.supply.cap.amount + 1)) * 100,
     100
   );
   const supplyColor =
@@ -135,7 +135,7 @@ const MarketLine = ({
       : "text-green-500";
 
   const borrowToSupplyPercentage =
-    (market.borrow.tvl.amount / market.supply.tvl.amount) * 100;
+    (market.borrow.tvl.amount / (market.supply.tvl.amount + 1)) * 100;
 
   const borrowInfo = (
     <div className="flex flex-row gap-1 items-center">
