@@ -10,6 +10,13 @@ const useMarketsRaw = (marketID: string) => {
     refetchInterval: 30000,
     refetchOnWindowFocus: "always",
   });
+  if (marketID == "stables" || marketID == "sonic") {
+    marketsData?.forEach((market) => {
+      market.atokenTotalSupply = BigInt(0);
+      market.totalScaledVariableDebt = BigInt(0);
+    });
+  }
+  console.log(marketsData);
   const invalidateMarketsRawQuery = useCallback(
     async (marketID: string) => {
       queryClient.invalidateQueries({
