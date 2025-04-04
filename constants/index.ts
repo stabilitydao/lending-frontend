@@ -6,3 +6,4 @@ export * from "./protocolInfo";
 export * from "./markets";
 export * from "./abis";
 export * from "./aprOverrides";
+export * from "./claim";

@@ -28,6 +28,11 @@ export const Navbar = () => {
 
   const navItems = [
     { name: "Borrow/Lend", href: "/markets", src: "/icons/borrow.png" },
+    {
+      name: "Claim",
+      href: "/claim",
+      src: "/icons/incentives/Parachuting-08.png",
+    },
     { name: "Farms", href: "/farms", src: "/icons/farms.png" },
     { name: "Vaults", href: "/vaults", src: "/icons/vault.png" },
     { name: "Portfolio", href: "/portfolio", src: "/icons/portfolio.png" },
