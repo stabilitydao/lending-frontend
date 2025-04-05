@@ -1,12 +1,12 @@
 import { useQueries } from "@tanstack/react-query";
-import { MARKET_DEFINITIONS } from "@/constants";
+import { DEFAULT_MARKET_ID, MARKET_DEFINITIONS } from "@/constants";
 import { queryKeys } from "@/queries";
 import { bnToNumber } from "@/helpers";
 
 const PRICE_DECIMALS = 8;
 
 const useMarketsTVL = () => {
-  const marketIDs = Object.keys(MARKET_DEFINITIONS);
+  const marketIDs = [DEFAULT_MARKET_ID];
 
   const queries = useQueries({
     queries: marketIDs.map(
