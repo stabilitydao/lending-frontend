@@ -100,7 +100,7 @@ const Positions = ({
           of your debt.
         </div>
       </div>
-      <div className="flex flex-row gap-2">
+      <div className="flex sm:flex-row flex-col flex-wrap gap-2">
         {positions.map((position) => (
           <Position
             key={position.token.address}
@@ -139,7 +139,7 @@ const ClaimPreview = ({
           the exploit.
         </div>
       </div>
-      <div className="flex flex-row gap-2">
+      <div className="flex sm:flex-row flex-col flex-wrap gap-2">
         {claims.map((claim) => {
           return (
             Number(claim.amount) * prices[claim.token.address] > 0.01 && (
@@ -176,14 +176,14 @@ const Disclaimer = () => (
     <div className="flex items-center gap-2">
       <h1 className="text-primary text-lg font-semibold">Preview</h1>
     </div>
-    <div className="text-primary text-sm font-light flex flex-row">
+    <div className="text-primary text-sm font-light">
       This page shows a preview of your potential reimbursement based on the
       positions you have at the time of the exploit. If you think there is a
       mistake with your preview, please open a ticket on our
       <Link href="https://discord.com/invite/vicuna">
-        <div className="text-primary underline cursor-pointer ml-1">
+        <span className="text-primary underline cursor-pointer ml-1">
           Discord
-        </div>
+        </span>
       </Link>
       . This preview phase will last for 24 to 48 hours.
     </div>
