@@ -1,6 +1,6 @@
 import { createQueryKeys } from "@lukemorales/query-key-factory";
 import { Address } from "viem";
-import { getTokenAllowance, getTokenBalance } from ".";
+import { getTokenAllowance, getTokenBalance, hasClaimed, isEnabled } from ".";
 import { getOrCreateTokenByAddress } from "@/constants";
 
 export const userQueries = createQueryKeys("user", {
@@ -25,6 +25,20 @@ export const userQueries = createQueryKeys("user", {
           const token = getOrCreateTokenByAddress(address, chainId);
           const walletBalance = await getTokenBalance(userAddress, token);
           return walletBalance;
+        },
+      }),
+      hasClaimed: () => ({
+        queryKey: ["hasClaimed"],
+        queryFn: async () => {
+          const claimed = await hasClaimed(userAddress, chainId);
+          return claimed;
+        },
+      }),
+      isEnabled: () => ({
+        queryKey: ["isEnabled"],
+        queryFn: async () => {
+          const enabled = await isEnabled(chainId);
+          return enabled;
         },
       }),
     },

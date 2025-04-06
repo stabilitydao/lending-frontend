@@ -5,6 +5,8 @@ import { getTokenByAddress, Token } from "@/constants";
 import { bnToNumber, formatSuffix, strToBn } from "@/helpers";
 import { Card } from "../portfolio";
 import Link from "next/link";
+import { useClaim } from "@/hooks/claim/useClaim";
+import { ChainButton } from "@/components/ui/button";
 
 const PositionFragment = ({
   value,
@@ -204,6 +206,39 @@ const NothingToClaim = () => (
   </div>
 );
 
+const Claim = () => {
+  const { claim, isEnabled, hasClaimed, isConfirming, isPending } = useClaim();
+
+  return (
+    <div className="flex flex-col gap-2">
+      <div className="flex items-center gap-2">
+        <h1 className="text-primary text-lg font-semibold">Claim</h1>
+      </div>
+      {!hasClaimed && (
+        <div className="text-primary text-sm font-light">
+          {isEnabled
+            ? "Click below to claim your tokens."
+            : "Claim not yet enabled."}
+        </div>
+      )}
+      {isEnabled &&
+        (hasClaimed ? (
+          <div className="text-primary text-sm font-light">
+            You have already claimed your tokens.
+          </div>
+        ) : (
+          <ChainButton
+            className=" flex items-center justify-center gap-2"
+            onClick={claim}
+            disabled={isConfirming || isPending}
+          >
+            {isConfirming || isPending ? "Claiming..." : "Claim"}
+          </ChainButton>
+        ))}
+    </div>
+  );
+};
+
 export const Preview = () => {
   const { prices, preview } = usePreview();
 
@@ -230,7 +265,8 @@ export const Preview = () => {
 
   return (
     <div className="flex flex-col gap-[30px]">
-      <Disclaimer />
+      {/* <Disclaimer /> */}
+      <Claim />
       <Positions
         positions={preview.positions}
         prices={prices}

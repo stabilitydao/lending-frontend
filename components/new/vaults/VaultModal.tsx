@@ -139,7 +139,7 @@ export const VaultModal = () => {
 
   if (modal !== "vault" || !vault) return null;
 
-  const vaultDefinition = getVaultByLPAddress(vault as Address);
+  const vaultDefinition = getVaultByAddress(vault as Address);
   if (!vaultDefinition) return null;
 
   return (

@@ -16,7 +16,6 @@ const useMarketsRaw = (marketID: string) => {
       market.totalScaledVariableDebt = BigInt(0);
     });
   }
-  console.log(marketsData);
   const invalidateMarketsRawQuery = useCallback(
     async (marketID: string) => {
       queryClient.invalidateQueries({
