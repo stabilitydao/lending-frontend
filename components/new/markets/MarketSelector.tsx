@@ -1,6 +1,6 @@
 "use client";
 
-import { MARKET_DEFINITIONS } from "@/constants";
+import { LEGACY_MARKET_DEFINITIONS } from "@/constants";
 import { useSelectedMarket } from "@/hooks";
 import { memo } from "react";
 
@@ -28,16 +28,15 @@ const SelectorButton = memo(
 );
 
 export const MarketSelector = () => {
-  const { marketID, availableMarkets, setMarketID } = useSelectedMarket();
+  const { marketID, setMarketID } = useSelectedMarket();
 
-  if (availableMarkets.length <= 1) return null;
-
+  const availableMarkets = Object.keys(LEGACY_MARKET_DEFINITIONS);
   return (
     <div className="flex items-center justify-center bg-card text-secondary-foreground rounded-[var(--radius)] p-2 space-x-2">
       {availableMarkets.map((market) => (
         <SelectorButton
           key={market}
-          market={MARKET_DEFINITIONS[market].name}
+          market={LEGACY_MARKET_DEFINITIONS[market].name}
           active={market === marketID}
           onClick={() => setMarketID(market)}
         />

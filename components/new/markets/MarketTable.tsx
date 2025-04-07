@@ -318,6 +318,33 @@ const MarketLine = ({
 export const MarketTable = () => {
   const { updateParams } = useQueryParams();
   const { marketDefinition, marketID } = useSelectedMarket();
+  if (!marketDefinition)
+    return (
+      <div className="p-4 gap-6 flex flex-col">
+        <div className="text-red-500">
+          Due to an exploit, the submarkets have been removed. Check the{" "}
+          <Link
+            href="https://discord.com/invite/vicuna"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline"
+          >
+            discord
+          </Link>{" "}
+          for more information, or the{" "}
+          <Link href="/claim" rel="noopener noreferrer" className="underline">
+            claim page
+          </Link>{" "}
+          to recuperate a portion of your funds.
+        </div>
+      </div>
+    );
+  return <InnerMarketTable />;
+};
+
+export const InnerMarketTable = () => {
+  const { updateParams } = useQueryParams();
+  const { marketDefinition, marketID } = useSelectedMarket();
   const { markets } = useMarkets(marketID);
 
   const [selectedUnloopingToken, setSelectedUnloopingToken] = useState<Token>(
@@ -363,20 +390,6 @@ export const MarketTable = () => {
 
   return (
     <div className="p-4 gap-6 flex flex-col">
-      {marketID != DEFAULT_MARKET_ID && (
-        <div className="text-red-500">
-          Due to an exploit, the submarkets are currently paused. Check the{" "}
-          <Link
-            href="https://discord.com/invite/vicuna"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline"
-          >
-            discord
-          </Link>{" "}
-          for more information.
-        </div>
-      )}
       <Table>
         <TableHeader className="h-8 border-b border-background">
           <TableRow>
