@@ -331,11 +331,7 @@ export const MarketTable = () => {
           >
             discord
           </Link>{" "}
-          for more information, or the{" "}
-          <Link href="/claim" rel="noopener noreferrer" className="underline">
-            claim page
-          </Link>{" "}
-          to recuperate a portion of your funds.
+          for more information.
         </div>
       </div>
     );

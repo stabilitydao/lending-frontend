@@ -28,26 +28,15 @@ export const Navbar = () => {
 
   const navItems = [
     { name: "Borrow/Lend", href: "/markets", src: "/icons/borrow.png" },
-    {
-      name: "Claim",
-      href: "/claim",
-      src: "/icons/incentives/Parachuting-08.png",
-    },
-    { name: "Farms", href: "/farms", src: "/icons/farms.png" },
     { name: "Vaults", href: "/vaults", src: "/icons/vault.png" },
     { name: "Portfolio", href: "/portfolio", src: "/icons/portfolio.png" },
-    { name: "Governance", href: "/governance", src: "/icons/governance.png" },
   ];
 
   return (
     <nav className="flex justify-between items-center bg-background py-3 px-8 z-50 shadow-lg absolute w-full">
       <div>
         <Link href="/" className="flex gap-[5px] items-center">
-          <Image src="/logo.svg" alt="logo" width={54} height={54} />
-          <div className="hidden min-[460px]:block self-end uppercase leading-[24px] text-primary">
-            <p className="text-[28px] font-black">Vicuna</p>
-            <p className="text-[16px] font-extralight">Finance</p>
-          </div>
+          <Image src="/full_logo_dark.png" alt="logo" width={150} height={78} />
         </Link>
       </div>
       {/* <Link href="/">
@@ -150,11 +139,6 @@ export const Navbar = () => {
               </a>
             </DropdownMenuItem>
             <DropdownMenuItem>Audits</DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link href={"/presale"} className="w-full">
-                Presale
-              </Link>
-            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -170,16 +154,6 @@ export const Navbar = () => {
               <SheetTitle>Menu</SheetTitle>
             </SheetHeader>
             <div className="flex flex-col gap-4 mt-4">
-              {/* add presale link */}
-              <SheetClose asChild>
-                <Link
-                  href={"/presale"}
-                  key={"presale"}
-                  className="flex items-center gap-2"
-                >
-                  <span className="text-primary font-bold">Presale</span>
-                </Link>
-              </SheetClose>
               {navItems.map((item, i) => (
                 <SheetClose asChild key={i}>
                   <Link

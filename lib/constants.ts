@@ -37,24 +37,12 @@ export const navLinks = [
     href: "/markets",
   },
   {
-    label: "Farms",
-    href: "/farms",
-  },
-  {
     label: "Vaults",
     href: "/vaults",
   },
   {
     label: "Portfolio",
     href: "/portfolio",
-  },
-  {
-    label: "Governance",
-    href: "/governance",
-  },
-  {
-    label: "Presale",
-    href: "/presale",
   },
 ];
 
