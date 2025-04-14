@@ -406,16 +406,6 @@ export const InnerMarketModal = ({
           </div>
         </div>
 
-        <div className="absolute inset-0 flex items-center justify-center z-0 pointer-events-none">
-          <Image
-            src="/logo.svg"
-            alt="Background Logo"
-            className="opacity-10"
-            width={500}
-            height={500}
-          />
-        </div>
-
         <div className="relative z-10">
           <DialogHeader>
             <DialogTitle className="flex">

@@ -74,7 +74,7 @@ export const Navbar = () => {
             />
             <p
               className={cn(
-                "text-primary text-center font-light transition-all",
+                "text-white text-center font-light transition-all",
                 pathname === item.href
                   ? "text-[12px] font-semibold"
                   : "text-[10px] group-hover:text-[12px]"
@@ -93,7 +93,7 @@ export const Navbar = () => {
               height={34}
               className="transition-transform group-hover:scale-110 ease-in-out duration-300"
             />
-            <p className="text-primary text-xs text-center font-light transition-all group-hover:text-[10px]">
+            <p className="text-white text-xs text-center font-light transition-all group-hover:text-[10px]">
               More
             </p>
           </DropdownMenuTrigger>
@@ -147,7 +147,7 @@ export const Navbar = () => {
         <ConnectWallet />
         <Sheet>
           <SheetTrigger className="lg:hidden">
-            <Menu size={24} className="text-primary" />
+            <Menu size={24} className="text-white" />
           </SheetTrigger>
           <SheetContent>
             <SheetHeader>
@@ -161,13 +161,13 @@ export const Navbar = () => {
                     key={i}
                     className="flex items-center gap-2"
                   >
-                    <span className="text-primary font-bold">{item.name}</span>
+                    <span className="text-white font-bold">{item.name}</span>
                   </Link>
                 </SheetClose>
               ))}
-              <span className="text-primary font-bold">Audits</span>
-              <span className="text-primary font-bold">Blog</span>
-              <span className="text-primary font-bold">Docs</span>
+              <span className="text-white font-bold">Audits</span>
+              <span className="text-white font-bold">Blog</span>
+              <span className="text-white font-bold">Docs</span>
             </div>
           </SheetContent>
         </Sheet>

@@ -19,8 +19,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Vicuna",
-  description: "Vicuna Finance",
+  title: "Stability",
+  description: "Stability",
 };
 
 export default function RootLayout({

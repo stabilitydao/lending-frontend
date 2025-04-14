@@ -120,7 +120,7 @@ const ScrollingPartners = () => {
                 className="w-auto h-8"
                 // quality={100}
               />
-              <p className="text-xl text-black text-nowrap">{partner.name}</p>
+              <p className="text-xl text-nowrap">{partner.name}</p>
             </div>
           ))}
         </motion.div>

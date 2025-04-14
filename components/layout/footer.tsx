@@ -25,7 +25,7 @@ export const Footer = () => {
             <Link
               key={link.href}
               href={link.href}
-              className="text-primary text-xs md:text-base"
+              className="text-white text-xs md:text-base"
             >
               {link.label}
             </Link>
@@ -52,9 +52,6 @@ export const Footer = () => {
           ))}
         </div>
       </div>
-      <p className="text-xs text-center text-primary pb-2">
-        Vicuna Finance, {new Date().getFullYear()}. All rights reserved
-      </p>
     </footer>
   );
 };
