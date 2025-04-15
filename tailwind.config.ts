@@ -110,7 +110,7 @@ export default {
           950: "#480707",
         },
       },
-      backgroundColor: (theme) => ({
+      backgroundColor: (theme: Function) => ({
         ...theme("colors.accent"),
         ...theme("colors.neutral"),
         ...theme("colors.success"),
@@ -120,14 +120,14 @@ export default {
         modal: theme("colors.modal"),
       }),
 
-      textColor: (theme) => ({
+      textColor: (theme: Function) => ({
         ...theme("colors.accent"),
         ...theme("colors.neutral"),
         ...theme("colors.success"),
         ...theme("colors.warning"),
         ...theme("colors.error"),
       }),
-      borderColor: (theme) => ({
+      borderColor: (theme: Function) => ({
         ...theme("colors.accent"),
         ...theme("colors.neutral"),
         ...theme("colors.success"),
