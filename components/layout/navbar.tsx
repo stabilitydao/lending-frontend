@@ -27,27 +27,22 @@ export const Navbar = () => {
   const pathname = usePathname();
 
   const navItems = [
-    { name: "Borrow/Lend", href: "/markets", src: "/icons/borrow.png" },
-    {
-      name: "Claim",
-      href: "/claim",
-      src: "/icons/incentives/Parachuting-08.png",
-    },
-    { name: "Farms", href: "/farms", src: "/icons/farms.png" },
-    { name: "Vaults", href: "/vaults", src: "/icons/vault.png" },
-    { name: "Portfolio", href: "/portfolio", src: "/icons/portfolio.png" },
-    { name: "Governance", href: "/governance", src: "/icons/governance.png" },
+    { name: "Borrow/Lend", href: "/" },
+    { name: "Vaults", href: "/vaults" },
+    { name: "Portfolio", href: "/portfolio" },
   ];
 
   return (
-    <nav className="flex justify-between items-center bg-background py-3 px-8 z-50 shadow-lg absolute w-full">
+    <nav className="flex justify-between items-center bg-background py-3 px-8 z-50 absolute w-full">
       <div>
         <Link href="/" className="flex gap-[5px] items-center">
-          <Image src="/logo.svg" alt="logo" width={54} height={54} />
-          <div className="hidden min-[460px]:block self-end uppercase leading-[24px] text-primary">
-            <p className="text-[28px] font-black">Vicuna</p>
-            <p className="text-[16px] font-extralight">Finance</p>
-          </div>
+          <Image
+            src="/full_logo_dark.png"
+            alt="logo"
+            width={150}
+            height={78}
+            priority
+          />
         </Link>
       </div>
       {/* <Link href="/">
@@ -73,22 +68,12 @@ export const Navbar = () => {
             key={i}
             className="flex flex-col items-center gap-2 group"
           >
-            <Image
-              src={item.src}
-              alt={item.name}
-              className={cn(
-                "transition-transform ease-in-out duration-300",
-                pathname === item.href ? "scale-125" : "group-hover:scale-110"
-              )}
-              width={34}
-              height={34}
-            />
             <p
               className={cn(
-                "text-primary text-center font-light transition-all",
+                "text-white text-center transition-all text-[16px] font-semibold px-4 py-[10px] hover:bg-accent-700 rounded-[16px]",
                 pathname === item.href
-                  ? "text-[12px] font-semibold"
-                  : "text-[10px] group-hover:text-[12px]"
+                  ? "bg-accent-500 hover:bg-accent-500"
+                  : ""
               )}
             >
               {item.name}
@@ -96,15 +81,8 @@ export const Navbar = () => {
           </Link>
         ))}
         <DropdownMenu>
-          <DropdownMenuTrigger className="flex flex-col items-center gap-2">
-            <Image
-              src="/icons/more.png"
-              alt="more"
-              width={34}
-              height={34}
-              className="transition-transform group-hover:scale-110 ease-in-out duration-300"
-            />
-            <p className="text-primary text-xs text-center font-light transition-all group-hover:text-[10px]">
+          <DropdownMenuTrigger className="flex flex-col items-center">
+            <p className="text-white text-[16px] text-center font-semibold">
               More
             </p>
           </DropdownMenuTrigger>
@@ -114,7 +92,7 @@ export const Navbar = () => {
                 href="https://app.rhino.fi/bridge/?refId=DeFi_VicunaFinance&chainIn=ARBITRUM&chainOut=SONIC"
                 target="_blank"
                 rel="noreferrer"
-                className="w-full"
+                className="w-full text-white"
               >
                 Bridge
               </a>
@@ -124,7 +102,7 @@ export const Navbar = () => {
                 href="https://app.magpiefi.xyz/swap"
                 target="_blank"
                 rel="noreferrer"
-                className="w-full"
+                className="w-full text-white"
               >
                 Swap
               </a>
@@ -134,7 +112,7 @@ export const Navbar = () => {
                 href="https://vicuna-finance.gitbook.io/vicuna-finance-sonic"
                 target="_blank"
                 rel="noreferrer"
-                className="w-full"
+                className="w-full text-white"
               >
                 Docs
               </a>
@@ -144,17 +122,12 @@ export const Navbar = () => {
                 href="https://medium.com/@vicunafinance"
                 target="_blank"
                 rel="noreferrer"
-                className="w-full"
+                className="w-full text-white"
               >
                 Blog
               </a>
             </DropdownMenuItem>
-            <DropdownMenuItem>Audits</DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link href={"/presale"} className="w-full">
-                Presale
-              </Link>
-            </DropdownMenuItem>
+            <DropdownMenuItem className="text-white">Audits</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -163,23 +136,13 @@ export const Navbar = () => {
         <ConnectWallet />
         <Sheet>
           <SheetTrigger className="lg:hidden">
-            <Menu size={24} className="text-primary" />
+            <Menu size={24} className="text-white" />
           </SheetTrigger>
           <SheetContent>
             <SheetHeader>
               <SheetTitle>Menu</SheetTitle>
             </SheetHeader>
             <div className="flex flex-col gap-4 mt-4">
-              {/* add presale link */}
-              <SheetClose asChild>
-                <Link
-                  href={"/presale"}
-                  key={"presale"}
-                  className="flex items-center gap-2"
-                >
-                  <span className="text-primary font-bold">Presale</span>
-                </Link>
-              </SheetClose>
               {navItems.map((item, i) => (
                 <SheetClose asChild key={i}>
                   <Link
@@ -187,13 +150,13 @@ export const Navbar = () => {
                     key={i}
                     className="flex items-center gap-2"
                   >
-                    <span className="text-primary font-bold">{item.name}</span>
+                    <span className="text-white font-bold">{item.name}</span>
                   </Link>
                 </SheetClose>
               ))}
-              <span className="text-primary font-bold">Audits</span>
-              <span className="text-primary font-bold">Blog</span>
-              <span className="text-primary font-bold">Docs</span>
+              <span className="text-white font-bold">Audits</span>
+              <span className="text-white font-bold">Blog</span>
+              <span className="text-white font-bold">Docs</span>
             </div>
           </SheetContent>
         </Sheet>

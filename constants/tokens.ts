@@ -248,7 +248,7 @@ export const SWPx = new Token({
   symbol: "SWPx",
   address: "0x0",
   decimals: 0,
-  icon: "/icons/coins/SwapX_Black.svg",
+  icon: "/icons/coins/SwapX_White.svg",
   chainId: sonic.id,
 });
 

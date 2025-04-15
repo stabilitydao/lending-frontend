@@ -9,15 +9,13 @@ export const Footer = () => {
       <div className="flex flex-col lg:flex-row items-center h-fit z-50 justify-between shadow-inner gap-10 bg-background w-full py-12 px-10 relative">
         <div>
           <Link href="/" className="flex gap-[5px] items-center">
-            <Image src="/logo.svg" alt="logo" width={78} height={78} />
-            <div className="uppercase leading-[28px] sm:leading-[32px] lg:leading-[36px] text-primary">
-              <p className="text-[32px] sm:text-[36px] lg:text-[40px] font-black">
-                Vicuna
-              </p>
-              <p className="text-[20px] sm:text-[24px] lg:text-[28px] font-extralight">
-                Finance
-              </p>
-            </div>
+            <Image
+              src="/full_logo_dark.png"
+              alt="logo"
+              width={150}
+              height={78}
+              priority
+            />
           </Link>
         </div>
         {/* <Link href="/">
@@ -28,7 +26,7 @@ export const Footer = () => {
             <Link
               key={link.href}
               href={link.href}
-              className="text-primary text-xs md:text-base"
+              className="text-white text-xs md:text-base"
             >
               {link.label}
             </Link>
@@ -55,9 +53,6 @@ export const Footer = () => {
           ))}
         </div>
       </div>
-      <p className="text-xs text-center text-primary pb-2">
-        Vicuna Finance, {new Date().getFullYear()}. All rights reserved
-      </p>
     </footer>
   );
 };

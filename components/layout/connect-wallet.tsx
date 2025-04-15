@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { ArrowRightIcon, PowerIcon } from "lucide-react";
-import { Wallet } from "../icons/wallet";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 import { Button } from "@/components/ui/button";
 import {
@@ -38,20 +37,17 @@ export const ConnectWalletDialog = ({
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader className="flex flex-col items-center">
           <div className="py-4">
-            <Image
-              src="/logo.svg"
-              alt="Vicuna Finances"
-              width={60}
-              height={60}
-            />
+            <Image src="/logo.svg" alt="Stability" width={60} height={60} />
           </div>
-          <DialogTitle className="text-3xl">Connect Wallet</DialogTitle>
-          <p className="text-xs">To start using Vicuna Finance</p>
+          <DialogTitle className="text-3xl text-white">
+            Connect Wallet
+          </DialogTitle>
+          <p className="text-xs text-white">To start using Stability</p>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           {connectors.map((connector) => (
             <Button
-              className="hover:bg-accent hover:text-primary flex items-center justify-between"
+              className="flex items-center justify-between"
               key={connector.id}
               onClick={() => {
                 connect({ connector });
@@ -62,8 +58,8 @@ export const ConnectWalletDialog = ({
             </Button>
           ))}
         </div>
-        <DialogFooter className="text-[10px] text-center">
-          By connecting, I accept the Vicuna Finance{" "}
+        <DialogFooter className="text-[10px] text-center text-white">
+          By connecting, I accept the Stability{" "}
           <a
             href="https://vicuna-finance.gitbook.io/vicuna-finance/other-info/terms-of-use"
             target="_blank"
@@ -83,9 +79,8 @@ interface ConnectWalletButtonProps {
 }
 
 export const ConnectWalletButton = ({ onClick }: ConnectWalletButtonProps) => (
-  <Button variant="default" className="bg-primary" onClick={onClick}>
+  <Button variant="default" onClick={onClick}>
     Connect Wallet
-    <Wallet className="w-5 h-5 ml-2" />
   </Button>
 );
 
@@ -98,15 +93,20 @@ export const ConnectWallet = () => {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="default" className="bg-primary">
+          <Button
+            variant="default"
+            className="bg-accent-500 flex items-center justify-center gap-2"
+          >
+            <div className="w-4 h-4">
+              <Image src="/logo.svg" alt="Stability" width={60} height={60} />
+            </div>
             <span className="hidden sm:inline">{formatAddress(address)}</span>
-            <Wallet className="w-5 h-5 ml-0 sm:ml-2" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className=" w-40">
           <DropdownMenuItem
             onClick={() => disconnect()}
-            className="flex items-center justify-between"
+            className="flex items-center justify-between text-white"
           >
             Disconnect <PowerIcon className="w-4 h-4" />
           </DropdownMenuItem>

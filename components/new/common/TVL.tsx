@@ -11,7 +11,7 @@ export const TVL = ({
   tooltip?: React.ReactNode;
 }) => {
   return (
-    <div className="text-primary">
+    <div className="text-white">
       {title}
       {tooltip && <span className="px-1">{tooltip}</span>}:
       <span className="font-semibold"> {formatNumberWithSuffix(tvl ?? 0)}</span>

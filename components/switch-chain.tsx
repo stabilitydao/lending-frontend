@@ -3,12 +3,7 @@
 import { useState, useEffect } from "react";
 import { type Chain } from "viem";
 import { useSwitchChain, useChainId } from "wagmi";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import Image from "next/image";
@@ -50,17 +45,17 @@ export const SwitchChain = () => {
     <Button
       disabled={isPending}
       variant="default"
-      className="flex items-center justify-start gap-2 "
-          >
-            {connectedChain && (
-              <Image
-                src={`/icons/coins/${connectedChain.name.toLowerCase()}.png`}
-                alt={`${connectedChain.name} icon`}
-                width={16}
-                height={16}
-              />
-            )}
-            <span className="hidden sm:inline">
+      className="flex items-center justify-start gap-2 bg-accent-900"
+    >
+      {connectedChain && (
+        <Image
+          src={`/icons/coins/${connectedChain.name.toLowerCase()}.png`}
+          alt={`${connectedChain.name} icon`}
+          width={16}
+          height={16}
+        />
+      )}
+      <span className="hidden sm:inline">
         {connectedChain ? connectedChain.name : "Select Chain"}
       </span>
     </Button>

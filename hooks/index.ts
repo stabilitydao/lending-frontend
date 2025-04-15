@@ -5,4 +5,3 @@ export * from "./markets";
 export * from "./common";
 export * from "./vaults";
 export * from "./portfolio";
-export * from "./claim";

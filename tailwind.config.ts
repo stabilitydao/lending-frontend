@@ -1,6 +1,6 @@
-import type { Config } from "tailwindcss";
+/** @type {import('tailwindcss').Config} */
 
-const config = {
+export default {
   darkMode: ["class"],
   content: [
     "./pages/**/*.{ts,tsx}",
@@ -59,10 +59,6 @@ const config = {
           DEFAULT: "hsl(var(--muted))",
           foreground: "hsl(var(--muted-foreground))",
         },
-        accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
-        },
         popover: {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
@@ -71,7 +67,74 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        accent: {
+          50: "#F4F2FF",
+          100: "#E8E5FE",
+          200: "#CFC8FD",
+          300: "#B2A5FD",
+          400: "#8F7AFC",
+          500: "#612FFB",
+          600: "#4B24C2",
+          700: "#3D1E9F",
+          800: "#2B1570",
+          900: "#1F0F50",
+          950: "#130932",
+          1000: "#0C0620",
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        neutral: {
+          50: "#F9F8FA",
+          100: "#F3F2F5",
+          200: "#E8E8EC",
+          300: "#D6D5DD",
+          400: "#C0BCC9",
+          500: "#A6A0B2",
+          600: "#958CA1",
+          700: "#7F768B",
+          800: "#6B6374",
+          900: "#585260",
+          950: "#3A3540",
+        },
+        error: {
+          50: "#FFF1F1",
+          100: "#FFE1E1",
+          200: "#FFC7C7",
+          300: "#FFA1A1",
+          400: "#FF6A6A",
+          500: "#F73C3C",
+          600: "#E01A1A",
+          700: "#C11414",
+          800: "#9F1515",
+          900: "#841818",
+          950: "#480707",
+        },
       },
+      backgroundColor: (theme: Function) => ({
+        ...theme("colors.accent"),
+        ...theme("colors.neutral"),
+        ...theme("colors.success"),
+        ...theme("colors.warning"),
+        ...theme("colors.error"),
+        button: theme("colors.button"),
+        modal: theme("colors.modal"),
+      }),
+
+      textColor: (theme: Function) => ({
+        ...theme("colors.accent"),
+        ...theme("colors.neutral"),
+        ...theme("colors.success"),
+        ...theme("colors.warning"),
+        ...theme("colors.error"),
+      }),
+      borderColor: (theme: Function) => ({
+        ...theme("colors.accent"),
+        ...theme("colors.neutral"),
+        ...theme("colors.success"),
+        ...theme("colors.warning"),
+        ...theme("colors.error"),
+      }),
+
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
@@ -94,6 +157,4 @@ const config = {
     },
   },
   plugins: [require("tailwindcss-animate")],
-} satisfies Config;
-
-export default config;
+};

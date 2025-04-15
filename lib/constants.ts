@@ -34,11 +34,7 @@ export const socialLinks = [
 export const navLinks = [
   {
     label: "Borrow/Lend",
-    href: "/markets",
-  },
-  {
-    label: "Farms",
-    href: "/farms",
+    href: "/",
   },
   {
     label: "Vaults",
@@ -47,14 +43,6 @@ export const navLinks = [
   {
     label: "Portfolio",
     href: "/portfolio",
-  },
-  {
-    label: "Governance",
-    href: "/governance",
-  },
-  {
-    label: "Presale",
-    href: "/presale",
   },
 ];
 

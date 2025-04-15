@@ -89,7 +89,7 @@ const VaultPositionCard = ({
 const VaultHeader = ({ lite = false }: { lite?: boolean }) => (
   <div className="flex flex-col gap-2">
     <div className="flex items-center gap-2">
-      <h1 className="text-primary text-lg font-semibold">Vaults</h1>
+      <h1 className="text-white text-lg font-semibold">Vaults</h1>
       <Image
         src={"/icons/coins/sonic.svg"}
         alt="Chain logo"
@@ -98,7 +98,7 @@ const VaultHeader = ({ lite = false }: { lite?: boolean }) => (
       />
     </div>
     {!lite && (
-      <div className="text-primary text-sm font-light">
+      <div className="text-white text-sm font-light">
         Deposit LPs, get yield.
       </div>
     )}
@@ -153,7 +153,7 @@ export const VaultsPortfolio = ({
     return (
       <div className="flex flex-col gap-2">
         <VaultHeader lite />
-        <div className="text-primary text-sm font-light">
+        <div className="text-white text-sm font-light">
           No vault data found for your wallet!
         </div>
       </div>
