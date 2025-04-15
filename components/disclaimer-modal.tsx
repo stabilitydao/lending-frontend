@@ -32,7 +32,7 @@ export const DisclaimerModal = ({
       <DialogContent className="bg-card text-primary">
         <DialogHeader>
           <DialogTitle className="text-center py-10">
-            Welcome to Vicuna Finance
+            Welcome to stability.market
             <p className="mt-4 text-center font-extralight">
               (Work In Progress)
             </p>
@@ -41,11 +41,11 @@ export const DisclaimerModal = ({
         <DialogDescription>
           <div className="flex flex-col text-left text-sm gap-8">
             <p>
-              Vicuna Finance is a decentralized, non-custodial lending and yield
-              optimizing platform.
+              stability.market is a decentralized, non-custodial lending and
+              yield optimizing platform.
             </p>
             <p>
-              By accessing the Vicuna Finance website, you agree to the{" "}
+              By accessing the stability.market website, you agree to the{" "}
               <a
                 href="https://vicuna-finance.gitbook.io/vicuna-finance-sonic/other-info/terms-of-use"
                 target="_blank"
