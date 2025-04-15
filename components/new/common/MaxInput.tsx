@@ -34,10 +34,9 @@ export const MaxInput = ({
       >
         MAX
       </Button>
-
       <Input
         type="number"
-        className="bg-primary placeholder:text-accent text-right text-accent rounded-full pl-16 pr-4"
+        className="bg-accent-900 placeholder:text-white text-right text-white rounded-full pl-16 pr-4"
         placeholder="0"
         value={amount}
         onChange={(e) => {

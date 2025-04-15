@@ -66,7 +66,7 @@ const HealthBarTooltip = ({
           key={color.name}
           className="flex items-center gap-4 justify-between"
         >
-          <p className="flex-grow text-xs text-right text-foreground/70">
+          <p className="flex-grow text-xs text-right text-white">
             {color.name}:{` `}
             {color.min === Infinity
               ? `${color.max}-`
@@ -96,7 +96,7 @@ export const HealthBar = ({
   return (
     <div className="flex flex-col">
       <div className="flex items-center gap-4">
-        <div className="text-primary text-lg font-semibold">Health Bar</div>
+        <div className="text-white text-lg font-semibold">Health Bar</div>
         <HealthBarTooltip healthBarDefinition={marketDefinition.healthBar} />
       </div>
       <HealthBarProgress

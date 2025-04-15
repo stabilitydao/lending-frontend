@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Poppins } from "next/font/google";
+import { Manrope } from "next/font/google";
 import "./globals.css";
 import "react-toastify/dist/ReactToastify.css";
 import { Navbar } from "@/components/layout/navbar";
@@ -8,14 +8,9 @@ import { ToastContainer } from "react-toastify";
 import { LocalIcon, LoopingModal, MarketModal, VaultModal } from "@/components";
 import { ProvidersWrapper } from "./providers";
 
-const poppins = Poppins({
-  subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-});
-
-const inter = Inter({
-  subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+const manrope = Manrope({
+  subsets: [],
+  weight: ["200", "300", "400", "500", "600", "700", "800"],
 });
 
 export const metadata: Metadata = {
@@ -31,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${poppins.className} ${inter.className} flex flex-col min-h-screen bg-background`}
+        className={`${manrope.className} flex flex-col min-h-screen bg-background`}
       >
         <ToastContainer
           position="top-right"

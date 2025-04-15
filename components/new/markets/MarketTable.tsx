@@ -66,7 +66,7 @@ const MarketLine = ({
     <div className="flex flex-row gap-1 items-center">
       <div className={withVault ? "w-[70px]" : "w-[60px]"}>
         {!token.pair && (
-          <p className="text-md">
+          <p className="text-[14px]">
             {formatSuffix(
               market.supply.tvl.amount,
               "linkedToMoney",
@@ -209,7 +209,7 @@ const MarketLine = ({
 
   const supplyAPR = token.pair ? (
     <div className="flex flex-col gap-1">
-      <div className="flex flex-row gap-1 items-center text-gray-500">
+      <div className="flex flex-row gap-1 items-center text-white">
         <span>{baseAPR}% (x1)</span>
         <ApyBreakdown
           breakdown={market.breakdown.supply}
@@ -288,7 +288,7 @@ const MarketLine = ({
   );
   return (
     <TableRow
-      className="text-primary border-t-background cursor-pointer hover:bg-background/50"
+      className="text-white border-t-background cursor-pointer hover:bg-background/50"
       onClick={() => onSelectToken(token)}
     >
       <TableCell>{tokenDisplay}</TableCell>
@@ -321,7 +321,7 @@ export const MarketTable = () => {
   if (!marketDefinition)
     return (
       <div className="p-4 gap-6 flex flex-col">
-        <div className="text-red-500">
+        <div className="text-red-700">
           Due to an exploit, the submarkets have been removed. Check the{" "}
           <Link
             href="https://discord.com/invite/vicuna"
@@ -428,7 +428,7 @@ export const InnerMarketTable = () => {
               defaultOrder="desc"
             />
             {isWithVaults && (
-              <TableHead className="text-muted">
+              <TableHead className="text-white text-[12px]">
                 <div className="flex items-center gap-2">Leverage</div>
               </TableHead>
             )}

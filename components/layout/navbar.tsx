@@ -33,7 +33,7 @@ export const Navbar = () => {
   ];
 
   return (
-    <nav className="flex justify-between items-center bg-background py-3 px-8 z-50 shadow-lg absolute w-full">
+    <nav className="flex justify-between items-center bg-background py-3 px-8 z-50 absolute w-full">
       <div>
         <Link href="/" className="flex gap-[5px] items-center">
           <Image src="/full_logo_dark.png" alt="logo" width={150} height={78} />
@@ -62,22 +62,9 @@ export const Navbar = () => {
             key={i}
             className="flex flex-col items-center gap-2 group"
           >
-            <Image
-              src={item.src}
-              alt={item.name}
-              className={cn(
-                "transition-transform ease-in-out duration-300",
-                pathname === item.href ? "scale-125" : "group-hover:scale-110"
-              )}
-              width={34}
-              height={34}
-            />
             <p
               className={cn(
-                "text-white text-center font-light transition-all",
-                pathname === item.href
-                  ? "text-[12px] font-semibold"
-                  : "text-[10px] group-hover:text-[12px]"
+                "text-white text-center transition-all text-[16px] font-semibold"
               )}
             >
               {item.name}
@@ -85,15 +72,8 @@ export const Navbar = () => {
           </Link>
         ))}
         <DropdownMenu>
-          <DropdownMenuTrigger className="flex flex-col items-center gap-2">
-            <Image
-              src="/icons/more.png"
-              alt="more"
-              width={34}
-              height={34}
-              className="transition-transform group-hover:scale-110 ease-in-out duration-300"
-            />
-            <p className="text-white text-xs text-center font-light transition-all group-hover:text-[10px]">
+          <DropdownMenuTrigger className="flex flex-col items-center">
+            <p className="text-white text-[16px] text-center font-semibold">
               More
             </p>
           </DropdownMenuTrigger>
@@ -103,7 +83,7 @@ export const Navbar = () => {
                 href="https://app.rhino.fi/bridge/?refId=DeFi_VicunaFinance&chainIn=ARBITRUM&chainOut=SONIC"
                 target="_blank"
                 rel="noreferrer"
-                className="w-full"
+                className="w-full text-white"
               >
                 Bridge
               </a>
@@ -113,7 +93,7 @@ export const Navbar = () => {
                 href="https://app.magpiefi.xyz/swap"
                 target="_blank"
                 rel="noreferrer"
-                className="w-full"
+                className="w-full text-white"
               >
                 Swap
               </a>
@@ -123,7 +103,7 @@ export const Navbar = () => {
                 href="https://vicuna-finance.gitbook.io/vicuna-finance-sonic"
                 target="_blank"
                 rel="noreferrer"
-                className="w-full"
+                className="w-full text-white"
               >
                 Docs
               </a>
@@ -133,12 +113,12 @@ export const Navbar = () => {
                 href="https://medium.com/@vicunafinance"
                 target="_blank"
                 rel="noreferrer"
-                className="w-full"
+                className="w-full text-white"
               >
                 Blog
               </a>
             </DropdownMenuItem>
-            <DropdownMenuItem>Audits</DropdownMenuItem>
+            <DropdownMenuItem className="text-white">Audits</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

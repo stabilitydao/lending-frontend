@@ -17,8 +17,9 @@ export const SearchFilter = ({ searchKey }: SearchFilterProps) => {
           placeholder="Search"
           value={searchTerm}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="pr-10 text-primary"
+          className="pr-10 text-white"
         />
+
         <SearchIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary h-5 w-5" />
       </div>
     </div>

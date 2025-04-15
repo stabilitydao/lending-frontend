@@ -34,7 +34,10 @@ export const SortableTableHead = ({
   };
 
   return (
-    <TableHead className="text-muted cursor-pointer" onClick={handleClick}>
+    <TableHead
+      className="text-white text-[12px] cursor-pointer"
+      onClick={handleClick}
+    >
       <div className="flex items-center gap-2">
         {label} <FilterIcon />
       </div>

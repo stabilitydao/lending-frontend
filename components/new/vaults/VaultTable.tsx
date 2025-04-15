@@ -42,7 +42,7 @@ const VaultLine = ({
 
   return (
     <TableRow
-      className="text-primary border-t-background cursor-pointer hover:bg-background/50"
+      className="text-white border-t-background cursor-pointer hover:bg-background/50"
       onClick={() => onSelectVault(vaultDefinition)}
     >
       <TableCell>

@@ -24,7 +24,7 @@ export const Card = ({
   width?: string;
 }) => (
   <div
-    className={`${width} rounded-lg bg-card text-card-foreground shadow-xl p-[24px] flex flex-col gap-4 min-w-[172px] w-full sm:w-auto`}
+    className={`${width} rounded-lg bg-card text-white shadow-xl p-[24px] flex flex-col gap-4 min-w-[172px] w-full sm:w-auto`}
   >
     {title && <div className="tracking-tight text-lg font-light">{title}</div>}
     {children}

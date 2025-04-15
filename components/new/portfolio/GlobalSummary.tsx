@@ -19,7 +19,7 @@ const Recap = ({
   <div className="flex flex-col gap-4">
     <div className="flex flex-col gap-2">
       <div className="flex items-center gap-2">
-        <h1 className="text-primary text-lg font-semibold">Your Summary</h1>
+        <h1 className="text-white text-lg font-semibold">Your Summary</h1>
         <Image
           src={"/icons/coins/sonic.svg"}
           alt="Chain logo"
@@ -27,7 +27,7 @@ const Recap = ({
           height={20}
         />
       </div>
-      <div className="text-primary text-sm font-light">
+      <div className="text-white text-sm font-light">
         Quickly monitor your portfolio's performance.
       </div>
     </div>
@@ -119,7 +119,7 @@ const Opportunities = ({
   <div className="flex flex-col gap-4">
     <div className="flex flex-col gap-2">
       <div className="flex items-center gap-2">
-        <h1 className="text-primary text-lg font-semibold">Opportunities</h1>
+        <h1 className="text-lg font-semibold text-white">Opportunities</h1>
         <Image
           src={"/icons/coins/sonic.svg"}
           alt="Chain logo"
@@ -127,7 +127,7 @@ const Opportunities = ({
           height={20}
         />
       </div>
-      <div className="text-primary text-sm font-light">
+      <div className="text-white text-sm font-light">
         {wrappedSuggestionsList.length > 0
           ? "Suggestions to improve your portfolio."
           : "No suggestions available for your address!"}

@@ -17,9 +17,7 @@ const PortfolioSelectorButton = ({
   <button
     onClick={onClick}
     className={`px-4 py-2 text-sm font-medium rounded-xl transition-colors ${
-      active
-        ? "bg-primary text-primary-foreground shadow-md"
-        : "bg-transparent text-primary hover:bg-primary/20"
+      active ? "bg-accent-500 text-white" : "text-accent-400"
     }`}
   >
     {text}
@@ -36,7 +34,7 @@ const PortfolioSelector = <T extends string>({
   setSelected: (option: T) => void;
 }) => {
   return (
-    <div className="flex self-center bg-card text-secondary-foreground rounded-[var(--radius)] p-2 space-x-2 w-fit">
+    <div className="flex self-center bg-accent-900 text-accent-400 rounded-[var(--radius)] p-1 space-x-2">
       {options.map((option) => (
         <PortfolioSelectorButton
           key={option}

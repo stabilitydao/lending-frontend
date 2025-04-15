@@ -112,7 +112,7 @@ const MarketInfo = ({
     <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-2">
-          <h1 className="text-primary text-lg font-semibold">{market.name}</h1>
+          <h1 className="text-white text-lg font-semibold">{market.name}</h1>
           <Image
             src={"/icons/coins/sonic.svg"}
             alt="Chain logo"
@@ -120,7 +120,7 @@ const MarketInfo = ({
             height={20}
           />
         </div>
-        <div className="text-primary text-sm font-light">
+        <div className="text-white text-sm font-light">
           {market.description}
         </div>
       </div>
@@ -218,7 +218,7 @@ export const MarketsPortfolio = ({
     return (
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-2">
-          <h1 className="text-primary text-lg font-semibold">Markets</h1>
+          <h1 className="text-white text-lg font-semibold">Markets</h1>
           <Image
             src={"/icons/coins/sonic.svg"}
             alt="Chain logo"
@@ -226,7 +226,7 @@ export const MarketsPortfolio = ({
             height={20}
           />
         </div>
-        <div className="text-primary text-sm font-light">
+        <div className="text-white text-sm font-light">
           No market data found for your wallet!
         </div>
       </div>

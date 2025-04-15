@@ -192,7 +192,7 @@ const RepayForm = ({ token, market, marketID }: FormProps) => {
 const StyledTrigger = ({ value }: { value: string }) => (
   <TabsTrigger
     value={value}
-    className="w-full text-lg data-[state=active]:bg-background data-[state=active]:text-primary bg-transparent h-12 shadow-none rounded-none border-b-0 border-l-0 border-r-0 border-t-2 border-t-transparent data-[state=inactive]:border-t-background"
+    className="w-full text-lg text-white bg-transparent  h-12 shadow-none rounded-none border-t-0 border-l-0 border-r-0 border-b-0 border-b-accent-500 data-[state=active]:border-b-2 data-[state=active]:bg-transparent data-[state=active]:text-white"
   >
     {value.charAt(0).toUpperCase() + value.slice(1)}
   </TabsTrigger>
@@ -208,7 +208,7 @@ const ActiveTabSelector = ({
   setMode: (mode: QueryValue) => void;
 }) => {
   return (
-    <Tabs className="w-full h-12 bg-card" value={mode} onValueChange={setMode}>
+    <Tabs className="w-full h-12" value={mode} onValueChange={setMode}>
       <TabsList
         className="grid w-full p-0 gap-0"
         style={{
@@ -291,7 +291,7 @@ export const InnerMarketModal = ({
       </VisuallyHidden>
       <DialogContent
         autoFocus={false}
-        className="bg-card text-primary overflow-y-auto pt-12 select-none"
+        className="bg-card text-white overflow-y-auto pt-12 select-none"
       >
         <div tabIndex={0} aria-hidden="true" />
         {isVault && (
@@ -323,7 +323,7 @@ export const InnerMarketModal = ({
             <>
               <button
                 onClick={() => setIsOpen(true)}
-                className="absolute right-0 mr-4 flex items-center gap-2 text-primary"
+                className="absolute right-0 mr-4 flex items-center gap-2 text-white"
               >
                 Get
                 <ExternalLinkIcon className="w-4 h-4" />
@@ -382,7 +382,7 @@ export const InnerMarketModal = ({
               className="absolute right-0 mr-4 flex items-center gap-2"
             >
               Get
-              <ExternalLinkIcon className="w-4 h-4 text-primary" />
+              <ExternalLinkIcon className="w-4 h-4 text-white" />
             </Link>
           )}
         </div>
@@ -415,7 +415,7 @@ export const InnerMarketModal = ({
                 setMode={(mode) => updateParams({ mode })}
               />
             </DialogTitle>
-            <div className="text-sm flex flex-col gap-8 pt-10 text-primary">
+            <div className="text-sm flex flex-col gap-8 pt-10 text-white">
               {mode == "supply" && (
                 <SupplyForm token={token} market={market} marketID={marketID} />
               )}
