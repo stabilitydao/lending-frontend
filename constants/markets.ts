@@ -29,22 +29,6 @@ const subMarketHealthBar = new HealthBarDefinition(
   ["red", "orange", "yellow", "green"]
 );
 
-export const LEGACY_MARKET_DEFINITIONS: {
-  [key: string]: {
-    name: string;
-  };
-} = {
-  main: {
-    name: "Main Protocol",
-  },
-  sonic: {
-    name: "Sonic Market",
-  },
-  stables: {
-    name: "Stable Market",
-  },
-};
-
 export const MARKET_DEFINITIONS: {
   [key: string]: MarketDefinition;
 } = {

@@ -1,9 +1,4 @@
-import {
-  MarketSelector,
-  MarketsTVL,
-  MarketTable,
-  SearchFilter,
-} from "@/components";
+import { MarketsTVL, MarketTable, SearchFilter } from "@/components";
 
 export default function Page() {
   return (
@@ -12,7 +7,6 @@ export default function Page() {
         <div className="flex items-center gap-4 justify-between">
           <div className="flex items-center gap-4">
             <SearchFilter searchKey="markets" />
-            <MarketSelector />
           </div>
           <MarketsTVL />
         </div>
