@@ -34,7 +34,7 @@ export const socialLinks = [
 export const navLinks = [
   {
     label: "Borrow/Lend",
-    href: "/markets",
+    href: "/",
   },
   {
     label: "Vaults",

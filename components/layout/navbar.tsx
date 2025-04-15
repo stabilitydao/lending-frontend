@@ -27,9 +27,9 @@ export const Navbar = () => {
   const pathname = usePathname();
 
   const navItems = [
-    { name: "Borrow/Lend", href: "/markets", src: "/icons/borrow.png" },
-    { name: "Vaults", href: "/vaults", src: "/icons/vault.png" },
-    { name: "Portfolio", href: "/portfolio", src: "/icons/portfolio.png" },
+    { name: "Borrow/Lend", href: "/" },
+    { name: "Vaults", href: "/vaults" },
+    { name: "Portfolio", href: "/portfolio" },
   ];
 
   return (
@@ -64,7 +64,10 @@ export const Navbar = () => {
           >
             <p
               className={cn(
-                "text-white text-center transition-all text-[16px] font-semibold"
+                "text-white text-center transition-all text-[16px] font-semibold px-4 py-[10px] hover:bg-accent-700 rounded-[16px]",
+                pathname === item.href
+                  ? "bg-accent-500 hover:bg-accent-500"
+                  : ""
               )}
             >
               {item.name}
