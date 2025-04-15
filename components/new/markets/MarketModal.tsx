@@ -301,12 +301,7 @@ export const InnerMarketModal = ({
         )}
         {!isVault && !shouldDisplaySwitch && (
           <div className="absolute left-5 top-5">
-            <Image
-              src="/logo.svg"
-              alt="Vicuna Finance"
-              width={30}
-              height={30}
-            />
+            <Image src="/logo.svg" alt="Stability" width={30} height={30} />
           </div>
         )}
         {shouldDisplaySwitch && (

@@ -37,7 +37,7 @@ const config = createConfig(
     walletConnectProjectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
 
     // Required App Info
-    appName: "Vicuna Finance",
+    appName: "Stability",
   })
 );
 export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
