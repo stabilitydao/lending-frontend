@@ -36,7 +36,13 @@ export const Navbar = () => {
     <nav className="flex justify-between items-center bg-background py-3 px-8 z-50 absolute w-full">
       <div>
         <Link href="/" className="flex gap-[5px] items-center">
-          <Image src="/full_logo_dark.png" alt="logo" width={150} height={78} />
+          <Image
+            src="/full_logo_dark.png"
+            alt="logo"
+            width={150}
+            height={78}
+            priority
+          />
         </Link>
       </div>
       {/* <Link href="/">

@@ -14,6 +14,7 @@ export const Footer = () => {
               alt="logo"
               width={150}
               height={78}
+              priority
             />
           </Link>
         </div>
