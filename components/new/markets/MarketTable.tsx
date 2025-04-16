@@ -62,6 +62,7 @@ const MarketLine = ({
       : supplyPercentage > 80
       ? "text-orange-500"
       : "text-green-500";
+
   const supplyInfo = (
     <div className="flex flex-row gap-1 items-center">
       <div className={withVault ? "w-[70px]" : "w-[60px]"}>
@@ -259,7 +260,7 @@ const MarketLine = ({
   );
 
   const tokenDisplay = (
-    <div className="flex items-center gap-10">
+    <div className="flex items-center gap-5">
       <div
         className={`flex flex-row gap-2 items-center ${
           withVault && "w-[88px]"
@@ -269,7 +270,6 @@ const MarketLine = ({
           <AvatarImage src={token.icon} className="object-contain" />
           <AvatarFallback>{token.symbol}</AvatarFallback>
         </Avatar>
-
         {token.pair && (
           <DoubleAvatar
             firstSrc={token.pair[0].icon}
@@ -279,10 +279,39 @@ const MarketLine = ({
           />
         )}
       </div>
-
       <div className="flex flex-col">
         <p className="text-lg ">{token.name}</p>
         <p className="text-xs font-light">{token.symbol}</p>
+      </div>
+      <div className="flex items-center justify-center gap-1">
+        <div
+          title="Sonic Activity Points"
+          className="flex items-center rounded-full border border-[#6EBD70] bg-[#6EBD70]/[0.16] pr-[6px]"
+        >
+          <img
+            src="/sonic.png"
+            alt="sonic"
+            className="w-[14px] h-[14px] rounded-full"
+          />
+          <span className="text-[10px] ml-[3px] mr-[2px]">
+            x{token?.points?.sonic}
+          </span>
+        </div>
+        {!!token?.points?.rings && (
+          <div
+            title="Rings Points"
+            className="flex items-center rounded-full border border-[#ac62e4] bg-black pr-[6px]"
+          >
+            <img
+              src="/rings.png"
+              alt="rings"
+              className="w-[14px] h-[14px] rounded-full"
+            />
+            <span className="text-[10px] ml-[3px] mr-[2px]">
+              x{token?.points?.rings}
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );
