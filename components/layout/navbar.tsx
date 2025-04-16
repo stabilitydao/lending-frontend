@@ -13,6 +13,9 @@ import {
   SheetTrigger,
   SheetClose,
 } from "@/components/ui/sheet";
+
+import { SonicPoints } from "../sonic-points";
+
 import { Menu } from "lucide-react";
 import {
   DropdownMenu,
@@ -20,6 +23,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
+
 import { cn } from "@/lib/utils";
 
 export const Navbar = () => {
@@ -36,13 +40,18 @@ export const Navbar = () => {
     <nav className="flex justify-between items-center bg-background py-3 px-8 z-50 absolute w-full">
       <div>
         <Link href="/" className="flex gap-[5px] items-center">
-          <Image
-            src="/full_logo_dark.png"
-            alt="logo"
-            width={150}
-            height={78}
-            priority
-          />
+          <div className="hidden md:block">
+            <Image
+              src="/full_logo_dark.png"
+              alt="logo"
+              width={150}
+              height={78}
+              priority
+            />
+          </div>
+          <div className="md:hidden block">
+            <Image src="/logo.svg" alt="logo" width={40} height={40} />
+          </div>
         </Link>
       </div>
       {/* <Link href="/">
@@ -132,6 +141,7 @@ export const Navbar = () => {
         </DropdownMenu>
       </div>
       <div className="flex items-center gap-4">
+        {/* <SonicPoints /> */}
         {isConnected && <SwitchChain />}
         <ConnectWallet />
         <Sheet>

@@ -15,6 +15,7 @@ export class Token {
   wrapperToken?: Token;
   pair?: Token[];
   buyLink: string;
+  points?: { sonic: string; rings?: string };
 
   constructor({
     name,
@@ -28,6 +29,7 @@ export class Token {
     wrapperToken,
     pair,
     buyLink,
+    points,
   }: {
     name: string;
     symbol: string;
@@ -40,6 +42,7 @@ export class Token {
     wrapperToken?: Token;
     pair?: Token[];
     buyLink?: string;
+    points?: { sonic: string; rings?: string };
   }) {
     this.name = name;
     this.symbol = symbol;
@@ -57,6 +60,8 @@ export class Token {
         chainId +
         "&inputCurrency=" +
         address;
+
+    this.points = points;
 
     ALL_TOKENS.push(this);
   }
@@ -99,6 +104,7 @@ export const S = new Token({
   icon: "/icons/coins/sonic.png",
   isNative: true,
   chainId: sonic.id,
+  points: { sonic: "8" },
 });
 
 export const wS = new Token({
@@ -120,6 +126,7 @@ export const USDCe = new Token({
   decimals: 6,
   icon: "/icons/coins/usdc.png",
   chainId: sonic.id,
+  points: { sonic: "12" },
 });
 
 export const scUSD = new Token({
@@ -129,6 +136,7 @@ export const scUSD = new Token({
   decimals: 6,
   icon: "/icons/coins/scusdc.png",
   chainId: sonic.id,
+  points: { sonic: "12", rings: "1.5" },
 });
 
 export const USDT = new Token({
@@ -138,6 +146,7 @@ export const USDT = new Token({
   decimals: 6,
   icon: "/icons/coins/usdt.png",
   chainId: sonic.id,
+  points: { sonic: "4" },
 });
 
 export const wETH = new Token({
@@ -147,6 +156,7 @@ export const wETH = new Token({
   decimals: 18,
   icon: "/icons/coins/weth.png",
   chainId: sonic.id,
+  points: { sonic: "4" },
 });
 
 export const scETH = new Token({
@@ -165,6 +175,7 @@ export const wOS = new Token({
   decimals: 18,
   icon: "/icons/coins/wos.png",
   chainId: sonic.id,
+  points: { sonic: "8" },
 });
 
 export const oS = new Token({
@@ -183,6 +194,7 @@ export const stS = new Token({
   decimals: 18,
   icon: "/icons/coins/sts.png",
   chainId: sonic.id,
+  points: { sonic: "8" },
 });
 
 /*
