@@ -139,6 +139,15 @@ export const scUSD = new Token({
   points: { sonic: "12", rings: "1.5" },
 });
 
+export const sbUSD = new Token({
+  name: "Staked bUSD",
+  symbol: "sbUSD",
+  address: "0x451812019238785086CFAC408D8A64f06898f6f5",
+  decimals: 18,
+  icon: "/icons/coins/sbusd.svg",
+  chainId: sonic.id,
+});
+
 export const USDT = new Token({
   name: "USDT",
   symbol: "USDT",

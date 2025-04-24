@@ -122,10 +122,12 @@ const MarketLine = ({
       )}
     </div>
   );
-  const borrowPercentage = Math.min(
-    (market.borrow.tvl.amount / market.borrow.cap.amount) * 100,
-    100
-  );
+  const borrowPercentage =
+    Math.min(
+      (market.borrow.tvl.amount / market.borrow.cap.amount) * 100,
+      100
+    ) || 0;
+
   const borrowColor =
     borrowPercentage > 95
       ? "text-red-500"
@@ -284,19 +286,21 @@ const MarketLine = ({
         <p className="text-xs font-light">{token.symbol}</p>
       </div>
       <div className="flex items-center justify-center gap-1">
-        <div
-          title="Sonic Activity Points"
-          className="flex items-center rounded-full border border-[#6EBD70] bg-[#6EBD70]/[0.16] pr-[6px]"
-        >
-          <img
-            src="/sonic.png"
-            alt="sonic"
-            className="w-[14px] h-[14px] rounded-full"
-          />
-          <span className="text-[10px] ml-[3px] mr-[2px]">
-            x{token?.points?.sonic}
-          </span>
-        </div>
+        {!!token?.points?.sonic && (
+          <div
+            title="Sonic Activity Points"
+            className="flex items-center rounded-full border border-[#6EBD70] bg-[#6EBD70]/[0.16] pr-[6px]"
+          >
+            <img
+              src="/sonic.png"
+              alt="sonic"
+              className="w-[14px] h-[14px] rounded-full"
+            />
+            <span className="text-[10px] ml-[3px] mr-[2px]">
+              x{token?.points?.sonic}
+            </span>
+          </div>
+        )}
         {!!token?.points?.rings && (
           <div
             title="Rings Points"
