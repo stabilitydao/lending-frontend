@@ -78,7 +78,7 @@ const SupplyForm = ({ token, market, marketID }: FormProps) => {
       title="Supply"
       amount={amount}
       onChangeAmount={setAmount}
-      balance={minBn(balance, supplyCap)}
+      balance={balance} //minBn(balance,supplyCap)
       hasEnoughAllowance={hasEnoughAllowance}
       onAction={supply}
       onApprove={approve}

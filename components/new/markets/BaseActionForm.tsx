@@ -60,6 +60,7 @@ export const BaseActionForm = ({
     displayData.totalDebt.current + displayData.borrowLimit.current > 0;
   const hasBorrowLimitFuture =
     displayData.totalDebt.future + displayData.borrowLimit.future > 0;
+
   return (
     <>
       <div className="flex items-center justify-between">
