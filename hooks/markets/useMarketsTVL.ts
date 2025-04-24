@@ -3,10 +3,14 @@ import { DEFAULT_MARKET_ID, MARKET_DEFINITIONS } from "@/constants";
 import { queryKeys } from "@/queries";
 import { bnToNumber } from "@/helpers";
 
+import { useSelectedMarket } from "./useSelectedMarket";
+
 const PRICE_DECIMALS = 8;
 
 const useMarketsTVL = () => {
-  const marketIDs = [DEFAULT_MARKET_ID];
+  const { marketID } = useSelectedMarket();
+
+  const marketIDs = [marketID];
 
   const queries = useQueries({
     queries: marketIDs.map(

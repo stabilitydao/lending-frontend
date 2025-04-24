@@ -273,8 +273,12 @@ const MarketLine = ({
     </div>
   ) : (
     // Single line for non-paired tokens in green
-    <div className="flex flex-row gap-1 items-center text-green-500">
-      <span>{baseAPR}%</span>
+    <div
+      className={`flex flex-row gap-1 items-center ${
+        token.symbol === "sbUSD" ? "" : "text-green-500"
+      } `}
+    >
+      {token.symbol === "sbUSD" ? <span>0%</span> : <span>{baseAPR}%</span>}
       <ApyBreakdown
         breakdown={market.breakdown.supply}
         note={hasMerkl && <MerklNote />}
@@ -501,6 +505,7 @@ export const InnerMarketTable = () => {
             )}
           </TableRow>
         </TableHeader>
+
         <TableBody>
           {sort(filter(marketDefinition.tokens)).map((token) => (
             <MarketLine
