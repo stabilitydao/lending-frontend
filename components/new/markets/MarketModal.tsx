@@ -263,7 +263,7 @@ export const InnerMarketModal = ({
       modal: null,
       token: null,
       mode: null,
-      ...(fullReplace ? { market: null } : {}),
+      ...(fullReplace ? { market: marketID } : {}),
     });
 
   const toggleWrappedNativeToken = useCallback(() => {

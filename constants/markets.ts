@@ -42,7 +42,7 @@ export const MARKET_DEFINITIONS: {
     name: "sbUSD Market",
     description:
       "A market exclusively made of Sonic-based assets. Its high correlation makes liquidation much less of a risk.",
-    tokens: [USDCe, sbUSD],
+    tokens: [sbUSD, USDCe],
     POOL_ADDRESS_PROVIDER: "0xC0512947845cCe3a32e58Efc3B4526Dd1D11F6af",
     AAVE_POOL: "0x680F8A574b0273f26A314cA61466c0A4f1E2d95e",
     NATIVE_TOKEN_GATEWAY: "0x7B41ed35bB96c193202eb8F79B8f8a8B05d45234",

@@ -14,9 +14,3 @@ export const getMarketData = async (marketID: string) =>
     functionName: "getReservesData",
     args: [MARKET_DEFINITIONS[marketID].POOL_ADDRESS_PROVIDER],
   });
-
-// marketID === "sbUSD"
-// ? Addresses[MARKET_DEFINITIONS[marketID].chainId].CONTRACTS
-//     .sbUSD_MARKET_DATA_PROVIDER
-// : Addresses[MARKET_DEFINITIONS[marketID].chainId].CONTRACTS
-//     .MARKET_DATA_PROVIDER,
