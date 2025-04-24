@@ -40,15 +40,23 @@ const useBorrow = (marketID: string, token: Token) => {
   const borrowCap = marketData?.borrowCap || BigInt(0);
   const variableDebt = userData?.variableDebt || BigInt(0);
   const availableLiquidity = marketData?.availableLiquidity || BigInt(0);
-  let maxBorrow = minBn(
+  let maxBorrow =
     borrowAmountUSD && price
       ? (((borrowAmountUSD * BigInt(10 ** token.decimals)) / price) *
           BigInt(999999)) /
-          BigInt(1000000)
-      : BigInt(0),
-    borrowCap * BigInt(10 ** token.decimals) - variableDebt,
-    (availableLiquidity * BigInt(10 ** 10 - 1)) / BigInt(10 ** 10)
-  );
+        BigInt(1000000)
+      : BigInt(0);
+
+  // let maxBorrow = minBn(
+  //   borrowAmountUSD && price
+  //     ? (((borrowAmountUSD * BigInt(10 ** token.decimals)) / price) *
+  //         BigInt(999999)) /
+  //         BigInt(1000000)
+  //     : BigInt(0),
+  //   borrowCap * BigInt(10 ** token.decimals) - variableDebt,
+  //   (availableLiquidity * BigInt(10 ** 10 - 1)) / BigInt(10 ** 10)
+  // );
+
   const { chainIdToUse } = useCorrectChain();
   const { address: userAddress } = useAccount();
 
