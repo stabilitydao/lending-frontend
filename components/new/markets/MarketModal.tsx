@@ -405,7 +405,11 @@ export const InnerMarketModal = ({
           <DialogHeader>
             <DialogTitle className="flex">
               <ActiveTabSelector
-                options={["supply", "withdraw", "borrow", "repay"]}
+                options={
+                  token.symbol === "sbUSD"
+                    ? ["supply", "withdraw"]
+                    : ["supply", "withdraw", "borrow", "repay"]
+                }
                 mode={mode}
                 setMode={(mode) => updateParams({ mode })}
               />

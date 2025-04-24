@@ -14,7 +14,7 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "Stability",
+  title: "Stability Market",
   description: "Stability",
 };
 
