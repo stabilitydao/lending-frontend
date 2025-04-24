@@ -64,6 +64,7 @@ const useMarkets = (marketID: string) => {
       markets: undefined,
       invalidateMarketsDataQuery,
     };
+
   for (const rawMarket of marketsData) {
     let token = getTokenByAddress(rawMarket.underlyingAsset);
     if (!token) {
@@ -92,6 +93,7 @@ const useMarkets = (marketID: string) => {
       Number(rawMarket.baseLTVasCollateral) / Number(BASIS_POINTS_DIVISOR);
 
     const price = rawMarket.priceInMarketReferenceCurrency;
+
     const totalSuppliedValue = bnToNumber(
       totalSupplied * price,
       decimals + PRICE_DECIMALS

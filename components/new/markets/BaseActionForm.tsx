@@ -106,26 +106,33 @@ export const BaseActionForm = ({
               </div>
             </div>
           </div>
-          <div className="flex items-center justify-between">
-            <div className="flex flex-col">
-              <div className="font-semibold">Borrowed</div>
-              <div>{market.borrow.APR.toFixed(2)}% Borrow APR</div>
-            </div>
-            <div className="flex flex-col ">
-              <div className="text-md font-semibold">
-                {formatSuffix(
-                  displayData?.borrowed,
-                  "linkedToMoney",
-                  displayData?.borrowedValueUSD
-                )}
+          {token.symbol !== "sbUSD" && (
+            <div className="flex items-center justify-between">
+              <div className="flex flex-col">
+                <div className="font-semibold">Borrowed</div>
+                <div>{market.borrow.APR.toFixed(2)}% Borrow APR</div>
               </div>
-              <div className="text-xs font-light text-right">
-                ${formatSuffix(displayData?.borrowedValueUSD, "money")}
+
+              <div className="flex flex-col ">
+                <div className="text-md font-semibold">
+                  {formatSuffix(
+                    displayData?.borrowed,
+                    "linkedToMoney",
+                    displayData?.borrowedValueUSD
+                  )}
+                </div>
+                <div className="text-xs font-light text-right">
+                  ${formatSuffix(displayData?.borrowedValueUSD, "money")}
+                </div>
               </div>
             </div>
-          </div>
+          )}
           <div className="flex items-center justify-between transform translate-y-1">
-            <span className="font-semibold">Supply/Borrow rewards</span>
+            <span className="font-semibold">
+              {token.symbol !== "sbUSD"
+                ? "Supply/Borrow rewards"
+                : "Supply rewards"}
+            </span>
             <div className="flex items-center justify-center gap-2">
               <Image
                 src={"/assets/icons/airdrop.png"}

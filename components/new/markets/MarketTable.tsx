@@ -14,7 +14,6 @@ import {
   useQueryParams,
   useSearch,
   useSelectedMarket,
-  useUserData,
 } from "@/hooks";
 import { formatSuffix, trimmedNumber } from "@/helpers";
 import { useState } from "react";
@@ -23,13 +22,11 @@ import {
   ApyBreakdown,
   SortableTableHead,
   SortBy,
-  FullEligibleRewards,
   MerklNote,
   StandardTooltip,
-  LoopingButton,
 } from "@/components";
 import { DoubleAvatar } from "@/components/ui/double-avatar";
-import { DEFAULT_MARKET_ID, Token } from "@/constants";
+import { Token } from "@/constants";
 import { MarketInfo } from "@/types";
 import Link from "next/link";
 
@@ -79,14 +76,15 @@ const MarketLine = ({
           ${formatSuffix(market.supply.tvl.value, "money")}
         </p>
       </div>
-      {!token.pair && (
+
+      {!token.pair && supplyPercentage != 100 && (
         <div className="flex flex-row items-end justify-center">
           <p className="text-md">
             ({trimmedNumber(supplyPercentage, 2)}% full)
           </p>
         </div>
       )}
-      {!token.pair && (
+      {!token.pair && supplyPercentage != 100 && (
         <StandardTooltip>
           <div className="flex flex-col gap-2">
             <div className={`text-[16px] text-center mb-[10px] ${supplyColor}`}>
@@ -123,10 +121,15 @@ const MarketLine = ({
     </div>
   );
   const borrowPercentage =
-    Math.min(
-      (market.borrow.tvl.amount / market.borrow.cap.amount) * 100,
-      100
-    ) || 0;
+    marketID === "sbUSD"
+      ? Math.min(
+          (market.borrow.tvl.amount / market.supply.tvl.amount) * 100,
+          100
+        ) || 0
+      : Math.min(
+          (market.borrow.tvl.amount / market.borrow.cap.amount) * 100,
+          100
+        ) || 0;
 
   const borrowColor =
     borrowPercentage > 95
@@ -142,7 +145,7 @@ const MarketLine = ({
 
   const borrowInfo = (
     <div className="flex flex-row gap-1 items-center">
-      <div className={"w-[60px]"}>
+      <div className="w-[60px]">
         <p className="text-md">
           {formatSuffix(
             market.borrow.tvl.amount,
@@ -169,14 +172,25 @@ const MarketLine = ({
           <div className={`text-[16px] text-center mb-[10px] ${borrowColor}`}>
             {trimmedNumber(100 - borrowPercentage, 2)}% remaining
           </div>
-          <p className="flex justify-between w-full gap-1">
-            <div>Cap:</div>
-            <div className="pl-[50px]">
-              {formatSuffix(market.borrow.cap.amount, "abbreviated")}{" "}
-              {token.symbol} ($
-              {formatSuffix(market.borrow.cap.value, "money")})
-            </div>
-          </p>
+          {marketID === "sbUSD" ? (
+            <p className="flex justify-between w-full gap-1">
+              <div>Cap:</div>
+              <div className="pl-[50px]">
+                {formatSuffix(market.supply.tvl.amount, "abbreviated")}{" "}
+                {token.symbol} ($
+                {formatSuffix(market.supply.tvl.value, "money")})
+              </div>
+            </p>
+          ) : (
+            <p className="flex justify-between w-full gap-1">
+              <div>Cap:</div>
+              <div className="pl-[50px]">
+                {formatSuffix(market.borrow.cap.amount, "abbreviated")}{" "}
+                {token.symbol} ($
+                {formatSuffix(market.borrow.cap.value, "money")})
+              </div>
+            </p>
+          )}
 
           <div className="flex justify-between w-full gap-1">
             <div>Utilization:</div>
@@ -186,14 +200,32 @@ const MarketLine = ({
               {formatSuffix(market.borrow.tvl.value, "money")})
             </div>
           </div>
-          <div className="flex justify-between w-full gap-1">
-            <div>Remaining:</div>
-            <div className="pl-[50px]">
-              {formatSuffix(market.borrow.remaining.amount, "abbreviated")}{" "}
-              {token.symbol} ($
-              {formatSuffix(market.borrow.remaining.value, "money")})
+          {marketID === "sbUSD" ? (
+            <div className="flex justify-between w-full gap-1">
+              <div>Remaining:</div>
+              <div className="pl-[50px]">
+                {formatSuffix(
+                  market.supply.tvl.amount - market.borrow.tvl.amount,
+                  "abbreviated"
+                )}{" "}
+                {token.symbol} ($
+                {formatSuffix(
+                  market.supply.tvl.value - market.borrow.tvl.value,
+                  "money"
+                )}
+                )
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="flex justify-between w-full gap-1">
+              <div>Remaining:</div>
+              <div className="pl-[50px]">
+                {formatSuffix(market.borrow.remaining.amount, "abbreviated")}{" "}
+                {token.symbol} ($
+                {formatSuffix(market.borrow.remaining.value, "money")})
+              </div>
+            </div>
+          )}
         </div>
       </StandardTooltip>
     </div>
@@ -327,10 +359,12 @@ const MarketLine = ({
       <TableCell>{tokenDisplay}</TableCell>
       {/* <TableCell>{<FullEligibleRewards />}</TableCell> */}
       <TableCell>{supplyInfo}</TableCell>
-      <TableCell>{marketID != DEFAULT_MARKET_ID ? "0%" : supplyAPR}</TableCell>
-      <TableCell>{token.pair ? null : borrowInfo}</TableCell>
+      <TableCell>{supplyAPR}</TableCell>
       <TableCell>
-        {token.pair ? null : marketID != DEFAULT_MARKET_ID ? "0%" : borrowAPR}
+        {token.pair || token.symbol === "sbUSD" ? null : borrowInfo}
+      </TableCell>
+      <TableCell>
+        {token.pair || token.symbol === "sbUSD" ? null : borrowAPR}
       </TableCell>
       {/* {withVault && (
         <TableCell>
