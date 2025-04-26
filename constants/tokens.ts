@@ -139,6 +139,15 @@ export const scUSD = new Token({
   points: { sonic: "12", rings: "1.5" },
 });
 
+export const YTscUSD = new Token({
+  name: "StableJack scUSD YieldToken",
+  symbol: "YT-scUSD",
+  address: "0xd2901D474b351bC6eE7b119f9c920863B0F781b2",
+  decimals: 18,
+  icon: "/icons/coins/ytscusdc.png",
+  chainId: sonic.id,
+});
+
 export const sbUSD = new Token({
   name: "Staked bUSD",
   symbol: "sbUSD",

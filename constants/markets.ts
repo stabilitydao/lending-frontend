@@ -1,6 +1,16 @@
 import { HealthBarDefinition, MarketDefinition } from "@/types";
 import { sonic } from "viem/chains";
-import { USDCe, wETH, USDT, wOS, stS, scUSD, S, sbUSD } from "@/constants";
+import {
+  USDCe,
+  wETH,
+  USDT,
+  wOS,
+  stS,
+  scUSD,
+  S,
+  sbUSD,
+  YTscUSD,
+} from "@/constants";
 
 const subMarketHealthBar = new HealthBarDefinition(
   [1.03, 1.07, 1.12, 2],
@@ -17,6 +27,9 @@ export const LEGACY_MARKET_DEFINITIONS: {
   },
   brunch: {
     name: "Brunch Market",
+  },
+  stablejack: {
+    name: "Stablejack Market",
   },
 };
 
@@ -46,6 +59,23 @@ export const MARKET_DEFINITIONS: {
     POOL_ADDRESS_PROVIDER: "0xC0512947845cCe3a32e58Efc3B4526Dd1D11F6af",
     AAVE_POOL: "0x680F8A574b0273f26A314cA61466c0A4f1E2d95e",
     NATIVE_TOKEN_GATEWAY: "0x7B41ed35bB96c193202eb8F79B8f8a8B05d45234",
+    LOOPING: {
+      LOOPING_CONTRACT: "0x0",
+      UNLOOPING_CONTRACT: "0x0",
+      VAULTS: [],
+      IO: [],
+    },
+    chainId: sonic.id,
+    healthBar: subMarketHealthBar,
+  },
+  stablejack: {
+    id: 2,
+    name: "Stablejack Market",
+    description: "",
+    tokens: [YTscUSD, USDCe, scUSD],
+    POOL_ADDRESS_PROVIDER: "0x3E3aAB589Ba86fB8f40CEB69332bb44E9B1411D4",
+    AAVE_POOL: "0x4895151C8eB560c0DE6Bd29A3916610DdfCEB094",
+    NATIVE_TOKEN_GATEWAY: "0x1528CF6A8Cf43399114F92802de0ef0D13577418",
     LOOPING: {
       LOOPING_CONTRACT: "0x0",
       UNLOOPING_CONTRACT: "0x0",
