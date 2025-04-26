@@ -29,7 +29,7 @@ export const LEGACY_MARKET_DEFINITIONS: {
     name: "Brunch Market",
   },
   stablejack: {
-    name: "Stablejack Market",
+    name: "Stable Jack Market",
   },
 };
 
@@ -70,7 +70,7 @@ export const MARKET_DEFINITIONS: {
   },
   stablejack: {
     id: 2,
-    name: "Stablejack Market",
+    name: "Stable Jack Market",
     description: "",
     tokens: [YTscUSD, USDCe, scUSD],
     POOL_ADDRESS_PROVIDER: "0x3E3aAB589Ba86fB8f40CEB69332bb44E9B1411D4",

@@ -121,7 +121,7 @@ const MarketLine = ({
     </div>
   );
   const borrowPercentage =
-    marketID === "brunch"
+    token.symbol === "USDC.E" && marketID !== "main"
       ? Math.min(
           (market.borrow.tvl.amount / market.supply.tvl.amount) * 100,
           100
@@ -172,7 +172,8 @@ const MarketLine = ({
           <div className={`text-[16px] text-center mb-[10px] ${borrowColor}`}>
             {trimmedNumber(100 - borrowPercentage, 2)}% remaining
           </div>
-          {marketID === "brunch" ? (
+
+          {token.symbol === "USDC.E" && marketID !== "main" ? (
             <p className="flex justify-between w-full gap-1">
               <div>Cap:</div>
               <div className="pl-[50px]">
@@ -200,7 +201,7 @@ const MarketLine = ({
               {formatSuffix(market.borrow.tvl.value, "money")})
             </div>
           </div>
-          {marketID === "brunch" ? (
+          {token.symbol === "USDC.E" && marketID !== "main" ? (
             <div className="flex justify-between w-full gap-1">
               <div>Remaining:</div>
               <div className="pl-[50px]">
