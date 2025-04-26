@@ -13,10 +13,10 @@ export const LEGACY_MARKET_DEFINITIONS: {
   };
 } = {
   main: {
-    name: "Main Protocol",
+    name: "Main Market",
   },
-  sbUSD: {
-    name: "sbUSD Market",
+  brunch: {
+    name: "Brunch Market",
   },
 };
 
@@ -25,7 +25,7 @@ export const MARKET_DEFINITIONS: {
 } = {
   main: {
     id: 0,
-    name: "Main Protocol",
+    name: "Main Market",
     description: "A simple market to lend and borrow assets.",
     tokens: [S, USDCe, scUSD, wETH, USDT, wOS, stS],
     POOL_ADDRESS_PROVIDER: "0x24835e3Da1B402f8037e3ce6dE4a701677fa1b54",
@@ -37,9 +37,9 @@ export const MARKET_DEFINITIONS: {
       ["red", "orange", "yellow", "green"]
     ),
   },
-  sbUSD: {
+  brunch: {
     id: 1,
-    name: "sbUSD Market",
+    name: "Brunch Market",
     description:
       "A market exclusively made of Sonic-based assets. Its high correlation makes liquidation much less of a risk.",
     tokens: [sbUSD, USDCe],
