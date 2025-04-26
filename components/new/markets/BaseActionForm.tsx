@@ -106,7 +106,7 @@ export const BaseActionForm = ({
               </div>
             </div>
           </div>
-          {token.symbol !== "sbUSD" && (
+          {!["sbUSD", "YT-scUSD"].includes(token.symbol) && (
             <div className="flex items-center justify-between">
               <div className="flex flex-col">
                 <div className="font-semibold">Borrowed</div>
@@ -129,7 +129,7 @@ export const BaseActionForm = ({
           )}
           <div className="flex items-center justify-between transform translate-y-1">
             <span className="font-semibold">
-              {token.symbol !== "sbUSD"
+              {!["sbUSD", "YT-scUSD"].includes(token.symbol)
                 ? "Supply/Borrow rewards"
                 : "Supply rewards"}
             </span>

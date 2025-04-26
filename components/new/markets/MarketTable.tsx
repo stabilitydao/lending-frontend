@@ -273,12 +273,12 @@ const MarketLine = ({
     </div>
   ) : (
     // Single line for non-paired tokens in green
-    <div
-      className={`flex flex-row gap-1 items-center ${
-        token.symbol === "sbUSD" ? "" : "text-green-500"
-      } `}
-    >
-      {token.symbol === "sbUSD" ? <span>0%</span> : <span>{baseAPR}%</span>}
+    <div className="flex flex-row gap-1 items-center text-green-500">
+      {["sbUSD", "YT-scUSD"].includes(token.symbol) ? (
+        <span>{token.symbol === "sbUSD" ? "164" : "9.14"}%</span>
+      ) : (
+        <span>{baseAPR}%</span>
+      )}
       <ApyBreakdown
         breakdown={market.breakdown.supply}
         note={hasMerkl && <MerklNote />}
@@ -365,10 +365,14 @@ const MarketLine = ({
       <TableCell>{supplyInfo}</TableCell>
       <TableCell>{supplyAPR}</TableCell>
       <TableCell>
-        {token.pair || token.symbol === "sbUSD" ? null : borrowInfo}
+        {token.pair || ["sbUSD", "YT-scUSD"].includes(token.symbol)
+          ? null
+          : borrowInfo}
       </TableCell>
       <TableCell>
-        {token.pair || token.symbol === "sbUSD" ? null : borrowAPR}
+        {token.pair || ["sbUSD", "YT-scUSD"].includes(token.symbol)
+          ? null
+          : borrowAPR}
       </TableCell>
       {/* {withVault && (
         <TableCell>
