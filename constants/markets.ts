@@ -10,6 +10,7 @@ import {
   S,
   sbUSD,
   YTscUSD,
+  xUSD,
 } from "@/constants";
 
 const subMarketHealthBar = new HealthBarDefinition(
@@ -30,6 +31,9 @@ export const LEGACY_MARKET_DEFINITIONS: {
   },
   stablejack: {
     name: "Stable Jack Market",
+  },
+  stream: {
+    name: "Stream Market",
   },
 };
 
@@ -76,6 +80,23 @@ export const MARKET_DEFINITIONS: {
     POOL_ADDRESS_PROVIDER: "0x3E3aAB589Ba86fB8f40CEB69332bb44E9B1411D4",
     AAVE_POOL: "0x4895151C8eB560c0DE6Bd29A3916610DdfCEB094",
     NATIVE_TOKEN_GATEWAY: "0x1528CF6A8Cf43399114F92802de0ef0D13577418",
+    LOOPING: {
+      LOOPING_CONTRACT: "0x0",
+      UNLOOPING_CONTRACT: "0x0",
+      VAULTS: [],
+      IO: [],
+    },
+    chainId: sonic.id,
+    healthBar: subMarketHealthBar,
+  },
+  stream: {
+    id: 3,
+    name: "Stream Market",
+    description: "",
+    tokens: [xUSD, USDCe],
+    POOL_ADDRESS_PROVIDER: "0xCc31959682Ad726A9bcde9bbD41c89f36c03E743",
+    AAVE_POOL: "0x1f672BD230D0FC2Ee9A75D2037a92CC1225A4Ad8",
+    NATIVE_TOKEN_GATEWAY: "0xBEB0822A79FAbF01Cac932BC924e1734147Ee797",
     LOOPING: {
       LOOPING_CONTRACT: "0x0",
       UNLOOPING_CONTRACT: "0x0",

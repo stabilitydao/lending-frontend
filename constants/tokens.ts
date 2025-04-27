@@ -148,6 +148,15 @@ export const YTscUSD = new Token({
   chainId: sonic.id,
 });
 
+export const xUSD = new Token({
+  name: "Stream USD",
+  symbol: "xUSD",
+  address: "0x6202B9f02E30E5e1c62Cc01E4305450E5d83b926",
+  decimals: 6,
+  icon: "/icons/coins/xusd.png",
+  chainId: sonic.id,
+});
+
 export const sbUSD = new Token({
   name: "Staked bUSD",
   symbol: "sbUSD",
