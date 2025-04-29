@@ -326,7 +326,7 @@ const MarketLine = ({
         {!!token?.points?.sonic && (
           <div
             title="Sonic Activity Points"
-            className="flex items-center rounded-full border border-[#6EBD70] bg-[#6EBD70]/[0.16] pr-[6px]"
+            className="flex items-center rounded-full border border-[#6EBD70] bg-[#6EBD70]/[0.16] pr-[6px] min-w-10"
           >
             <img
               src="/sonic.png"
@@ -341,7 +341,7 @@ const MarketLine = ({
         {!!token?.points?.rings && (
           <div
             title="Rings Points"
-            className="flex items-center rounded-full border border-[#ac62e4] bg-black pr-[6px]"
+            className="flex items-center rounded-full border border-[#ac62e4] bg-black pr-[6px] min-w-10"
           >
             <img
               src="/rings.png"
