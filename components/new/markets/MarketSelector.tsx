@@ -30,7 +30,7 @@ export const MarketSelector = () => {
 
   const availableMarkets = Object.keys(LEGACY_MARKET_DEFINITIONS);
   return (
-    <div className="flex items-center justify-center bg-accent-900 text-accent-400 rounded-[var(--radius)] p-1 space-x-2">
+    <div className="flex items-center justify-center bg-accent-900 text-accent-400 rounded-[var(--radius)] p-1 space-x-2 flex-wrap lg:flex-nowrap">
       {availableMarkets.map((market) => (
         <SelectorButton
           key={market}

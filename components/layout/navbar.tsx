@@ -89,56 +89,6 @@ export const Navbar = () => {
             </p>
           </Link>
         ))}
-        <DropdownMenu>
-          <DropdownMenuTrigger className="flex flex-col items-center">
-            <p className="text-white text-[16px] text-center font-semibold">
-              More
-            </p>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem>
-              <a
-                href="https://app.rhino.fi/bridge/?refId=DeFi_VicunaFinance&chainIn=ARBITRUM&chainOut=SONIC"
-                target="_blank"
-                rel="noreferrer"
-                className="w-full text-white"
-              >
-                Bridge
-              </a>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <a
-                href="https://app.magpiefi.xyz/swap"
-                target="_blank"
-                rel="noreferrer"
-                className="w-full text-white"
-              >
-                Swap
-              </a>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <a
-                href="https://vicuna-finance.gitbook.io/vicuna-finance-sonic"
-                target="_blank"
-                rel="noreferrer"
-                className="w-full text-white"
-              >
-                Docs
-              </a>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <a
-                href="https://medium.com/@vicunafinance"
-                target="_blank"
-                rel="noreferrer"
-                className="w-full text-white"
-              >
-                Blog
-              </a>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="text-white">Audits</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
       </div>
       <div className="flex items-center gap-4">
         {/* <SonicPoints /> */}
