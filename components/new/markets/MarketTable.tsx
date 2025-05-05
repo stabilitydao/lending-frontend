@@ -483,45 +483,48 @@ export const InnerMarketTable = () => {
 
       const sjAPR = sjData.data[0].yt_scusd_apy.toFixed(2);
 
-      const rewardRatePerSecond = await readContract(client, {
+      const rewardRatePerSecond = (await readContract(client, {
         address: sbUSD.address,
         abi: sbUSDAbi,
         functionName: "rewardRatePerSecond",
-      });
+      })) as bigint;
 
-      const rewardDistributionEnd = await readContract(client, {
+      const rewardDistributionEnd = (await readContract(client, {
         address: sbUSD.address,
         abi: sbUSDAbi,
         functionName: "rewardDistributionEnd",
-      });
+      })) as bigint;
 
-      const totalReserves = await readContract(client, {
+      const totalReserves = (await readContract(client, {
         address: sbUSD.address,
         abi: sbUSDAbi,
         functionName: "totalReserves",
-      });
+      })) as bigint;
 
-      const pendingReward = await readContract(client, {
+      const pendingReward = (await readContract(client, {
         address: sbUSD.address,
         abi: sbUSDAbi,
         functionName: "pendingReward",
-      });
+      })) as bigint;
 
-      const balanceOf = await readContract(client, {
+      const balanceOf = (await readContract(client, {
         address: bUSD,
         abi: sbUSDAbi,
         functionName: "balanceOf",
         args: [sbUSD.address],
-      });
+      })) as bigint;
 
       const tvl = balanceOf - pendingReward - totalReserves;
 
       const now = Math.floor(Date.now() / 1000);
 
       const bAPR =
-        tvl > 0n && rewardDistributionEnd > now
+        tvl > BigInt(0) && rewardDistributionEnd > now
           ? formatUnits(
-              (BigInt(rewardRatePerSecond) * 86400n * 365n * 1_0000_0000n) /
+              (BigInt(rewardRatePerSecond) *
+                BigInt(86400) *
+                BigInt(365) *
+                BigInt(1_0000_0000)) /
                 tvl,
               6
             )
