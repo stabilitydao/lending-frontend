@@ -5,7 +5,9 @@ import { formatNumberWithSuffix } from "@/lib/utils";
 
 export const MarketsTVL = () => {
   const { supplied, borrowed, isLoading } = useMarketsTVL();
+
   if (isLoading) return null;
+
   return (
     <div className="flex flex-row gap-4">
       <TVL

@@ -7,6 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import axios from "axios";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import {
   useMarket,
@@ -16,7 +17,7 @@ import {
   useSelectedMarket,
 } from "@/hooks";
 import { formatSuffix, trimmedNumber } from "@/helpers";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   HealthBar,
   ApyBreakdown,
@@ -26,9 +27,18 @@ import {
   StandardTooltip,
 } from "@/components";
 import { DoubleAvatar } from "@/components/ui/double-avatar";
-import { Token } from "@/constants";
+import { Token, sbUSD } from "@/constants";
+import { sbUSDAbi } from "@/constants/abis/sbUSDAbi";
 import { MarketInfo } from "@/types";
 import Link from "next/link";
+import { createPublicClient, http, formatUnits } from "viem";
+import { readContract } from "viem/actions";
+import { sonic } from "viem/chains";
+
+let client = createPublicClient({
+  chain: sonic,
+  transport: http(),
+});
 
 const MarketLine = ({
   token,
@@ -36,15 +46,18 @@ const MarketLine = ({
   withVault = false,
   onClickLoopingButton,
   onClickUnloopingButton,
+  aprs,
 }: {
   token: Token;
   onSelectToken: (token: Token) => void;
   withVault?: boolean;
   onClickLoopingButton: (token: Token) => void;
   onClickUnloopingButton: () => void;
+  aprs: { scusd: string; sbusd: string };
 }) => {
   const { marketID } = useSelectedMarket();
   const { market, isMarketLoading } = useMarket(marketID, token);
+
   // const maybeToken = token.isNative ? token.wrapperToken! : token;
   if (isMarketLoading || !market) return null;
   const supplyPercentage = Math.min(
@@ -276,7 +289,7 @@ const MarketLine = ({
     // Single line for non-paired tokens in green
     <div className="flex flex-row gap-1 items-center text-green-500">
       {["sbUSD", "YT-scUSD"].includes(token.symbol) ? (
-        <span>{token.symbol === "sbUSD" ? "164" : "9.14"}%</span>
+        <span>{token.symbol === "sbUSD" ? aprs.sbusd : aprs.scusd}%</span>
       ) : (
         <span>{baseAPR}%</span>
       )}
@@ -356,6 +369,7 @@ const MarketLine = ({
       </div>
     </div>
   );
+
   return (
     <TableRow
       className="text-white border-t-background cursor-pointer hover:bg-background/50"
@@ -419,6 +433,8 @@ export const InnerMarketTable = () => {
   const { marketDefinition, marketID } = useSelectedMarket();
   const { markets } = useMarkets(marketID);
 
+  const [APRs, setAPRs] = useState({ scusd: "-", sbusd: "-" });
+
   const [selectedUnloopingToken, setSelectedUnloopingToken] = useState<Token>(
     marketDefinition.LOOPING
       ? marketDefinition.LOOPING.VAULTS[0]
@@ -457,8 +473,77 @@ export const InnerMarketTable = () => {
       return (valA > valB ? 1 : -1) * (sortBy.order === "asc" ? 1 : -1);
     });
   };
+
+  const getAPRData = async () => {
+    const bUSD = "0x602BaeaB9B0DE4a99C457cf1249088932AA04FaC";
+    try {
+      const sjData = await axios.get(
+        "https://v1data.stablejack.org/ytscusdapy"
+      );
+
+      const sjAPR = sjData.data[0].yt_scusd_apy.toFixed(2);
+
+      const rewardRatePerSecond = (await readContract(client, {
+        address: sbUSD.address,
+        abi: sbUSDAbi,
+        functionName: "rewardRatePerSecond",
+      })) as bigint;
+
+      const rewardDistributionEnd = (await readContract(client, {
+        address: sbUSD.address,
+        abi: sbUSDAbi,
+        functionName: "rewardDistributionEnd",
+      })) as bigint;
+
+      const totalReserves = (await readContract(client, {
+        address: sbUSD.address,
+        abi: sbUSDAbi,
+        functionName: "totalReserves",
+      })) as bigint;
+
+      const pendingReward = (await readContract(client, {
+        address: sbUSD.address,
+        abi: sbUSDAbi,
+        functionName: "pendingReward",
+      })) as bigint;
+
+      const balanceOf = (await readContract(client, {
+        address: bUSD,
+        abi: sbUSDAbi,
+        functionName: "balanceOf",
+        args: [sbUSD.address],
+      })) as bigint;
+
+      const tvl = balanceOf - pendingReward - totalReserves;
+
+      const now = Math.floor(Date.now() / 1000);
+
+      const bAPR =
+        tvl > BigInt(0) && rewardDistributionEnd > now
+          ? formatUnits(
+              (BigInt(rewardRatePerSecond) *
+                BigInt(86400) *
+                BigInt(365) *
+                BigInt(1_0000_0000)) /
+                tvl,
+              6
+            )
+          : "0";
+
+      setAPRs({ scusd: sjAPR, sbusd: Number(bAPR).toFixed(2) });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const isWithVaults =
     marketDefinition.tokens.findIndex((token) => token.pair) != -1;
+
+  useEffect(() => {
+    if (APRs.sbusd === "-") {
+      getAPRData();
+    }
+  }, []);
 
   return (
     <div className="p-4 gap-6 flex flex-col">
@@ -523,6 +608,7 @@ export const InnerMarketTable = () => {
                 setSelectedUnloopingToken(token);
                 onClickUnloopingButton();
               }}
+              aprs={APRs}
             />
           ))}
         </TableBody>
