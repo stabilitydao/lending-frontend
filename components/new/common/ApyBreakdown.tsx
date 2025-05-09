@@ -5,10 +5,20 @@ import { cn } from "@/lib/utils";
 export const ApyBreakdown = ({
   note,
   breakdown,
+  isGems = false,
 }: {
   note?: React.ReactNode;
   breakdown: Record<string, number> | undefined;
+  isGems?: boolean;
 }) => {
+  if (isGems) {
+    return (
+      <StandardTooltip>
+        <p>This market has gems allocated from vicuna takeover</p>
+      </StandardTooltip>
+    );
+  }
+
   if (!breakdown || Object.keys(breakdown).length === 0) return null;
 
   return (
@@ -27,6 +37,7 @@ export const ApyBreakdown = ({
             <span>{trimmedNumber(value, 2)}%</span>
           </div>
         ))}
+        {isGems && <p>This market has gems allocated from vicuna takeover</p>}
       </div>
     </StandardTooltip>
   );

@@ -185,7 +185,6 @@ const MarketLine = ({
           <div className={`text-[16px] text-center mb-[10px] ${borrowColor}`}>
             {trimmedNumber(100 - borrowPercentage, 2)}% remaining
           </div>
-
           {token.symbol === "USDC.E" && marketID !== "main" ? (
             <p className="flex justify-between w-full gap-1">
               <div>Cap:</div>
@@ -307,7 +306,22 @@ const MarketLine = ({
       }`}
     >
       {trimmedNumber(market.borrow.APR, 2)}%
-      <ApyBreakdown breakdown={market.breakdown.borrow} note={<MerklNote />} />
+      <ApyBreakdown
+        breakdown={market.breakdown.borrow}
+        note={<MerklNote />}
+        isGems={
+          ["stablejack", "stream"].includes(marketID) &&
+          token.symbol === "USDC.E"
+        }
+      />
+      {["stablejack", "stream"].includes(marketID) &&
+        token.symbol === "USDC.E" && (
+          <img
+            src="https://raw.githubusercontent.com/stabilitydao/.github/main/tokens/sGEM1.png"
+            alt="gem"
+            className="w-5 h-5"
+          />
+        )}
     </div>
   );
 
