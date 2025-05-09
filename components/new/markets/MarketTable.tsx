@@ -25,7 +25,6 @@ import {
   SortBy,
   MerklNote,
   StandardTooltip,
-  VicunaNote,
 } from "@/components";
 import { DoubleAvatar } from "@/components/ui/double-avatar";
 import { Token, sbUSD } from "@/constants";

@@ -9,7 +9,7 @@ export const ApyBreakdown = ({
 }: {
   note?: React.ReactNode;
   breakdown: Record<string, number> | undefined;
-  isGems: boolean;
+  isGems?: boolean;
 }) => {
   if (isGems) {
     return (
