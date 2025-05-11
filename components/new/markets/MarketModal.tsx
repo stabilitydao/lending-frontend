@@ -406,7 +406,7 @@ export const InnerMarketModal = ({
             <DialogTitle className="flex">
               <ActiveTabSelector
                 options={
-                  ["sbUSD", "YT-scUSD"].includes(token.symbol)
+                  ["sbUSD", "YT-scUSD", "xUSD"].includes(token.symbol)
                     ? ["supply", "withdraw"]
                     : ["supply", "withdraw", "borrow", "repay"]
                 }
