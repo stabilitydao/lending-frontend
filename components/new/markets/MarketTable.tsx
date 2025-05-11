@@ -394,12 +394,13 @@ const MarketLine = ({
       <TableCell>{supplyInfo}</TableCell>
       <TableCell>{supplyAPR}</TableCell>
       <TableCell>
-        {token.pair || ["sbUSD", "YT-scUSD"].includes(token.symbol)
+        {token.pair || ["sbUSD", "YT-scUSD", "xUSD"].includes(token.symbol)
           ? null
           : borrowInfo}
       </TableCell>
+
       <TableCell>
-        {token.pair || ["sbUSD", "YT-scUSD"].includes(token.symbol)
+        {token.pair || ["sbUSD", "YT-scUSD", "xUSD"].includes(token.symbol)
           ? null
           : borrowAPR}
       </TableCell>
