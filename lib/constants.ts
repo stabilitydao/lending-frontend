@@ -3,28 +3,28 @@ import { FarmData } from "@/types/farm";
 export const socialLinks = [
   {
     imageSrc: "/icons/social/twitter.png",
-    url: "https://twitter.com/VicunaFinance",
+    url: "https://x.com/stabilitydao",
   },
-  {
-    imageSrc: "/icons/social/medium.png",
-    url: "https://medium.com/@vicunafinance",
-  },
-  {
-    imageSrc: "/icons/social/github.png",
-    url: "https://github.com/VicunaFinance-com",
-  },
+  // {
+  //   imageSrc: "/icons/social/medium.png",
+  //   url: "https://medium.com/@vicunafinance",
+  // },
+  // {
+  //   imageSrc: "/icons/social/github.png",
+  //   url: "https://github.com/VicunaFinance-com",
+  // },
   {
     imageSrc: "/icons/social/discord.png",
-    url: "https://discord.com/invite/vicuna",
+    url: "https://discord.com/invite/R3nnetWzC9",
   },
-  {
-    imageSrc: "/icons/social/dune.png",
-    url: "https://dune.com/vicunafinance",
-  },
-  {
-    imageSrc: "/icons/social/docs.png",
-    url: "https://vicuna-finance.gitbook.io/vicuna-finance-sonic",
-  },
+  // {
+  //   imageSrc: "/icons/social/dune.png",
+  //   url: "https://dune.com/vicunafinance",
+  // },
+  // {
+  //   imageSrc: "/icons/social/docs.png",
+  //   url: "https://vicuna-finance.gitbook.io/vicuna-finance-sonic",
+  // },
   // {
   //   imageSrc: "/icons/social/telegram.png",
   //   url: "",
