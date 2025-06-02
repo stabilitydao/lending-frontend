@@ -429,7 +429,7 @@ export const MarketTable = () => {
         <div className="text-red-700">
           Due to an exploit, the submarkets have been removed. Check the{" "}
           <Link
-            href="https://discord.com/invite/vicuna"
+            href="https://discord.com/invite/R3nnetWzC9"
             target="_blank"
             rel="noopener noreferrer"
             className="underline"
