@@ -11,6 +11,10 @@ import {
   sbUSD,
   YTscUSD,
   xUSD,
+  cxScUSD,
+  cxUSDC,
+  cxWS,
+  wS,
 } from "@/constants";
 
 const subMarketHealthBar = new HealthBarDefinition(
@@ -34,6 +38,9 @@ export const LEGACY_MARKET_DEFINITIONS: {
   },
   stream: {
     name: "Stream Market",
+  },
+  credix: {
+    name: "Credix Market",
   },
 };
 
@@ -95,8 +102,25 @@ export const MARKET_DEFINITIONS: {
     description: "",
     tokens: [xUSD, USDCe],
     POOL_ADDRESS_PROVIDER: "0xCc31959682Ad726A9bcde9bbD41c89f36c03E743",
-    AAVE_POOL: "0x1f672BD230D0FC2Ee9A75D2037a92CC1225A4Ad8",
+    AAVE_POOL: "0x0850A9759165B25832E2cAa3dB3f2d04dc583D4E",
     NATIVE_TOKEN_GATEWAY: "0xBEB0822A79FAbF01Cac932BC924e1734147Ee797",
+    LOOPING: {
+      LOOPING_CONTRACT: "0x0",
+      UNLOOPING_CONTRACT: "0x0",
+      VAULTS: [],
+      IO: [],
+    },
+    chainId: sonic.id,
+    healthBar: subMarketHealthBar,
+  },
+  credix: {
+    id: 3,
+    name: "Credix Market",
+    description: "",
+    tokens: [cxScUSD, cxWS, cxUSDC, scUSD, USDCe, wS],
+    POOL_ADDRESS_PROVIDER: "0x4b139f6E816934D580D9305Ca0f115145f698973",
+    AAVE_POOL: "0xce767E508A17321C25117b44d246e4611bbEcFE4",
+    NATIVE_TOKEN_GATEWAY: "0x8510cEBf9803a18F45f9D346D024c75CE42B2e6b",
     LOOPING: {
       LOOPING_CONTRACT: "0x0",
       UNLOOPING_CONTRACT: "0x0",

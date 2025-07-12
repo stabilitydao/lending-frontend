@@ -34,6 +34,7 @@ import Link from "next/link";
 import { createPublicClient, http, formatUnits } from "viem";
 import { readContract } from "viem/actions";
 import { sonic } from "viem/chains";
+import { NON_DEBT_TOKENS } from "@/lib/constants";
 
 let client = createPublicClient({
   chain: sonic,
@@ -134,7 +135,7 @@ const MarketLine = ({
     </div>
   );
   const borrowPercentage =
-    token.symbol === "USDC.E" && marketID !== "main"
+    token.symbol === "USDC" && marketID !== "main"
       ? Math.min(
           (market.borrow.tvl.amount / market.supply.tvl.amount) * 100,
           100
@@ -185,7 +186,7 @@ const MarketLine = ({
           <div className={`text-[16px] text-center mb-[10px] ${borrowColor}`}>
             {trimmedNumber(100 - borrowPercentage, 2)}% remaining
           </div>
-          {token.symbol === "USDC.E" && marketID !== "main" ? (
+          {token.symbol === "USDC" && marketID !== "main" ? (
             <p className="flex justify-between w-full gap-1">
               <div>Cap:</div>
               <div className="pl-[50px]">
@@ -213,7 +214,7 @@ const MarketLine = ({
               {formatSuffix(market.borrow.tvl.value, "money")})
             </div>
           </div>
-          {token.symbol === "USDC.E" && marketID !== "main" ? (
+          {token.symbol === "USDC" && marketID !== "main" ? (
             <div className="flex justify-between w-full gap-1">
               <div>Remaining:</div>
               <div className="pl-[50px]">
@@ -310,12 +311,11 @@ const MarketLine = ({
         breakdown={market.breakdown.borrow}
         note={<MerklNote />}
         isGems={
-          ["stablejack", "stream"].includes(marketID) &&
-          token.symbol === "USDC.E"
+          ["stablejack", "stream"].includes(marketID) && token.symbol === "USDC"
         }
       />
       {["stablejack", "stream"].includes(marketID) &&
-        token.symbol === "USDC.E" && (
+        token.symbol === "USDC" && (
           <img
             src="https://raw.githubusercontent.com/stabilitydao/.github/main/tokens/sGEM1.png"
             alt="gem"
@@ -394,13 +394,13 @@ const MarketLine = ({
       <TableCell>{supplyInfo}</TableCell>
       <TableCell>{supplyAPR}</TableCell>
       <TableCell>
-        {token.pair || ["sbUSD", "YT-scUSD", "xUSD"].includes(token.symbol)
+        {token.pair || NON_DEBT_TOKENS.includes(token.symbol)
           ? null
           : borrowInfo}
       </TableCell>
 
       <TableCell>
-        {token.pair || ["sbUSD", "YT-scUSD", "xUSD"].includes(token.symbol)
+        {token.pair || NON_DEBT_TOKENS.includes(token.symbol)
           ? null
           : borrowAPR}
       </TableCell>

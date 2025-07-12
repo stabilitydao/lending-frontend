@@ -2155,3 +2155,12 @@ export const PresaleBonus = {
   18: [60, 45],
   24: [100, 75],
 };
+
+export const NON_DEBT_TOKENS = [
+  "sbUSD",
+  "YT-scUSD",
+  "xUSD",
+  "cxUSDC",
+  "cxWS",
+  "cxScUSD",
+];

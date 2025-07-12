@@ -120,8 +120,8 @@ export const wS = new Token({
 S.wrapperToken = wS;
 
 export const USDCe = new Token({
-  name: "Bridged USDC",
-  symbol: "USDC.E",
+  name: "USDC",
+  symbol: "USDC",
   address: "0x29219dd400f2Bf60E5a23d13Be72B486D4038894",
   decimals: 6,
   icon: "/icons/coins/usdc.png",
@@ -405,6 +405,34 @@ export const scBTC = new Token({
   address: "0x0",
   decimals: 0,
   icon: "/icons/coins/scbtc.png",
+  chainId: sonic.id,
+});
+
+// Credix tokens
+export const cxUSDC = new Token({
+  name: "Credix USDC",
+  symbol: "cxUSDC",
+  address: "0xEc26D07B5c0a99D3690375A2CC229E5B943e7726",
+  decimals: 6,
+  icon: "/icons/coins/usdc.png",
+  chainId: sonic.id,
+});
+
+export const cxWS = new Token({
+  name: "Credix wS",
+  symbol: "cxWS",
+  address: "0x95cAF53667D912F3491173fd4712450dFcf4c89f",
+  decimals: 18,
+  icon: "/icons/coins/wsonic.png",
+  chainId: sonic.id,
+});
+
+export const cxScUSD = new Token({
+  name: "Credix scUSD",
+  symbol: "cxScUSD",
+  address: "0xa175EE511de429275d26Ac5420fAbeb60C67C372",
+  decimals: 6,
+  icon: "/icons/coins/scusdc.png",
   chainId: sonic.id,
 });
 

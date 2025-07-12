@@ -6,6 +6,7 @@ import { bnToNumber, bnToStr, formatSuffix, trimmedNumber } from "@/helpers";
 import Image from "next/image";
 import { Token } from "@/constants";
 import { MaxInputWithSlider } from "@/components";
+import { NON_DEBT_TOKENS } from "@/lib/constants";
 
 const HealthDisplay = ({
   healthBarDefinition,
@@ -106,7 +107,7 @@ export const BaseActionForm = ({
               </div>
             </div>
           </div>
-          {!["sbUSD", "YT-scUSD", "xUSD"].includes(token.symbol) && (
+          {!NON_DEBT_TOKENS.includes(token.symbol) && (
             <div className="flex items-center justify-between">
               <div className="flex flex-col">
                 <div className="font-semibold">Borrowed</div>
@@ -129,7 +130,7 @@ export const BaseActionForm = ({
           )}
           <div className="flex items-center justify-between transform translate-y-1">
             <span className="font-semibold">
-              {!["sbUSD", "YT-scUSD", "xUSD"].includes(token.symbol)
+              {!NON_DEBT_TOKENS.includes(token.symbol)
                 ? "Supply/Borrow rewards"
                 : "Supply rewards"}
             </span>
@@ -158,46 +159,50 @@ export const BaseActionForm = ({
       </div>
       <div>
         <div className="flex flex-col gap-4">
-          <div className="flex items-center justify-between">
-            <span className="font-semibold">Borrow Limit</span>
-            <div className="flex items-center gap-2">
-              <span>
-                ${formatSuffix(displayData.borrowLimit.current, "money")}
-              </span>
-              <ArrowRight className="w-4 h-4" />
-              <span>
-                ${formatSuffix(displayData.borrowLimit.future, "money")}
-              </span>
+          {!NON_DEBT_TOKENS.includes(token.symbol) && (
+            <div className="flex items-center justify-between">
+              <span className="font-semibold">Borrow Limit</span>
+              <div className="flex items-center gap-2">
+                <span>
+                  ${formatSuffix(displayData.borrowLimit.current, "money")}
+                </span>
+                <ArrowRight className="w-4 h-4" />
+                <span>
+                  ${formatSuffix(displayData.borrowLimit.future, "money")}
+                </span>
+              </div>
             </div>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="font-semibold">Borrow Limit Used</span>
-            <div className="flex items-center gap-2">
-              <span>
-                {hasBorrowLimitCurrent
-                  ? trimmedNumber(
-                      (100 * displayData.totalDebt.current) /
-                        (displayData.totalDebt.current +
-                          displayData.borrowLimit.current),
-                      2
-                    )
-                  : 0}
-                %
-              </span>
-              <ArrowRight className="w-4 h-4" />
-              <span>
-                {hasBorrowLimitFuture
-                  ? trimmedNumber(
-                      (100 * displayData.totalDebt.future) /
-                        (displayData.totalDebt.future +
-                          displayData.borrowLimit.future),
-                      2
-                    )
-                  : 0}
-                %
-              </span>
+          )}
+          {!NON_DEBT_TOKENS.includes(token.symbol) && (
+            <div className="flex items-center justify-between">
+              <span className="font-semibold">Borrow Limit Used</span>
+              <div className="flex items-center gap-2">
+                <span>
+                  {hasBorrowLimitCurrent
+                    ? trimmedNumber(
+                        (100 * displayData.totalDebt.current) /
+                          (displayData.totalDebt.current +
+                            displayData.borrowLimit.current),
+                        2
+                      )
+                    : 0}
+                  %
+                </span>
+                <ArrowRight className="w-4 h-4" />
+                <span>
+                  {hasBorrowLimitFuture
+                    ? trimmedNumber(
+                        (100 * displayData.totalDebt.future) /
+                          (displayData.totalDebt.future +
+                            displayData.borrowLimit.future),
+                        2
+                      )
+                    : 0}
+                  %
+                </span>
+              </div>
             </div>
-          </div>
+          )}
           <div className="flex items-center justify-between">
             <span className="font-semibold">Health Factor</span>
             <div className="flex items-center gap-2">

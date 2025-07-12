@@ -40,6 +40,7 @@ import {
   Token,
 } from "@/constants";
 import { DoubleAvatar } from "@/components/ui/double-avatar";
+import { NON_DEBT_TOKENS } from "@/lib/constants";
 
 export interface MarketModalProps {
   token: Token;
@@ -406,7 +407,7 @@ export const InnerMarketModal = ({
             <DialogTitle className="flex">
               <ActiveTabSelector
                 options={
-                  ["sbUSD", "YT-scUSD", "xUSD"].includes(token.symbol)
+                  NON_DEBT_TOKENS.includes(token.symbol)
                     ? ["supply", "withdraw"]
                     : ["supply", "withdraw", "borrow", "repay"]
                 }
