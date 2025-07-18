@@ -7,13 +7,14 @@ type VaultTVLData = {
 };
 
 export const getVaultsTVL = async () => {
-  try {
-    const response = await axios.get<VaultTVLData>(
-      "https://vicuna.orthae.xyz/tvl"
-    );
-    return response.data["146"];
-  } catch (error) {
-    console.error("Error fetching TVL:", error);
-    return {};
-  }
+  return {};
+  // try {
+  //   const response = await axios.get<VaultTVLData>(
+  //     "https://vicuna.orthae.xyz/tvl"
+  //   );
+  //   return response.data["146"];
+  // } catch (error) {
+  //   console.error("Error fetching TVL:", error);
+  //   return {};
+  // }
 };

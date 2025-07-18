@@ -48,6 +48,7 @@ const MarketLine = ({
   onClickLoopingButton,
   onClickUnloopingButton,
   aprs,
+  merklAPRs,
 }: {
   token: Token;
   onSelectToken: (token: Token) => void;
@@ -55,6 +56,7 @@ const MarketLine = ({
   onClickLoopingButton: (token: Token) => void;
   onClickUnloopingButton: () => void;
   aprs: { scusd: string; sbusd: string };
+  merklAPRs: { scusd: string; usdc: string; ws: string };
 }) => {
   const { marketID } = useSelectedMarket();
   const { market, isMarketLoading } = useMarket(marketID, token);
@@ -247,8 +249,15 @@ const MarketLine = ({
 
   const maxLeverage = (1 / (1 - market.collateralFactor) - 1) * 0.95 + 1;
 
-  const baseAPR =
-    market.supply.APR > 0.01 ? trimmedNumber(market.supply.APR, 2) : "<0.01";
+  const merklAPR =
+    marketID === "credix" && ["USDC", "wS", "scUSD"].includes(token.symbol)
+      ? merklAPRs[token.symbol.toLowerCase()]
+      : 0;
+
+  const apr = market.supply.APR + merklAPR;
+
+  const baseAPR = apr > 0.01 ? trimmedNumber(apr, 2) : "<0.01";
+
   const leveragedAPR =
     market.supply.APR > 0.01
       ? trimmedNumber(market.supply.APR * maxLeverage, 2)
@@ -296,6 +305,7 @@ const MarketLine = ({
       <ApyBreakdown
         breakdown={market.breakdown.supply}
         note={hasMerkl && <MerklNote />}
+        merklAPR={merklAPR}
       />
     </div>
   );
@@ -446,9 +456,12 @@ export const MarketTable = () => {
 export const InnerMarketTable = () => {
   const { updateParams } = useQueryParams();
   const { marketDefinition, marketID } = useSelectedMarket();
+
   const { markets } = useMarkets(marketID);
 
   const [APRs, setAPRs] = useState({ scusd: "-", sbusd: "-" });
+
+  const [merklAPRs, setMerklAPRs] = useState({ scusd: 0, usdc: 0, ws: 0 });
 
   const [selectedUnloopingToken, setSelectedUnloopingToken] = useState<Token>(
     marketDefinition.LOOPING
@@ -551,6 +564,42 @@ export const InnerMarketTable = () => {
     }
   };
 
+  const getMerklAPR = async () => {
+    const tokenMap: Record<string, string> = {
+      "0x9154f0a385eef5d48cef78d9fea19995a92718a9": "scusd",
+      "0x64d0071044ef8f98b8e5ecfcb4a6c12cb8bc1ec0": "usdc",
+      "0x61bc5ce0639aa0a24ab7ea8b574d4b0d6b619833": "ws",
+    };
+
+    const identifiers = Object.keys(tokenMap).join(",");
+    const url = `https://api.merkl.xyz/v4/opportunities?chainId=146&identifier=${identifiers}`;
+
+    try {
+      const response = await axios.get(url);
+      const aprs = response.data;
+
+      const tokensData = Object.values(tokenMap).reduce((acc, symbol) => {
+        acc[symbol] = 0;
+        return acc;
+      }, {});
+
+      aprs.forEach(({ chainId, identifier, apr }) => {
+        if (chainId !== 146) return;
+
+        const address = identifier.toLowerCase();
+        const symbol = tokenMap[address];
+
+        if (symbol) {
+          tokensData[symbol] = apr;
+        }
+      });
+
+      setMerklAPRs(tokensData);
+    } catch (error) {
+      console.error("Error fetching Merkl APRs:", error);
+    }
+  };
+
   const isWithVaults =
     marketDefinition.tokens.findIndex((token) => token.pair) != -1;
 
@@ -558,6 +607,7 @@ export const InnerMarketTable = () => {
     if (APRs.sbusd === "-") {
       getAPRData();
     }
+    getMerklAPR();
   }, []);
 
   return (
@@ -624,6 +674,7 @@ export const InnerMarketTable = () => {
                 onClickUnloopingButton();
               }}
               aprs={APRs}
+              merklAPRs={merklAPRs}
             />
           ))}
         </TableBody>

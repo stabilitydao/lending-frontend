@@ -124,7 +124,9 @@ const VaultLine = ({
 export const VaultTable = () => {
   const { updateParams } = useQueryParams();
   const { vaultDefinitions } = useSelectedVaults();
+
   const { vaults } = useVaults(vaultDefinitions);
+
   const { filter } = useSearch(
     "vaults",
     (vault: VaultDefinition) => vault.receipt.name

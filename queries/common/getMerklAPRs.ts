@@ -5,13 +5,15 @@ export const getMerklAPRs = async () => {
   return {};
   try {
     const response = await axios.get(
-      "https://api.merkl.xyz/v4/opportunities?name=Vicuna&items=1000"
+      "https://api.merkl.xyz/v4/opportunities?chainId=146&identifier=0x9154f0a385eef5d48ceF78D9FEA19995A92718a9,0x64d0071044EF8F98B8E5ecFCb4A6c12Cb8BC1Ec0,0x61bC5Ce0639aA0A24Ab7ea8B574D4B0D6b619833"
     );
 
     const aprs = response.data;
+
     const aprData: {
-      [key: string]: { supply: number; borrow: number; vault: number };
+      [key: string]: { apr: number };
     } = {};
+
     aprs.forEach(
       (data: {
         chainId: number;
@@ -24,15 +26,7 @@ export const getMerklAPRs = async () => {
         if (!tokenAddress) return;
 
         if (!aprData[tokenAddress]) {
-          aprData[tokenAddress] = { supply: 0, borrow: 0, vault: 0 };
-        }
-
-        if (data.name.toLowerCase().includes("supply")) {
-          aprData[tokenAddress.toLowerCase()].supply += data.apr || 0;
-        } else if (data.name.toLowerCase().includes("borrow")) {
-          aprData[tokenAddress.toLowerCase()].borrow += data.apr || 0;
-        } else if (data.name.toLowerCase().includes("vault")) {
-          aprData[tokenAddress.toLowerCase()].vault += data.apr || 0;
+          aprData[tokenAddress] = { apr: data.apr };
         }
       }
     );
