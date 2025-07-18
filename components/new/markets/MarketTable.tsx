@@ -249,10 +249,8 @@ const MarketLine = ({
 
   const maxLeverage = (1 / (1 - market.collateralFactor) - 1) * 0.95 + 1;
 
-  const merklAPR =
-    marketID === "credix" && ["USDC", "wS", "scUSD"].includes(token.symbol)
-      ? merklAPRs[token.symbol.toLowerCase()]
-      : 0;
+  const symbol = token.symbol.toLowerCase() as keyof typeof merklAPRs;
+  const merklAPR = marketID === "credix" ? merklAPRs[symbol] : 0;
 
   const apr = market.supply.APR + merklAPR;
 
