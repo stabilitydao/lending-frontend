@@ -20,6 +20,7 @@ const useMarkets = (marketID: string) => {
   const overrides = useAprOverride();
   const { merklAPRs, isMerklAPRsLoading, invalidateMerklAPRsQuery } =
     useMerklAPRs();
+
   const { vaultsBreakdown } = useVaultsBreakdown();
   const {
     supplyIncentives,

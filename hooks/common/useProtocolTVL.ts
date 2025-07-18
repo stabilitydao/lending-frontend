@@ -7,7 +7,7 @@ const useProtocolTVL = () => {
     return { isTVLLoading: true, tvl: undefined };
   return {
     isTVLLoading: isMarketsTVLLoading || isVaultsTVLLoading,
-    tvl: marketsTVL! + vaultsTVL!,
+    tvl: Number(marketsTVL) + Number(vaultsTVL),
   };
 };
 

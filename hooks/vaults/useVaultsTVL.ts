@@ -20,7 +20,7 @@ const useVaultsTVL = () => {
     isLoading,
     totalTVL: tvl
       ? Object.values(tvl).reduce((acc, v) => {
-          return acc + v;
+          return Number(acc) + Number(v);
         }, 0)
       : 0,
     vaultsTVL: tvl,

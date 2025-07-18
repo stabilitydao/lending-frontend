@@ -4,5 +4,5 @@ import { TVL } from "@/components";
 
 export const VaultsTVL = () => {
   const { totalTVL } = useVaultsTVL();
-  return <TVL title="Vaults TVL" tvl={totalTVL} />;
+  return <TVL title="Vaults TVL" tvl={Number(totalTVL)} />;
 };

@@ -8,13 +8,14 @@ type TVLData = {
 };
 
 export const fetchTVL = async (): Promise<TVLData | undefined> => {
-  try {
-    const response = await axios.get("https://vicuna.orthae.xyz/tvl");
-    const tvlData = response.data;
-    return tvlData;
-  } catch (error) {
-    console.error("Error fetching TVL:", error);
-  }
+  return undefined;
+  // try {
+  //   const response = await axios.get("https://vicuna.orthae.xyz/tvl");
+  //   const tvlData = response.data;
+  //   return tvlData;
+  // } catch (error) {
+  //   console.error("Error fetching TVL:", error);
+  // }
 };
 
 export const useTvl = () => {
@@ -26,5 +27,5 @@ export const useTvl = () => {
     });
   }, []);
 
-  return { tvl }
-}
+  return { tvl };
+};

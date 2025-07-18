@@ -65,6 +65,7 @@ const useVaults = (vaultDefinitions: VaultDefinition[]) => {
     const vId = vaultDefinition.id;
 
     const userLpBalance = balancesObj[vaultDefinition.lp.address] ?? BigInt(0);
+    // @ts-ignore
     const lpPrice = lpsPrice?.[vId] ?? 0;
     const userReceiptBalance =
       balancesObj[vaultDefinition.receipt.address] ?? BigInt(0);
@@ -94,6 +95,7 @@ const useVaults = (vaultDefinitions: VaultDefinition[]) => {
     );
 
     const apy = merklSupplyAPR + totalApy;
+    //@ts-ignore
     const tvl = vaultsTVL?.[vId] ?? 0;
 
     vaults[vId] = {

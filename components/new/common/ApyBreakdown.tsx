@@ -6,15 +6,17 @@ export const ApyBreakdown = ({
   note,
   breakdown,
   isGems = false,
+  merklAPR = 0,
 }: {
   note?: React.ReactNode;
   breakdown: Record<string, number> | undefined;
   isGems?: boolean;
+  merklAPR?: number;
 }) => {
   if (isGems) {
     return (
       <StandardTooltip>
-        <p>This market has gems allocated from vicuna takeover</p>
+        <p>This market has gems allocated from stability takeover</p>
       </StandardTooltip>
     );
   }
@@ -37,7 +39,20 @@ export const ApyBreakdown = ({
             <span>{trimmedNumber(value, 2)}%</span>
           </div>
         ))}
-        {isGems && <p>This market has gems allocated from vicuna takeover</p>}
+        {!!merklAPR && (
+          <div
+            className={cn(
+              "flex justify-between w-full gap-1",
+              merklAPR >= 0 ? "text-green-400" : "text-red-400"
+            )}
+          >
+            <span className="capitalize">Merkl APR:</span>
+            <span>{trimmedNumber(merklAPR, 2)}%</span>
+          </div>
+        )}
+        {isGems && (
+          <p>This market has gems allocated from stability takeover</p>
+        )}
       </div>
     </StandardTooltip>
   );
