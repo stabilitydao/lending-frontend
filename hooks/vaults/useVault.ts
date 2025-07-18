@@ -81,7 +81,7 @@ const useVaults = (vaultDefinitions: VaultDefinition[]) => {
     const tradingApr =
       (vaultsBreakdown?.[vId]?.breakdown.tradingApr || 0) * 100;
     const merklSupplyAPR =
-      merklAPRs?.[vaultDefinition.receipt.address.toLowerCase()]?.apr || 0;
+      merklAPRs?.[vaultDefinition.receipt.address.toLowerCase()]?.vault || 0;
     const totalApy = (vaultsBreakdown?.[vId]?.apy || 0) * 100;
 
     const breakdown = Object.fromEntries(

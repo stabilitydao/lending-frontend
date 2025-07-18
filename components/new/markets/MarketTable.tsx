@@ -56,7 +56,7 @@ const MarketLine = ({
   onClickLoopingButton: (token: Token) => void;
   onClickUnloopingButton: () => void;
   aprs: { scusd: string; sbusd: string };
-  merklAPRs: { scusd: string; usdc: string; ws: string };
+  merklAPRs: { scusd: number; usdc: number; ws: number };
 }) => {
   const { marketID } = useSelectedMarket();
   const { market, isMarketLoading } = useMarket(marketID, token);
@@ -250,9 +250,9 @@ const MarketLine = ({
   const maxLeverage = (1 / (1 - market.collateralFactor) - 1) * 0.95 + 1;
 
   const symbol = token.symbol.toLowerCase() as keyof typeof merklAPRs;
-  const merklAPR = marketID === "credix" ? merklAPRs[symbol] : 0;
+  const merklAPR = marketID === "credix" ? Number(merklAPRs[symbol]) : 0;
 
-  const apr = market.supply.APR + merklAPR;
+  const apr = Number(market.supply.APR) + Number(merklAPR);
 
   const baseAPR = apr > 0.01 ? trimmedNumber(apr, 2) : "<0.01";
 
@@ -563,11 +563,11 @@ export const InnerMarketTable = () => {
   };
 
   const getMerklAPR = async () => {
-    const tokenMap: Record<string, string> = {
+    const tokenMap = {
       "0x9154f0a385eef5d48cef78d9fea19995a92718a9": "scusd",
       "0x64d0071044ef8f98b8e5ecfcb4a6c12cb8bc1ec0": "usdc",
       "0x61bc5ce0639aa0a24ab7ea8b574d4b0d6b619833": "ws",
-    };
+    } as const;
 
     const identifiers = Object.keys(tokenMap).join(",");
     const url = `https://api.merkl.xyz/v4/opportunities?chainId=146&identifier=${identifiers}`;
@@ -576,21 +576,23 @@ export const InnerMarketTable = () => {
       const response = await axios.get(url);
       const aprs = response.data;
 
-      const tokensData = Object.values(tokenMap).reduce((acc, symbol) => {
-        acc[symbol] = 0;
-        return acc;
-      }, {});
+      const tokensData: { scusd: number; usdc: number; ws: number } = {
+        scusd: 0,
+        usdc: 0,
+        ws: 0,
+      };
 
-      aprs.forEach(({ chainId, identifier, apr }) => {
-        if (chainId !== 146) return;
+      aprs.forEach(
+        (data: { chainId: number; identifier: string; apr: number }) => {
+          if (data.chainId !== 146) return;
 
-        const address = identifier.toLowerCase();
-        const symbol = tokenMap[address];
-
-        if (symbol) {
-          tokensData[symbol] = apr;
+          const symbol =
+            tokenMap[data.identifier.toLowerCase() as keyof typeof tokenMap];
+          if (symbol) {
+            tokensData[symbol] = data.apr;
+          }
         }
-      });
+      );
 
       setMerklAPRs(tokensData);
     } catch (error) {
