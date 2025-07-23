@@ -24,24 +24,14 @@ export const DisclaimerProvider = ({
     }
   }, []);
 
-  const handleCookiesChange = (checked: boolean) => {
-    setCookiesAccepted(checked);
-  };
-
-  const handleMessageChange = (checked: boolean) => {
-    setMessageAccepted(checked);
-  };
-
   const handleContinue = () => {
-    if (cookiesAccepted && messageAccepted) {
-      cookies.set("vicuna-cookies", "accepted", {
-        expires: new Date(Date.now() + THIRTY_DAYS_IN_SECONDS),
-      });
-      cookies.set("vicuna-message", "accepted", {
-        expires: new Date(Date.now() + THIRTY_DAYS_IN_SECONDS),
-      });
-      setShowDisclaimer(false);
-    }
+    cookies.set("vicuna-cookies", "accepted", {
+      expires: new Date(Date.now() + THIRTY_DAYS_IN_SECONDS),
+    });
+    cookies.set("vicuna-message", "accepted", {
+      expires: new Date(Date.now() + THIRTY_DAYS_IN_SECONDS),
+    });
+    setShowDisclaimer(false);
   };
 
   return (
@@ -49,13 +39,7 @@ export const DisclaimerProvider = ({
       {children}
       {showDisclaimer && (
         <div className="fixed inset-0 backdrop-blur-[2px] flex items-center justify-center z-50">
-          <DisclaimerModal
-            cookiesAccepted={cookiesAccepted}
-            messageAccepted={messageAccepted}
-            onCookiesChange={handleCookiesChange}
-            onMessageChange={handleMessageChange}
-            onContinue={handleContinue}
-          />
+          <DisclaimerModal onContinue={handleContinue} />
         </div>
       )}
     </>
