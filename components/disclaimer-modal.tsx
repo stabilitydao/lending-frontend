@@ -11,20 +11,10 @@ import {
 import { Button } from "@/components/ui/button";
 
 interface DisclaimerModalProps {
-  cookiesAccepted: boolean;
-  messageAccepted: boolean;
-  onCookiesChange: (checked: boolean) => void;
-  onMessageChange: (checked: boolean) => void;
   onContinue: () => void;
 }
 
-export const DisclaimerModal = ({
-  cookiesAccepted,
-  messageAccepted,
-  onCookiesChange,
-  onMessageChange,
-  onContinue,
-}: DisclaimerModalProps) => {
+export const DisclaimerModal = ({ onContinue }: DisclaimerModalProps) => {
   return (
     <Dialog open={true}>
       <DialogContent className="bg-card text-primary">
