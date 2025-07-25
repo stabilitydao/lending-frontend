@@ -137,7 +137,7 @@ const MarketLine = ({
     </div>
   );
   const borrowPercentage =
-    token.symbol === "USDC" && marketID !== "main"
+    marketID !== "main"
       ? Math.min(
           (market.borrow.tvl.amount / market.supply.tvl.amount) * 100,
           100
