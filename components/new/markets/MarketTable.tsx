@@ -463,7 +463,12 @@ export const InnerMarketTable = () => {
 
   const [APRs, setAPRs] = useState({ scusd: "-", sbusd: "-" });
 
-  const [merklAPRs, setMerklAPRs] = useState({ scusd: 0, usdc: 0, ws: 0 });
+  const [merklAPRs, setMerklAPRs] = useState({
+    scusd: 0,
+    usdc: 0,
+    ws: 0,
+    wmetausd: 0,
+  });
 
   const [selectedUnloopingToken, setSelectedUnloopingToken] = useState<Token>(
     marketDefinition.LOOPING
@@ -581,13 +586,17 @@ export const InnerMarketTable = () => {
       const response = await axios.get(url);
       const aprs = response.data;
 
-      const tokensData: { scusd: number; usdc: number; ws: number; wmetausd } =
-        {
-          scusd: 0,
-          usdc: 0,
-          ws: 0,
-          wmetausd: 0,
-        };
+      const tokensData: {
+        scusd: number;
+        usdc: number;
+        ws: number;
+        wmetausd: number;
+      } = {
+        scusd: 0,
+        usdc: 0,
+        ws: 0,
+        wmetausd: 0,
+      };
 
       aprs.forEach(
         (data: { chainId: number; identifier: string; apr: number }) => {
