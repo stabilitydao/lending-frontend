@@ -56,7 +56,13 @@ const MarketLine = ({
   onClickLoopingButton: (token: Token) => void;
   onClickUnloopingButton: () => void;
   aprs: { scusd: string; sbusd: string };
-  merklAPRs: { scusd: number; usdc: number; ws: number; wmetausd: number };
+  merklAPRs: {
+    scusd: number;
+    usdc: number;
+    ws: number;
+    wmetausd: number;
+    stability_usdc: number;
+  };
 }) => {
   const { marketID } = useSelectedMarket();
   const { market, isMarketLoading } = useMarket(marketID, token);
@@ -253,6 +259,8 @@ const MarketLine = ({
   const merklAPR =
     marketID === "credix" || symbol === "wmetausd"
       ? Number(merklAPRs[symbol])
+      : marketID === "wmetaUSD" && symbol === "usdc"
+      ? Number(merklAPRs["stability_usdc"])
       : 0;
 
   const marketAPR = symbol === "wmetausd" ? 9.07 : Number(market.supply.APR);
@@ -575,6 +583,7 @@ export const InnerMarketTable = () => {
     const tokenMap = {
       "0x9154f0a385eef5d48cef78d9fea19995a92718a9": "scusd",
       "0x64d0071044ef8f98b8e5ecfcb4a6c12cb8bc1ec0": "usdc",
+      "0x62e8eee1aaac7978672f90da21e4de766213b574": "stability_usdc",
       "0x61bc5ce0639aa0a24ab7ea8b574d4b0d6b619833": "ws",
       "0xaaaaaaaac311d0572bffb4772fe985a750e88805": "wmetausd",
     } as const;
@@ -591,11 +600,13 @@ export const InnerMarketTable = () => {
         usdc: number;
         ws: number;
         wmetausd: number;
+        stability_usdc: number;
       } = {
         scusd: 0,
         usdc: 0,
         ws: 0,
         wmetausd: 0,
+        stability_usdc: 0,
       };
 
       aprs.forEach(
