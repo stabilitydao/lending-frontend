@@ -36,6 +36,11 @@ import { readContract } from "viem/actions";
 import { sonic } from "viem/chains";
 import { NON_DEBT_TOKENS } from "@/lib/constants";
 
+type MetaVault = {
+  symbol: string;
+  APR: number;
+};
+
 let client = createPublicClient({
   chain: sonic,
   transport: http(),
@@ -531,9 +536,9 @@ export const InnerMarketTable = () => {
 
       const req = await axios.get(stabilityAPI);
 
-      const res = Object.values(req.data.metaVaults[146]).find(
-        (mv) => mv?.symbol === "metaUSD"
-      );
+      const res = Object.values(
+        req.data.metaVaults[146] as Record<string, MetaVault>
+      ).find((mv) => mv?.symbol === "metaUSD");
 
       const APR = res?.APR;
 
@@ -589,7 +594,7 @@ export const InnerMarketTable = () => {
       setAPRs({
         scusd: String(sjAPR),
         sbusd: Number(bAPR).toFixed(2),
-        wmetaUSD: APR,
+        wmetaUSD: String(APR),
       });
     } catch (error) {
       console.log(error);
