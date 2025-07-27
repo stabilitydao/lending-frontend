@@ -36,6 +36,11 @@ import { readContract } from "viem/actions";
 import { sonic } from "viem/chains";
 import { NON_DEBT_TOKENS } from "@/lib/constants";
 
+type MetaVault = {
+  symbol: string;
+  APR: number;
+};
+
 let client = createPublicClient({
   chain: sonic,
   transport: http(),
@@ -55,7 +60,7 @@ const MarketLine = ({
   withVault?: boolean;
   onClickLoopingButton: (token: Token) => void;
   onClickUnloopingButton: () => void;
-  aprs: { scusd: string; sbusd: string };
+  aprs: { scusd: string; sbusd: string; wmetaUSD: string };
   merklAPRs: {
     scusd: number;
     usdc: number;
@@ -263,7 +268,8 @@ const MarketLine = ({
       ? Number(merklAPRs["stability_usdc"])
       : 0;
 
-  const marketAPR = symbol === "wmetausd" ? 9.07 : Number(market.supply.APR);
+  const marketAPR =
+    symbol === "wmetausd" ? Number(aprs.wmetaUSD) : Number(market.supply.APR);
 
   const apr = Number(marketAPR) + Number(merklAPR);
 
@@ -469,7 +475,7 @@ export const InnerMarketTable = () => {
 
   const { markets } = useMarkets(marketID);
 
-  const [APRs, setAPRs] = useState({ scusd: "-", sbusd: "-" });
+  const [APRs, setAPRs] = useState({ scusd: "0", sbusd: "0", wmetaUSD: "0" });
 
   const [merklAPRs, setMerklAPRs] = useState({
     scusd: 0,
@@ -520,10 +526,21 @@ export const InnerMarketTable = () => {
 
   const getAPRData = async () => {
     const bUSD = "0x602BaeaB9B0DE4a99C457cf1249088932AA04FaC";
+
+    const stabilityAPI = "https://api.stability.farm/";
+
     try {
       const sjData = await axios.get(
         "https://v1data.stablejack.org/ytscusdapy"
       );
+
+      const req = await axios.get(stabilityAPI);
+
+      const res = Object.values(
+        req.data.metaVaults[146] as Record<string, MetaVault>
+      ).find((mv) => mv?.symbol === "metaUSD");
+
+      const APR = res?.APR;
 
       const sjAPR = sjData.data[0].yt_scusd_apy.toFixed(2);
 
@@ -574,7 +591,11 @@ export const InnerMarketTable = () => {
             )
           : "0";
 
-      setAPRs({ scusd: sjAPR, sbusd: Number(bAPR).toFixed(2) });
+      setAPRs({
+        scusd: String(sjAPR),
+        sbusd: Number(bAPR).toFixed(2),
+        wmetaUSD: String(APR),
+      });
     } catch (error) {
       console.log(error);
     }
@@ -632,9 +653,7 @@ export const InnerMarketTable = () => {
     marketDefinition.tokens.findIndex((token) => token.pair) != -1;
 
   useEffect(() => {
-    if (APRs.sbusd === "-") {
-      getAPRData();
-    }
+    getAPRData();
     getMerklAPR();
   }, []);
 

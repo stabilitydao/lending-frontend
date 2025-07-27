@@ -437,9 +437,8 @@ export const cxScUSD = new Token({
 });
 
 // Stability tokens
-
 export const wmetaUSD = new Token({
-  name: "Stability wmetaUSD",
+  name: "wmetaUSD",
   symbol: "wmetaUSD",
   address: "0xAaAaaAAac311D0572Bffb4772fe985A750E88805",
   decimals: 18,
