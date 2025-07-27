@@ -476,6 +476,7 @@ export const InnerMarketTable = () => {
     usdc: 0,
     ws: 0,
     wmetausd: 0,
+    stability_usdc: 0,
   });
 
   const [selectedUnloopingToken, setSelectedUnloopingToken] = useState<Token>(
