@@ -56,7 +56,7 @@ const MarketLine = ({
   onClickLoopingButton: (token: Token) => void;
   onClickUnloopingButton: () => void;
   aprs: { scusd: string; sbusd: string };
-  merklAPRs: { scusd: number; usdc: number; ws: number };
+  merklAPRs: { scusd: number; usdc: number; ws: number; wmetausd: number };
 }) => {
   const { marketID } = useSelectedMarket();
   const { market, isMarketLoading } = useMarket(marketID, token);
@@ -250,16 +250,19 @@ const MarketLine = ({
   const maxLeverage = (1 / (1 - market.collateralFactor) - 1) * 0.95 + 1;
 
   const symbol = token.symbol.toLowerCase() as keyof typeof merklAPRs;
-  const merklAPR = marketID === "credix" ? Number(merklAPRs[symbol]) : 0;
+  const merklAPR =
+    marketID === "credix" || symbol === "wmetausd"
+      ? Number(merklAPRs[symbol])
+      : 0;
 
-  const apr = Number(market.supply.APR) + Number(merklAPR);
+  const marketAPR = symbol === "wmetausd" ? 9.07 : Number(market.supply.APR);
+
+  const apr = Number(marketAPR) + Number(merklAPR);
 
   const baseAPR = apr > 0.01 ? trimmedNumber(apr, 2) : "<0.01";
 
   const leveragedAPR =
-    market.supply.APR > 0.01
-      ? trimmedNumber(market.supply.APR * maxLeverage, 2)
-      : "<0.01";
+    marketAPR > 0.01 ? trimmedNumber(marketAPR * maxLeverage, 2) : "<0.01";
   const formattedMaxLeverage = trimmedNumber(maxLeverage, 2);
   const hasMerkl = market.breakdown.supply["Merkl Rewards"] > 0;
 
@@ -300,6 +303,7 @@ const MarketLine = ({
       ) : (
         <span>{baseAPR}%</span>
       )}
+
       <ApyBreakdown
         breakdown={market.breakdown.supply}
         note={hasMerkl && <MerklNote />}
@@ -459,7 +463,12 @@ export const InnerMarketTable = () => {
 
   const [APRs, setAPRs] = useState({ scusd: "-", sbusd: "-" });
 
-  const [merklAPRs, setMerklAPRs] = useState({ scusd: 0, usdc: 0, ws: 0 });
+  const [merklAPRs, setMerklAPRs] = useState({
+    scusd: 0,
+    usdc: 0,
+    ws: 0,
+    wmetausd: 0,
+  });
 
   const [selectedUnloopingToken, setSelectedUnloopingToken] = useState<Token>(
     marketDefinition.LOOPING
@@ -567,6 +576,7 @@ export const InnerMarketTable = () => {
       "0x9154f0a385eef5d48cef78d9fea19995a92718a9": "scusd",
       "0x64d0071044ef8f98b8e5ecfcb4a6c12cb8bc1ec0": "usdc",
       "0x61bc5ce0639aa0a24ab7ea8b574d4b0d6b619833": "ws",
+      "0xaaaaaaaac311d0572bffb4772fe985a750e88805": "wmetausd",
     } as const;
 
     const identifiers = Object.keys(tokenMap).join(",");
@@ -576,10 +586,16 @@ export const InnerMarketTable = () => {
       const response = await axios.get(url);
       const aprs = response.data;
 
-      const tokensData: { scusd: number; usdc: number; ws: number } = {
+      const tokensData: {
+        scusd: number;
+        usdc: number;
+        ws: number;
+        wmetausd: number;
+      } = {
         scusd: 0,
         usdc: 0,
         ws: 0,
+        wmetausd: 0,
       };
 
       aprs.forEach(

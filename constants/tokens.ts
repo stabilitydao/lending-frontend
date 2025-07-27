@@ -436,6 +436,17 @@ export const cxScUSD = new Token({
   chainId: sonic.id,
 });
 
+// Stability tokens
+
+export const wmetaUSD = new Token({
+  name: "Stability wmetaUSD",
+  symbol: "wmetaUSD",
+  address: "0xAaAaaAAac311D0572Bffb4772fe985A750E88805",
+  decimals: 18,
+  icon: "/icons/coins/wmetaUSD.png",
+  chainId: sonic.id,
+});
+
 export const getTokenByAddress = (
   address: string | undefined
 ): Token | undefined => {
