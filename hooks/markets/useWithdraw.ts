@@ -40,15 +40,6 @@ const useWithdraw = (marketID: string, token: Token) => {
   const price = marketData?.priceInMarketReferenceCurrency || BigInt(1);
   const scale = marketData?.baseLTVasCollateral || BigInt(10000);
   const abalance = userData?.aTokenBalance || BigInt(0);
-  const maxWithdraw = minBn(
-    abalance,
-    (((((borrowAmountUSD * BigInt(10 ** token.decimals)) / price) *
-      BigInt(10000)) /
-      scale) *
-      BigInt(99999999)) /
-      BigInt(100000000),
-    marketData?.availableLiquidity
-  );
 
   const { chainIdToUse } = useCorrectChain();
   const { address: userAddress } = useAccount();
@@ -156,7 +147,7 @@ const useWithdraw = (marketID: string, token: Token) => {
   return {
     amount,
     setAmount,
-    balance: maxWithdraw,
+    balance: abalance,
     withdraw,
     isPending: isPending || isNativePending || isNativeSuccess,
     isConfirming,
