@@ -2163,4 +2163,5 @@ export const NON_DEBT_TOKENS = [
   "cxUSDC",
   "cxWS",
   "cxScUSD",
+  "wmetaUSD",
 ];

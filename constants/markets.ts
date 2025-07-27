@@ -15,6 +15,7 @@ import {
   cxUSDC,
   cxWS,
   wS,
+  wmetaUSD,
 } from "@/constants";
 
 const subMarketHealthBar = new HealthBarDefinition(
@@ -41,6 +42,9 @@ export const LEGACY_MARKET_DEFINITIONS: {
   },
   credix: {
     name: "Credix Market",
+  },
+  wmetaUSD: {
+    name: "wmetaUSD Market",
   },
 };
 
@@ -114,13 +118,30 @@ export const MARKET_DEFINITIONS: {
     healthBar: subMarketHealthBar,
   },
   credix: {
-    id: 3,
+    id: 4,
     name: "Credix Market",
     description: "",
     tokens: [cxScUSD, cxWS, cxUSDC, scUSD, USDCe, wS],
     POOL_ADDRESS_PROVIDER: "0x4b139f6E816934D580D9305Ca0f115145f698973",
     AAVE_POOL: "0x0850A9759165B25832E2cAa3dB3f2d04dc583D4E",
     NATIVE_TOKEN_GATEWAY: "0x8510cEBf9803a18F45f9D346D024c75CE42B2e6b",
+    LOOPING: {
+      LOOPING_CONTRACT: "0x0",
+      UNLOOPING_CONTRACT: "0x0",
+      VAULTS: [],
+      IO: [],
+    },
+    chainId: sonic.id,
+    healthBar: subMarketHealthBar,
+  },
+  wmetaUSD: {
+    id: 5,
+    name: "wmetaUSD Market",
+    description: "",
+    tokens: [wmetaUSD, USDCe],
+    POOL_ADDRESS_PROVIDER: "0x5CC16D46fdf657651e4F4eeA4470DD215E4Af7bd",
+    AAVE_POOL: "0x2a32dA908B5E646c0afE567AC077f10d56F0af26",
+    NATIVE_TOKEN_GATEWAY: "0x9450D69DF9D8eF8044B59218cF5CD74b0F63C370",
     LOOPING: {
       LOOPING_CONTRACT: "0x0",
       UNLOOPING_CONTRACT: "0x0",
