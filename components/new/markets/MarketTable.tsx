@@ -56,7 +56,7 @@ const MarketLine = ({
   onClickLoopingButton: (token: Token) => void;
   onClickUnloopingButton: () => void;
   aprs: { scusd: string; sbusd: string };
-  merklAPRs: { scusd: number; usdc: number; ws: number };
+  merklAPRs: { scusd: number; usdc: number; ws: number; wmetausd: number };
 }) => {
   const { marketID } = useSelectedMarket();
   const { market, isMarketLoading } = useMarket(marketID, token);
