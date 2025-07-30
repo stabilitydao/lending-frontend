@@ -5,22 +5,12 @@ import { cn } from "@/lib/utils";
 export const ApyBreakdown = ({
   note,
   breakdown,
-  isGems = false,
   merklAPR = 0,
 }: {
   note?: React.ReactNode;
   breakdown: Record<string, number> | undefined;
-  isGems?: boolean;
   merklAPR?: number;
 }) => {
-  if (isGems) {
-    return (
-      <StandardTooltip>
-        <p>This market has gems allocated from stability takeover</p>
-      </StandardTooltip>
-    );
-  }
-
   if (!breakdown || Object.keys(breakdown).length === 0) return null;
 
   return (
@@ -49,9 +39,6 @@ export const ApyBreakdown = ({
             <span className="capitalize">Merkl APR:</span>
             <span>{trimmedNumber(merklAPR, 2)}%</span>
           </div>
-        )}
-        {isGems && (
-          <p>This market has gems allocated from stability takeover</p>
         )}
       </div>
     </StandardTooltip>
