@@ -333,21 +333,7 @@ const MarketLine = ({
       }`}
     >
       {trimmedNumber(market.borrow.APR, 2)}%
-      <ApyBreakdown
-        breakdown={market.breakdown.borrow}
-        note={<MerklNote />}
-        isGems={
-          ["stablejack", "stream"].includes(marketID) && token.symbol === "USDC"
-        }
-      />
-      {["stablejack", "stream"].includes(marketID) &&
-        token.symbol === "USDC" && (
-          <img
-            src="https://raw.githubusercontent.com/stabilitydao/.github/main/tokens/sGEM1.png"
-            alt="gem"
-            className="w-5 h-5"
-          />
-        )}
+      <ApyBreakdown breakdown={market.breakdown.borrow} note={<MerklNote />} />
     </div>
   );
 
