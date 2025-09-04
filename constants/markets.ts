@@ -40,12 +40,12 @@ export const LEGACY_MARKET_DEFINITIONS: {
   stream: {
     name: "Stream Market",
   },
-  credix: {
-    name: "Credix Market",
-  },
-  wmetaUSD: {
-    name: "wmetaUSD Market",
-  },
+  // credix: {
+  //   name: "Credix Market",
+  // },
+  // wmetaUSD: {
+  //   name: "wmetaUSD Market",
+  // },
 };
 
 export const MARKET_DEFINITIONS: {
