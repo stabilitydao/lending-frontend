@@ -40,6 +40,9 @@ export const LEGACY_MARKET_DEFINITIONS: {
   stream: {
     name: "Stream Market",
   },
+  brunch2: {
+    name: "Brunch Market gen2",
+  },
   // credix: {
   //   name: "Credix Market",
   // },
@@ -142,6 +145,23 @@ export const MARKET_DEFINITIONS: {
     POOL_ADDRESS_PROVIDER: "0x5CC16D46fdf657651e4F4eeA4470DD215E4Af7bd",
     AAVE_POOL: "0x2a32dA908B5E646c0afE567AC077f10d56F0af26",
     NATIVE_TOKEN_GATEWAY: "0x9450D69DF9D8eF8044B59218cF5CD74b0F63C370",
+    LOOPING: {
+      LOOPING_CONTRACT: "0x0",
+      UNLOOPING_CONTRACT: "0x0",
+      VAULTS: [],
+      IO: [],
+    },
+    chainId: sonic.id,
+    healthBar: subMarketHealthBar,
+  },
+  brunch2: {
+    id: 6,
+    name: "Brunch Market gen2",
+    description: "",
+    tokens: [sbUSD, USDCe],
+    POOL_ADDRESS_PROVIDER: "0x546eF43c9Edd9f5108E7b054AB81Df73fBE4F73A",
+    AAVE_POOL: "0x6D8Aa37DfAa98d2a14da39cfeD36975F97fc3f85",
+    NATIVE_TOKEN_GATEWAY: "0x2220010512a19BaC5fF597b21c5aBeCa41f701e4",
     LOOPING: {
       LOOPING_CONTRACT: "0x0",
       UNLOOPING_CONTRACT: "0x0",
