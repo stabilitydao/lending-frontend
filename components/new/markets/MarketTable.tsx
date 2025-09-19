@@ -78,6 +78,13 @@ const MarketLine = ({
     (market.supply.tvl.amount / (market.supply.cap.amount + 1)) * 100,
     100
   );
+
+  const firstSupplyCondition = !token.pair && supplyPercentage != 100;
+  const secondSupplyCondition = !(
+    marketID === "wmetaUSD2" && token.name === "USDC"
+  );
+  const allSupplyConditions = firstSupplyCondition && secondSupplyCondition;
+
   const supplyColor =
     supplyPercentage > 95
       ? "text-red-500"
@@ -104,14 +111,14 @@ const MarketLine = ({
         </p>
       </div>
 
-      {!token.pair && supplyPercentage != 100 && (
+      {allSupplyConditions && (
         <div className="flex flex-row items-end justify-center">
           <p className="text-md">
             ({trimmedNumber(supplyPercentage, 2)}% full)
           </p>
         </div>
       )}
-      {!token.pair && supplyPercentage != 100 && (
+      {allSupplyConditions && (
         <StandardTooltip>
           <div className="flex flex-col gap-2">
             <div className={`text-[16px] text-center mb-[10px] ${supplyColor}`}>
@@ -147,6 +154,7 @@ const MarketLine = ({
       )}
     </div>
   );
+
   const borrowPercentage =
     marketID !== "main"
       ? Math.min(

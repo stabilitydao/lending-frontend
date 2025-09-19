@@ -43,6 +43,9 @@ export const LEGACY_MARKET_DEFINITIONS: {
   brunch2: {
     name: "Brunch Market gen2",
   },
+  wmetaUSD2: {
+    name: "wmetaUSD Market gen2",
+  },
   // credix: {
   //   name: "Credix Market",
   // },
@@ -162,6 +165,23 @@ export const MARKET_DEFINITIONS: {
     POOL_ADDRESS_PROVIDER: "0x546eF43c9Edd9f5108E7b054AB81Df73fBE4F73A",
     AAVE_POOL: "0x6D8Aa37DfAa98d2a14da39cfeD36975F97fc3f85",
     NATIVE_TOKEN_GATEWAY: "0x2220010512a19BaC5fF597b21c5aBeCa41f701e4",
+    LOOPING: {
+      LOOPING_CONTRACT: "0x0",
+      UNLOOPING_CONTRACT: "0x0",
+      VAULTS: [],
+      IO: [],
+    },
+    chainId: sonic.id,
+    healthBar: subMarketHealthBar,
+  },
+  wmetaUSD2: {
+    id: 7,
+    name: "wmetaUSD Market gen2",
+    description: "",
+    tokens: [wmetaUSD, USDCe],
+    POOL_ADDRESS_PROVIDER: "0xE8385DEcBCFf931799dd6689677299CA73A9F644",
+    AAVE_POOL: "0x909ba6aC1A9D34fE97Cb459C2CA9b6Ff986676F7",
+    NATIVE_TOKEN_GATEWAY: "0xEF2d3C1A7e133681a8908820A322ea457F9D6840",
     LOOPING: {
       LOOPING_CONTRACT: "0x0",
       UNLOOPING_CONTRACT: "0x0",
