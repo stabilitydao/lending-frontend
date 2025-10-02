@@ -77,18 +77,23 @@ const useMarkets = (marketID: string) => {
       : undefined;
 
     const symbol = token?.symbol ?? rawMarket.symbol;
+
     const name = rawMarket.name;
     const decimals = token?.decimals ?? bnToNumber(rawMarket.decimals);
     const icon = token?.icon ?? "/icons/coins/unknown.png";
 
     const stableDebt = rawMarket.totalPrincipalStableDebt;
-    const variableDebt = rawMarket.totalScaledVariableDebt;
+    const variableDebtRaw =
+      rawMarket.totalScaledVariableDebt * rawMarket.variableBorrowIndex;
+
+    const variableDebt = variableDebtRaw / BigInt(RAY);
+
     const availableLiquidity = rawMarket.availableLiquidity;
     const totalBorrowed = stableDebt + variableDebt;
     const totalSupplied = rawMarket.atokenTotalSupply;
 
     const supplyAPR = (Number(rawMarket.liquidityRate) * 100) / RAY;
-    let borrowAPR = -(Number(rawMarket.variableBorrowRate) * 100) / RAY;
+    let borrowAPR = (Number(rawMarket.variableBorrowRate) * 100) / RAY;
 
     const collateralFactor =
       Number(rawMarket.baseLTVasCollateral) / Number(BASIS_POINTS_DIVISOR);
